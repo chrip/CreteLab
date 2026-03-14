@@ -1,0 +1,19 @@
+{
+  "name": "crete-lab",
+  "version": "1.0.0",
+  "description": "Open-source concrete recipe calculator based on Zement-Merkblatt B 20",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js",
+    "test:watch": "node --test --watch tests/**/*.test.js"
+  },
+  "keywords": [
+    "concrete",
+    "calculator",
+    "beton",
+    "mix-design",
+    "B20"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build outputs (if any)
+dist/
+build/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# B20 folder - not my copyright, excluded from repository
+B20/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files (sensitive data)
+.env
+.env.local

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreteLab - Betonrezept Rechner</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ CreteLab</h1>
+            <p class="tagline">Ihr intelligenter Betonrezept Rechner nach Zement-Merkblatt B 20</p>
+        </header>
+
+        <main id="calculator">
+            <section class="form-section">
+                <h2>Betoneigenschaften</h2>
+                
+                <div class="form-group">
+                    <label for="useCase">Verwendungszweck:</label>
+                    <select id="useCase" name="useCase">
+                        <option value="">Bitte auswählen...</option>
+                        <option value="foundation">Gartenfundament</option>
+                        <option value="tabletop">Tischplatte / Balkon</option>
+                        <option value="driveway">Einfahrt / Terrasse</option>
+                        <option value="wall">Mauerwerk / Stützmauer</option>
+                        <option value="slab">Bodenplatte</option>
+                        <option value="stairs">Treppe</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="volume">Benötigtes Volumen (m³):</label>
+                    <input type="number" id="volume" name="volume" step="0.1" min="0.1" value="1" placeholder="z.B. 0.5">
+                </div>
+
+                <div class="form-group">
+                    <label for="strengthClass">Druckfestigkeitsklasse:</label>
+                    <select id="strengthClass" name="strengthClass">
+                        <option value="">Automatisch (empfohlen)</option>
+                        <option value="C12/15">C 12/15</option>
+                        <option value="C16/20">C 16/20</option>
+                        <option value="C20/25" selected>C 20/25</option>
+                        <option value="C25/30">C 25/30</option>
+                        <option value="C30/37">C 30/37</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="exposureClass">Umgebungseinwirkung:</label>
+                    <select id="exposureClass" name="exposureClass">
+                        <option value="">Automatisch (empfohlen)</option>
+                        <option value="X0">X0 - Kein Angriff</option>
+                        <option value="XC1">XC1 - Trocken/Feucht wechselnd</option>
+                        <option value="XC2">XC2 - Ständig feucht</option>
+                        <option value="XC3">XC3 - Mäßig feucht</option>
+                        <option value="XC4">XC4 - Nass/Trocken</option>
+                        <option value="XF1">XF1 - Frostsicher ohne Tausalz</option>
+                        <option value="XF2">XF2 - Frostsicher mit Tausalz</option>
+                    </select>
+                </div>
+
+                <h3>Zusätzliche Parameter (optional)</h3>
+
+                <div class="form-group">
+                    <label for="siebline">Sieblinie der Gesteinskörnung:</label>
+                    <select id="siebline" name="siebline">
+                        <option value="A8">A 8</option>
+                        <option value="B8">B 8</option>
+                        <option value="C8">C 8</option>
+                        <option value="A16">A 16</option>
+                        <option value="B16">B 16</option>
+                        <option value="C16">C 16</option>
+                        <option value="A32" selected>A 32</option>
+                        <option value="B32">B 32</option>
+                        <option value="C32">C 32</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="consistencyClass">Konsistenzklasse:</label>
+                    <select id="consistencyClass" name="consistencyClass">
+                        <option value="C0">C 0 - sehr steif</option>
+                        <option value="C1">C 1 - steif</option>
+                        <option value="F1">F 1 - steif</option>
+                        <option value="C2">C 2 - plastisch</option>
+                        <option value="F2">F 2 - plastisch</option>
+                        <option value="C3" selected>C 3 - weich</option>
+                        <option value="F3">F 3 - weich</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="aggregateType">Gesteinskörnung:</label>
+                    <select id="aggregateType" name="aggregateType">
+                        <option value="Kiessand (Quarz)">Kiessand (Quarz) ~2.65 kg/dm³</option>
+                        <option value="Granit">Granit ~2.70 kg/dm³</option>
+                        <option value="Dichter Kalkstein">Kalkstein ~2.75 kg/dm³</option>
+                        <option value="Basalt" selected>Basalt ~3.00 kg/dm³</option>
+                    </select>
+                </div>
+
+                <h3>Zusatzstoffe (optional)</h3>
+
+                <!-- Betonverflüssiger / Fließmittel -->
+                <div class="form-group">
+                    <label for="admixtureType">Verflüssigungsmittel:</label>
+                    <select id="admixtureType" name="admixtureType">
+                        <option value="none">Kein Verflüssiger</option>
+                        <option value="BV">Betonverflüssiger (5-10% Wasserreduktion)</option>
+                        <option value="FM">Fließmittel (15-25% Wasserreduktion, höheres Ausbreitmaß)</option>
+                    </select>
+                    <small class="form-hint" id="admixtureHint">Kein Zusatzmittel verwendet</small>
+                </div>
+
+                <!-- Luftporenbildner -->
+                <div class="form-group">
+                    <label for="useAirEntraining">
+                        <input type="checkbox" id="useAirEntraining" name="useAirEntraining" style="width: auto; margin-right: 8px;">
+                        Luftporenbildner verwenden (für Frostsicherheit)
+                    </label>
+                </div>
+
+                <div class="form-group" id="airEntrainingContainer" style="display: none;">
+                    <label for="airEntrainingPercent">Luftgehalt (% Vol.-%):</label>
+                    <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="6" value="4">
+                    <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). 1% LP ≈ 5l weniger Wasser, aber ca. 3.5 N/mm² geringere Festigkeit.</small>
+                </div>
+
+                <!-- Flugasche -->
+                <div class="form-group">
+                    <label for="useFlyAsh">
+                        <input type="checkbox" id="useFlyAsh" name="useFlyAsh" style="width: auto; margin-right: 8px;">
+                        Flugasche (k=0.4) verwenden
+                    </label>
+                </div>
+
+                <div class="form-group" id="flyAshContainer" style="display: none;">
+                    <label for="flyAshPercent">Flugasche-Gehalt (% vom Zement):</label>
+                    <input type="number" id="flyAshPercent" name="flyAshPercent" step="1" min="0" max="33" value="15">
+                    <small class="form-hint">Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I.</small>
+                </div>
+
+                <!-- Silikastaub -->
+                <div class="form-group">
+                    <label for="useSilicaFume">
+                        <input type="checkbox" id="useSilicaFume" name="useSilicaFume" style="width: auto; margin-right: 8px;">
+                        Silikastaub / Mikrosilika (k=1.0) verwenden
+                    </label>
+                </div>
+
+                <div class="form-group" id="silicaFumeContainer" style="display: none;">
+                    <label for="silicaFumePercent">Silikastaub-Gehalt (% vom Zement):</label>
+                    <input type="number" id="silicaFumePercent" name="silicaFumePercent" step="1" min="0" max="11" value="8">
+                    <small class="form-hint">Erhöht Festigkeit deutlich, verbessert Dichtheit. Max. 11% vom Zementgewicht.</small>
+                </div>
+
+                <!-- Wasserundurchlässig -->
+                <div class="form-group">
+                    <label for="useWaterproofing">
+                        <input type="checkbox" id="useWaterproofing" name="useWaterproofing" style="width: auto; margin-right: 8px;">
+                        Wasserundurchlässig (WU) machen
+                    </label>
+                </div>
+
+                <div class="form-group" id="waterproofContainer" style="display: none;">
+                    <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
+                    <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
+                    <small class="form-hint">Verbessert Wasserundurchlässigkeit für WU-Beton.</small>
+                </div>
+
+                <button type="submit" id="calculateBtn" class="btn btn-primary">Rezept berechnen</button>
+            </section>
+
+            <section id="results" class="result-section" style="display: none;">
+                <h2>📋 Ihr Betonrezept</h2>
+                
+                <div class="recipe-summary">
+                    <div class="summary-item">
+                        <span class="label">Klasse:</span>
+                        <span id="resStrength" class="value"></span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="label">Volumen:</span>
+                        <span id="resVolume" class="value"></span>
+                    </div>
+                </div>
+
+                <h3>Zutaten für 1 m³:</h3>
+                <table class="recipe-table">
+                    <thead>
+                        <tr>
+                            <th>Zutat</th>
+                            <th>Menge (kg/l)</th>
+                            <th>Bemerkung</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recipeBody"></tbody>
+                </table>
+
+                <div class="additives-summary" id="additivesSummary" style="display: none;">
+                    <h3>Zusatzstoff-Effekte:</h3>
+                    <ul id="effectsList">
+                        <li>Mikrosilika erhöht Festigkeit (+15% bei 8%)</li>
+                        <li>WU-Additiv verbessert Wasserundurchlässigkeit</li>
+                    </ul>
+                </div>
+
+                <div class="instructions">
+                    <h3>Anleitung:</h3>
+                    <ol id="instructionList"></ol>
+                </div>
+
+                <button type="button" id="printBtn" class="btn btn-secondary">🖨️ Rezept drucken</button>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="https://github.com/yourusername/cretelab" target="_blank">CreteLab auf GitHub</a></p>
+            <p class="disclaimer">Hinweis: Für wichtige Bauwerke bitte einen Statiker oder Betontechnologen konsultieren.</p>
+        </footer>
+    </div>
+
+    <!-- Import the library -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
