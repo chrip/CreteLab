@@ -5,13 +5,14 @@ import { STRENGTH_CLASSES, getStrengthClass, calculateTargetStrength, recommendS
 import { EXPOSURE_CLASSES, getExposureClass, getMaxWz, recommendExposureClass } from './lib/exposure.js';
 import { SIEBLINIES, CONSISTENCY_CLASSES, calculateWaterDemand, adjustForAggregateType, getAvailableSieblinies, getAvailableConsistencyClasses } from './lib/consistency.js';
 import { AGGREGATE_DENSITIES, ADDITIVE_DENSITIES, WATER_DENSITY, STOFFRAUM_CONSTANTS, stofraumrechnung, getAverageDensity, calculateVolume, calculateMass } from './lib/densities.js';
+import { getRecommendedWaterSaving, applyAdmixtureWaterReduction } from './lib/additives.js';
 
 // Application state
 const appState = {
-    useCase: null,
+    useCase: 'standard',
     volume: null,
     strengthClass: 'C20/25',
-    exposureClass: null,
+    exposureClasses: ['XC2'],
     siebline: 'B32',
     consistencyClass: 'F3',
     aggregateType: 'Basalt',
@@ -21,10 +22,136 @@ const appState = {
     useAirEntraining: false,
     flyAshContent: 0,
     silicaFumeContent: 0,
-    airEntrainingPercent: 1.5,
+    airEntrainingPercent: 0,
     admixtureType: 'none',
     result: null
 };
+
+const USE_CASE_PRESETS = {
+    standard: {
+        strengthClass: 'C20/25',
+        exposureClasses: ['XC2'],
+        siebline: 'B32',
+        consistencyClass: 'F3',
+        aggregateType: 'Basalt',
+        admixtureType: 'BV',
+        useFlyAsh: false,
+        useSilicaFume: false,
+        useAirEntraining: false,
+        airEntrainingPercent: 0,
+        useWaterproofing: false,
+        flyAshPercent: 0,
+        silicaFumePercent: 0,
+        waterproofPercent: 0
+    },
+    hobby: {
+        strengthClass: 'C16/20',
+        exposureClasses: ['XC1'],
+        siebline: 'C32',
+        consistencyClass: 'F2',
+        aggregateType: 'Kiessand (Quarz)',
+        admixtureType: 'none',
+        useFlyAsh: false,
+        useSilicaFume: false,
+        useAirEntraining: false,
+        airEntrainingPercent: 0,
+        useWaterproofing: false,
+        flyAshPercent: 0,
+        silicaFumePercent: 0,
+        waterproofPercent: 0
+    },
+    highend: {
+        strengthClass: 'C30/37',
+        exposureClasses: ['XC4', 'XF1'],
+        siebline: 'A32',
+        consistencyClass: 'F3',
+        aggregateType: 'Basalt',
+        admixtureType: 'FM',
+        useFlyAsh: true,
+        useSilicaFume: true,
+        useAirEntraining: true,
+        airEntrainingPercent: 4.5,
+        useWaterproofing: true,
+        flyAshPercent: 20,
+        silicaFumePercent: 8,
+        waterproofPercent: 2
+    }
+};
+
+function updateStrengthDescription() {
+    const hintElement = document.getElementById('strengthHint');
+    const value = elements.strengthClass.value;
+    const descriptions = {
+        'C12/15': 'Leichte Anwendungen, z.B. Fundamentplatten im Garteneinsatz.',
+        'C16/20': 'Mittlere Belastung, z.B. Kellerwände, Gehwege.',
+        'C20/25': 'Standard-Beton für normale Bauten und Bodenplatten.',
+        'C25/30': 'Höhere Dauerhaftigkeit, z.B. Garagenplatten, Terrassen.',
+        'C30/37': 'Robuster Beton für hohe Beanspruchung und Außenbau.'
+    };
+    hintElement.textContent = descriptions[value] || 'Wählbare Festigkeitsklasse für statische Anforderungen.';
+}
+
+function updateSieblinieDescription() {
+    const hintElement = document.getElementById('sieblinieHint');
+    const value = elements.siebline.value;
+    const descriptions = {
+        'A8': 'Feinste Körnung, hoher Wasserbedarf, gute Verdichtbarkeit.',
+        'B8': 'Feiner Kornmix, geeignet für kleine Formteile.',
+        'C8': 'Fein, für glatte Oberflächen und schmale Querschnitte.',
+        'A16': 'Guter Standardmix mit ausgeglichenem Wasserbedarf.',
+        'B16': 'Mittelgroße Körnung, gute Verarbeitbarkeit.',
+        'C16': 'Eher grobkörnig, spart Wasser für strukturierte Bauteile.',
+        'A32': 'Standardgroßkorn-Beton für Bodenplatten und Wände.',
+        'B32': 'Betriebsübliche Mischung, gutes Preis-Leistung-Verhältnis.',
+        'C32': 'Körnung grob, für hohe Festigkeit und weniger Wasserverbrauch.'
+    };
+    hintElement.textContent = descriptions[value] || 'Sieblinie bestimmt Wasseranspruch und Körnungsspektrum.';
+}
+
+function applyUseCasePreset(useCase) {
+    const p = USE_CASE_PRESETS[useCase];
+    if (!p) return;
+
+    elements.strengthClass.value = p.strengthClass;
+    // Exposure class checkboxes
+    const exposureCheckboxes = document.querySelectorAll('#exposureClassContainer input[name="exposureClass"]');
+    exposureCheckboxes.forEach((cb) => { cb.checked = p.exposureClasses.includes(cb.value); });
+    elements.siebline.value = p.siebline;
+    elements.consistencyClass.value = p.consistencyClass;
+    elements.aggregateType.value = p.aggregateType;
+    elements.admixtureType.value = p.admixtureType;
+    elements.useFlyAsh.checked = p.useFlyAsh;
+    elements.flyAshContainer.style.display = p.useFlyAsh ? 'block' : 'none';
+    elements.flyAshPercent.value = p.flyAshPercent;
+    elements.useSilicaFume.checked = p.useSilicaFume;
+    elements.silicaFumeContainer.style.display = p.useSilicaFume ? 'block' : 'none';
+    elements.silicaFumePercent.value = p.silicaFumePercent;
+    elements.useAirEntraining.checked = p.useAirEntraining;
+    elements.airEntrainingContainer.style.display = p.useAirEntraining ? 'block' : 'none';
+    elements.airEntrainingPercent.value = p.airEntrainingPercent;
+    elements.useWaterproofing.checked = p.useWaterproofing;
+    elements.waterproofContainer.style.display = p.useWaterproofing ? 'block' : 'none';
+    elements.waterproofPercent.value = p.waterproofPercent;
+
+    appState.useCase = useCase;
+    appState.strengthClass = p.strengthClass;
+    appState.exposureClasses = p.exposureClasses;
+    appState.siebline = p.siebline;
+    appState.consistencyClass = p.consistencyClass;
+    appState.aggregateType = p.aggregateType;
+    appState.admixtureType = p.admixtureType;
+    appState.useFlyAsh = p.useFlyAsh;
+    appState.flyAshPercent = p.flyAshPercent;
+    appState.useSilicaFume = p.useSilicaFume;
+    appState.silicaFumePercent = p.silicaFumePercent;
+    appState.useAirEntraining = p.useAirEntraining;
+    appState.airEntrainingPercent = p.airEntrainingPercent;
+    appState.useWaterproofing = p.useWaterproofing;
+    appState.waterproofPercent = p.waterproofPercent;
+
+    updateStrengthDescription();
+    updateSieblinieDescription();
+}
 
 // DOM Elements
 const elements = {
@@ -32,7 +159,7 @@ const elements = {
     useCase: document.getElementById('useCase'),
     volume: document.getElementById('volume'),
     strengthClass: document.getElementById('strengthClass'),
-    exposureClass: document.getElementById('exposureClass'),
+    exposureClassContainer: document.getElementById('exposureClassContainer'),
     siebline: document.getElementById('siebline'),
     consistencyClass: document.getElementById('consistencyClass'),
     aggregateType: document.getElementById('aggregateType'),
@@ -98,6 +225,17 @@ function setupAdditiveListeners() {
     elements.useAirEntraining.addEventListener('change', function() {
         elements.airEntrainingContainer.style.display = this.checked ? 'block' : 'none';
     });
+
+    // Exposure toggles (multiple)
+    const exposureCheckboxes = document.querySelectorAll('#exposureClassContainer input[name="exposureClass"]');
+    exposureCheckboxes.forEach((cb) => {
+        cb.addEventListener('change', function() {
+            const selected = Array.from(exposureCheckboxes)
+                .filter((ch) => ch.checked)
+                .map((ch) => ch.value);
+            appState.exposureClasses = selected;
+        });
+    });
     
     // Fly ash
     elements.useFlyAsh.addEventListener('change', function() {
@@ -120,18 +258,32 @@ function setupAdditiveListeners() {
  */
 function init() {
     console.log('CreteLab initialized');
-    
+
     // Set up event listeners - use submit to handle form submission properly
     elements.calculateBtn.addEventListener('click', handleCalculate);
     elements.printBtn.addEventListener('click', handlePrint);
-    
+
+    // Use-case presets for beginner friendly configuration
+    elements.useCase.addEventListener('change', function() {
+        applyUseCasePreset(this.value);
+    });
+
+    elements.strengthClass.addEventListener('change', updateStrengthDescription);
+    elements.siebline.addEventListener('change', updateSieblinieDescription);
+
     // Also add submit listener for form button type="submit"
     document.querySelector('#calculator').addEventListener('submit', function(e) {
         e.preventDefault();
     });
-    
+
     // Load saved state from localStorage if available
     loadState();
+
+    // Apply initial standard preset and hints
+    applyUseCasePreset('standard');
+    elements.useCase.value = 'standard';
+    updateStrengthDescription();
+    updateSieblinieDescription();
 }
 
 /**
@@ -142,7 +294,7 @@ function saveState() {
         useCase: appState.useCase,
         volume: appState.volume,
         strengthClass: appState.strengthClass,
-        exposureClass: appState.exposureClass,
+        exposureClasses: appState.exposureClasses,
         siebline: appState.siebline,
         consistencyClass: appState.consistencyClass,
         aggregateType: appState.aggregateType,
@@ -169,13 +321,20 @@ function loadState() {
         // Apply saved values to DOM
         if (state.useCase && elements.useCase.querySelector(`[value="${state.useCase}"]`)) {
             elements.useCase.value = state.useCase;
+            applyUseCasePreset(state.useCase);
         }
         if (state.volume) elements.volume.value = state.volume;
         if (state.strengthClass && elements.strengthClass.querySelector(`[value="${state.strengthClass}"]`)) {
             elements.strengthClass.value = state.strengthClass;
         }
-        if (state.exposureClass && elements.exposureClass.querySelector(`[value="${state.exposureClass}"]`)) {
-            elements.exposureClass.value = state.exposureClass;
+
+        // Choose controlled exposure from selected list
+        if (Array.isArray(state.exposureClasses)) {
+            const exposureCheckboxes = document.querySelectorAll('#exposureClassContainer input[name="exposureClass"]');
+            exposureCheckboxes.forEach((cb) => {
+                cb.checked = state.exposureClasses.includes(cb.value);
+            });
+            appState.exposureClasses = state.exposureClasses;
         }
     } catch (e) {
         console.warn('Could not load state:', e);
@@ -206,7 +365,11 @@ function handleCalculate() {
     appState.useCase = useCase;
     appState.volume = volume;
     appState.strengthClass = elements.strengthClass.value;
-    appState.exposureClass = elements.exposureClass.value || null;
+    
+    const exposureChecks = Array.from(document.querySelectorAll('#exposureClassContainer input[name="exposureClass"]'));
+    const selectedExposure = exposureChecks.filter((c) => c.checked).map((c) => c.value);
+    appState.exposureClasses = selectedExposure.length ? selectedExposure : ['XC2'];
+
     appState.siebline = elements.siebline.value;
     appState.consistencyClass = elements.consistencyClass.value;
     appState.aggregateType = elements.aggregateType.value;
@@ -253,9 +416,41 @@ function calculateRecipe() {
         }
         
         // Get exposure class data (use auto-recommendation if not specified)
-        let exposureClass = appState.exposureClass || recommendExposureClass(appState.useCase);
-        
-        const wzLimit = getMaxWz(exposureClass, true); // Apply betontechnologische Abminderung
+        let selectedExposureKeys = Array.isArray(appState.exposureClasses) && appState.exposureClasses.length ? appState.exposureClasses : [recommendExposureClass(appState.useCase) && recommendExposureClass(appState.useCase).name];
+
+        // evaluate selected exposures and choose the most restrictive (maßgeblich)
+        const selectedExposureItems = selectedExposureKeys
+            .map((key) => ({ key, data: getExposureClass(key) }))
+            .filter((item) => item.data);
+
+        let controllingExposureItem = null;
+        if (selectedExposureItems.length > 0) {
+            controllingExposureItem = selectedExposureItems.reduce((best, current) => {
+                if (!best) return current;
+
+                const bestMaxWz = best.data.max_wz === null ? Infinity : best.data.max_wz;
+                const currMaxWz = current.data.max_wz === null ? Infinity : current.data.max_wz;
+
+                if (currMaxWz < bestMaxWz) return current;
+                if (currMaxWz > bestMaxWz) return best;
+                if (current.data.min_z > best.data.min_z) return current;
+                if (current.data.min_f_ck_cube > best.data.min_f_ck_cube) return current;
+                return best;
+            }, null);
+        }
+
+        if (!controllingExposureItem) {
+            const recommended = recommendExposureClass(appState.useCase);
+            const recommendedKey = Object.keys(EXPOSURE_CLASSES).find((key) => getExposureClass(key) === recommended);
+            controllingExposureItem = recommendedKey ? { key: recommendedKey, data: recommended } : null;
+        }
+
+        const controllingExposure = controllingExposureItem ? controllingExposureItem.data : null;
+        const controllingExposureKey = controllingExposureItem ? controllingExposureItem.key : null;
+
+        const selectedExposureKey = controllingExposureKey || (Array.isArray(appState.exposureClasses) && appState.exposureClasses.length > 0 ? appState.exposureClasses[0] : 'XC1');
+        const wzLimit = selectedExposureKey ? getMaxWz(selectedExposureKey, true) : null;
+        appState.selectedControllingExposure = selectedExposureKey;
         
         // Calculate water demand based on consistency
         const waterDemand = calculateWaterDemand(appState.siebline, appState.consistencyClass);
@@ -268,15 +463,10 @@ function calculateRecipe() {
         const isCrushedStone = (appState.aggregateType === 'Granit' || appState.aggregateType === 'Basalt');
         let waterAmount = adjustForAggregateType(waterDemand, isCrushedStone);
         
-        // Apply admixture effects - reduce water based on admixture type
-        if (appState.admixtureType === 'BV') {
-            // Betonverflüssiger: 5-10% water reduction (~7%)
-            waterAmount = Math.round(waterAmount * 0.93);
-        } else if (appState.admixtureType === 'FM') {
-            // Fließmittel (superplasticizer): 15-25% water reduction (~20%)
-            waterAmount = Math.round(waterAmount * 0.80);
-        }
-        
+        // Apply admixture effects - reduce water based on typical BV/FM saving
+        const admixturePerc = getRecommendedWaterSaving(appState.admixtureType) || 0;
+        waterAmount = applyAdmixtureWaterReduction(waterAmount, appState.admixtureType);
+
         // Apply air entraining - further reduce water by ~5l per 1% LP
         if (appState.useAirEntraining && appState.airEntrainingPercent > 0) {
             const lpWaterSaving = appState.airEntrainingPercent * 5; // ~5l per 1% LP
@@ -292,7 +482,8 @@ function calculateRecipe() {
         let cementContent = waterAmount / targetWz;
         
         // Adjust based on exposure class minimum cement content
-        const exposureData = getExposureClass(exposureClass);
+        const effectiveExposureClass = controllingExposureKey || (Array.isArray(appState.exposureClasses) && appState.exposureClasses.length > 0 ? appState.exposureClasses[0] : 'XC1');
+        const exposureData = getExposureClass(effectiveExposureClass);
         if (exposureData && exposureData.min_z && exposureData.min_z > cementContent) {
             cementContent = exposureData.min_z;
         }
@@ -314,21 +505,26 @@ function calculateRecipe() {
         
         const wzLimitValue = wzLimit || 'unbeschränkt';
         
+        const admixtureFraction = appState.admixtureType === 'BV' ? 0.005 : appState.admixtureType === 'FM' ? 0.01 : 0;
+        const admixtureMass = Math.round(cementContent * admixtureFraction * scaleFactor * 100) / 100;
+
         const recipe = {
             strengthClass: appState.strengthClass,
             targetStrength: calculateTargetStrength(strengthClassData.f_ck_cyl),
-            exposureClass: exposureClass,
+            exposureClass: appState.selectedControllingExposure || 'XC1',
             wzLimit: wzLimitValue,
             volume: appState.volume,
-            
+            admixtureWaterSaving: admixturePerc,
+
             materials: {
                 cement: Math.round(cementContent * scaleFactor * 100) / 100,
                 waterproofing: appState.useWaterproofing ? Math.round((cementContent * (appState.waterproofPercent / 100)) * scaleFactor * 100) / 100 : 0,
                 water: Math.round(waterAmount * scaleFactor),
                 aggregate: aggregateResult ? Math.round(aggregateResult.aggregate_mass * scaleFactor * 100) / 100 : null,
-                
-                flyAsh: appState.useFlyAsh ? Math.round(appState.flyAshPercent * cementContent * scaleFactor * 100) / 100 : 0,
-                silicaFume: appState.useSilicaFume ? Math.round(appState.silicaFumePercent * cementContent * scaleFactor / 100) / 100 : 0,
+                flyAsh: appState.useFlyAsh ? Math.round((appState.flyAshPercent / 100) * cementContent * scaleFactor * 100) / 100 : 0,
+                silicaFume: appState.useSilicaFume ? Math.round((appState.silicaFumePercent / 100) * cementContent * scaleFactor * 100) / 100 : 0,
+                admixture: admixtureMass,
+                admixtureUnit: appState.admixtureType === 'FM' ? 'l' : appState.admixtureType === 'BV' ? 'kg' : ''
             },
             
             totalCementitious: cementContent + (appState.useFlyAsh ? (cementContent * appState.flyAshPercent / 100) : 0),
@@ -405,12 +601,23 @@ function displayRecipe(recipe) {
     const waterDisplay = formatNumber(recipe.materials.water, 0);
     let wzNote = `w/z ≤ ${recipe.wzLimit}`;
     if (appState.admixtureType === 'BV') {
-        wzNote += ' (mit Betonverflüssiger)';
+        wzNote += ` (mit Betonverflüssiger, ${formatNumber(recipe.admixtureWaterSaving, 0)}% Einsparung)`;
     } else if (appState.admixtureType === 'FM') {
-        wzNote += ' (mit Fließmittel)';
+        wzNote += ` (mit Fließmittel, ${formatNumber(recipe.admixtureWaterSaving, 0)}% Einsparung)`;
+    } else {
+        wzNote += ' (kein Zusatzmittel)';
     }
     tableRows.push(`<tr><td>Wasser</td><td>${waterDisplay} l</td><td>${wzNote}</td></tr>`);
-    
+
+    // Display admixture (BV/FM in recipe table)
+    if (appState.admixtureType === 'BV' || appState.admixtureType === 'FM') {
+        const admixtureName = appState.admixtureType === 'BV' ? 'Betonverflüssiger (BV)' : 'Fließmittel (FM)';
+        const adoption = appState.admixtureType === 'BV' ? '7% Wasserersparnis (typisch)' : '20% Wasserersparnis (typisch)';
+        const unit = recipe.materials.admixtureUnit || 'kg';
+        const admixtureQty = recipe.materials.admixture ? `${formatNumber(recipe.materials.admixture, 2)} ${unit}` : '--';
+        tableRows.push(`<tr><td>${admixtureName}</td><td>${admixtureQty}</td><td>${adoption}</td></tr>`);
+    }
+
     // Display aggregate content with formatted density
     const aggDensity = getAverageDensity(appState.aggregateType);
     const aggMassDisplay = recipe.materials.aggregate ? formatNumber(recipe.materials.aggregate, 0) : '-';

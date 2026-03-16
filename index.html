@@ -20,14 +20,11 @@
                 <div class="form-group">
                     <label for="useCase">Verwendungszweck:</label>
                     <select id="useCase" name="useCase">
-                        <option value="">Bitte auswählen...</option>
-                        <option value="foundation">Gartenfundament</option>
-                        <option value="tabletop">Tischplatte / Balkon</option>
-                        <option value="driveway">Einfahrt / Terrasse</option>
-                        <option value="wall">Mauerwerk / Stützmauer</option>
-                        <option value="slab">Bodenplatte</option>
-                        <option value="stairs">Treppe</option>
+                        <option value="standard" selected>Standard Beton (allround, einfacher Anwendungsfall)</option>
+                        <option value="hobby">Cheapest possible concrete (Hobby / Gartenfundament)</option>
+                        <option value="highend">High-End Concrete (Tischplatte / höchste Qualität)</option>
                     </select>
+                    <small class="form-hint" id="useCaseHint">Wählen Sie einen Anwendungsfall, um vorgeschlagene Parameter zu laden.</small>
                 </div>
 
                 <div class="form-group">
@@ -38,27 +35,28 @@
                 <div class="form-group">
                     <label for="strengthClass">Druckfestigkeitsklasse:</label>
                     <select id="strengthClass" name="strengthClass">
-                        <option value="">Automatisch (empfohlen)</option>
-                        <option value="C12/15">C 12/15</option>
-                        <option value="C16/20">C 16/20</option>
-                        <option value="C20/25" selected>C 20/25</option>
-                        <option value="C25/30">C 25/30</option>
-                        <option value="C30/37">C 30/37</option>
+                        <option value="C12/15">C 12/15 (Niedrige Beanspruchung, Steine, Gehweg)</option>
+                        <option value="C16/20">C 16/20 (Leichte Bauteile, Stützmauern)</option>
+                        <option value="C20/25" selected>C 20/25 (Standardbau, Bodenplatten)</option>
+                        <option value="C25/30">C 25/30 (Mittlere Beanspruchung)</option>
+                        <option value="C30/37">C 30/37 (Höherer Dauerhaftigkeits- und Festigkeitsbedarf)</option>
                     </select>
+                    <small class="form-hint" id="strengthHint">Wählen Sie eine Klasse gemäß statischen Anforderungen und Nutzung.</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="exposureClass">Umgebungseinwirkung:</label>
-                    <select id="exposureClass" name="exposureClass">
-                        <option value="">Automatisch (empfohlen)</option>
-                        <option value="X0">X0 - Kein Angriff</option>
-                        <option value="XC1">XC1 - Trocken/Feucht wechselnd</option>
-                        <option value="XC2">XC2 - Ständig feucht</option>
-                        <option value="XC3">XC3 - Mäßig feucht</option>
-                        <option value="XC4">XC4 - Nass/Trocken</option>
-                        <option value="XF1">XF1 - Frostsicher ohne Tausalz</option>
-                        <option value="XF2">XF2 - Frostsicher mit Tausalz</option>
-                    </select>
+                    <label>Umgebungseinwirkung (Mehrfachauswahl möglich):</label>
+                    <div class="checkbox-grid" id="exposureClassContainer">
+                        <label><input type="checkbox" name="exposureClass" value="X0"> X0 - Kein Angriff</label>
+                        <label><input type="checkbox" name="exposureClass" value="XC1"> XC1 - Trocken/Feucht wechselnd</label>
+                        <label><input type="checkbox" name="exposureClass" value="XC2"> XC2 - Ständig feucht</label>
+                        <label><input type="checkbox" name="exposureClass" value="XC3"> XC3 - Mäßig feucht</label>
+                        <label><input type="checkbox" name="exposureClass" value="XC4"> XC4 - Nass/Trocken</label>
+                        <label><input type="checkbox" name="exposureClass" value="XD1"> XD1 - Feucht, mäßig chloridbelastet</label>
+                        <label><input type="checkbox" name="exposureClass" value="XF1"> XF1 - Frostsicher ohne Tausalz</label>
+                        <label><input type="checkbox" name="exposureClass" value="XF2"> XF2 - Frostsicher mit Tausalz</label>
+                    </div>
+                    <small class="form-hint">Wählen Sie alle in Ihrem Objekt relevanten Expositionsklassen; die restriktivste (“maßgeblich”) wird zur Berechnung genutzt.</small>
                 </div>
 
                 <h3>Zusätzliche Parameter (optional)</h3>
@@ -66,16 +64,17 @@
                 <div class="form-group">
                     <label for="siebline">Sieblinie der Gesteinskörnung:</label>
                     <select id="siebline" name="siebline">
-                        <option value="A8">A 8</option>
+                        <option value="A8">A 8 (feinste Körnung, hohe Verdichtbarkeit)</option>
                         <option value="B8">B 8</option>
                         <option value="C8">C 8</option>
                         <option value="A16">A 16</option>
                         <option value="B16">B 16</option>
                         <option value="C16">C 16</option>
-                        <option value="A32" selected>A 32</option>
+                        <option value="A32" selected>A 32 (Standard, guter Materialmix)</option>
                         <option value="B32">B 32</option>
-                        <option value="C32">C 32</option>
+                        <option value="C32">C 32 (grobste Körnung, weniger Wasserbedarf)</option>
                     </select>
+                    <small class="form-hint" id="sieblinieHint">Feinere Sieblinien benötigen mehr Wasser, gröbere Sieblinien sparen Wasser.</small>
                 </div>
 
                 <div class="form-group">
@@ -162,12 +161,13 @@
                         <input type="checkbox" id="useWaterproofing" name="useWaterproofing" style="width: auto; margin-right: 8px;">
                         Wasserundurchlässig (WU) machen
                     </label>
+                    <small class="form-hint">WU = wasserundurchlässig; erhöht Abdichtung gegen Wasser/Druck. Setze 1-2% vom Zementgewicht.</small>
                 </div>
 
                 <div class="form-group" id="waterproofContainer" style="display: none;">
                     <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
                     <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
-                    <small class="form-hint">Verbessert Wasserundurchlässigkeit für WU-Beton.</small>
+                    <small class="form-hint">Verwendet zur Reduzierung von Wasserdurchlässigkeit und Frostbeständigkeit.</small>
                 </div>
 
                 <button type="submit" id="calculateBtn" class="btn btn-primary">Rezept berechnen</button>

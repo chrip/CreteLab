@@ -83,9 +83,9 @@ export function getSupplementaryMaterial(materialType) {
 /**
  * Get maximum allowable content of supplementary material for a cement type
  * @param {string} materialType - Material type ('Flugasche' or 'Silikastaub')
- * @param {string} hasPhosphorus - Whether cement contains phosphorus (P)
- * @param {string} hasVanadium - Whether cement contains vanadium (V)
- * @param {string} hasChloride - Whether cement contains chloride (D)
+ * @param {boolean} hasPhosphorus - Whether cement contains phosphorus (P)
+ * @param {boolean} hasVanadium - Whether cement contains vanadium (V)
+ * @param {boolean} hasChloride - Whether cement contains chloride (D)
  * @returns {number|null} Maximum fraction of z or null if invalid
  */
 export function getMaxSupplementaryContent(materialType, hasPhosphorus = false, hasVanadium = false, hasChloride = false) {
@@ -247,6 +247,33 @@ export function getRecommendedWaterSaving(admixtureType) {
 }
 
 /**
+ * Get the admixture water reduction factor (e.g., 0.07 for BV, 0.20 for FM)
+ * @param {string} admixtureType - Admixture type ('BV' or 'FM')
+ * @returns {number} fraction 0-1
+ */
+export function getAdmixtureWaterReductionFactor(admixtureType) {
+    if (!admixtureType || admixtureType === 'none') return 0;
+
+    const savingPercent = getRecommendedWaterSaving(admixtureType);
+    if (savingPercent === null || savingPercent <= 0) return 0;
+
+    return Math.min(0.95, Math.max(0, savingPercent / 100));
+}
+
+/**
+ * Apply admixture-related water reduction to a water demand value
+ * @param {number} waterAmount - Initial water amount in l/m³
+ * @param {string} admixtureType - 'BV'|'FM'|'none'
+ * @returns {number} adjusted water amount
+ */
+export function applyAdmixtureWaterReduction(waterAmount, admixtureType) {
+    if (waterAmount === null || waterAmount === undefined || waterAmount < 0) return waterAmount;
+
+    const reduction = getAdmixtureWaterReductionFactor(admixtureType);
+    return Math.round(waterAmount * (1 - reduction));
+}
+
+/**
  * Check if supplementary material usage is valid for exposure class
  * Some classes don't allow certain materials (e.g., XF2, XF4 for silica fume)
  * @param {string} exposureClass - Exposure class (e.g., 'XF2')
@@ -312,4 +339,101 @@ export function calculateEquivalentWzWithBoth(w, z, f, s) {
 
     const wz_eq = w / (z + k_f * f + k_s * s);
     return Math.round(wz_eq * 100) / 100;
+}
+
+/**
+ * Calculate required amount of liquid admixture (Zusatzmittel) based on BV dosing range
+ * Based on B20 Section 7.1: Dosierbereich bis X M.-% von Zementgewicht
+ * For BV=92 with max 0,5% from cement content z = 287 kg/m³:
+ *   Z_m = 0,005 × 287 = 1,435 ≈ 1,44 kg/m³
+ * @param {number} bvPercent - Dosing range in M.-% (mass percent of cement weight)
+ * @param {number} cementContent - Cement content in kg/m³
+ * @returns {object|null} Calculation result with required admixture mass or null if invalid
+ */
+export function calculateAdmixtureContent(bvPercent, cementContent) {
+    // Allow bvPercent to be 0 (zero dosing), but reject undefined/null or negative values
+    if ((bvPercent === undefined || bvPercent === null || bvPercent < 0) || !cementContent || cementContent <= 0) return null;
+
+    // Convert M.-% to fraction (e.g., 0.5% = 0.005)
+    const dosageFraction = bvPercent / 100;
+
+    // Calculate required admixture mass: Z_m = (bv/100) × z
+    const admixtureMass = cementContent * dosageFraction;
+
+    return {
+        dosing_range_percent: bvPercent,
+        cement_content: Math.round(cementContent),
+        dosage_fraction: dosageFraction,
+        required_admixture_mass: Math.round(admixtureMass * 100) / 100 // Round to 2 decimals
+    };
+}
+
+/**
+ * Calculate liquid admixture mass from BV value (Dosierbereich in g/kg of cement)
+ * For BV=92: approximately 0,5% von Zementgewicht
+ * @param {number} bvValue - BV value (e.g., 92 means approx 0.5%)
+ * @param {number} cementContent - Cement content in kg/m³
+ * @returns {object|null} Calculation result or null if invalid
+ */
+export function calculateAdmixtureFromBV(bvValue, cementContent) {
+    if (!bvValue || !cementContent || cementContent <= 0) return null;
+
+    // BV=92 corresponds to approximately 0.5% dosing range (from B20 documentation)
+    const bvToPercent = {
+        'BV90': 0.4,
+        'BV92': 0.5,
+        'BV94': 0.6,
+        'default': 0.5 // Default for BV values around 90-95
+    };
+
+    const dosagePercent = bvToPercent[`BV${Math.round(bvValue)}`] || bvToPercent['default'];
+    
+    const admixtureMass = cementContent * (dosagePercent / 100);
+
+    return {
+        bv_value: bvValue,
+        assumed_dosing_percent: dosagePercent,
+        cement_content: Math.round(cementContent),
+        required_admixture_mass: Math.round(admixtureMass * 100) / 100
+    };
+}
+
+/**
+ * Check if liquid admixture amount exceeds maximum for mixing water calculation
+ * Based on B20 Section 7.1: If total liquid admixture > 3 l/m³, consider water content in w/z calculation
+ * @param {number} admixtureMass - Liquid admixture mass in kg/m³
+ * @returns {object} Check result with max threshold and exceeds flag
+ */
+/**
+ * Alias for getMaxSupplementaryContent - calculates maximum supplementary material content
+ * @param {number} cement - Cement content in kg/m³
+ * @param {string} materialType - Material type ('Flugasche' or 'Silikastaub')
+ * @param {boolean} hasP - Contains phosphorus
+ * @param {boolean} hasV - Contains vanadium
+ * @param {boolean} hasD - Contains chloride
+ * @returns {number|null} Maximum supplementary content in kg/m³ or null if invalid
+ */
+export function calculateMaxSupplementaryContent(cement, materialType, hasP = false, hasV = false, hasD = false) {
+    const maxFraction = getMaxSupplementaryContent(materialType, hasP, hasV, hasD);
+
+    if (!maxFraction || !cement) return null;
+
+    return Math.round(cement * maxFraction);
+}
+
+export function checkAdmixtureWaterContent(admixtureMass) {
+    const MAX_LIQUID_ADMIXTURE = 3; // l/m³ from B20 Section 7.1
+
+    if (!admixtureMass || admixtureMass < 0) return null;
+
+    const exceedsMax = admixtureMass > MAX_LIQUID_ADMIXTURE;
+
+    return {
+        max_liquid_admixture: MAX_LIQUID_ADMIXTURE,
+        actual_admixture_mass: Math.round(admixtureMass * 100) / 100,
+        exceeds_maximum: exceedsMax,
+        note: exceedsMax 
+            ? 'Liquid admixture > 3 l/m³ - consider water content in w/z calculation' 
+            : 'Within acceptable limits'
+    };
 }

@@ -212,8 +212,8 @@ export const STOFFRAUM_CONSTANTS = {
  * @returns {object|null} Calculation result or null if invalid
  */
 export function stofraumrechnung(cementMass, waterMass, airVolume = 20, aggregateType) {
-    // Use standard cement density of ~3.1 kg/dm³ (typical value for Portland cement)
-    const rhoZ = 3.1; 
+    // Use standard cement density of ρz = 3.0 kg/dm³ (B20 Section 6.1)
+    const rhoZ = 3.0;
     const rhoG = getAverageDensity(aggregateType);
 
     if (!rhoZ || !rhoG) return null;
