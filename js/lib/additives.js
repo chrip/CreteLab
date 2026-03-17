@@ -242,7 +242,12 @@ export function getRecommendedWaterSaving(admixtureType) {
 
     if (!effect) return null;
 
-    // Return midpoint of typical range
+    // Prefer documented typical water saving where available.
+    if (typeof effect.typicalWaterSaving === 'number') {
+        return effect.typicalWaterSaving;
+    }
+
+    // Fall back to midpoint of min/max range if not provided.
     return Math.round(((effect.waterReductionPercentMin + effect.waterReductionPercentMax) / 2));
 }
 
