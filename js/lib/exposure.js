@@ -1,5 +1,6 @@
 // exposure.js - Expositionklassen nach Zement-Merkblatt B 20 (Tafel 2)
 // Environmental exposure classes and their requirements for concrete durability
+import { getStrengthClass } from './strength.js';
 
 /**
  * Expositionklassen (Exposure Classes) according to DIN EN 206
@@ -254,5 +255,5 @@ export function getGoverningExposureClass(classes) {
         }
     }
 
-    return getExposureClass(mostSevere);
+    return mostSevere;
 }

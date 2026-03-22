@@ -15,5 +15,8 @@
     "B20"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^29.0.0"
+  }
 }

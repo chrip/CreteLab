@@ -178,6 +178,11 @@ export function getAvailableSieblinies() {
  * Get all available consistency classes sorted by stiffness
  * @returns {string[]} Array of consistency class identifiers
  */
+export const WATER_DEMAND_A32_PLASTIC = 141.5; // computed for k=5.48 + F2 equivalent
+export const WATER_DEMAND_B32_PLASTIC = 166.7; // computed for k=4.20 + F2 equivalent
+export const WATER_DEMAND_C32_PLASTIC = 187.5; // computed for k=3.30 + F2 equivalent
+export const SPLIT_SURCHARGE = 0.10;
+
 export function getAvailableConsistencyClasses() {
     return ['C0', 'C1', 'F1', 'C2', 'F2', 'C3', 'F3', 'F4', 'F5', 'F6'];
 }

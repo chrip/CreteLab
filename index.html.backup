@@ -18,11 +18,11 @@
                 <h2>Betoneigenschaften</h2>
                 
                 <div class="form-group">
-                    <label for="useCase">Mixqualität:</label>
+                    <label for="useCase">Verwendungszweck:</label>
                     <select id="useCase" name="useCase">
                         <!-- Options will be populated dynamically -->
                     </select>
-                    <small class="form-hint" id="useCaseHint">Wählen Sie Cheap/Standard/Strong/Ultra Strong, um vernünftige Ausgangswerte zu laden.</small>
+                    <small class="form-hint" id="useCaseHint">Wählen Sie einen Anwendungsfall, um vorgeschlagene Parameter zu laden.</small>
                 </div>
 
                 <div class="form-group">
@@ -100,89 +100,4 @@
                     <label for="useFlyAsh">
                         <input type="checkbox" id="useFlyAsh" name="useFlyAsh" style="width: auto; margin-right: 8px;">
                         Flugasche (k=0.4) verwenden
-                    </label>
-                </div>
-
-                <div class="form-group" id="flyAshContainer" style="display: none;">
-                    <label for="flyAshPercent">Flugasche-Gehalt (% vom Zement):</label>
-                    <input type="number" id="flyAshPercent" name="flyAshPercent" step="1" min="0" max="33" value="15">
-                    <small class="form-hint">Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I.</small>
-                </div>
-
-                <!-- Silikastaub -->
-                <div class="form-group">
-                    <label for="useSilicaFume">
-                        <input type="checkbox" id="useSilicaFume" name="useSilicaFume" style="width: auto; margin-right: 8px;">
-                        Silikastaub / Mikrosilika (k=1.0) verwenden
-                    </label>
-                </div>
-
-                <div class="form-group" id="silicaFumeContainer" style="display: none;">
-                    <label for="silicaFumePercent">Silikastaub-Gehalt (% vom Zement):</label>
-                    <input type="number" id="silicaFumePercent" name="silicaFumePercent" step="1" min="0" max="11" value="8">
-                    <small class="form-hint">Erhöht Festigkeit deutlich, verbessert Dichtheit. Max. 11% vom Zementgewicht.</small>
-                </div>
-
-                <!-- Wasserundurchlässig -->
-                <div class="form-group">
-                    <label for="useWaterproofing">
-                        <input type="checkbox" id="useWaterproofing" name="useWaterproofing" style="width: auto; margin-right: 8px;">
-                        Wasserundurchlässig (WU) machen
-                    </label>
-                    <small class="form-hint">WU = wasserundurchlässig; erhöht Abdichtung gegen Wasser/Druck. Setze 1-2% vom Zementgewicht.</small>
-                </div>
-
-                <div class="form-group" id="waterproofContainer" style="display: none;">
-                    <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
-                    <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
-                    <small class="form-hint">Verwendet zur Reduzierung von Wasserdurchlässigkeit und Frostbeständigkeit.</small>
-                </div>
-
-                <button type="submit" id="calculateBtn" class="btn btn-primary">Rezept berechnen</button>
-            </section>
-
-            <section id="results" class="result-section" style="display: none;">
-                <h2>📋 Ihr Betonrezept</h2>
-                
-                <div class="recipe-summary">
-                    <div class="summary-item">
-                        <span class="label">Klasse:</span>
-                        <span id="resStrength" class="value"></span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="label">Volumen:</span>
-                        <span id="resVolume" class="value"></span>
-                    </div>
-                </div>
-
-                <h3 id="ingredientsHeader">Zutaten für 1 m³:</h3>
-                <table class="recipe-table">
-                    <thead>
-                        <tr>
-                            <th>Zutat</th>
-                            <th>Menge (kg/l)</th>
-                            <th>Bemerkung</th>
-                        </tr>
-                    </thead>
-                    <tbody id="recipeBody"></tbody>
-                </table>
-
-                <div class="additives-sum" id="additivesSummary" style="display: none;">
-                    <h3>Zusatzstoff-Effekte:</h3>
-                    <ul id="effectsList">
-                    </ul>
-                </div>
-
-                <div class="instructions">
-                    <h3>Anleitung:</h3>
-                    <ol id="instructionList">
-                    </ol>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Import the library -->
-    <script type="module" src="js/app.js"></script>
-</body>
-</html>
+                    </label
