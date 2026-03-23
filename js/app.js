@@ -4,6 +4,7 @@ import { getAvailableSieblinies, getAvailableConsistencyClasses, calculateWaterD
 import { getAvailableAggregates, getAverageDensity, stofraumrechnung } from './lib/densities.js';
 import { calculateCementFromWz } from './lib/mix-design.js';
 import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivalentWzWithBoth, calculateMaxFlyAshContent, calculateMaxSilicaFumeContent, getAdmixtureDosage, getRecommendedWaterSaving } from './lib/additives.js';
+import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPasteRequirements, checkCemIFlyAshSilicaFume } from './lib/fines-content.js';
 
 const USE_CASES = {
     cheap:        { label: 'Billig (Cheap)', strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Granit', admixtureType: 'none' },
@@ -94,6 +95,33 @@ function evaluatePlausibility(state, recipe) {
         const wzc = recipe.materials.water / recipe.materials.cement;
         if (exposureData.max_wz !== null && wzc > exposureData.max_wz + 0.005) {
             warnings.push(`W/z=${wzc.toFixed(2)} ist über dem Limit ${exposureData.max_wz.toFixed(2)} für ${state.exposureClass}.`);
+        }
+    }
+
+    // Paste volume check (Zementleimgehalt) - Tafel 9 Schritt
+    const paste = calculatePasteVolume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
+    if (paste && !checkPasteRequirements(paste, state.exposureClass).meetsRequirement) {
+        warnings.push(`Zementleimgehalt ${formatNumber(paste.pasteVolume)} kg/m³ unterschreitet Mindestwert für Expositionsklasse ${state.exposureClass}.`);
+    }
+
+    // Fines content check (Mehlkorngehalt) - Tafel 9 Schritt 8
+    const fines = calculateFinesContent({
+        cement: recipe.materials.cement,
+        flyAsh: recipe.materials.flyAsh,
+        silicaFume: recipe.materials.silicaFume
+    });
+    if (fines) {
+        const finesCheck = checkFinesLimits(fines, state.exposureClass);
+        if (finesCheck && finesCheck.exceedsLimit) {
+            warnings.push(`Mehlkorngehalt ${formatNumber(fines.finesContent0125)} kg/m³ überschreitet Maximum ${finesCheck.maxAllowed} kg/m³ für Expositionsklasse ${state.exposureClass}.`);
+        }
+    }
+
+    // CEM I specific check for combined fly ash and silica fume
+    if (recipe.materials.flyAsh > 0 && recipe.materials.silicaFume > 0) {
+        const cemICheck = checkCemIFlyAshSilicaFume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
+        if (!cemICheck.meetsLimit) {
+            warnings.push(`CEM I Limit: Flugasche/Zement ${cemICheck.fZRatio.toFixed(3)} überschreitet Maximum ${cemICheck.maxFLimit.toFixed(3)} für Silikastaub ${cemICheck.sZRatio.toFixed(3)}.`);
         }
     }
 
