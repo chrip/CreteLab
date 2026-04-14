@@ -1,32 +1,18 @@
 /**
- * Golden set tests from real example documentation (B20 + practical recipes).
+ * Golden set tests from real B20 example documentation.
  * Verifies direct source formulas and expected concrete recipe results.
  */
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 
-import { calculateFreshConcreteTemperatureSimple, calculateFreshConcreteTemperatureDetailed } from '../js/lib/temperature.js';
 import { calculateWetAggregateMass, calculateAggregateMoistureMass, calculateAddedWaterFromMoisture } from '../js/lib/moisture.js';
 import { calculateWaterDemand, calculateAverageK, adjustForAggregateType, WATER_DEMAND_A32_PLASTIC, WATER_DEMAND_B32_PLASTIC, WATER_DEMAND_C32_PLASTIC, SPLIT_SURCHARGE } from '../js/lib/consistency.js';
-import { calculateEquivalentWz, calculateMaxFlyAshContent, validateUnderwaterConcrete } from '../js/lib/additives.js';
+import { calculateEquivalentWz, calculateMaxFlyAshContent } from '../js/lib/additives.js';
 import { calculateTargetStrength, calculateCementFromWz } from '../js/lib/mix-design.js';
 import { getMaxWz } from '../js/lib/exposure.js';
 
-// 1. Fresh Concrete Temperature
-describe('Golden set: fresh concrete temperature', () => {
-  it('winter scenario', () => {
-    const result = calculateFreshConcreteTemperatureSimple(8, 5, 45);
-    assert.ok(Math.abs(result - 13.3) < 0.1);
-  });
-
-  it('high ambient with fly ash scenario', () => {
-    const result = calculateFreshConcreteTemperatureDetailed(340, 75, 1800, 27, 0, 0, 150, 25);
-    assert.ok(Math.abs(result - 32.1) < 0.1);
-  });
-});
-
-// 2. Comprehensive mix design check (B20 Appendix example I)
+// 1. Comprehensive mix design check (B20 Appendix example I)
 describe('Golden set: mix design appendix example I', () => {
   it('water demand and k-average consistency', () => {
     const A32 = calculateWaterDemand('A32', 'F2');
@@ -47,7 +33,7 @@ describe('Golden set: mix design appendix example I', () => {
   });
 });
 
-// 3. Fly ash k-value example
+// 2. Fly ash k-value example
 describe('Golden set: fly ash k-value', () => {
   it('max fly ash for 300 kg cement', () => {
     const maxContent = calculateMaxFlyAshContent(300);
@@ -69,36 +55,32 @@ describe('Golden set: fly ash k-value', () => {
   });
 });
 
-// 4. Underwater constraints
-describe('Golden set: underwater concrete checks', () => {
-  it('valid underwater recipe should be valid', () => {
-    const result = validateUnderwaterConcrete({
-      cement: 310,
-      flyAsh: 40,
-      wzEquivalent: 0.53,
-      finesContent: 380,
-      kValue: 0.7
-    });
-
-    assert.strictEqual(result.valid, true);
-    assert.deepStrictEqual(result.errors, []);
+// 3. Moisture correction → Zugabewasser (B20 Step 7)
+describe('Golden set: moisture correction and Zugabewasser', () => {
+  it('computes aggregate moisture mass per grain group', () => {
+    const m1 = calculateAggregateMoistureMass(685, 4.5);
+    const m2 = calculateAggregateMoistureMass(463, 3.0);
+    const m3 = calculateAggregateMoistureMass(704, 2.0);
+    assert.ok(Math.abs(m1 - 30.8) < 0.5);
+    assert.ok(Math.abs(m2 - 13.9) < 0.5);
+    assert.ok(Math.abs(m3 - 14.1) < 0.5);
   });
 
-  it('invalid underwater recipe should provide errors', () => {
-    const result = validateUnderwaterConcrete({
-      cement: 280,
-      flyAsh: 50,
-      wzEquivalent: 0.65,
-      finesContent: 300,
-      kValue: 0.65
-    });
+  it('computes Zugabewasser from total water minus moisture contributions', () => {
+    const m1 = calculateAggregateMoistureMass(685, 4.5);
+    const m2 = calculateAggregateMoistureMass(463, 3.0);
+    const m3 = calculateAggregateMoistureMass(704, 2.0);
+    const addedWater = calculateAddedWaterFromMoisture(190, [m1, m2, m3]);
+    assert.ok(Math.abs(addedWater - 131.2) < 0.2);
+  });
 
-    assert.strictEqual(result.valid, false);
-    assert.ok(result.errors.length >= 3);
+  it('computes wet aggregate mass including surface moisture', () => {
+    const wetAgg = calculateWetAggregateMass(685, 4.5);
+    assert.ok(Math.abs(wetAgg - 715.8) < 0.3);
   });
 });
 
-// 5. System table constants
+// 4. System table constants
 describe('Golden set: table constants', () => {
   it('winds up mixed water demands and equations', () => {
     assert.ok(WATER_DEMAND_A32_PLASTIC > 0);

@@ -6,15 +6,17 @@
  * Used to calculate water requirement for concrete consistency
  */
 export const SIEBLINIES = {
-    'A8':  { k: 3.63, dSum: 537 },
-    'B8':  { k: 2.90, dSum: 610 },
-    'C8':  { k: 2.27, dSum: 673 },
-    'A16': { k: 4.60, dSum: 440 },
-    'B16': { k: 3.66, dSum: 534 },
-    'C16': { k: 2.75, dSum: 625 },
-    'A32': { k: 5.48, dSum: 352 },
-    'B32': { k: 4.20, dSum: 480 },
-    'C32': { k: 3.30, dSum: 570 }
+    'A8':   { k: 3.63, dSum: 537 },
+    'B8':   { k: 2.90, dSum: 610 },
+    'C8':   { k: 2.27, dSum: 673 },
+    'A16':  { k: 4.60, dSum: 440 },
+    'B16':  { k: 3.66, dSum: 534 },
+    'C16':  { k: 2.75, dSum: 625 },
+    'A/B16':{ k: 4.13, dSum: 487 }, // avg A16+B16; B20 Beispiel II & IV
+    'A32':  { k: 5.48, dSum: 352 },
+    'B32':  { k: 4.20, dSum: 480 },
+    'C32':  { k: 3.30, dSum: 570 },
+    'A/B32':{ k: 4.84, dSum: 416 }  // avg A32+B32
 };
 
 /**
@@ -29,9 +31,9 @@ export const CONSISTENCY_CLASSES = {
     'F2': { name: 'plastisch', formula: 'w = 1200/(k+3)' },
     'C3': { name: 'weich', formula: 'w = 1300/(k+3)' },
     'F3': { name: 'weich', formula: 'w = 1300/(k+3)' },
-    'F4': { name: 'sehr weich', formula: 'empirisch' },
-    'F5': { name: 'fließfähig', formula: 'empirisch' },
-    'F6': { name: 'sehr fließfähig', formula: 'empirisch' }
+    'F4': { name: 'sehr weich',      formula: 'w = 1300/(k+3), FM erforderlich' },
+    'F5': { name: 'fließfähig',      formula: 'w = 1300/(k+3), FM erforderlich' },
+    'F6': { name: 'sehr fließfähig', formula: 'w = 1300/(k+3), FM erforderlich' }
 };
 
 /**
@@ -82,8 +84,15 @@ export function calculateWaterDemand(siebline, consistencyClass) {
         case 'F3':
             numerator = 1300;
             break;
+        case 'F4':
+        case 'F5':
+        case 'F6':
+            // B20: F4–F6 are "empirisch" – fluidity is achieved via FM (Fließmittel),
+            // not additional water. Base water demand equals F3; FM then reduces it
+            // while increasing consistency. FM is mandatory for these classes.
+            numerator = 1300;
+            break;
         default:
-            // For F4, F5, F6 use empirical values or return null
             return null;
     }
 

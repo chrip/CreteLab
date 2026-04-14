@@ -3,18 +3,128 @@
 
 /**
  * Sieblinien (Sieve Curves) with k-Wert (k-value) according to Tafel 3
- * Used to calculate water requirement for concrete consistency
+ * Used to calculate water requirement for concrete consistency.
+ * Combined lines (A/B32, A/B16) are the arithmetic average of two adjacent curves,
+ * used when the quarry grading falls between two reference lines (B20 Example II, IV).
  */
 export const SIEBLINIES = {
-    'A8':  { k: 5.48, dSum: 352 },
-    'B8':  { k: 4.20, dSum: 480 },
-    'C8':  { k: 3.30, dSum: 570 },
-    'A16': { k: 4.60, dSum: 440 },
-    'B16': { k: 3.66, dSum: 534 },
-    'C16': { k: 2.75, dSum: 625 },
-    'A32': { k: 5.48, dSum: 352 },
-    'B32': { k: 4.20, dSum: 480 },
-    'C32': { k: 3.30, dSum: 570 }
+    'A8':   { k: 3.63, dSum: 537, maxGrain: 8  },
+    'B8':   { k: 2.90, dSum: 610, maxGrain: 8  },
+    'C8':   { k: 2.27, dSum: 673, maxGrain: 8  },
+    'A16':  { k: 4.60, dSum: 440, maxGrain: 16 },
+    'B16':  { k: 3.66, dSum: 534, maxGrain: 16 },
+    'C16':  { k: 2.75, dSum: 625, maxGrain: 16 },
+    'A/B16':{ k: 4.13, dSum: 487, maxGrain: 16 }, // avg A16+B16, B20 Beispiel II & IV
+    'A32':  { k: 5.48, dSum: 352, maxGrain: 32 },
+    'B32':  { k: 4.20, dSum: 480, maxGrain: 32 },
+    'C32':  { k: 3.30, dSum: 570, maxGrain: 32 },
+    'A/B32':{ k: 4.84, dSum: 416, maxGrain: 32 }  // avg A32+B32
+};
+
+/**
+ * Korngruppen (Grain groups) per sieve line – typical mass percentages and
+ * fine-particle fractions validated against B20 Anhang worked examples.
+ *
+ * groups[]: fraction of total aggregate mass per grain size range
+ * fines0125: fraction of total aggregate mass that passes the 0.125 mm sieve
+ *            (used for Mehlkorngehalt calculation, B20 Section 8, Beispiel I p.14)
+ * fines0250: fraction passing 0.250 mm (Mehlkorn- und Feinstsandanteil)
+ *
+ * Sources:
+ *   B32  → B20 Beispiel I (p.13-14): groups 37/25/38, fines0125=0.04, fines0250=0.08
+ *   A/B16 → B20 Beispiel II (p.15): groups 45/8/47, fines0125=0.03, fines0250=0.06
+ *   A/B16 → B20 Beispiel IV (p.19): groups 38/22/40 (kies), fines confirmed 0.03
+ *   B16  → interpolated between B32 and A/B16
+ */
+export const GRAIN_GROUPS_BY_SIEBLINE = {
+    // Max grain 32 mm
+    'A32':  {
+        groups: [
+            { range: '0/2',   pct: 33 },
+            { range: '2/8',   pct: 27 },
+            { range: '8/32',  pct: 40 }
+        ],
+        fines0125: 0.03, fines0250: 0.06
+    },
+    'B32':  {
+        groups: [
+            { range: '0/2',   pct: 37 },
+            { range: '2/8',   pct: 25 },
+            { range: '8/32',  pct: 38 }
+        ],
+        fines0125: 0.04, fines0250: 0.08   // B20 Beispiel I confirmed
+    },
+    'A/B32':{
+        groups: [
+            { range: '0/2',   pct: 35 },
+            { range: '2/8',   pct: 26 },
+            { range: '8/32',  pct: 39 }
+        ],
+        fines0125: 0.035, fines0250: 0.07
+    },
+    'C32':  {
+        groups: [
+            { range: '0/2',   pct: 42 },
+            { range: '2/8',   pct: 23 },
+            { range: '8/32',  pct: 35 }
+        ],
+        fines0125: 0.05, fines0250: 0.10
+    },
+    // Max grain 16 mm
+    'A16':  {
+        groups: [
+            { range: '0/2',   pct: 40 },
+            { range: '2/8',   pct: 20 },
+            { range: '8/16',  pct: 40 }
+        ],
+        fines0125: 0.03, fines0250: 0.05
+    },
+    'B16':  {
+        groups: [
+            { range: '0/2',   pct: 38 },
+            { range: '2/8',   pct: 22 },
+            { range: '8/16',  pct: 40 }
+        ],
+        fines0125: 0.035, fines0250: 0.065
+    },
+    'A/B16':{
+        groups: [
+            { range: '0/2',   pct: 38 },  // avg Beispiel II (45) and IV (38) → 38 (kies)
+            { range: '2/8',   pct: 22 },
+            { range: '8/16',  pct: 40 }
+        ],
+        fines0125: 0.03, fines0250: 0.06  // B20 Beispiel II confirmed
+    },
+    'C16':  {
+        groups: [
+            { range: '0/2',   pct: 45 },
+            { range: '2/8',   pct: 20 },
+            { range: '8/16',  pct: 35 }
+        ],
+        fines0125: 0.04, fines0250: 0.08
+    },
+    // Max grain 8 mm
+    'A8':   {
+        groups: [
+            { range: '0/2',   pct: 50 },
+            { range: '2/8',   pct: 50 }
+        ],
+        fines0125: 0.03, fines0250: 0.06
+    },
+    'B8':   {
+        groups: [
+            { range: '0/2',   pct: 55 },
+            { range: '2/8',   pct: 45 }
+        ],
+        fines0125: 0.04, fines0250: 0.08
+    },
+    'C8':   {
+        groups: [
+            { range: '0/2',   pct: 60 },
+            { range: '2/8',   pct: 40 }
+        ],
+        fines0125: 0.05, fines0250: 0.10
+    }
 };
 
 /**
@@ -184,6 +294,77 @@ export function calculateFractionMasses(fractions, aggregateType) {
         mass: Math.round(fraction.volume * density),
         density: density
     }));
+}
+
+/**
+ * Get Korngruppen (grain groups) for a given sieve line.
+ * Returns typical mass-% fractions as defined in GRAIN_GROUPS_BY_SIEBLINE.
+ * @param {string} siebline - Sieve line identifier (e.g., 'B32', 'A/B16')
+ * @returns {object|null} Grain group data or null if not found
+ */
+export function getGrainGroups(siebline) {
+    return GRAIN_GROUPS_BY_SIEBLINE[siebline] || null;
+}
+
+/**
+ * Get the aggregate fine fraction ≤ 0.125 mm for Mehlkorngehalt calculation.
+ * @param {string} siebline - Sieve line identifier
+ * @returns {number} Fraction of total aggregate mass passing 0.125 mm (e.g. 0.04)
+ */
+export function getFinesFraction(siebline) {
+    const data = GRAIN_GROUPS_BY_SIEBLINE[siebline];
+    return data ? data.fines0125 : 0.04; // fallback to B32 value
+}
+
+/**
+ * Distribute total aggregate mass into Korngruppen with moisture correction.
+ * Returns ready-to-display rows for the mix design output.
+ *
+ * @param {number} totalMassKg - Total dry aggregate mass in kg/m³
+ * @param {string} siebline    - Sieve line identifier (e.g., 'B32')
+ * @param {number[]} moistures - Moisture [%] per grain group (same order as groups[])
+ * @returns {object[]|null} Array of { range, pct, massDry, moisturePct, massMoist } or null
+ */
+export function distributeAggregateBySiebline(totalMassKg, siebline, moistures = []) {
+    const data = GRAIN_GROUPS_BY_SIEBLINE[siebline];
+    if (!data) return null;
+
+    return data.groups.map((g, i) => {
+        const massDry = Math.round(totalMassKg * g.pct / 100);
+        const mPct = moistures[i] !== undefined ? moistures[i] : getDefaultMoisture(i);
+        const massMoist = Math.round(massDry * (1 + mPct / 100));
+        return {
+            range: g.range,
+            pct: g.pct,
+            massDry,
+            moisturePct: mPct,
+            massMoist
+        };
+    });
+}
+
+/**
+ * Default surface moisture [%] per grain group index.
+ * Based on B20 typical values: sand (0/2) ≈ 5%, medium (2/8) ≈ 3%, coarse ≈ 2%
+ */
+export function getDefaultMoisture(groupIndex) {
+    const defaults = [5, 3, 2, 1];
+    return defaults[groupIndex] !== undefined ? defaults[groupIndex] : 2;
+}
+
+/**
+ * Calculate Zugabewasser (water to add on site) from total water demand minus
+ * moisture already present in the aggregates.
+ * @param {number} totalWater     - Total concrete water demand in l/m³
+ * @param {object[]} korngruppen  - Output from distributeAggregateBySiebline()
+ * @returns {number} Zugabewasser in l/m³
+ */
+export function calculateZugabewasser(totalWater, korngruppen) {
+    if (!korngruppen || korngruppen.length === 0) return totalWater;
+    const moistureWater = korngruppen.reduce((sum, kg) => {
+        return sum + (kg.massDry * kg.moisturePct / 100);
+    }, 0);
+    return Math.round(totalWater - moistureWater);
 }
 
 /**

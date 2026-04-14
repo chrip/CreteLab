@@ -362,47 +362,6 @@ export function calculateEquivalentWzWithBoth(w, z, f, s) {
 }
 
 /**
- * Validate underwater concrete recipe constraints.
- *
- * @param {object} params
- * @param {number} params.cement - cement mass (kg/m³)
- * @param {number} params.flyAsh - fly ash mass (kg/m³)
- * @param {number} params.wzEquivalent - equivalent w/z ratio
- * @param {number} params.finesContent - fines mass (kg/m³)
- * @param {number} [params.kValue=0.7] - fly ash k-value (default 0.7 underwater)
- * @returns {{valid: boolean, errors: string[]}}
- */
-export function validateUnderwaterConcrete({cement, flyAsh, wzEquivalent, finesContent, kValue = 0.7}) {
-    const errors = [];
-
-    if (cement === undefined || flyAsh === undefined || wzEquivalent === undefined || finesContent === undefined) {
-        errors.push('Missing required parameters');
-        return { valid: false, errors };
-    }
-
-    if (cement + flyAsh < 350) {
-        errors.push('Combined cement + fly ash must be at least 350 kg/m³');
-    }
-
-    if (wzEquivalent > 0.6) {
-        errors.push('Equivalent w/z must be ≤ 0.60');
-    }
-
-    if (finesContent < 350) {
-        errors.push('Fines content must be ≥ 350 kg/m³');
-    }
-
-    if (kValue !== 0.7) {
-        errors.push('Underwater fly ash k-value should be 0.7 for this recipe');
-    }
-
-    return {
-        valid: errors.length === 0,
-        errors
-    };
-}
-
-/**
  * Calculate required amount of liquid admixture (Zusatzmittel) based on BV dosing range
  * Based on B20 Section 7.1: Dosierbereich bis X M.-% von Zementgewicht
  * For BV=92 with max 0,5% from cement content z = 287 kg/m³:

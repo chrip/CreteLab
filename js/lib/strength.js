@@ -4,13 +4,42 @@
 /**
  * Cement strength classes according to DIN EN 197-1
  * Used for Walzkurven (Roll curves) calculations
+ * f_cm = A * (z/w)^n  (Bild 1, B20)
  */
+// A and n calibrated to the LOWER BOUNDARY of B20 Bild 1 (design/conservative reading).
+// Calibration points from B20 worked examples (Anhang):
+//   CEM I 42.5 N: f_cm,dry,cube=34.6 → w/z=0.68  (Beispiel I, p.3-4)
+//     → A=34.6/(1/0.68)^0.67 = 34.6/1.296 ≈ 27
+//   CEM I 52.5 R: f_cm,dry,cube=59 → w/z=0.52     (Beispiel III, p.15-17)
+//     → A=59/(1/0.52)^0.67 = 59/1.551 ≈ 38
 export const CEMENT_CLASSES = {
-    '42.5': { name: 'CEM I 42.5 N', A: 37, n: 0.67 },
-    '42.5R': { name: 'CEM I 42.5 R', A: 41, n: 0.67 }, // Rapid hardening
-    '52.5': { name: 'CEM I 52.5 N', A: 47, n: 0.67 },
-    '52.5R': { name: 'CEM I 52.5 R', A: 52, n: 0.67 }, // Rapid hardening
-    '32.5': { name: 'CEM I 32.5 N', A: 29, n: 0.67 }
+    '32.5':  { name: 'CEM I 32.5 N', A: 19, n: 0.67 },
+    '42.5':  { name: 'CEM I 42.5 N', A: 27, n: 0.67 },
+    '42.5R': { name: 'CEM I 42.5 R', A: 31, n: 0.67 },
+    '52.5':  { name: 'CEM I 52.5 N', A: 35, n: 0.67 },
+    '52.5R': { name: 'CEM I 52.5 R', A: 38, n: 0.67 }
+};
+
+/**
+ * Cement types used in practice (Zementarten) – B20 Section 7.2
+ * Combines DIN designation, Walzkurven key, density, and fly ash limit factor.
+ *
+ * faMaxFactor: max fly ash that may be credited on w/z-Wert
+ *   0.33 → Zemente ohne P, V und D  (CEM I, CEM II/A-S, CEM II/A-LL, …)
+ *   0.25 → Zemente mit P oder V, aber ohne D
+ *   0.15 → Zemente mit D
+ */
+export const CEMENT_TYPES = {
+    'CEM I 32.5 N':    { walzkurveKey: '32.5',  density: 3.1, faMaxFactor: 0.33 },
+    'CEM I 42.5 N':    { walzkurveKey: '42.5',  density: 3.1, faMaxFactor: 0.33 },
+    'CEM I 42.5 R':    { walzkurveKey: '42.5R', density: 3.1, faMaxFactor: 0.33 },
+    'CEM I 52.5 N':    { walzkurveKey: '52.5',  density: 3.1, faMaxFactor: 0.33 },
+    'CEM I 52.5 R':    { walzkurveKey: '52.5R', density: 3.1, faMaxFactor: 0.33 },
+    'CEM II/A-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
+    'CEM II/B-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
+    'CEM II/A-LL 42.5 N':{ walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.33 },
+    'CEM III/A 42.5 N':  { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
+    'CEM III/B 42.5 N':  { walzkurveKey: '42.5', density: 2.9, faMaxFactor: 0.25 }
 };
 
 /**
@@ -127,6 +156,39 @@ export function recommendStrengthClass(useCase, exposureClass = null) {
  */
 export function getCementClass(classKey) {
     return CEMENT_CLASSES[classKey] || null;
+}
+
+/**
+ * Calculate w/z ratio from a target compressive strength using Walzkurven (inverse)
+ * w/z = (A / f_cm_target)^(1/n)
+ * @param {number} f_cm_target - Target dry-cube mean strength in N/mm²
+ * @param {string} cementClassKey - Cement class key (e.g., '42.5')
+ * @returns {number|null} Required w/z ratio or null if invalid
+ */
+export function calculateWzFromTargetStrength(f_cm_target, cementClassKey) {
+    if (!f_cm_target || f_cm_target <= 0) return null;
+    const cementClass = CEMENT_CLASSES[cementClassKey];
+    if (!cementClass) return null;
+    // w/z = (A / f_cm)^(1/n)
+    const wz = Math.pow(cementClass.A / f_cm_target, 1 / cementClass.n);
+    return Math.round(wz * 1000) / 1000; // 3 decimal places
+}
+
+/**
+ * Get all available cement types with their metadata
+ * @returns {string[]} Array of cement type names
+ */
+export function getAvailableCementTypes() {
+    return Object.keys(CEMENT_TYPES);
+}
+
+/**
+ * Get cement type metadata
+ * @param {string} typeName - Cement type name (e.g., 'CEM I 42.5 N')
+ * @returns {object|null} Cement type data or null
+ */
+export function getCementType(typeName) {
+    return CEMENT_TYPES[typeName] || null;
 }
 
 /**

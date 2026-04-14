@@ -108,7 +108,7 @@ export function checkFinesLimits(fines, exposureClass) {
 /**
  * Calculate paste volume (Zementleimgehalt) in kg/m³
  * Paste volume = Zement + Zusatzstoffe (Flugasche, Silikastaub)
- * Recommended minimum: ≥ 320 kg/m³ for XC4/XF2/XF4, ≥ 350 kg/m³ for underwater concrete
+ * Recommended minimum: ≥ 320 kg/m³ for XC4/XF2/XF4 (B20 Tafel 9)
  * 
  * @param {number} cement - Cement content in kg/m³
  * @param {number} flyAsh - Fly ash content in kg/m³ (optional)

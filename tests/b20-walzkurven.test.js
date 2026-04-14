@@ -19,7 +19,9 @@ describe('B20 cement strength classes', () => {
         const result = getCementClass('42.5');
         assert.ok(result);
         assert.strictEqual(result.name, 'CEM I 42.5 N');
-        assert.strictEqual(result.A, 37);
+        // A=27 calibrated to lower boundary of B20 Bild 1
+        // Calibration: Beispiel I w/z=0.68 → f_cm,dry,cube=34.6 → A≈27
+        assert.strictEqual(result.A, 27);
         assert.strictEqual(result.n, 0.67);
     });
 
@@ -27,7 +29,8 @@ describe('B20 cement strength classes', () => {
         const result = getCementClass('52.5');
         assert.ok(result);
         assert.strictEqual(result.name, 'CEM I 52.5 N');
-        assert.strictEqual(result.A, 47);
+        // A=35 calibrated to lower boundary of B20 Bild 1
+        assert.strictEqual(result.A, 35);
         assert.strictEqual(result.n, 0.67);
     });
 
@@ -35,7 +38,8 @@ describe('B20 cement strength classes', () => {
         const result = getCementClass('52.5R');
         assert.ok(result);
         assert.strictEqual(result.name, 'CEM I 52.5 R');
-        assert.strictEqual(result.A, 52);
+        // A=38 calibrated from Beispiel III: w/z=0.52 → f_cm,dry,cube=59
+        assert.strictEqual(result.A, 38);
     });
 
     it('returns null for unknown cement class', () => {
@@ -45,38 +49,38 @@ describe('B20 cement strength classes', () => {
 
 describe('B20 Walzkurven calculation (no supplementary materials)', () => {
     it('calculates strength for CEM I 42.5 N with w/z = 0.5', () => {
-        // f_cm = 37 * (1/0.5)^0.67 = 37 * 2^0.67 ≈ 37 * 1.596 ≈ 59.0
+        // f_cm = 27 * (1/0.5)^0.67 = 27 * 2^0.67 ≈ 27 * 1.591 ≈ 43.0
         const result = calculateStrengthFromWalzkurven(0.5, '42.5');
         assert.ok(result);
-        assert.ok(Math.abs(result - 59.0) < 1.0);
+        assert.ok(Math.abs(result - 43.0) < 1.0);
     });
 
     it('calculates strength for CEM I 42.5 N with w/z = 0.6', () => {
-        // f_cm = 37 * (1/0.6)^0.67 = 37 * 1.667^0.67 ≈ 37 * 1.428 ≈ 52.8
+        // f_cm = 27 * (1/0.6)^0.67 = 27 * 1.667^0.67 ≈ 27 * 1.408 ≈ 38.0
         const result = calculateStrengthFromWalzkurven(0.6, '42.5');
         assert.ok(result);
-        assert.ok(Math.abs(result - 52.8) < 1.0);
+        assert.ok(Math.abs(result - 38.0) < 1.0);
     });
 
     it('calculates strength for CEM I 52.5 N with w/z = 0.5', () => {
-        // f_cm = 47 * (1/0.5)^0.67 = 47 * 2^0.67 ≈ 47 * 1.596 ≈ 75.0
+        // f_cm = 35 * (1/0.5)^0.67 = 35 * 2^0.67 ≈ 35 * 1.591 ≈ 55.7
         const result = calculateStrengthFromWalzkurven(0.5, '52.5');
         assert.ok(result);
-        assert.ok(Math.abs(result - 75.0) < 1.0);
+        assert.ok(Math.abs(result - 55.7) < 1.0);
     });
 
     it('calculates strength for CEM I 52.5 N with w/z = 0.6', () => {
-        // f_cm = 47 * (1/0.6)^0.67 ≈ 47 * 1.428 ≈ 67.1
+        // f_cm = 35 * (1/0.6)^0.67 ≈ 35 * 1.408 ≈ 49.3
         const result = calculateStrengthFromWalzkurven(0.6, '52.5');
         assert.ok(result);
-        assert.ok(Math.abs(result - 67.1) < 1.0);
+        assert.ok(Math.abs(result - 49.3) < 1.0);
     });
 
     it('calculates strength for CEM I 42.5 N with w/z = 0.55 (typical value)', () => {
-        // f_cm = 37 * (1/0.55)^0.67 ≈ 37 * 1.818^0.67 ≈ 37 * 1.512 ≈ 55.9
+        // f_cm = 27 * (1/0.55)^0.67 ≈ 27 * 1.818^0.67 ≈ 27 * 1.493 ≈ 40.3
         const result = calculateStrengthFromWalzkurven(0.55, '42.5');
         assert.ok(result);
-        assert.ok(Math.abs(result - 55.9) < 1.0);
+        assert.ok(Math.abs(result - 40.3) < 1.0);
     });
 
     it('returns null for invalid w/z ratio (zero)', () => {
@@ -98,19 +102,21 @@ describe('B20 Walzkurven calculation (no supplementary materials)', () => {
 
 describe('B20 Walzkurven with fly ash (supplementary materials)', () => {
     it('calculates strength reduction with 10% fly ash replacement', () => {
-        // With 10% fly ash: f_cm = 37 * 0.98 * (1/0.5)^0.67 ≈ 57.8
+        // effectiveA = 27 * (1 - 0.1*0.2) = 27 * 0.98 = 26.46
+        // f_cm = 26.46 * (1/0.5)^0.67 ≈ 26.46 * 1.591 ≈ 42.1
         const result = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.1, 0);
         assert.ok(result);
-        // Should be slightly lower than without fly ash (~59.0)
-        assert.ok(Math.abs(result - 57.8) < 1.0);
+        // Should be slightly lower than without fly ash (~43.0)
+        assert.ok(Math.abs(result - 42.1) < 1.0);
     });
 
     it('calculates strength with 20% fly ash replacement', () => {
-        // With 20% fly ash: f_cm = 37 * 0.96 * (1/0.5)^0.67 ≈ 56.6
+        // effectiveA = 27 * (1 - 0.2*0.2) = 27 * 0.96 = 25.92
+        // f_cm = 25.92 * (1/0.5)^0.67 ≈ 25.92 * 1.591 ≈ 41.3
         const result = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.2, 0);
         assert.ok(result);
         // Should be lower than with 10% fly ash
-        assert.ok(Math.abs(result - 56.6) < 1.0);
+        assert.ok(Math.abs(result - 41.3) < 1.0);
     });
 
     it('returns same result as Walzkurven when no supplementary materials', () => {
@@ -125,27 +131,28 @@ describe('B20 Walzkurven with fly ash (supplementary materials)', () => {
 });
 
 describe('B20 Walzkurven integration with concrete strength classes', () => {
-    it('verifies C30/37 achievable with CEM I 42.5 N at w/z = 0.55', () => {
-        // For C30/37, we need f_cm >= 38 + margin ≈ 46-50
-        const strength = calculateStrengthFromWalzkurven(0.55, '42.5');
-        
-        // Should be above typical target for C30/37 (around 46 N/mm²)
-        assert.ok(strength >= 45);
+    it('verifies C20/25 achievable with CEM I 42.5 N at w/z = 0.68 (B20 Beispiel I)', () => {
+        // B20 Beispiel I: C20/25, CEM I/II 42.5N, w/z=0.68 → f_cm,dry,cube=34.6
+        const strength = calculateStrengthFromWalzkurven(0.68, '42.5');
+        // Should be at or above the Beispiel I target of 34.6 N/mm²
+        assert.ok(strength >= 33 && strength <= 36);
     });
 
-    it('verifies C40/50 achievable with CEM I 52.5 N at w/z = 0.5', () => {
-        // For C40/50, we need f_cm >= 48
-        const strength = calculateStrengthFromWalzkurven(0.5, '52.5');
-        
-        assert.ok(strength >= 70); // Should be well above 48 N/mm²
+    it('verifies C35/45 achievable with CEM I 52.5 R at w/z = 0.52 (B20 Beispiel III)', () => {
+        // B20 Beispiel III: C35/45, CEM I 52.5R, w/z=0.52 → f_cm,dry,cube=59
+        const strength = calculateStrengthFromWalzkurven(0.52, '52.5R');
+        // Should match the B20 Beispiel III calibration point: f_cm,dry,cube=59
+        assert.ok(Math.abs(strength - 59) < 1.5);
     });
 
     it('calculates required w/z for target strength with CEM I 42.5 N', () => {
-        const targetStrength = 46; // For C30/37
-        
-        // f_cm = A * (z/w)^n => z/w = (f_cm/A)^(1/n) => w/z = 1/(f_cm/A)^(1/n)
-        const wzRatio = 1 / Math.pow(targetStrength / 37, 1 / 0.67);
-        
-        assert.ok(wzRatio > 0.4 && wzRatio < 0.8);
+        const targetStrength = 34.6; // B20 Beispiel I target for C20/25
+
+        // f_cm = A * (z/w)^n => w/z = (A/f_cm)^(1/n)
+        // With A=27, n=0.67: w/z = (27/34.6)^(1/0.67)
+        const wzRatio = 1 / Math.pow(targetStrength / 27, 1 / 0.67);
+
+        // Should be close to Beispiel I w/z=0.68
+        assert.ok(wzRatio > 0.6 && wzRatio < 0.8);
     });
 });
