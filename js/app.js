@@ -421,7 +421,9 @@ function calculateRecipe() {
     const aggregateMass = Math.round(vg * rhoG);
 
     // ── Step 7: Korngruppen und Zugabewasser ──────────────────────────────────
-    const moistures = [appState.moisture0_2, appState.moisture2_8, appState.moisture8plus];
+    const moistures = appState.useMoisture
+        ? [appState.moisture0_2, appState.moisture2_8, appState.moisture8plus]
+        : [0, 0, 0];
     const korngruppen = distributeAggregateBySiebline(aggregateMass, appState.siebline, moistures);
     const zugabewasser = korngruppen
         ? calculateZugabewasser(waterTarget, korngruppen)
@@ -675,7 +677,7 @@ function initialize() {
     elements.useFlyAsh.addEventListener('change', updateOptionalSections);
     elements.useSilicaFume.addEventListener('change', updateOptionalSections);
     elements.useWaterproofing.addEventListener('change', updateOptionalSections);
-    elements.useMoisture.addEventListener('change', updateOptionalSections);
+    elements.useMoisture.addEventListener('change', () => { updateOptionalSections(); calculateRecipe(); });
 
     elements.volume.addEventListener('input', calculateRecipe);
 
