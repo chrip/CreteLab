@@ -1,7 +1,7 @@
 # 🏗️ CreteLab - Open Source Betonrezept Rechner
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Pages](https://img.shields.io/static/v1?label=Deployed+on&message=GitHub+Pages&color=brightgreen)](https://chrip.github.io/cretelab/)
+[![GitHub Pages](https://img.shields.io/static/v1?label=Deployed+on&message=GitHub+Pages&color=brightgreen)](https://chrip.github.io/CreteLab/)
 
 **CreteLab** ist ein Open-Source Betonrezept Rechner, der auf dem [Zement-Merkblatt B 20](https://www.zementportal.de/de/fachwissen/publikationen/zement-merkblaetter-zmb/zmb-b20/) basiert. Das Tool hilft Handwerkern und Hobby-Bauleuten dabei, die richtigen Betonzusammensetzungen für verschiedene Anwendungen zu berechnen – komplett kostenlos, ohne Server, direkt im Browser.
 
@@ -13,14 +13,12 @@
 - ✅ **Druckfestigkeitsklassen C 8/10 bis C 100/115** - Volle Unterstützung aller DIN EN 206 Klassen
 - ✅ **Expositionsklassen XC1-XC4, XF1-XF4, XD1-XD3, XS1-XS3** - Für alle Umgebungsbedingungen
 - ✅ **Zusatzstoffe** - Flugasche und Silikastaub mit k-Wert-Berechnung
-- ✅ **Verschiedene Gesteinskörnungen** - Von Leichtbeton bis Schwergewichtsbeton
+- ✅ **Korngruppen & Zugabewasser** - Automatische Aufteilung nach Sieblinie mit Feuchtekorrektur
 - ✅ **Offline nutzbar** - Einmal geladen, immer verfügbar
 
 ## 📱 Verwendungszwecke
 
-Das Tool unterstützt folgende Anwendungsfälle:
-
-| Verwendungszweck | Empfohlene Klasse | Mindest-Festigkeit |
+| Verwendungszweck | Empfohlene Klasse | Expositionsklasse |
 |-----------------|-------------------|-------------------|
 | Gartenfundament | C 20/25 | XC1 |
 | Tischplatte / Balkon | C 25/30 | XC2 |
@@ -29,51 +27,20 @@ Das Tool unterstützt folgende Anwendungsfälle:
 | Bodenplatte | C 20/25 | XC2 |
 | Treppe | C 25/30 | XF1 |
 
-## 🚀 Installation & Deployment
+## 🚀 Verwenden
 
-### Lokal verwenden (ohne Server)
+### Direkt im Browser
 
-Da CreteLab komplett client-seitig ist, können Sie die Dateien einfach herunterladen und im Browser öffnen:
+👉 **[chrip.github.io/CreteLab](https://chrip.github.io/CreteLab/)**
+
+### Lokal ausführen
 
 ```bash
-# Repository klonen
-git clone https://github.com/chrip/cretelab.git
-cd cretelab
-
-# Lokal im Browser öffnen
-open index.html  # macOS
-start index.html  # Windows
-xdg-open index.html  # Linux
+git clone https://github.com/chrip/CreteLab.git
+cd CreteLab
+python3 -m http.server 8000
+# Browser: http://localhost:8000
 ```
-
-### GitHub Pages Deployment
-
-CreteLab ist für [GitHub Pages](https://pages.github.com/) optimiert:
-
-1. **Repository erstellen** (falls noch nicht geschehen):
-   ```bash
-   cd cretelab
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/chrip/cretelab.git
-   git push -u origin main
-   ```
-
-2. **GitHub Pages aktivieren**:
-   - Repository → Settings → Pages
-   - Source: `main` branch, `/ (root)` folder
-   - Save
-
-3. **Automatisches Deployment** (via GitHub Actions):
-   
-   Das Workflow-File `.github/workflows/deploy.yml` ist bereits enthalten und automatisch deployed bei jedem Push auf den main-Zweig.
-
-4. **URL aufrufen**:
-   ```
-   https://<yourusername>.github.io/cretelab/
-   ```
 
 ## 📖 Berechnungsmethoden
 
@@ -116,7 +83,7 @@ wobei:
   z = Zementgehalt [kg/m³]
   ρz = Rohdichte Zement (~3.0 kg/dm³)
   w = Wasserinhalt [l/m³]
-  ρw = Wasserticht (1.0 kg/dm³)
+  ρw = Rohdichte Wasser (1.0 kg/dm³)
   g = Gesteinskorngehalt [kg/m³]
   ρg = Rohdichte Gestein [kg/dm³]
   f = Zusatzstoffe [kg/m³]
@@ -128,7 +95,6 @@ wobei:
 **Flugasche (k_f = 0.4):**
 - Bei Zementen ohne P, V, D: f ≤ 0.33·z
 - Bei Zementen mit P oder V, aber ohne D: f ≤ 0.25·z
-- Bei Zement mit D: f ≤ 0.15·z
 
 **Silikastaub (k_s = 1.0):**
 - Bei allen Zementarten: s ≤ 0.11·z
@@ -141,104 +107,54 @@ Mit Zusatzstoffen wird der effektive w/z berechnet:
 (w/z)_eq = w / (z + k·f)
 ```
 
-Für Flugasche mit k=0.4 und 50 kg/m³ bei 300 kg Zement:
-```
-(w/z)_eq = w / (300 + 0.4×50) = w / 320
-```
-
 ## 🛠️ Entwicklung
 
 ### Projektstruktur
 
 ```
-cretelab/
-├── index.html              # Hauptseite mit Benutzeroberfläche
+CreteLab/
+├── index.html                  # Benutzeroberfläche
 ├── css/
-│   └── styles.css          # Responsive CSS Styles
+│   └── styles.css              # Responsive Styles
 ├── js/
-│   ├── app.js              # Hauptanwendungslogik
+│   ├── app.js                  # Hauptanwendungslogik
 │   └── lib/
-│       ├── strength.js     # Druckfestigkeitsklassen (Tafel 1)
-│       ├── exposure.js     # Expositionsklassen (Tafel 2)
-│       ├── consistency.js  # Konsistenz & Wasseranspruch (Tafel 3)
-│       ├── densities.js    # Rohdichten (Tafel 4, 5, 6)
-│       └── additives.js    # Zusatzstoffe (Abschnitt 7)
-├── .github/
-│   └── workflows/
-│       └── deploy.yml      # GitHub Actions Deployment
-├── LICENSE                 # MIT License
-└── README.md               # Diese Datei
+│       ├── strength.js         # Druckfestigkeitsklassen & Walzkurven
+│       ├── exposure.js         # Expositionsklassen
+│       ├── consistency.js      # Konsistenz & Wasseranspruch
+│       ├── densities.js        # Rohdichten der Gesteinskörnungen
+│       ├── additives.js        # Zusatzstoffe & Zusatzmittel
+│       ├── fines-content.js    # Mehlkorngehalt & Leimgehalt
+│       └── aggregate-gradation.js  # Korngruppen & Zugabewasser
+├── assets/                     # Bilder & Icons
+├── tests/                      # Automatisierte Tests (163 Tests)
+├── .github/workflows/
+│   └── deploy.yml              # CI/CD: Tests + GitHub Pages Deploy
+├── LICENSE
+└── README.md
 ```
 
-### Lokale Entwicklung
-
-Um eine lokale Entwicklungsumgebung zu starten:
+### Tests ausführen
 
 ```bash
-# Python 3 (empfohlen)
-python3 -m http.server 8000
-
-# Oder Node.js mit simple-http-server
-npx serve .
-
-# Dann im Browser öffnen:
-http://localhost:8000
+npm install
+npm test
 ```
 
-### Tests
-
-Für einfache Manuelle Tests können Sie die JavaScript-Konsolen-Funktionen verwenden oder die Datei direkt im Browser öffnen.
+163 Tests in 49 Suites, abgedeckt: Walzkurven, Expositionsklassen, Konsistenzklassen, SCM-Korrekturen, Korngruppen, Zugabewasser.
 
 ## 📄 Lizenz
 
-Dieses Projekt steht unter der **MIT License**. Das bedeutet:
-
-- ✅ Freie Nutzung für kommerzielle und private Zwecke
-- ✅ Modification und Distribution erlaubt
-- ✅ Private Weiterentwicklung muss nicht geteilt werden
-- ⚠️ Keine Gewährleistung, Urheber muss genannt werden
-
-Siehe [LICENSE](LICENSE) für Details.
-
-## 🤝 Contributing
-
-Beiträge sind willkommen! Bitte folgen Sie diesen Schritten:
-
-1. Fork das Repository
-2. Erstellen Sie einen Feature Branch (`git checkout -b feature/amazing-feature`)
-3. Committen Sie Ihre Änderungen (`git commit -m 'Add amazing feature'`)
-4. Pushen Sie den Branch (`git push origin feature/amazing-feature`)
-5. Öffnen Sie einen Pull Request
-
-### Coding Guidelines
-
-- Verwenden Sie ES6+ JavaScript Module
-- Kommentare auf Deutsch oder Englisch (konsistent)
-- Follow the existing code style
-- Testen Sie Ihre Änderungen vor dem Commit
+Dieses Projekt steht unter der **MIT License**. Siehe [LICENSE](LICENSE) für Details.
 
 ## 📚 Quellen & Referenzen
 
-Dieses Projekt basiert auf folgenden Normen und Publikationen:
-
 1. **DIN EN 206** - Beton - Festlegung, Eigenschaften, Herstellung und Konformität
 2. **Zement-Merkblatt B 20** - Berechnung der Betonzusammensetzung
-   [Download PDF](https://www.zementportal.de/de/fachwissen/publikationen/zement-merkblaetter-zmb/zmb-b20/)
+   ([Download PDF](https://www.zementportal.de/de/fachwissen/publikationen/zement-merkblaetter-zmb/zmb-b20/))
 3. **DIN 1045-2** - Tragwerke aus Beton, Stahlbeton und Spannbeton
-
-## 🙏 Danksagungen
-
-- **Deutsche Zementindustrie** für das umfassende Merkblatt B 20
-- **GitHub** für die kostenlose Hosting-Infrastruktur via GitHub Pages
-- **Open Source Community** für Inspiration und Best Practices
 
 ## 📧 Kontakt & Support
 
-Bei Fragen oder Problemen:
-
-- [Issues](https://github.com/chrip/cretelab/issues) auf GitHub
-- [Discussions](https://github.com/chrip/cretelab/discussions) für allgemeine Fragen
-
----
-
-**CreteLab** - Open Source Betonrezept Rechner | [MIT License](LICENSE) | Built with ❤️ for the construction community
+- [Issues](https://github.com/chrip/CreteLab/issues) für Fehler und Fragen
+- [Discussions](https://github.com/chrip/CreteLab/discussions) für allgemeine Diskussionen
