@@ -8,6 +8,52 @@ import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivale
 import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPasteRequirements, checkCemIFlyAshSilicaFume } from './lib/fines-content.js';
 import { getFinesFraction, distributeAggregateBySiebline, calculateZugabewasser, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
 
+const SIEBLINE_LABELS = {
+    'A8':    'A8 – Größtkorn 8 mm, wenig Sand (weniger Wasser)',
+    'B8':    'B8 – Größtkorn 8 mm, ausgewogen',
+    'C8':    'C8 – Größtkorn 8 mm, viel Sand (mehr Wasser)',
+    'A16':   'A16 – Größtkorn 16 mm, wenig Sand',
+    'B16':   'B16 – Größtkorn 16 mm, ausgewogen',
+    'C16':   'C16 – Größtkorn 16 mm, viel Sand',
+    'A/B16': 'A/B16 – Größtkorn 16 mm, Mittelwert A+B',
+    'A32':   'A32 – Größtkorn 32 mm, wenig Sand',
+    'B32':   'B32 – Größtkorn 32 mm, ausgewogen (Standard)',
+    'C32':   'C32 – Größtkorn 32 mm, viel Sand',
+    'A/B32': 'A/B32 – Größtkorn 32 mm, Mittelwert A+B'
+};
+
+const SIEBLINE_HINTS = {
+    '8':  'Für dünne Bauteile < 10 cm und dicht bewehrte Konstruktionen.',
+    '16': 'Standard für Wände, Decken, Stützen und Treppen.',
+    '32': 'Für Fundamente, Bodenplatten und massige Bauteile.'
+};
+
+const CONSISTENCY_LABELS = {
+    'C0': 'C0 – sehr steif, nur maschinell verdichtbar',
+    'C1': 'C1 – steif, einfache Fundamente ohne Bewehrung',
+    'F1': 'F1 – steif, einfache Fundamente ohne Bewehrung',
+    'C2': 'C2 – plastisch, gut verdichtbar mit Stochern',
+    'F2': 'F2 – plastisch, gut verdichtbar mit Stochern',
+    'C3': 'C3 – weich, Standard für die meisten Anwendungen',
+    'F3': 'F3 – weich, Standard für die meisten Anwendungen ✓',
+    'F4': 'F4 – sehr weich, Fließmittel erforderlich',
+    'F5': 'F5 – fließfähig, Fließmittel erforderlich',
+    'F6': 'F6 – sehr fließfähig, Fließmittel erforderlich'
+};
+
+const CONSISTENCY_HINTS = {
+    'C0': 'Sehr trocken, kaum von Hand verarbeitbar. Nur für Rütteltische oder Betonfertigteile.',
+    'C1': 'Trockener Beton, hält Form ohne Schalung. Für einfache Wegplatten oder Pflasterbettung.',
+    'F1': 'Trockener Beton, hält Form ohne Schalung. Für einfache Wegplatten oder Pflasterbettung.',
+    'C2': 'Gut verdichtbar mit Stocherstab. Typisch für Fundamente und Bodenplatten.',
+    'F2': 'Gut verdichtbar mit Stocherstab. Typisch für Fundamente und Bodenplatten.',
+    'C3': 'Fließt leicht in die Schalung, einfach zu verarbeiten. DIY-Standard.',
+    'F3': 'Fließt leicht in die Schalung, einfach zu verarbeiten. DIY-Standard.',
+    'F4': 'Sehr fließfähig – Fließmittel (FM) zwingend erforderlich. Für dicht bewehrte Bauteile.',
+    'F5': 'Selbstverdichtend – Fließmittel (FM) zwingend erforderlich. Für Sichtbeton.',
+    'F6': 'Sehr dünnflüssig – Fließmittel (FM) zwingend erforderlich. Spezialanwendungen.'
+};
+
 const USE_CASES = {
     cheap:       { label: 'Einfach – Fundamente, Verfüllung (C20/25)', strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Granit',      admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
     standard:    { label: 'Standard – Wände, Decken, Treppen (C25/30)', strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Granit',      admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
@@ -259,24 +305,25 @@ function updateHints() {
     const sieb = SIEBLINIES[siebKey];
     if (elements.sieblinieHint) {
         const maxGrain = siebKey.replace(/[A-Z/]/g, '') || '?';
+        const usageHint = SIEBLINE_HINTS[maxGrain] || '';
         elements.sieblinieHint.textContent = sieb
-            ? `Max. Korngröße ${maxGrain} mm | k = ${sieb.k} | Wasserbedarf ${sieb.k < 3.5 ? 'niedrig' : sieb.k < 4.5 ? 'mittel' : 'hoch'}`
+            ? `k = ${sieb.k} | ${usageHint}`
             : 'Sieblinie nicht gefunden.';
     }
 
-    // Consistency class hint – warn when F4-F6 requires FM
+    // Consistency class hint
     const cons = elements.consistencyClass.value;
     const admForHint = elements.admixtureType.value;
     const consHintEl = document.getElementById('consistencyHint');
     if (consHintEl) {
         if (['F4', 'F5', 'F6'].includes(cons) && admForHint !== 'FM') {
-            consHintEl.textContent = `${cons}: Fließmittel (FM) nach B20 erforderlich – bitte unter "Verflüssigungsmittel" FM wählen.`;
+            consHintEl.textContent = `Fließmittel (FM) zwingend erforderlich – bitte unter "Verflüssigungsmittel" FM wählen.`;
             consHintEl.style.color = '#c0392b';
         } else if (['F4', 'F5', 'F6'].includes(cons) && admForHint === 'FM') {
-            consHintEl.textContent = `${cons} + FM: Konsistenz wird durch Fließmittel erzeugt – Wasseransatz wie F3, FM reduziert Wasser und erhöht Fließfähigkeit.`;
+            consHintEl.textContent = `${CONSISTENCY_HINTS[cons] || ''} Wasseransatz wie F3, FM reduziert Wasser und erhöht Fließfähigkeit.`;
             consHintEl.style.color = '#27ae60';
         } else {
-            consHintEl.textContent = '';
+            consHintEl.textContent = CONSISTENCY_HINTS[cons] || '';
             consHintEl.style.color = '';
         }
     }
@@ -709,9 +756,9 @@ function initialize() {
 
     // Build sieve line options with A/B16 and A/B32 included
     const sieblineOptions = Object.keys(GRAIN_GROUPS_BY_SIEBLINE).sort();
-    buildSelectOptions(elements.siebline, sieblineOptions.map(v => ({ value: v, label: v })), 'B32');
+    buildSelectOptions(elements.siebline, sieblineOptions.map(v => ({ value: v, label: SIEBLINE_LABELS[v] || v })), 'B32');
 
-    buildSelectOptions(elements.consistencyClass, getAvailableConsistencyClasses().map(value => ({ value, label: value })), 'F3');
+    buildSelectOptions(elements.consistencyClass, getAvailableConsistencyClasses().map(value => ({ value, label: CONSISTENCY_LABELS[value] || value })), 'F3');
     buildSelectOptions(elements.aggregateType, getAvailableAggregates().map(value => ({ value, label: value })), 'Granit');
 
     buildSelectOptions(elements.cementType,
