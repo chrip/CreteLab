@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CreteLab - Betonrezept Rechner</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>CreteLab - Intelligenter Betonrezept Rechner nach B 20</title>
+    <meta name="title" content="CreteLab - Intelligenter Betonrezept Rechner nach B 20">
+    <meta name="description" content="Professioneller Betonrechner basierend auf dem Zement-Merkblatt B 20. Berechnen Sie präzise Betonrezepte inklusive Stoffraumrechnung, Mehlkorngehalt und Zugabewasser-Korrektur.">
+    <meta name="keywords" content="Betonrechner, B 20, Zement-Merkblatt, Betonrezept, Stoffraumrechnung, Betontechnologie, Bauwesen">
+    <meta name="author" content="CreteLab">
+    <link rel="canonical" href="https://chrip.github.io/CreteLab/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://chrip.github.io/CreteLab/">
+    <meta property="og:title" content="CreteLab - Intelligenter Betonrezept Rechner nach B 20">
+    <meta property="og:description" content="Präzise Betonrezept-Berechnung nach Zement-Merkblatt B 20. Inklusive SCM-Korrekturen und Plausibilitätsprüfung.">
+    <meta property="og:image" content="https://chrip.github.io/CreteLab/assets/og-image.png">
+
+    <!-- PWA & Browser Theme -->
+    <meta name="theme-color" content="#3498db">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -14,179 +34,181 @@
         </header>
 
         <main id="calculator">
-            <section class="form-section">
-                <h2>Betoneigenschaften</h2>
-                
-                <div class="form-group">
-                    <label for="useCase">Mixqualität:</label>
-                    <select id="useCase" name="useCase">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint" id="useCaseHint">Wählen Sie Cheap/Standard/Strong/Ultra Strong, um vernünftige Ausgangswerte zu laden.</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="volume">Benötigtes Volumen (m³):</label>
-                    <input type="number" id="volume" name="volume" step="0.1" min="0.1" value="1" placeholder="z.B. 0.5">
-                </div>
-
-                <div class="form-group">
-                    <label for="strengthClass">Druckfestigkeitsklasse:</label>
-                    <select id="strengthClass" name="strengthClass">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint" id="strengthHint">Wählen Sie eine Klasse gemäß statischen Anforderungen und Nutzung.</small>
-                </div>
-
-                <div class="form-group">
-                    <label>Umgebungseinwirkung (Mehrfachauswahl möglich):</label>
-                    <div class="checkbox-grid" id="exposureClassContainer">
-                        <!-- Options will be populated dynamically -->
+            <form id="recipeForm" onsubmit="return false;">
+                <section class="form-section">
+                    <h2 id="section-properties">Betoneigenschaften</h2>
+                    
+                    <div class="form-group">
+                        <label for="useCase">Mixqualität:</label>
+                        <select id="useCase" name="useCase" aria-describedby="useCaseHint">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint" id="useCaseHint">Wählen Sie Cheap/Standard/Strong/Ultra Strong, um vernünftige Ausgangswerte zu laden.</small>
                     </div>
-                    <div id="governingExposureInfo" class="exposure-info-box" style="display: none; margin-top: 10px; padding: 8px; background: #f9f9f9; border-left: 4px solid #3498db; font-size: 0.9em;">
-                        <strong>Maßgebliche Klasse: </strong> <span id="govClassCode"></span><br>
-                        <span id="govClassDesc"></span>
+
+                    <div class="form-group">
+                        <label for="volume">Benötigtes Volumen (m³):</label>
+                        <input type="number" id="volume" name="volume" step="0.1" min="0.1" value="1" placeholder="z.B. 0.5">
                     </div>
-                    <small class="form-hint">Wählen Sie alle in Ihrem Objekt relevanten Expositionsklassen; die restriktivste (“maßgeblich”) wird zur Berechnung genutzt.</small>
-                </div>
 
-                <h3>Zusätzliche Parameter (optional)</h3>
+                    <div class="form-group">
+                        <label for="strengthClass">Druckfestigkeitsklasse:</label>
+                        <select id="strengthClass" name="strengthClass" aria-describedby="strengthHint">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint" id="strengthHint">Wählen Sie eine Klasse gemäß statischen Anforderungen und Nutzung.</small>
+                    </div>
 
-                <div class="form-group">
-                    <label for="siebline">Sieblinie der Gesteinskörnung:</label>
-                    <select id="siebline" name="siebline">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint" id="sieblinieHint">Feinere Sieblinien benötigen mehr Wasser, gröbere Sieblinien sparen Wasser.</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="consistencyClass">Konsistenzklasse:</label>
-                    <select id="consistencyClass" name="consistencyClass">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint" id="consistencyHint"></small>
-                </div>
-
-                <div class="form-group">
-                    <label for="aggregateType">Gesteinskörnung:</label>
-                    <select id="aggregateType" name="aggregateType">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="cementType">Zementart / Festigkeitsklasse:</label>
-                    <select id="cementType" name="cementType">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint">Bestimmt Walzkurven-Koeffizient, Dichte und max. Flugascheanteil (B20 Bild 1).</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="vorhaltemas">Vorhaltemaß v (N/mm²):</label>
-                    <input type="number" id="vorhaltemas" name="vorhaltemas" step="1" min="3" max="12" value="3">
-                    <small class="form-hint">Sicherheitszuschlag für Zielfestigkeit (B20 Abschnitt 6.2). Typisch: 3–5 für kleine Chargen, 9–12 für Baustelle mit unbekannter Streuung.</small>
-                </div>
-
-                <!-- Oberflächenfeuchte der Gesteinskörnung -->
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="useMoisture" name="useMoisture" style="width: auto; margin-right: 8px;">
-                        Oberflächenfeuchte der Gesteinskörnung angeben
-                    </label>
-                    <small class="form-hint">Aktiviert Feuchtekorrektur nach B20 Schritt 7. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).</small>
-                </div>
-                <div class="form-group" id="moistureContainer" style="display: none;">
-                    <div class="moisture-grid">
-                        <div>
-                            <label for="moisture0_2">Feuchte 0/2 mm (%):</label>
-                            <input type="number" id="moisture0_2" name="moisture0_2" step="0.5" min="0" max="15" value="5">
+                    <div class="form-group">
+                        <label id="exposureLabel">Umgebungseinwirkung (Mehrfachauswahl möglich):</label>
+                        <div class="checkbox-grid" id="exposureClassContainer" role="group" aria-labelledby="exposureLabel">
+                            <!-- Options will be populated dynamically -->
                         </div>
-                        <div>
-                            <label for="moisture2_8">Feuchte 2/8 mm (%):</label>
-                            <input type="number" id="moisture2_8" name="moisture2_8" step="0.5" min="0" max="10" value="3">
+                        <div id="governingExposureInfo" class="exposure-info-box" style="display: none; margin-top: 10px; padding: 8px; background: #f9f9f9; border-left: 4px solid #3498db; font-size: 0.9em;">
+                            <strong>Maßgebliche Klasse: </strong> <span id="govClassCode"></span><br>
+                            <span id="govClassDesc"></span>
                         </div>
-                        <div>
-                            <label for="moisture8plus">Feuchte 8+ mm (%):</label>
-                            <input type="number" id="moisture8plus" name="moisture8plus" step="0.5" min="0" max="5" value="2">
+                        <small class="form-hint">Wählen Sie alle in Ihrem Objekt relevanten Expositionsklassen; die restriktivste (“maßgeblich”) wird zur Berechnung genutzt.</small>
+                    </div>
+
+                    <h3 id="section-optional">Zusätzliche Parameter (optional)</h3>
+
+                    <div class="form-group">
+                        <label for="siebline">Sieblinie der Gesteinskörnung:</label>
+                        <select id="siebline" name="siebline" aria-describedby="sieblinieHint">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint" id="sieblinieHint">Feinere Sieblinien benötigen mehr Wasser, gröbere Sieblinien sparen Wasser.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="consistencyClass">Konsistenzklasse:</label>
+                        <select id="consistencyClass" name="consistencyClass" aria-describedby="consistencyHint">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint" id="consistencyHint"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="aggregateType">Gesteinskörnung:</label>
+                        <select id="aggregateType" name="aggregateType">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cementType">Zementart / Festigkeitsklasse:</label>
+                        <select id="cementType" name="cementType">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint">Bestimmt Walzkurven-Koeffizient, Dichte und max. Flugascheanteil (B20 Bild 1).</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vorhaltemas">Vorhaltemaß v (N/mm²):</label>
+                        <input type="number" id="vorhaltemas" name="vorhaltemas" step="1" min="3" max="12" value="3">
+                        <small class="form-hint">Sicherheitszuschlag für Zielfestigkeit (B20 Abschnitt 6.2). Typisch: 3–5 für kleine Chargen, 9–12 für Baustelle mit unbekannter Streuung.</small>
+                    </div>
+
+                    <!-- Oberflächenfeuchte der Gesteinskörnung -->
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="useMoisture" name="useMoisture" style="width: auto; margin-right: 8px;">
+                            Oberflächenfeuchte der Gesteinskörnung angeben
+                        </label>
+                        <small class="form-hint">Aktiviert Feuchtekorrektur nach B20 Schritt 7. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).</small>
+                    </div>
+                    <div class="form-group" id="moistureContainer" style="display: none;">
+                        <div class="moisture-grid">
+                            <div class="moisture-field">
+                                <label for="moisture0_2">Feuchte 0/2 mm (%):</label>
+                                <input type="number" id="moisture0_2" name="moisture0_2" step="0.5" min="0" max="15" value="5">
+                            </div>
+                            <div class="moisture-field">
+                                <label for="moisture2_8">Feuchte 2/8 mm (%):</label>
+                                <input type="number" id="moisture2_8" name="moisture2_8" step="0.5" min="0" max="10" value="3">
+                            </div>
+                            <div class="moisture-field">
+                                <label for="moisture8plus">Feuchte 8+ mm (%):</label>
+                                <input type="number" id="moisture8plus" name="moisture8plus" step="0.5" min="0" max="5" value="2">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <h3>Zusatzstoffe (optional)</h3>
+                    <h3 id="section-additives">Zusatzstoffe (optional)</h3>
 
-                <!-- Betonverflüssiger / Fließmittel -->
-                <div class="form-group">
-                    <label for="admixtureType">Verflüssigungsmittel:</label>
-                    <select id="admixtureType" name="admixtureType">
-                        <!-- Options will be populated dynamically -->
-                    </select>
-                    <small class="form-hint" id="admixtureHint">Kein Zusatzmittel verwendet</small>
-                </div>
+                    <!-- Betonverflüssiger / Fließmittel -->
+                    <div class="form-group">
+                        <label for="admixtureType">Verflüssigungsmittel:</label>
+                        <select id="admixtureType" name="admixtureType" aria-describedby="admixtureHint">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                        <small class="form-hint" id="admixtureHint">Kein Zusatzmittel verwendet</small>
+                    </div>
 
-                <!-- Luftporenbildner -->
-                <div class="form-group">
-                    <label for="useAirEntraining">
-                        <input type="checkbox" id="useAirEntraining" name="useAirEntraining" style="width: auto; margin-right: 8px;">
-                        Luftporenbildner verwenden (für Frostsicherheit)
-                    </label>
-                </div>
+                    <!-- Luftporenbildner -->
+                    <div class="form-group">
+                        <label for="useAirEntraining">
+                            <input type="checkbox" id="useAirEntraining" name="useAirEntraining" style="width: auto; margin-right: 8px;">
+                            Luftporenbildner verwenden (für Frostsicherheit)
+                        </label>
+                    </div>
 
-                <div class="form-group" id="airEntrainingContainer" style="display: none;">
-                    <label for="airEntrainingPercent">Luftgehalt (% Vol.-%):</label>
-                    <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="6" value="4">
-                    <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). 1% LP ≈ 5l weniger Wasser, aber ca. 3.5 N/mm² geringere Festigkeit.</small>
-                </div>
+                    <div class="form-group" id="airEntrainingContainer" style="display: none;">
+                        <label for="airEntrainingPercent">Luftgehalt (% Vol.-%):</label>
+                        <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="6" value="4">
+                        <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). 1% LP ≈ 5l weniger Wasser, aber ca. 3.5 N/mm² geringere Festigkeit.</small>
+                    </div>
 
-                <!-- Flugasche -->
-                <div class="form-group">
-                    <label for="useFlyAsh">
-                        <input type="checkbox" id="useFlyAsh" name="useFlyAsh" style="width: auto; margin-right: 8px;">
-                        Flugasche (k=0.4) verwenden
-                    </label>
-                </div>
+                    <!-- Flugasche -->
+                    <div class="form-group">
+                        <label for="useFlyAsh">
+                            <input type="checkbox" id="useFlyAsh" name="useFlyAsh" style="width: auto; margin-right: 8px;">
+                            Flugasche (k=0.4) verwenden
+                        </label>
+                    </div>
 
-                <div class="form-group" id="flyAshContainer" style="display: none;">
-                    <label for="flyAshPercent">Flugasche-Gehalt (% vom Zement):</label>
-                    <input type="number" id="flyAshPercent" name="flyAshPercent" step="1" min="0" max="33" value="15">
-                    <small class="form-hint">Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I.</small>
-                </div>
+                    <div class="form-group" id="flyAshContainer" style="display: none;">
+                        <label for="flyAshPercent">Flugasche-Gehalt (% vom Zement):</label>
+                        <input type="number" id="flyAshPercent" name="flyAshPercent" step="1" min="0" max="33" value="15">
+                        <small class="form-hint">Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I.</small>
+                    </div>
 
-                <!-- Silikastaub -->
-                <div class="form-group">
-                    <label for="useSilicaFume">
-                        <input type="checkbox" id="useSilicaFume" name="useSilicaFume" style="width: auto; margin-right: 8px;">
-                        Silikastaub / Mikrosilika (k=1.0) verwenden
-                    </label>
-                </div>
+                    <!-- Silikastaub -->
+                    <div class="form-group">
+                        <label for="useSilicaFume">
+                            <input type="checkbox" id="useSilicaFume" name="useSilicaFume" style="width: auto; margin-right: 8px;">
+                            Silikastaub / Mikrosilika (k=1.0) verwenden
+                        </label>
+                    </div>
 
-                <div class="form-group" id="silicaFumeContainer" style="display: none;">
-                    <label for="silicaFumePercent">Silikastaub-Gehalt (% vom Zement):</label>
-                    <input type="number" id="silicaFumePercent" name="silicaFumePercent" step="1" min="0" max="11" value="8">
-                    <small class="form-hint">Erhöht Festigkeit deutlich, verbessert Dichtheit. Max. 11% vom Zementgewicht.</small>
-                </div>
+                    <div class="form-group" id="silicaFumeContainer" style="display: none;">
+                        <label for="silicaFumePercent">Silikastaub-Gehalt (% vom Zement):</label>
+                        <input type="number" id="silicaFumePercent" name="silicaFumePercent" step="1" min="0" max="11" value="8">
+                        <small class="form-hint">Erhöht Festigkeit deutlich, verbessert Dichtheit. Max. 11% vom Zementgewicht.</small>
+                    </div>
 
-                <!-- Wasserundurchlässig -->
-                <div class="form-group">
-                    <label for="useWaterproofing">
-                        <input type="checkbox" id="useWaterproofing" name="useWaterproofing" style="width: auto; margin-right: 8px;">
-                        Wasserundurchlässig (WU) machen
-                    </label>
-                    <small class="form-hint">WU = wasserundurchlässig; erhöht Abdichtung gegen Wasser/Druck. Setze 1-2% vom Zementgewicht.</small>
-                </div>
+                    <!-- Wasserundurchlässig -->
+                    <div class="form-group">
+                        <label for="useWaterproofing">
+                            <input type="checkbox" id="useWaterproofing" name="useWaterproofing" style="width: auto; margin-right: 8px;">
+                            Wasserundurchlässig (WU) machen
+                        </label>
+                        <small class="form-hint">WU = wasserundurchlässig; erhöht Abdichtung gegen Wasser/Druck. Setze 1-2% vom Zementgewicht.</small>
+                    </div>
 
-                <div class="form-group" id="waterproofContainer" style="display: none;">
-                    <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
-                    <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
-                    <small class="form-hint">Verwendet zur Reduzierung von Wasserdurchlässigkeit und Frostbeständigkeit.</small>
-                </div>
+                    <div class="form-group" id="waterproofContainer" style="display: none;">
+                        <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
+                        <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
+                        <small class="form-hint">Verwendet zur Reduzierung von Wasserdurchlässigkeit und Frostbeständigkeit.</small>
+                    </div>
 
-                <button type="submit" id="calculateBtn" class="btn btn-primary">Rezept berechnen</button>
-            </section>
+                    <button type="submit" id="calculateBtn" class="btn btn-primary">Rezept berechnen</button>
+                </section>
+            </form>
 
-            <section id="results" class="result-section" style="display: none;">
-                <h2>📋 Ihr Betonrezept</h2>
+            <section id="results" class="result-section" style="display: none;" aria-labelledby="results-title">
+                <h2 id="results-title">📋 Ihr Betonrezept</h2>
 
                 <div class="recipe-summary">
                     <div class="summary-item">
@@ -211,10 +233,10 @@
                 <table class="recipe-table">
                     <thead>
                         <tr>
-                            <th>Zutat</th>
-                            <th>Menge / m³</th>
-                            <th id="volumeColHeader">Menge gesamt</th>
-                            <th>Bemerkung</th>
+                            <th scope="col">Zutat</th>
+                            <th scope="col">Menge / m³</th>
+                            <th scope="col" id="volumeColHeader">Menge gesamt</th>
+                            <th scope="col">Bemerkung</th>
                         </tr>
                     </thead>
                     <tbody id="recipeBody"></tbody>
@@ -226,11 +248,11 @@
                     <table class="korngruppen-table">
                         <thead>
                             <tr>
-                                <th>Korngruppe</th>
-                                <th>Anteil [%]</th>
-                                <th>Trocken [kg]</th>
-                                <th>Feuchte [%]</th>
-                                <th>Feucht [kg]</th>
+                                <th scope="col">Korngruppe</th>
+                                <th scope="col">Anteil [%]</th>
+                                <th scope="col">Trocken [kg]</th>
+                                <th scope="col">Feuchte [%]</th>
+                                <th scope="col">Feucht [kg]</th>
                             </tr>
                         </thead>
                         <tbody id="kornGruppenBody"></tbody>
@@ -251,9 +273,19 @@
                 </div>
             </section>
         </main>
+
+        <footer>
+            <p>&copy; 2026 CreteLab. Berechnungen basierend auf Zement-Merkblatt B 20.</p>
+            <p>
+                <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">
+                    GitHub Repository
+                </a>
+            </p>
+        </footer>
     </div>
 
     <!-- Import the library -->
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
+</write_to_file>
