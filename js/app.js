@@ -54,6 +54,19 @@ const CONSISTENCY_HINTS = {
     'F6': 'Sehr dünnflüssig – Fließmittel (FM) zwingend erforderlich. Spezialanwendungen.'
 };
 
+const CEMENT_TYPE_LABELS = {
+    'CEM I 32.5 N':       'CEM I 32.5 N – Portlandzement, langsam erhärtend',
+    'CEM I 42.5 N':       'CEM I 42.5 N – Standard Portlandzement ✓',
+    'CEM I 42.5 R':       'CEM I 42.5 R – Portlandzement, schnell erhärtend',
+    'CEM I 52.5 N':       'CEM I 52.5 N – Hochfester Portlandzement',
+    'CEM I 52.5 R':       'CEM I 52.5 R – Hochfest, schnell erhärtend',
+    'CEM II/A-S 42.5 N':  'CEM II/A-S 42.5 N – Portlandhüttenzement, weniger Wärme',
+    'CEM II/B-S 42.5 N':  'CEM II/B-S 42.5 N – Portlandhüttenzement, hoher Schlackeanteil',
+    'CEM II/A-LL 42.5 N': 'CEM II/A-LL 42.5 N – Portlandkalksteinzement',
+    'CEM III/A 42.5 N':   'CEM III/A 42.5 N – Hochofenzement, sulfatbeständig',
+    'CEM III/B 42.5 N':   'CEM III/B 42.5 N – Hochofenzement, sehr wärmearm'
+};
+
 const USE_CASES = {
     cheap:       { label: 'Einfach – Fundamente, Verfüllung (C20/25)', strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Granit',      admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
     standard:    { label: 'Standard – Wände, Decken, Treppen (C25/30)', strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Granit',      admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
@@ -762,7 +775,7 @@ function initialize() {
     buildSelectOptions(elements.aggregateType, getAvailableAggregates().map(value => ({ value, label: value })), 'Granit');
 
     buildSelectOptions(elements.cementType,
-        getAvailableCementTypes().map(v => ({ value: v, label: v })),
+        getAvailableCementTypes().map(v => ({ value: v, label: CEMENT_TYPE_LABELS[v] || v })),
         'CEM I 42.5 N');
 
     buildSelectOptions(elements.admixtureType, [
