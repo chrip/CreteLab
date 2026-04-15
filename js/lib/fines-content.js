@@ -91,10 +91,9 @@ export function checkFinesLimits(fines, exposureClass) {
                                   : MAX_FINES_LIMITS['non-exposed'].cementMin350.limit;
     }
 
-    // For C50/60 and higher, the limits can be increased by 50 kg/m³
-    if (fines.finesContent0125 > 400) {
-        maxLimit += 50;
-    }
+    // Note: For C50/60 and higher, limits can be increased by 50 kg/m³ per B20.
+    // This requires strength class context, which is not provided to this function.
+    // We stick to the standard limits defined in MAX_FINES_LIMITS.
 
     return {
         finesContent: fines.finesContent0125,
