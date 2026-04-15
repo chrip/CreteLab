@@ -88,6 +88,34 @@ function formatNumber(value, digits = 0) {
     });
 }
 
+/**
+ * Dynamic formatter for quantities (kg, l) to avoid rounding errors in small volumes.
+ * @param {number} value - The quantity to format
+ * @param {string} unit - 'kg' or 'l'
+ * @returns {string} Formatted string with appropriate precision
+ */
+function formatQuantity(value, unit) {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+    const val = Number(value);
+    
+    if (val === 0) return '0 ' + unit;
+
+    // For very small volumes, we need high precision
+    if (val < 0.1) {
+        // Use 3 decimals for very small amounts (e.g. 0.003 l)
+        return val.toLocaleString('de-DE', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' ' + unit;
+    } else if (val < 1) {
+        // Use 2 decimals for small amounts (e.g. 0.54 l)
+        return val.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + unit;
+    } else if (val < 10) {
+        // Use 1 decimal for medium amounts (e.g. 1.1 kg)
+        return val.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ' + unit;
+    } else {
+        // Use 0 decimals for larger amounts (e.g. 350 kg)
+        return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ' + unit;
+    }
+}
+
 function setError(message) {
     clearError();
     const error = document.createElement('div');
@@ -302,7 +330,7 @@ function applyUseCaseDefaults() {
 }
 
 function collectFormValues() {
-    const volume = Math.max(0.1, parseFloat(elements.volume.value) || 1);
+    const volume = Math.max(0.001, parseFloat(elements.volume.value) || 1);
     const strengthClass = elements.strengthClass.value || 'C20/25';
     const exposureClasses = getSelectedExposureClasses();
     const exposureClass = exposureClasses.length > 0 ? getGoverningExposureClass(exposureClasses) : null;
@@ -560,7 +588,7 @@ function displayRecipe(recipe) {
         tableRows.push(`<tr>
             <td>${name}</td>
             <td>${formatNumber(perM3, 1)} ${unit}/m³</td>
-            <td>${formatNumber(totalQty, 1)} ${totalUnit}</td>
+            <td>${formatQuantity(totalQty, totalUnit)}</td>
             <td>${note}</td>
         </tr>`);
     };
@@ -577,12 +605,12 @@ function displayRecipe(recipe) {
 
     // Water: show total water and Zugabewasser
     const zugRow = recipe.materials.zugabewasser !== recipe.materials.water
-        ? ` | Zugabewasser: ${formatNumber(recipe.materials.zugabewasser * vol, 0)} l`
+        ? ` | Zugabewasser: ${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}`
         : '';
     tableRows.push(`<tr>
         <td>Wasser (gesamt)</td>
         <td>${formatNumber(recipe.materials.water, 0)} l/m³</td>
-        <td>${formatNumber(recipe.materials.water * vol, 0)} l${zugRow}</td>
+        <td>${formatQuantity(recipe.materials.water * vol, 'l')}${zugRow}</td>
         <td>w/z ≤ ${recipe.wzLimit.toFixed(2)}</td>
     </tr>`);
 
@@ -621,45 +649,54 @@ function displayRecipe(recipe) {
         elements.kornGruppenSection.style.display = 'block';
         let kgRows = '';
         let totalDry = 0, totalMoist = 0;
-        recipe.korngruppen.forEach(kg => {
-            totalDry += kg.massDry;
-            totalMoist += kg.massMoist;
-            kgRows += `<tr>
-                <td>${kg.range} mm</td>
-                <td>${kg.pct}</td>
-                <td>${formatNumber(kg.massDry * vol, 0)}</td>
-                <td>${formatNumber(kg.moisturePct, 1)}</td>
-                <td>${formatNumber(kg.massMoist * vol, 0)}</td>
-            </tr>`;
-        });
-        kgRows += `<tr class="total-row">
-            <td><strong>Summe</strong></td>
-            <td>100</td>
-            <td><strong>${formatNumber(totalDry * vol, 0)}</strong></td>
-            <td>–</td>
-            <td><strong>${formatNumber(totalMoist * vol, 0)}</strong></td>
+    recipe.korngruppen.forEach(kg => {
+        totalDry += kg.massDry;
+        totalMoist += kg.massMoist;
+        kgRows += `<tr>
+            <td>${kg.range} mm</td>
+            <td>${kg.pct}</td>
+            <td>${formatQuantity(kg.massDry * vol, 'kg')}</td>
+            <td>${formatNumber(kg.moisturePct, 1)}</td>
+            <td>${formatQuantity(kg.massMoist * vol, 'kg')}</td>
         </tr>`;
+    });
+    kgRows += `<tr class="total-row">
+        <td><strong>Summe</strong></td>
+        <td>100</td>
+        <td><strong>${formatQuantity(totalDry * vol, 'kg')}</strong></td>
+        <td>–</td>
+        <td><strong>${formatQuantity(totalMoist * vol, 'kg')}</strong></td>
+    </tr>`;
         elements.kornGruppenBody.innerHTML = kgRows;
 
-        const moistureTotal = Math.round((totalMoist - totalDry) * vol);
+        const moistureTotal = (totalMoist - totalDry) * vol;
         elements.zugabewasserInfo.innerHTML =
-            `<strong>Gesamtwasser:</strong> ${formatNumber(recipe.materials.water * vol, 0)} l &nbsp;–&nbsp; ` +
-            `<strong>Oberflächenfeuchte:</strong> ${formatNumber(moistureTotal, 0)} l &nbsp;=&nbsp; ` +
-            `<strong>Zugabewasser:</strong> ${formatNumber(recipe.materials.zugabewasser * vol, 0)} l`;
+            `<strong>Gesamtwasser:</strong> ${formatQuantity(recipe.materials.water * vol, 'l')} &nbsp;–&nbsp; ` +
+            `<strong>Oberflächenfeuchte:</strong> ${formatQuantity(moistureTotal, 'l')} &nbsp;=&nbsp; ` +
+            `<strong>Zugabewasser:</strong> ${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}`;
     } else {
         elements.kornGruppenSection.style.display = 'none';
     }
 
     // ── Mixing instructions ───────────────────────────────────────────────────
+    const totalCement = recipe.materials.cement * vol;
+    const totalAgg = recipe.materials.aggregate * vol;
+    const totalFA = recipe.materials.flyAsh * vol;
+    const totalSF = recipe.materials.silicaFume * vol;
+    const totalWU = recipe.materials.waterproofing * vol;
+    const totalAdm = recipe.materials.admixture * vol;
+    const totalWater = recipe.materials.zugabewasser * vol;
+
     const baseInstructions = [
-        `${appState.cementType} und trockene Zuschläge gleichmäßig mischen.`,
-        recipe.materials.flyAsh > 0 ? `Flugasche unterkneten.` : '',
-        recipe.materials.silicaFume > 0 ? `Silikastaub gleichmäßig einmischen.` : '',
-        recipe.materials.waterproofing > 0 ? `WU-Additiv einmischen.` : '',
-        `Zugabewasser (${formatNumber(recipe.materials.zugabewasser * vol, 0)} l) langsam zugeben und gründlich mischen.`,
-        recipe.airEntraining > 0 ? `Luftporenbildner nach Rezept dosieren.` : '',
-        `Beton bis zur gewünschten Konsistenz durchmischen.`,
-        `Sofort verbauen oder max. 30 min frische Lagerung beachten.`
+        `Trockenmischung: ${formatQuantity(totalCement, 'kg')} ${appState.cementType} und ${formatQuantity(totalAgg, 'kg')} Gesteinskörnung gleichmäßig mischen.`,
+        totalFA > 0 ? `Zusatzstoff: ${formatQuantity(totalFA, 'kg')} Flugasche untermischen.` : '',
+        totalSF > 0 ? `Zusatzstoff: ${formatQuantity(totalSF, 'kg')} Silikastaub gleichmäßig einmischen.` : '',
+        totalWU > 0 ? `Additiv: ${formatQuantity(totalWU, 'kg')} WU-Additiv einmischen.` : '',
+        `Wasserzugabe: ${formatQuantity(totalWater, 'l')} Zugabewasser langsam zugeben und gründlich mischen.`,
+        totalAdm > 0 ? `Verflüssiger: ${formatQuantity(totalAdm, 'l')} ${appState.admixtureType === 'BV' ? 'Betonverflüssiger (BV)' : 'Fließmittel (FM)'} hinzufügen.` : '',
+        recipe.airEntraining > 0 ? `Luftporenbildner: Luftgehalt von ${recipe.airEntraining}% sicherstellen.` : '',
+        `Durchmischen: Beton bis zur gewünschten Konsistenz (${appState.consistencyClass}) durchmischen.`,
+        `Verarbeitung: Sofort verbauen oder max. 30 min frische Lagerung beachten.`
     ].filter(ii => ii);
 
     elements.instructionList.innerHTML = baseInstructions.map(inst => `<li>${inst}</li>`).join('');

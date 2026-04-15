@@ -30,7 +30,11 @@ function auditRecipe(inputs) {
     const maxWz_exposure = getMaxWz(governingClass) || 0.75;
 
     // 2. Water Demand
-    const waterTarget = calculateWaterDemand(siebline, consistencyClass);
+    let waterTarget = calculateWaterDemand(siebline, consistencyClass);
+    console.log(`DEBUG: waterTarget for ${siebline}/${consistencyClass} = ${waterTarget}`);
+    if (waterTarget === null || isNaN(waterTarget)) {
+        throw new Error(`calculateWaterDemand returned ${waterTarget} for ${siebline}/${consistencyClass}`);
+    }
 
     // 3. Strength & Wz
     const f_ck_cube = 25; // Simplified for audit
@@ -58,7 +62,7 @@ function auditRecipe(inputs) {
         warnings.push(`Zementleimgehalt ${paste.pasteVolume.toFixed(0)} kg/m³ unterschreitet Mindestwert für Expositionsklasse ${governingClass}.`);
     }
 
-    return { governingClass, maxWz, cementAmount, warnings };
+    return { governingClass, maxWz, cementAmount, waterTarget, warnings };
 }
 
 // --- SCENARIO 1: Baseline Standard Mix ---
@@ -159,6 +163,32 @@ function auditRecipe(inputs) {
     });
     const result = checkFinesLimits(finesData, 'XC1');
     assert.strictEqual(result.exceedsLimit, true, '600kg should exceed 550kg limit for XC1');
+}
+
+// --- SCENARIO 7: Tiny Volume Plausibility ---
+{
+    console.log('Scenario 7: Tiny Volume Plausibility (0.003 m³)...');
+    const vol = 0.003;
+    const res = auditRecipe({
+        strengthClass: 'C25/30',
+        exposureClasses: ['XC1'],
+        siebline: 'B32',
+        consistencyClass: 'F3',
+        cementType: 'CEM I 42.5 N',
+        vorhaltemas: 3,
+        useFlyAsh: false,
+        useSilicaFume: false
+    });
+
+    const totalCement = res.cementAmount * vol;
+    const totalWater = res.waterTarget * vol;
+
+    // Verify that we have non-zero, plausible values for tiny volumes
+    assert.ok(totalCement > 0, 'Total cement should be positive');
+    assert.ok(totalWater > 0, 'Total water should be positive');
+    
+    // Check that the governing class is still correct regardless of volume
+    assert.strictEqual(res.governingClass, 'XC1');
 }
 
 console.log('✅ E2E Plausibility Audit Passed!');
