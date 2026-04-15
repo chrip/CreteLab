@@ -26,6 +26,9 @@ const elements = {
     cementType: document.getElementById('cementType'),
     vorhaltemas: document.getElementById('vorhaltemas'),
     admixtureType: document.getElementById('admixtureType'),
+    governingExposureInfo: document.getElementById('governingExposureInfo'),
+    govClassCode: document.getElementById('govClassCode'),
+    govClassDesc: document.getElementById('govClassDesc'),
     useAirEntraining: document.getElementById('useAirEntraining'),
     airEntrainingContainer: document.getElementById('airEntrainingContainer'),
     airEntrainingPercent: document.getElementById('airEntrainingPercent'),
@@ -165,7 +168,10 @@ function buildExposureCheckboxes() {
     const values = getAvailableExposureClasses();
     elements.exposureClassContainer.innerHTML = '';
 
-    values.forEach(exposure => {
+    values.forEach(exposureCode => {
+        const exposureData = getExposureClass(exposureCode);
+        const labelText = exposureData ? `${exposureCode} - ${exposureData.name}` : exposureCode;
+
         const wrapper = document.createElement('label');
         wrapper.style.display = 'inline-flex';
         wrapper.style.alignItems = 'center';
@@ -174,14 +180,29 @@ function buildExposureCheckboxes() {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.name = 'exposureClass';
-        checkbox.value = exposure;
+        checkbox.value = exposureCode;
         checkbox.style.marginRight = '4px';
+        checkbox.addEventListener('change', updateGoverningExposureInfo);
 
         wrapper.appendChild(checkbox);
-        wrapper.appendChild(document.createTextNode(exposure));
+        wrapper.appendChild(document.createTextNode(labelText));
 
         elements.exposureClassContainer.appendChild(wrapper);
     });
+}
+
+function updateGoverningExposureInfo() {
+    const selected = getSelectedExposureClasses();
+    const governingCode = getGoverningExposureClass(selected);
+    
+    if (governingCode) {
+        const data = getExposureClass(governingCode);
+        elements.govClassCode.textContent = governingCode;
+        elements.govClassDesc.textContent = data ? data.description : '';
+        elements.governingExposureInfo.style.display = 'block';
+    } else {
+        elements.governingExposureInfo.style.display = 'none';
+    }
 }
 
 function getSelectedExposureClasses() {
@@ -277,6 +298,7 @@ function applyUseCaseDefaults() {
 
     updateOptionalSections();
     updateHints();
+    updateGoverningExposureInfo();
 }
 
 function collectFormValues() {
@@ -686,6 +708,7 @@ function initialize() {
         calculateRecipe();
     });
 
+    updateGoverningExposureInfo();
     calculateRecipe();
 }
 

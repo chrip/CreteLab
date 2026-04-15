@@ -250,7 +250,7 @@ export function getGoverningExposureClass(classes) {
     for (const cls of classes) {
         const idx = severityOrder.indexOf(cls);
         const currentIdx = severityOrder.indexOf(mostSevere);
-        if (idx < currentIdx) {
+        if (idx > currentIdx) {
             mostSevere = cls;
         }
     }
