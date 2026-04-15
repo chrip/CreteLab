@@ -100,10 +100,10 @@ Expositionsklassen definieren die Umgebungsbedingungen und maximale w/z-Werte:
 Der Wasserbedarf wird über die Sieblinie berechnet:
 
 ```
-w = 1100 / (k + 3) für Konsistenz F3 (weich)
+w = 1300 / (k + 3) für Konsistenz F3 (weich)
 ```
 
-Für Sieblinie B32 (k=4.20): w ≈ 208 l/m³
+Für Sieblinie B32 (k=4.20): w ≈ 181 l/m³
 
 ### Stoffraumrechnung (ZMB B20 Tafel 6.1)
 
