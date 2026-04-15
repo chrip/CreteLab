@@ -330,7 +330,7 @@ function applyUseCaseDefaults() {
 }
 
 function collectFormValues() {
-    const volume = Math.max(0.001, parseFloat(elements.volume.value) || 1);
+    const volume = Math.max(0.001, parseFloat(elements.volume.value.replace(',', '.')) || 1);
     const strengthClass = elements.strengthClass.value || 'C20/25';
     const exposureClasses = getSelectedExposureClasses();
     const exposureClass = exposureClasses.length > 0 ? getGoverningExposureClass(exposureClasses) : null;
