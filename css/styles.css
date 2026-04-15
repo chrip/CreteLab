@@ -47,7 +47,7 @@ header {
 }
 
 .header-logo {
-    height: 3.6rem; /* matches two lines: h1 line-height + tagline line-height */
+    height: 5rem;
     width: auto;
     object-fit: contain;
     flex-shrink: 0;
@@ -275,7 +275,7 @@ footer a:hover {
     }
 
     .header-logo {
-        height: 3rem;
+        height: 4rem;
     }
 
     #calculator {
