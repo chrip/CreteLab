@@ -230,17 +230,17 @@ function evaluatePlausibility(state, recipe) {
     if (limits) {
         const strengthMeta = getStrengthClass(state.strengthClass);
         if (strengthMeta && strengthMeta.f_ck_cube < limits.minFck) {
-            warnings.push(`Festigkeitsklasse ${state.strengthClass} (f_ck,cube=${strengthMeta.f_ck_cube} N/mm²) erfüllt nicht Mindestfestigkeit ${limits.minFck} N/mm² der gewählten Expositionsklassen.`);
+            warnings.push(`Betonklasse ${state.strengthClass} ist zu schwach für die gewählten Expositionsklassen – mindestens ${limits.minFck} N/mm² Würfeldruckfestigkeit erforderlich.`);
         }
 
         if (recipe.materials.cement < limits.minZ) {
-            warnings.push(`Zementgehalt ${formatNumber(recipe.materials.cement,1)} kg/m³ ist unter Mindestwert ${limits.minZ} kg/m³ der gewählten Expositionsklassen.`);
+            warnings.push(`Zementgehalt ${formatNumber(recipe.materials.cement, 0)} kg/m³ liegt unter dem Mindestwert von ${limits.minZ} kg/m³ für die gewählten Expositionsklassen.`);
         }
 
         if (limits.maxWz < Infinity) {
             const wzc = recipe.materials.water / recipe.materials.cement;
             if (wzc > limits.maxWz + 0.005) {
-                warnings.push(`W/z=${wzc.toFixed(2)} ist über dem Grenzwert ${limits.maxWz.toFixed(2)} der gewählten Expositionsklassen.`);
+                warnings.push(`Wasser-Zement-Wert ${wzc.toFixed(2)} überschreitet den zulässigen Grenzwert ${limits.maxWz.toFixed(2)} der gewählten Expositionsklassen.`);
             }
         }
     }
@@ -248,7 +248,7 @@ function evaluatePlausibility(state, recipe) {
     // Paste volume check (Zementleimgehalt)
     const paste = calculatePasteVolume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
     if (paste && !checkPasteRequirements(paste, state.exposureClass).meetsRequirement) {
-        warnings.push(`Zementleimgehalt ${formatNumber(paste.pasteVolume)} kg/m³ unterschreitet Mindestwert für Expositionsklasse ${state.exposureClass}.`);
+        warnings.push(`Leimgehalt ${formatNumber(paste.pasteVolume, 0)} kg/m³ ist zu niedrig für die Expositionsklasse ${state.exposureClass}.`);
     }
 
     // Fines content check (Mehlkorngehalt) – including aggregate fines from sieve line
@@ -262,7 +262,7 @@ function evaluatePlausibility(state, recipe) {
     if (fines) {
         const finesCheck = checkFinesLimits(fines, state.exposureClass);
         if (finesCheck && finesCheck.exceedsLimit) {
-            warnings.push(`Mehlkorngehalt ${formatNumber(fines.finesContent0125)} kg/m³ überschreitet Maximum ${finesCheck.maxAllowed} kg/m³ für Expositionsklasse ${state.exposureClass}.`);
+            warnings.push(`Mehlkorngehalt ${formatNumber(fines.finesContent0125, 0)} kg/m³ zu hoch – Maximum ${finesCheck.maxAllowed} kg/m³ für Expositionsklasse ${state.exposureClass}.`);
         }
     }
 
@@ -270,12 +270,12 @@ function evaluatePlausibility(state, recipe) {
     if (recipe.materials.flyAsh > 0 && recipe.materials.silicaFume > 0) {
         const cemICheck = checkCemIFlyAshSilicaFume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
         if (!cemICheck.meetsLimit) {
-            warnings.push(`CEM I Limit: Flugasche/Zement ${cemICheck.fZRatio.toFixed(3)} überschreitet Maximum ${cemICheck.maxFLimit.toFixed(3)} für Silikastaub ${cemICheck.sZRatio.toFixed(3)}.`);
+            warnings.push(`Flugasche-Anteil zu hoch für die kombinierte Verwendung mit Silikastaub bei diesem Zement – bitte Anteile reduzieren.`);
         }
     }
 
     if (state.useAirEntraining && state.airEntrainingPercent > 10) {
-        warnings.push(`Luftgehalt von ${state.airEntrainingPercent}% ist ungewöhnlich hoch (typisch ≤ 10%). Dies kann die Festigkeit massiv reduzieren.`);
+        warnings.push(`Luftgehalt ${state.airEntrainingPercent}% ist ungewöhnlich hoch – dies kann die Festigkeit stark reduzieren.`);
     }
 
     return warnings;
