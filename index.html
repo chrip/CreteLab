@@ -121,7 +121,7 @@
                             <input type="checkbox" id="useMoisture" name="useMoisture" style="width: auto; margin-right: 8px;">
                             Oberflächenfeuchte der Gesteinskörnung angeben
                         </label>
-                        <small class="form-hint">Aktiviert Feuchtekorrektur nach B20 Schritt 7. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).</small>
+                        <small class="form-hint">Aktiviert Feuchtekorrektur für die Gesteinskörnung. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).</small>
                     </div>
                     <div class="form-group" id="moistureContainer" style="display: none;">
                         <div class="moisture-grid">
@@ -160,16 +160,16 @@
                     </div>
 
                     <div class="form-group" id="airEntrainingContainer" style="display: none;">
-                        <label for="airEntrainingPercent">Luftgehalt (% Vol.-%):</label>
-                        <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="6" value="4">
-                        <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). 1% LP ≈ 5l weniger Wasser, aber ca. 3.5 N/mm² geringere Festigkeit.</small>
+                        <label for="airEntrainingPercent">Ziel-Luftgehalt (Vol.-%):</label>
+                        <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="10" value="4">
+                        <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). Ein höherer Luftgehalt reduziert den Wasserbedarf, senkt jedoch die Druckfestigkeit.</small>
                     </div>
 
                     <!-- Flugasche -->
                     <div class="form-group">
                         <label for="useFlyAsh">
                             <input type="checkbox" id="useFlyAsh" name="useFlyAsh" style="width: auto; margin-right: 8px;">
-                            Flugasche (k=0.4) verwenden
+                            Flugasche verwenden
                         </label>
                     </div>
 
@@ -183,7 +183,7 @@
                     <div class="form-group">
                         <label for="useSilicaFume">
                             <input type="checkbox" id="useSilicaFume" name="useSilicaFume" style="width: auto; margin-right: 8px;">
-                            Silikastaub / Mikrosilika (k=1.0) verwenden
+                            Silikastaub / Mikrosilika verwenden
                         </label>
                     </div>
 
@@ -215,26 +215,14 @@
             <section id="results" class="result-section" style="display: none;" aria-labelledby="results-title">
                 <h2 id="results-title">📋 Ihr Betonrezept</h2>
 
-                <div class="recipe-summary">
-                    <div class="summary-item">
-                        <span class="label">Klasse:</span>
-                        <span id="resStrength" class="value"></span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="label">Volumen:</span>
-                        <span id="resVolume" class="value"></span>
-                    </div>
-                </div>
-
-                <!-- Collapsible calculation steps (B20 Tafel 9) -->
+                <!-- Collapsible calculation steps -->
                 <details id="calcDetails" class="calc-details">
-                    <summary>Berechnungsschritte (B20 Tafel 9)</summary>
+                    <summary>Berechnungsschritte</summary>
                     <table class="calc-steps-table">
                         <tbody id="calcStepsBody"></tbody>
                     </table>
                 </details>
 
-                <h3 id="ingredientsHeader">Zutaten für 1 m³:</h3>
                 <table class="recipe-table">
                     <thead>
                         <tr>
@@ -265,10 +253,8 @@
                     <p class="zugabewasser-info" id="zugabewasserInfo"></p>
                 </div>
 
-                <div class="additives-sum" id="additivesSummary" style="display: none;">
-                    <h3>Zusatzstoff-Effekte:</h3>
-                    <ul id="effectsList">
-                    </ul>
+                <div class="zugabewasser-info" id="additivesSummary" style="display: none;">
+                    <p id="effectsList"></p>
                 </div>
 
                 <div class="instructions">
