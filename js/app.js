@@ -666,7 +666,7 @@ function displayRecipe(recipe) {
     if (appState.plausibilityWarnings && appState.plausibilityWarnings.length > 0) {
         const warningsNode = document.createElement('div');
         warningsNode.className = 'plausibility-warning';
-        warningsNode.innerHTML = `<h3>⚠️ Plausibilitätsprüfung</h3><ul>${appState.plausibilityWarnings.map(item => `<li>${item}</li>`).join('')}</ul>`;
+        warningsNode.innerHTML = `⚠️ ${appState.plausibilityWarnings.join('<br>⚠️ ')}`;
         const calcDetails = elements.calcDetails;
         calcDetails.parentNode.insertBefore(warningsNode, calcDetails);
     }

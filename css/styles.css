@@ -82,9 +82,24 @@ header h1 {
 }
 
 .form-section h2, .result-section h2 {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
+    font-weight: 600;
     margin-bottom: 20px;
     color: var(--text-primary);
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
 }
 
 /* Form Groups */
@@ -97,14 +112,6 @@ header h1 {
     font-weight: 600;
     margin-bottom: 8px;
     color: var(--text-primary);
-}
-
-.form-hint {
-    display: block;
-    color: var(--secondary-color);
-    font-size: 0.85rem;
-    margin-top: 6px;
-    line-height: 1.35;
 }
 
 .form-group select,
@@ -166,37 +173,6 @@ header h1 {
     margin-top: 30px;
     padding-top: 30px;
     border-top: 2px solid var(--border-color);
-}
-
-.recipe-summary {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-}
-
-.summary-item {
-    background: rgba(255, 255, 255, 0.42);
-    border: 1px solid rgba(255, 255, 0.8);
-    color: var(--text-primary);
-    padding: 15px 20px;
-    border-radius: 12px;
-    flex: 1;
-    min-width: 130px;
-    backdrop-filter: blur(5px);
-}
-
-.summary-item .label {
-    display: block;
-    font-size: 0.9rem;
-    opacity: 0.9;
-    margin-bottom: 5px;
-}
-
-.summary-item .value {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 700;
 }
 
 /* Recipe Table */
@@ -286,7 +262,7 @@ footer a:hover {
 
     .form-section h2,
     .result-section h2 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .recipe-table {
@@ -358,31 +334,6 @@ footer a:hover {
     margin-top: 15px;
 }
 
-/* Additive Summary Section */
-.additives-summary {
-    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 4px solid var(--primary-color);
-}
-
-.additives-summary h3 {
-    color: var(--text-primary);
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.additives-summary ul {
-    padding-left: 25px;
-    margin: 0;
-    color: var(--text-secondary);
-}
-
-.additives-summary li {
-    margin-bottom: 8px;
-}
-
 /* Checkbox styling */
 .form-group label input[type="checkbox"] {
     cursor: pointer;
@@ -434,33 +385,9 @@ footer a:hover {
     margin-top: 6px;
     font-size: 0.85rem;
     color: var(--text-secondary);
-    font-style: italic;
+    line-height: 1.4;
 }
 
-/* Additive summary section styling */
-.additives-summary {
-    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    border-left: 4px solid var(--primary-color);
-}
-
-.additives-summary h3 {
-    color: var(--text-primary);
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.additives-summary ul {
-    padding-left: 25px;
-    margin: 0;
-    color: var(--text-secondary);
-}
-
-.additives-summary li {
-    margin-bottom: 8px;
-}
 /* ── Moisture grid for grain group inputs ────────────────────────────────── */
 .moisture-grid {
     display: grid;
@@ -529,7 +456,6 @@ footer a:hover {
 
 /* ── Korngruppen table ───────────────────────────────────────────────────── */
 #kornGruppenSection { margin-top: 20px; }
-#kornGruppenSection h4 { font-size: 1rem; color: var(--text-primary); margin-bottom: 10px; }
 
 .korngruppen-table {
     width: 100%;
@@ -567,6 +493,18 @@ footer a:hover {
     font-size: 0.9rem;
     color: var(--text-primary);
     margin-top: 8px;
+}
+
+.plausibility-warning {
+    background: #fffbeb;
+    border-left: 4px solid var(--warning-color);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #92400e;
+    line-height: 1.7;
+    margin-top: 8px;
+    margin-bottom: 16px;
 }
 
 /* 4-column recipe table: right-align quantity cols */
