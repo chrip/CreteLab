@@ -29,8 +29,6 @@ python3 -m http.server 8000
 npm install && npm test
 ```
 
-163 Tests, 0 Fehler.
-
 ## Lizenz
 
 [MIT](LICENSE) © 2026 Christoph Schaefer
