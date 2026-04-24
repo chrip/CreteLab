@@ -190,7 +190,7 @@ export function calculateCementWithFlyAsh(bEq, flyAshContent) {
     if (bEq === undefined || flyAshContent === undefined) return null;
 
     let zRed, iterations = 0;
-    const fs_z_ratio = flyAshContent / bEq;
+    let fs_z_ratio = flyAshContent / bEq;
 
     do {
         zRed = bEq / (1 + k_f * fs_z_ratio);

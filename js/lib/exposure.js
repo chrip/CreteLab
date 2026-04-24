@@ -230,6 +230,27 @@ export function getAvailableExposureClasses() {
 }
 
 /**
+ * Compute the combined strictest limits across all applicable exposure classes.
+ * Per DIN 1045-2 all classes must be satisfied simultaneously, so:
+ *   maxWz  = min of all max_wz values
+ *   minZ   = max of all min_z values
+ *   minFck = max of all min_f_ck_cube values
+ * @param {string[]} classes - Array of applicable exposure classes
+ * @returns {{ maxWz: number, minZ: number, minFck: number }}
+ */
+export function getStrictestLimits(classes) {
+    if (!classes || classes.length === 0) {
+        return { maxWz: Infinity, minZ: 0, minFck: 0 };
+    }
+    const data = classes.map(c => EXPOSURE_CLASSES[c]).filter(Boolean);
+    return {
+        maxWz:  Math.min(...data.map(d => d.max_wz ?? Infinity)),
+        minZ:   Math.max(...data.map(d => d.min_z)),
+        minFck: Math.max(...data.map(d => d.min_f_ck_cube)),
+    };
+}
+
+/**
  * Determine the governing exposure class when multiple apply
  * The most severe condition governs
  * @param {string[]} classes - Array of applicable exposure classes

@@ -43,7 +43,7 @@ export const ADMIXTURE_EFFECTS = {
         waterReductionPercentMin: 15,
         waterReductionPercentMax: 25,
         typicalWaterSaving: 20, // percent
-        typicalDosageLPerM3: 0.15 // liters per cubic meter
+        typicalDosageLPerM3: 0.2 // liters per cubic meter
     },
     'LP': {
         name: 'Luftporenbildner',
@@ -51,7 +51,8 @@ export const ADMIXTURE_EFFECTS = {
         airContentMin: 1.5,    // Vol.-%
         airContentMax: 6,      // Vol.-% for frost resistant concrete
         waterSavingPerPercent: 5, // l per 1% LP ≈ 5l water saving
-        strengthLossPerPercent: 3.5 // N/mm² per 1% LP
+        strengthLossPerPercent: 3.5, // N/mm² per 1% LP
+        typicalDosageLPerM3: 0.2 // liters per cubic meter
     }
 };
 
@@ -184,7 +185,7 @@ export function calculateCementWithFlyAsh(bEq, fS) {
     // Using quadratic formula or approximation for small f_s/z
 
     const kf = material.k_f;
-    const fs_z_ratio = fS / bEq; // Approximate initial ratio
+    let fs_z_ratio = fS / bEq; // Approximate initial ratio
 
     let zRed, iterations = 0;
     do {
@@ -254,14 +255,21 @@ export function getRecommendedWaterSaving(admixtureType) {
 }
 
 /**
- * Get typical admixture dosage in liters per cubic meter
- * @param {string} admixtureType - Admixture type ('BV' or 'FM')
- * @returns {number|null} Typical dosage in l/m³ or null if invalid
+ * Get admixture dosage in liters per cubic meter
+ * @param {string} admixtureType - Admixture type ('BV', 'FM', or 'LP')
+ * @param {number} [targetValue] - Optional target value (e.g., target air content % for LP)
+ * @returns {number|null} Dosage in l/m³ or null if invalid
  */
-export function getAdmixtureDosage(admixtureType) {
+export function getAdmixtureDosage(admixtureType, targetValue = null) {
     const effect = ADMIXTURE_EFFECTS[admixtureType];
 
     if (!effect) return null;
+
+    // For Luftporenbildner (LP), dosage is proportional to target air content.
+    // Typical: 0.2 l/m³ for 4% air content -> 0.05 l/m³ per 1%
+    if (admixtureType === 'LP' && targetValue !== null) {
+        return targetValue * 0.05;
+    }
 
     return effect.typicalDosageLPerM3 || 0;
 }

@@ -193,5 +193,8 @@ export const WATER_DEMAND_C32_PLASTIC = 187.5; // computed for k=3.30 + F2 equiv
 export const SPLIT_SURCHARGE = 0.10;
 
 export function getAvailableConsistencyClasses() {
-    return ['C0', 'C1', 'F1', 'C2', 'F2', 'C3', 'F3', 'F4', 'F5', 'F6'];
+    // C1/C2/C3 are excluded: they are identical in water demand to F1/F2/F3.
+    // B20 treats Cx and Fx as equivalent settling classes; only the F-series is
+    // used in the Tafel 3 formula, so Cx entries would be misleading duplicates.
+    return ['C0', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6'];
 }

@@ -6,18 +6,16 @@
  * Used for Walzkurven (Roll curves) calculations
  * f_cm = A * (z/w)^n  (Bild 1, B20)
  */
-// A and n calibrated to the LOWER BOUNDARY of B20 Bild 1 (design/conservative reading).
-// Calibration points from B20 worked examples (Anhang):
-//   CEM I 42.5 N: f_cm,dry,cube=34.6 → w/z=0.68  (Beispiel I, p.3-4)
-//     → A=34.6/(1/0.68)^0.67 = 34.6/1.296 ≈ 27
-//   CEM I 52.5 R: f_cm,dry,cube=59 → w/z=0.52     (Beispiel III, p.15-17)
-//     → A=59/(1/0.52)^0.67 = 59/1.551 ≈ 38
+// A values calibrated to the MEAN curve of B20 Bild 1.
+// Vorhaltemaß (v) is the sole statistical safety margin per B20; sigma must NOT
+// be added separately. Previous A values were calibrated to the lower boundary
+// while also adding 1.48·σ — double-counting the safety margin.
 export const CEMENT_CLASSES = {
-    '32.5':  { name: 'CEM I 32.5 N', A: 19, n: 0.67 },
-    '42.5':  { name: 'CEM I 42.5 N', A: 27, n: 0.67 },
-    '42.5R': { name: 'CEM I 42.5 R', A: 31, n: 0.67 },
-    '52.5':  { name: 'CEM I 52.5 N', A: 35, n: 0.67 },
-    '52.5R': { name: 'CEM I 52.5 R', A: 38, n: 0.67 }
+    '32.5':  { name: 'CEM I 32.5 N', A: 22, n: 0.67 },
+    '42.5':  { name: 'CEM I 42.5 N', A: 31, n: 0.67 },
+    '42.5R': { name: 'CEM I 42.5 R', A: 37, n: 0.67 },
+    '52.5':  { name: 'CEM I 52.5 N', A: 44, n: 0.67 },
+    '52.5R': { name: 'CEM I 52.5 R', A: 48, n: 0.67 }
 };
 
 /**
@@ -87,15 +85,16 @@ export function calculateTargetStrength(f_ck) {
 }
 
 /**
- * Calculate target strength with statistical consideration
- * f_cm,cube,dry ≥ (f_ck / 0.92) + 1.48·σ + Vorhaltemaß
- * @param {number} f_ck - Characteristic strength in N/mm²
- * @param {number} sigma - Standard deviation (default: 3 N/mm² for good conditions)
- * @param {number} margin - Safety margin (Vorhaltemaß, default: 3-12 N/mm²)
+ * Calculate target strength (Zielfestigkeit) per B20 Tafel 9 Step 3
+ * f_cm,cube,dry ≥ (f_ck,cube / 0.92) + v
+ * The Vorhaltemaß (v) is the sole safety margin; sigma must not be added separately.
+ * @param {number} f_ck - Characteristic cube strength in N/mm²
+ * @param {number} _sigma - Unused legacy parameter (kept for API compatibility, pass 0)
+ * @param {number} margin - Vorhaltemaß v in N/mm² (default: 3, range 3–12)
  * @returns {number} Target dry-cube strength in N/mm²
  */
-export function calculateTargetStrengthWithMargin(f_ck, sigma = 3, margin = 3) {
-    const f_cm_cube = (f_ck / 0.92) + (1.48 * sigma) + margin;
+export function calculateTargetStrengthWithMargin(f_ck, _sigma = 0, margin = 3) {
+    const f_cm_cube = (f_ck / 0.92) + margin;
     return Math.round(f_cm_cube * 10) / 10; // Round to 1 decimal
 }
 
