@@ -3,6 +3,8 @@
 // Input: URL params from main calculator (or built-in presets).
 // Output: absolute quantities per selected option (total for their volume).
 
+import { applyAdmixtureWaterReduction } from './lib/additives.js';
+
 const PRESETS = [
     { value: 'c20', label: 'Einfach – C20/25 (Fundamente, Pflasterbett)',     z: 280, w: 195, g: 1820, klasse: 'C20/25' },
     { value: 'c25', label: 'Standard – C25/30 (Wände, Bodenplatten)',         z: 300, w: 190, g: 1800, klasse: 'C25/30' },
@@ -134,7 +136,7 @@ function computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useLP) {
     if (useExtraCement) z_eff += cementPerM3 * 0.10;        // 10% more cement
     if (useFlyAsh)      z_eff += cementPerM3 * 0.15 * 0.4;  // k=0.4
     if (useSilica)      z_eff += cementPerM3 * 0.08 * 1.0;  // k=1.0
-    if (useBV)          w_eff *= 0.93;                       // BV saves 7% water
+    if (useBV)          w_eff = applyAdmixtureWaterReduction(w_eff, 'BV');
 
     const fCm = 31 / Math.sqrt(w_eff / z_eff);
     let fCk = fCm - 8;        // subtract combined margin (vorhaltemas + sigma)
@@ -250,7 +252,8 @@ function update() {
     const shoppingItems = document.getElementById('shoppingItems');
     if (items.length > 0) {
         // Water is always the last step; note dissolved additives if present
-        const waterTotal = Math.round(waterPerM3 * vol);
+        const waterBase  = Math.round(waterPerM3 * vol);
+        const waterTotal = useBV ? applyAdmixtureWaterReduction(waterBase, 'BV') : waterBase;
         const waterNote  = (useBV || useLP) ? ' (mit eingerührten Zusatzmitteln)' : '';
         items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
 
