@@ -249,6 +249,11 @@ function update() {
     const shoppingList  = document.getElementById('shoppingList');
     const shoppingItems = document.getElementById('shoppingItems');
     if (items.length > 0) {
+        // Water is always the last step; note dissolved additives if present
+        const waterTotal = Math.round(waterPerM3 * vol);
+        const waterNote  = (useBV || useLP) ? ' (mit eingerührten Zusatzmitteln)' : '';
+        items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
+
         shoppingList.style.display = 'block';
         shoppingItems.innerHTML = items.map(step => `<li>${step}</li>`).join('');
     } else {
