@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreteLab – Rezept feintunen</title>
+    <meta name="description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner.">
+    <link rel="icon" type="image/png" href="assets/CreteLab_emoji.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .option-card {
+            background: rgba(255,255,255,0.85);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .option-card.selected {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.04);
+        }
+
+        .option-card > label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .option-card > label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .option-card .form-hint {
+            padding-left: 32px;
+            margin-top: 6px;
+        }
+
+        .option-result {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #eff6ff;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .base-recipe-box {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 22px;
+        }
+
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-brand">
+                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo">
+                <div class="header-text">
+                    <h1>CreteLab</h1>
+                    <p class="tagline">Rezept verfeinern</p>
+                </div>
+            </div>
+        </header>
+
+        <main id="calculator">
+            <a href="index.html" class="back-link">← Zurück zum Betonrechner</a>
+
+            <section class="form-section">
+                <h2>Ihr Basisrezept</h2>
+
+                <div id="mixSelector" style="display:none;">
+                    <div class="form-group">
+                        <label for="mixPreset">Ausgangsbeton (was ich kaufe / gekauft habe):</label>
+                        <select id="mixPreset"></select>
+                        <small class="form-hint">Wählen Sie das Basisrezept, das Sie tunen möchten.</small>
+                    </div>
+                    <!-- Shown only when "Aus dem Betonrechner" is selected -->
+                    <div id="baseRecipeInfo" class="base-recipe-box" style="display:none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tuneVolume">Benötigtes Volumen (m³):</label>
+                    <input type="text" id="tuneVolume" inputmode="decimal" value="1" placeholder="z.B. 0,3">
+                    <small class="form-hint">Tragen Sie hier die Menge ein, die Sie mischen möchten.</small>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Was möchten Sie verbessern?</h2>
+
+                <div class="option-card" id="cardCement">
+                    <label>
+                        <input type="checkbox" id="useExtraCement">
+                        🧱 Mehr Zement – einfach mehr Festigkeit
+                    </label>
+                    <p class="form-hint">10% mehr Zement in denselben Mix – der einfachste Weg für spürbar mehr Druckfestigkeit. Kein Spezialprodukt, im Baumarkt erhältlich.</p>
+                    <div class="option-result" id="resExtraCement" style="display:none;"></div>
+                </div>
+
+                <div class="option-card" id="cardFlyAsh">
+                    <label>
+                        <input type="checkbox" id="useFlyAsh">
+                        🌿 Flugasche – Dauerhaftigkeit &amp; Verarbeitbarkeit
+                    </label>
+                    <p class="form-hint">Zusatzstoff aus Kraftwerksasche. Verbessert die Langzeitfestigkeit, macht den Beton dichter und etwas flüssiger. Im Baustoffhandel erhältlich.</p>
+                    <div class="option-result" id="resFlyAsh" style="display:none;"></div>
+                </div>
+
+                <div class="option-card" id="cardBV">
+                    <label>
+                        <input type="checkbox" id="useBV">
+                        💧 Betonverflüssiger – besser verarbeitbar
+                    </label>
+                    <p class="form-hint">Der Beton fließt gleichmäßiger in die Schalung, ohne mehr Wasser zuzugeben. Im Baumarkt erhältlich (z.B. als "Betonverflüssiger").</p>
+                    <div class="option-result" id="resBV" style="display:none;"></div>
+                </div>
+
+                <div class="option-card" id="cardSilica">
+                    <label>
+                        <input type="checkbox" id="useSilica">
+                        💪 Silikastaub – deutlich mehr Festigkeit
+                    </label>
+                    <p class="form-hint">Mikrosilika macht Beton spürbar fester und dichter. Für hochbeanspruchte Böden, Stützen und Fertigteile. Nur im Baustoffhandel oder online erhältlich (Spezialprodukt).</p>
+                    <div class="option-result" id="resSilica" style="display:none;"></div>
+                </div>
+
+                <div class="option-card" id="cardLP">
+                    <label>
+                        <input type="checkbox" id="useLP">
+                        ❄️ Luftporenbildner – Frostsicherheit
+                    </label>
+                    <p class="form-hint">Erzeugt feine Luftporen, die Frostschäden verhindern. Wichtig für Terrassen, Einfahrten und Außentreppen. Senkt die Druckfestigkeit um ca. 14 N/mm².</p>
+                    <div class="option-result" id="resLP" style="display:none;"></div>
+                </div>
+
+                <div class="plausibility-warning" id="combineWarning" style="display:none;"></div>
+
+                <div class="zugabewasser-info" id="strengthResult" style="margin-top:16px;"></div>
+            </section>
+
+            <!-- Step-by-step list shown when at least one option is selected -->
+            <div class="instructions" id="shoppingList" style="display:none;">
+                <h3>Schritt für Schritt:</h3>
+                <ol id="shoppingItems"></ol>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 CreteLab. <a href="index.html">Zum Betonrechner</a> &nbsp;·&nbsp; <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script type="module" src="js/fine-tune.js"></script>
+</body>
+</html>

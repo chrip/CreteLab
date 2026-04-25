@@ -835,6 +835,32 @@ function displayRecipe(recipe) {
     ].filter(ii => ii);
 
     elements.instructionList.innerHTML = baseInstructions.map(inst => `<li>${inst}</li>`).join('');
+
+    // ── Fine-tune button ──────────────────────────────────────────────────────
+    // Store recipe in sessionStorage so fine-tune.html gets it regardless of
+    // how the dev server handles query strings (some strip them on clean URLs).
+    try {
+        sessionStorage.setItem('creteLab_finetune', JSON.stringify({
+            v:      vol,
+            z:      Math.round(recipe.materials.cement),
+            w:      Math.round(recipe.materials.water),
+            g:      Math.round(recipe.materials.aggregate),
+            wz:     recipe.wzLimit,
+            klasse: appState.strengthClass,
+            zement: appState.cementType,
+        }));
+    } catch (_) { /* sessionStorage blocked */ }
+
+    let fineTuneBtn = document.getElementById('fineTuneBtn');
+    if (!fineTuneBtn) {
+        fineTuneBtn = document.createElement('a');
+        fineTuneBtn.id = 'fineTuneBtn';
+        fineTuneBtn.className = 'btn btn-secondary';
+        fineTuneBtn.style.cssText = 'display:inline-block; margin-top:20px;';
+        elements.resultsSection.appendChild(fineTuneBtn);
+    }
+    fineTuneBtn.href = 'fine-tune.html';
+    fineTuneBtn.textContent = 'Rezept feintunen →';
 }
 
 function initialize() {
