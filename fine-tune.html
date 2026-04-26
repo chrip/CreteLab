@@ -134,10 +134,19 @@
                 <div class="option-card" id="cardBV">
                     <label>
                         <input type="checkbox" id="useBV">
-                        💧 Betonverflüssiger – besser verarbeitbar
+                        💧 Betonverflüssiger (BV) – besser verarbeitbar
                     </label>
-                    <p class="form-hint">Der Beton fließt gleichmäßiger in die Schalung, ohne mehr Wasser zuzugeben. Im Baumarkt erhältlich (z.B. als "Betonverflüssiger").</p>
+                    <p class="form-hint">Reduziert den Wasserbedarf um ca. 7 %, der Beton fließt gleichmäßiger in die Schalung. Im Baumarkt erhältlich. Nicht zusammen mit Fließmittel verwenden.</p>
                     <div class="option-result" id="resBV" style="display:none;"></div>
+                </div>
+
+                <div class="option-card" id="cardFM">
+                    <label>
+                        <input type="checkbox" id="useFM">
+                        🌊 Fließmittel (FM) – maximale Verarbeitbarkeit
+                    </label>
+                    <p class="form-hint">Stärkerer Verflüssiger: reduziert den Wasserbedarf um ca. 20 %. Für sehr fließfähigen Beton (F4–F6). Dosierung je nach Produkt prüfen. Nicht zusammen mit BV verwenden.</p>
+                    <div class="option-result" id="resFM" style="display:none;"></div>
                 </div>
 
                 <div class="option-card" id="cardSilica">
@@ -158,6 +167,7 @@
                     <div class="option-result" id="resLP" style="display:none;"></div>
                 </div>
 
+                <div class="plausibility-warning" id="plasticWarning"  style="display:none;"></div>
                 <div class="plausibility-warning" id="combineWarning" style="display:none;"></div>
 
                 <div class="zugabewasser-info" id="strengthResult" style="margin-top:16px;"></div>

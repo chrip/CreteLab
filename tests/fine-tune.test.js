@@ -90,7 +90,7 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         return doc.getElementById('combineWarning').style.display !== 'none';
     }
 
-    const ALL_CHECKBOXES = ['useExtraCement', 'useFlyAsh', 'useSilica', 'useBV', 'useLP'];
+    const ALL_CHECKBOXES = ['useExtraCement', 'useFlyAsh', 'useSilica', 'useBV', 'useFM', 'useLP'];
 
     // Reset to clean state before every test.
     beforeEach(() => {
@@ -321,14 +321,15 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         ALL_CHECKBOXES.forEach(id => check(id));
         const steps = getSteps();
 
-        assert.strictEqual(steps.length, 6,
-            `expected 6 steps (5 additives + water), got ${steps.length}`);
+        assert.strictEqual(steps.length, 7,
+            `expected 7 steps (6 additives + water), got ${steps.length}`);
 
         const idx = (keyword) => steps.findIndex(s => s.includes(keyword));
         const cementIdx = idx('Zement');
         const flyAshIdx = idx('Flugasche');
         const silicaIdx = idx('Silikastaub');
         const bvIdx     = idx('Betonverflüssiger');
+        const fmIdx     = idx('Fließmittel');
         const lpIdx     = idx('Luftporenbildner');
         const waterIdx  = idx('Wasser');
 
@@ -336,10 +337,11 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         assert.ok(cementIdx < bvIdx,  'cement (dry) must precede BV (wet)');
         assert.ok(flyAshIdx < bvIdx,  'fly ash (dry) must precede BV (wet)');
         assert.ok(silicaIdx < bvIdx,  'silica (dry) must precede BV (wet)');
-        assert.ok(silicaIdx < lpIdx,  'silica (dry) must precede LP (wet)');
-        assert.ok(bvIdx     < waterIdx, 'BV must precede water');
+        assert.ok(silicaIdx < fmIdx,  'silica (dry) must precede FM (wet)');
+        assert.ok(bvIdx     < lpIdx,  'BV must precede LP');
+        assert.ok(fmIdx     < lpIdx,  'FM must precede LP');
         assert.ok(lpIdx     < waterIdx, 'LP must precede water');
-        assert.strictEqual(waterIdx, 5, 'water must be the very last step');
+        assert.strictEqual(waterIdx, 6, 'water must be the very last step');
     });
 
     // ── Preset switching ──────────────────────────────────────────────────────
@@ -384,6 +386,73 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         const fck = extractFck(getStrengthText());
         assert.ok(fck > baseFck + 5,
             `all strength additives should push fck well above base ${baseFck}, got ${fck}`);
+    });
+
+    // ── Fließmittel (FM) ──────────────────────────────────────────────────────
+
+    it('FM: step appears and shows dosage from lib', () => {
+        check('useFM');
+        const step = getSteps().find(s => s.includes('Fließmittel'));
+        assert.ok(step, 'FM step must appear');
+        // getAdmixtureDosage('FM') = 0.2 l/m³ → fmtQty(0.2, 'l') → '0,2 l'
+        assert.ok(step.match(/0[,.]2\s*l/), `expected 0,2 l in: ${step}`);
+    });
+
+    it('FM: reduces water demand by 20% (B20 typical for FM)', () => {
+        const { w } = PRESETS.c25;
+        const baseWater = Math.round(w);
+        const expected  = applyAdmixtureWaterReduction(baseWater, 'FM'); // ~152 l
+        check('useFM');
+        const waterStep = getSteps().at(-1);
+        assert.ok(waterStep.includes(String(expected)),
+            `water step should show ${expected} l (20% FM reduction), got: ${waterStep}`);
+        assert.ok(expected < baseWater * 0.85, 'FM must reduce water by more than 15%');
+    });
+
+    it('FM: increases estimated fck more than BV (stronger water reduction)', () => {
+        const { z, w } = PRESETS.c25;
+        const baseFck = Math.round(calculateStrengthFromWalzkurven(w / z, '42.5') - 8);
+
+        check('useBV');
+        const fckBV = extractFck(getStrengthText());
+        check('useBV', false);
+
+        check('useFM');
+        const fckFM = extractFck(getStrengthText());
+        check('useFM', false);
+
+        assert.ok(fckFM > fckBV,
+            `FM (20% reduction) should give higher fck than BV (7%): FM=${fckFM}, BV=${fckBV}`);
+        assert.ok(fckFM > baseFck, 'FM must increase fck above base');
+    });
+
+    it('FM: water step notes dissolved admixture', () => {
+        check('useFM');
+        assert.ok(getSteps().at(-1).includes('eingerührten'));
+    });
+
+    // ── BV + FM combination warning ───────────────────────────────────────────
+
+    it('BV + FM: combination warning is shown (mutually exclusive product types)', () => {
+        check('useBV');
+        check('useFM');
+        const warn = doc.getElementById('plasticWarning');
+        assert.ok(warn.style.display !== 'none', 'plasticWarning must be visible');
+        assert.ok(warn.textContent.includes('BV') && warn.textContent.includes('FM'));
+    });
+
+    it('BV + FM: warning disappears when BV is unchecked', () => {
+        check('useBV');
+        check('useFM');
+        check('useBV', false);
+        assert.strictEqual(doc.getElementById('plasticWarning').style.display, 'none');
+    });
+
+    it('BV + FM: warning disappears when FM is unchecked', () => {
+        check('useBV');
+        check('useFM');
+        check('useFM', false);
+        assert.strictEqual(doc.getElementById('plasticWarning').style.display, 'none');
     });
 
     it('LP cancels out gains when combined with all strength-increasing additives', () => {

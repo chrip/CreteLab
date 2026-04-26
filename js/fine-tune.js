@@ -128,6 +128,7 @@ if (customRecipe) {
     if (customRecipe.useFlyAsh) document.getElementById('useFlyAsh').checked = true;
     if (customRecipe.useSilica) document.getElementById('useSilica').checked = true;
     if (customRecipe.useBV)     document.getElementById('useBV').checked     = true;
+    if (customRecipe.useFM)     document.getElementById('useFM').checked     = true;
     if (customRecipe.useLP)     document.getElementById('useLP').checked     = true;
 }
 
@@ -144,7 +145,7 @@ function getBaseKlasse() {
 
 // Walzkurven for CEM I 42.5N via shared lib. SCM k-factors from SUPPLEMENTARY_MATERIALS.
 // Returns estimated f_ck_cube after applying selected additions.
-function computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useLP) {
+function computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useFM, useLP) {
     let z_eff = cementPerM3;
     let w_eff = waterPerM3;
 
@@ -152,6 +153,7 @@ function computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useLP) {
     if (useFlyAsh)      z_eff += cementPerM3 * 0.15 * SUPPLEMENTARY_MATERIALS.Flugasche.k_f;
     if (useSilica)      z_eff += cementPerM3 * 0.08 * SUPPLEMENTARY_MATERIALS.Silikastaub.k_s;
     if (useBV)          w_eff  = applyAdmixtureWaterReduction(w_eff, 'BV');
+    if (useFM)          w_eff  = applyAdmixtureWaterReduction(w_eff, 'FM');
 
     const fCm = calculateStrengthFromWalzkurven(w_eff / z_eff, '42.5');
     const fCmFinal = useLP ? calculateStrengthReduction(fCm, 4) : fCm;
@@ -222,6 +224,16 @@ function update() {
         `${fmtQty(bvTotal, 'l')} Betonverflüssiger ins Anmachwasser einrühren, dann langsam zugeben`
     );
 
+    // Fließmittel (into water)
+    const useFM = document.getElementById('useFM').checked;
+    setCard('cardFM', useFM);
+    const fmTotal = getAdmixtureDosage('FM') * vol;
+    setResult('resFM', useFM,
+        `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`);
+    if (useFM) items.push(
+        `${fmtQty(fmTotal, 'l')} Fließmittel ins Anmachwasser einrühren, dann langsam zugeben`
+    );
+
     // Luftporenbildner (into water)
     const useLP = document.getElementById('useLP').checked;
     setCard('cardLP', useLP);
@@ -231,6 +243,15 @@ function update() {
     if (useLP) items.push(
         `${fmtQty(lpTotal, 'l')} Luftporenbildner ins Anmachwasser mischen, dann zugeben`
     );
+
+    // Combination warning: BV and FM are mutually exclusive plasticizer types
+    const plasticWarning = document.getElementById('plasticWarning');
+    if (useBV && useFM) {
+        plasticWarning.style.display = 'block';
+        plasticWarning.textContent = '⚠️ Betonverflüssiger (BV) und Fließmittel (FM) nicht zusammen verwenden – bitte nur eines der beiden auswählen.';
+    } else {
+        plasticWarning.style.display = 'none';
+    }
 
     // Combination warning: LP (frost) + Silikastaub not recommended together
     const combineWarning = document.getElementById('combineWarning');
@@ -243,9 +264,9 @@ function update() {
 
     // Strength result — always visible, updates with each selection change
     const baseKlasse  = getBaseKlasse();
-    const tunedFck    = computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useLP);
+    const tunedFck    = computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useFM, useLP);
     const tunedKlasse = fckToClass(tunedFck);
-    const anyChecked  = useExtraCement || useFlyAsh || useSilica || useBV || useLP;
+    const anyChecked  = useExtraCement || useFlyAsh || useSilica || useBV || useFM || useLP;
     const resultEl    = document.getElementById('strengthResult');
     if (anyChecked) {
         const arrow = baseKlasse && baseKlasse !== tunedKlasse ? ` &nbsp;→&nbsp; <strong>${tunedKlasse}</strong>` : '';
@@ -261,9 +282,10 @@ function update() {
     const shoppingItems = document.getElementById('shoppingItems');
     if (items.length > 0) {
         // Water is always the last step; note dissolved additives if present
-        const waterBase  = Math.round(waterPerM3 * vol);
-        const waterTotal = useBV ? applyAdmixtureWaterReduction(waterBase, 'BV') : waterBase;
-        const waterNote  = (useBV || useLP) ? ' (mit eingerührten Zusatzmitteln)' : '';
+        let waterTotal = Math.round(waterPerM3 * vol);
+        if (useBV) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'BV');
+        if (useFM) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'FM');
+        const waterNote = (useBV || useFM || useLP) ? ' (mit eingerührten Zusatzmitteln)' : '';
         items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
 
         shoppingList.style.display = 'block';
@@ -274,7 +296,7 @@ function update() {
 }
 
 // Wire events — both input (keystrokes) and change (Enter / tab / paste)
-['useExtraCement', 'useFlyAsh', 'useBV', 'useSilica', 'useLP'].forEach(id => {
+['useExtraCement', 'useFlyAsh', 'useBV', 'useFM', 'useSilica', 'useLP'].forEach(id => {
     document.getElementById(id).addEventListener('change', update);
 });
 const volInput = document.getElementById('tuneVolume');

@@ -860,6 +860,7 @@ function displayRecipe(recipe) {
             useFlyAsh: appState.useFlyAsh        || false,
             useSilica: appState.useSilicaFume    || false,
             useBV:     plasticizer === 'BV',
+            useFM:     plasticizer === 'FM',
             useLP:     appState.useAirEntraining || false,
         }));
     } catch (_) { /* sessionStorage blocked */ }
