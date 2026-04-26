@@ -271,15 +271,6 @@ function update() {
         `${fmtQty(lpTotal, 'l')} Luftporenbildner ins Anmachwasser mischen, dann zugeben`
     );
 
-    // Combination warning: BV and FM are mutually exclusive plasticizer types
-    const plasticWarning = document.getElementById('plasticWarning');
-    if (useBV && useFM && !bvPre && !fmPre) {
-        plasticWarning.classList.remove('hidden');
-        plasticWarning.textContent = '⚠️ Betonverflüssiger (BV) und Fließmittel (FM) nicht zusammen verwenden – bitte nur eines der beiden auswählen.';
-    } else {
-        plasticWarning.classList.add('hidden');
-    }
-
     // Combination warning: LP (frost) + Silikastaub not recommended together
     const combineWarning = document.getElementById('combineWarning');
     if (useLP && useSilica) {
@@ -333,9 +324,22 @@ function update() {
     }
 }
 
+// BV and FM are mutually exclusive plasticizer types — selecting one auto-clears the other.
+function enforceBvFmXor(justChanged) {
+    const other = justChanged === 'useBV' ? 'useFM' : 'useBV';
+    const justEl = document.getElementById(justChanged);
+    const otherEl = document.getElementById(other);
+    if (justEl.checked && otherEl.checked && !otherEl.disabled) {
+        otherEl.checked = false;
+    }
+}
+
 // Wire events — both input (keystrokes) and change (Enter / tab / paste)
 ['useExtraCement', 'useFlyAsh', 'useBV', 'useFM', 'useSilica', 'useLP'].forEach(id => {
-    document.getElementById(id).addEventListener('change', update);
+    document.getElementById(id).addEventListener('change', () => {
+        if (id === 'useBV' || id === 'useFM') enforceBvFmXor(id);
+        update();
+    });
 });
 const volInput = document.getElementById('tuneVolume');
 volInput.addEventListener('input', update);

@@ -318,30 +318,30 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
     // ── Mixing order (B20: dry first, wet last) ───────────────────────────────
 
     it('all selected: dry additions precede wet ones; water is last', () => {
+        // BV and FM are mutually exclusive — checking them in order leaves FM on, BV cleared.
         ALL_CHECKBOXES.forEach(id => check(id));
         const steps = getSteps();
 
-        assert.strictEqual(steps.length, 7,
-            `expected 7 steps (6 additives + water), got ${steps.length}`);
+        assert.strictEqual(steps.length, 6,
+            `expected 6 steps (5 additives + water; BV cleared by FM), got ${steps.length}`);
 
         const idx = (keyword) => steps.findIndex(s => s.includes(keyword));
         const cementIdx = idx('Zement');
         const flyAshIdx = idx('Flugasche');
         const silicaIdx = idx('Silikastaub');
-        const bvIdx     = idx('Betonverflüssiger');
         const fmIdx     = idx('Fließmittel');
         const lpIdx     = idx('Luftporenbildner');
         const waterIdx  = idx('Wasser');
 
+        assert.strictEqual(idx('Betonverflüssiger'), -1, 'BV must be absent (cleared by FM)');
+
         // Dry additions come before wet ones (B20 mixing sequence)
-        assert.ok(cementIdx < bvIdx,  'cement (dry) must precede BV (wet)');
-        assert.ok(flyAshIdx < bvIdx,  'fly ash (dry) must precede BV (wet)');
-        assert.ok(silicaIdx < bvIdx,  'silica (dry) must precede BV (wet)');
+        assert.ok(cementIdx < fmIdx,  'cement (dry) must precede FM (wet)');
+        assert.ok(flyAshIdx < fmIdx,  'fly ash (dry) must precede FM (wet)');
         assert.ok(silicaIdx < fmIdx,  'silica (dry) must precede FM (wet)');
-        assert.ok(bvIdx     < lpIdx,  'BV must precede LP');
         assert.ok(fmIdx     < lpIdx,  'FM must precede LP');
         assert.ok(lpIdx     < waterIdx, 'LP must precede water');
-        assert.strictEqual(waterIdx, 6, 'water must be the very last step');
+        assert.strictEqual(waterIdx, 5, 'water must be the very last step');
     });
 
     // ── Preset switching ──────────────────────────────────────────────────────
@@ -431,28 +431,28 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         assert.ok(getSteps().at(-1).includes('eingerührten'));
     });
 
-    // ── BV + FM combination warning ───────────────────────────────────────────
+    // ── BV ⊕ FM mutual exclusion ──────────────────────────────────────────────
 
-    it('BV + FM: combination warning is shown (mutually exclusive product types)', () => {
+    it('BV ⊕ FM: checking FM while BV is on auto-unchecks BV', () => {
         check('useBV');
         check('useFM');
-        const warn = doc.getElementById('plasticWarning');
-        assert.ok(!warn.classList.contains('hidden'), 'plasticWarning must be visible');
-        assert.ok(warn.textContent.includes('BV') && warn.textContent.includes('FM'));
+        assert.strictEqual(doc.getElementById('useBV').checked, false, 'BV should be cleared');
+        assert.strictEqual(doc.getElementById('useFM').checked, true,  'FM should remain on');
     });
 
-    it('BV + FM: warning disappears when BV is unchecked', () => {
-        check('useBV');
+    it('BV ⊕ FM: checking BV while FM is on auto-unchecks FM', () => {
         check('useFM');
-        check('useBV', false);
-        assert.ok(doc.getElementById('plasticWarning').classList.contains('hidden'));
+        check('useBV');
+        assert.strictEqual(doc.getElementById('useFM').checked, false, 'FM should be cleared');
+        assert.strictEqual(doc.getElementById('useBV').checked, true,  'BV should remain on');
     });
 
-    it('BV + FM: warning disappears when FM is unchecked', () => {
+    it('BV ⊕ FM: only one plasticizer step appears at a time', () => {
         check('useBV');
-        check('useFM');
-        check('useFM', false);
-        assert.ok(doc.getElementById('plasticWarning').classList.contains('hidden'));
+        check('useFM');  // should clear BV
+        const steps = getSteps().join(' | ');
+        assert.ok( steps.includes('Fließmittel'),         'FM step expected');
+        assert.ok(!steps.includes('Betonverflüssiger'),   'BV step must be gone');
     });
 
     it('LP cancels out gains when combined with all strength-increasing additives', () => {
