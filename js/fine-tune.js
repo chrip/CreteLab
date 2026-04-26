@@ -290,12 +290,22 @@ function update() {
     }
 
     // Strength result — always visible, updates with each selection change
-    const baseKlasse  = getBaseKlasse();
-    const tunedFck    = computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useFM, useLP);
-    const tunedKlasse = fckToClass(tunedFck);
-    const anyChecked  = useExtraCement || useFlyAsh || useSilica || useBV || useFM || useLP;
-    const resultEl    = document.getElementById('strengthResult');
-    if (anyChecked) {
+    // Pre-applied additives are already baked into the base klasse (the main form
+    // designed the recipe with them in mind, including safety margins).  Only show
+    // a recomputed strength when the user actively *adds* something on top —
+    // otherwise the blunt Walzkurven inversion would downgrade the chosen class.
+    const baseKlasse      = getBaseKlasse();
+    const anyUserChecked  =
+        useExtraCement ||
+        (useFlyAsh && !flyAshPre) ||
+        (useSilica  && !silicaPre) ||
+        (useBV      && !bvPre) ||
+        (useFM      && !fmPre) ||
+        (useLP      && !lpPre);
+    const resultEl = document.getElementById('strengthResult');
+    if (anyUserChecked) {
+        const tunedFck    = computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useFM, useLP);
+        const tunedKlasse = fckToClass(tunedFck);
         const arrow = baseKlasse && baseKlasse !== tunedKlasse ? ` &nbsp;→&nbsp; <strong>${tunedKlasse}</strong>` : '';
         resultEl.innerHTML =
             `<strong>Ausgangsbeton:</strong> ${baseKlasse || '–'}${arrow}` +
