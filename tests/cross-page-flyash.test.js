@@ -7,12 +7,16 @@
 //   3. Hand off the no-FA recipe to fine-tune, tick fly ash there
 //   4. Compare the fly-ash mass shown in fine-tune to the one from step 1.
 //
-// In the current code the two paths *cannot* coincide:
-//   • main form with FA reduces cement via equivalent binder (z_FA < z_noFA)
-//   • fine-tune adds 15 % of the *delivered* cement, which is z_noFA (higher)
-// so the fine-tune amount is structurally larger than the main-form amount.
-// The tolerance below documents that gap; if a future change tightens it,
-// this test will catch it.
+// The two paths cannot fully coincide:
+//   • main form with FA uses equivalent binder
+//     (z = w / (maxWz × (1 + k_FA·α_FA)) — with k_FA=0.4 and α_FA=0.15 the
+//     cement is up to ~6 % lower than without FA, so FA = 15 % of that
+//     smaller cement).
+//   • fine-tune adds 15 % of the *delivered* (no-FA) cement, which is
+//     larger — so fine-tune is ~6 % higher in the unclamped regime.
+//   • when the recipe hits the minimum-cement floor for the exposure class
+//     (e.g. XC1 ≥ 240 kg/m³), the gap shrinks below the theoretical max.
+// 10 % tolerance covers both regimes with margin.
 
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert';
@@ -139,15 +143,14 @@ describe('Cross-page parity: fly ash via main form vs. via fine-tune', () => {
             `fine-tune water step (${waterTune} l) must equal main no-FA water (${waterMain} l)`);
     });
 
-    it('fine-tune fly-ash matches main-form fly-ash within ±20 % tolerance', () => {
-        // Documented gap: fine-tune uses delivered cement (z_noFA), main uses
-        // the FA-reduced cement (z_FA), so fine-tune is structurally higher.
-        // The tolerance is wide enough to absorb that for a typical C25/30/XC1
-        // recipe but tight enough to flag a regression.
+    it('fine-tune fly-ash matches main-form fly-ash within ±10 % tolerance', () => {
+        // Theoretical max gap is ~6 % (1/1.06 − 1) when neither side hits the
+        // min-cement floor; on this C25/30 + XC1 recipe the with-FA side
+        // does hit the floor, so the actual gap is ~4 %. 10 % covers both.
         const diff = Math.abs(flyAshKgTune - flyAshKgMain);
         const rel  = diff / flyAshKgMain;
-        assert.ok(rel <= 0.20,
-            `FA mass should agree within 20 %: main=${flyAshKgMain} kg/m³, ` +
+        assert.ok(rel <= 0.10,
+            `FA mass should agree within 10 %: main=${flyAshKgMain} kg/m³, ` +
             `fine-tune=${flyAshKgTune} kg/m³ (Δ=${rel.toFixed(2)})`);
     });
 

@@ -2,11 +2,16 @@
 // mass the main form would have produced if silica had been ticked there
 // directly?
 //
-// Like the fly-ash test, the two paths cannot fully coincide:
-//   • main form with silica reduces cement via equivalent binder (k=1.0)
+// The two paths cannot fully coincide:
+//   • main form with silica reduces cement via equivalent binder
+//     (z = w / (maxWz × (1 + k_s·α_s)) — with k_s=1.0 and α_s=0.08 the
+//     cement is up to 8 % lower than without silica, so silica = 8 % of
+//     that smaller cement).
 //   • fine-tune adds 8 % of the *delivered* (no-silica) cement, which is
-//     larger — so fine-tune is structurally higher.
-// Tolerance is wide enough to absorb that gap, tight enough to flag drift.
+//     larger — so fine-tune lands ~8 % higher in the unclamped regime.
+//   • when the recipe hits the minimum-cement floor for the exposure
+//     class (e.g. XC1 ≥ 240 kg/m³), the gap shrinks to a few percent.
+// 10 % tolerance covers both regimes with margin; 25 % was a sloppy guard.
 
 import { describe, it, before } from 'node:test';
 import assert from 'node:assert';
@@ -98,12 +103,13 @@ describe('Cross-page parity: Silikastaub via main form vs. via fine-tune', () =>
             `water should be silica-independent: with=${recipeWithSF.w} vs no=${recipeNoSF.w}`);
     });
 
-    it('fine-tune silica mass agrees with main-form silica within ±25 % tolerance', () => {
-        // Main reduces cement via equivalent binder (k=1.0), fine-tune scales 8 %
-        // of the larger no-silica cement. Tolerance documents that gap.
+    it('fine-tune silica mass agrees with main-form silica within ±10 % tolerance', () => {
+        // Theoretical max gap is ~8 % (1/1.08 − 1) when neither side hits the
+        // min-cement floor; on this C25/30 + XC1 recipe the with-silica side
+        // does hit the floor, so the actual gap is ~4 %. 10 % covers both.
         const rel = Math.abs(silicaTune - silicaMain) / silicaMain;
-        assert.ok(rel <= 0.25,
-            `silica mass should agree within 25 %: main=${silicaMain} kg/m³, ` +
+        assert.ok(rel <= 0.10,
+            `silica mass should agree within 10 %: main=${silicaMain} kg/m³, ` +
             `tune=${silicaTune} kg/m³ (Δ=${rel.toFixed(2)})`);
     });
 
