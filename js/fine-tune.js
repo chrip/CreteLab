@@ -3,7 +3,13 @@
 // Input: URL params from main calculator (or built-in presets).
 // Output: absolute quantities per selected option (total for their volume).
 
-import { applyAdmixtureWaterReduction } from './lib/additives.js';
+import {
+    applyAdmixtureWaterReduction,
+    calculateStrengthReduction,
+    getAdmixtureDosage,
+    SUPPLEMENTARY_MATERIALS,
+} from './lib/additives.js';
+import { calculateStrengthFromWalzkurven, STRENGTH_CLASSES } from './lib/strength.js';
 
 const PRESETS = [
     { value: 'c20', label: 'Einfach – C20/25 (Fundamente, Pflasterbett)',     z: 280, w: 195, g: 1820, klasse: 'C20/25' },
@@ -127,32 +133,26 @@ function getBaseKlasse() {
     return PRESETS.find(p => p.value === sel.value)?.klasse || '';
 }
 
-// Simplified Walzkurven for CEM I 42.5N: f_cm ≈ 31 / sqrt(w/z), A=31 matches main app.
+// Walzkurven for CEM I 42.5N via shared lib. SCM k-factors from SUPPLEMENTARY_MATERIALS.
 // Returns estimated f_ck_cube after applying selected additions.
 function computeTunedFck(useExtraCement, useFlyAsh, useSilica, useBV, useLP) {
     let z_eff = cementPerM3;
     let w_eff = waterPerM3;
 
-    if (useExtraCement) z_eff += cementPerM3 * 0.10;        // 10% more cement
-    if (useFlyAsh)      z_eff += cementPerM3 * 0.15 * 0.4;  // k=0.4
-    if (useSilica)      z_eff += cementPerM3 * 0.08 * 1.0;  // k=1.0
-    if (useBV)          w_eff = applyAdmixtureWaterReduction(w_eff, 'BV');
+    if (useExtraCement) z_eff += cementPerM3 * 0.10;
+    if (useFlyAsh)      z_eff += cementPerM3 * 0.15 * SUPPLEMENTARY_MATERIALS.Flugasche.k_f;
+    if (useSilica)      z_eff += cementPerM3 * 0.08 * SUPPLEMENTARY_MATERIALS.Silikastaub.k_s;
+    if (useBV)          w_eff  = applyAdmixtureWaterReduction(w_eff, 'BV');
 
-    const fCm = 31 / Math.sqrt(w_eff / z_eff);
-    let fCk = fCm - 8;        // subtract combined margin (vorhaltemas + sigma)
-    if (useLP) fCk -= 14;     // 4% air × 3.5 N/mm² per %
-    return Math.max(8, Math.round(fCk));
+    const fCm = calculateStrengthFromWalzkurven(w_eff / z_eff, '42.5');
+    const fCmFinal = useLP ? calculateStrengthReduction(fCm, 4) : fCm;
+    return Math.max(8, Math.round(fCmFinal - 8));
 }
 
 function fckToClass(fck) {
-    if (fck >= 50) return 'C40/50';
-    if (fck >= 45) return 'C35/45';
-    if (fck >= 37) return 'C30/37';
-    if (fck >= 30) return 'C25/30';
-    if (fck >= 25) return 'C20/25';
-    if (fck >= 20) return 'C16/20';
-    if (fck >= 15) return 'C12/15';
-    return 'C8/10';
+    const sorted = Object.entries(STRENGTH_CLASSES)
+        .sort((a, b) => b[1].f_ck_cube - a[1].f_ck_cube);
+    return (sorted.find(([, v]) => fck >= v.f_ck_cube) ?? sorted[sorted.length - 1])[0];
 }
 
 // --- Core update: recompute quantities and refresh DOM ---
@@ -203,20 +203,20 @@ function update() {
         `${fmtQty(silicaTotal, 'kg')} Silikastaub trocken in den Trockenmix einmischen`
     );
 
-    // Betonverflüssiger – 0.5 l/m³ (into water)
+    // Betonverflüssiger (into water)
     const useBV = document.getElementById('useBV').checked;
     setCard('cardBV', useBV);
-    const bvTotal = 0.5 * vol;
+    const bvTotal = getAdmixtureDosage('BV') * vol;
     setResult('resBV', useBV,
         `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`);
     if (useBV) items.push(
         `${fmtQty(bvTotal, 'l')} Betonverflüssiger ins Anmachwasser einrühren, dann langsam zugeben`
     );
 
-    // Luftporenbildner – 0.2 l/m³ (into water)
+    // Luftporenbildner (into water)
     const useLP = document.getElementById('useLP').checked;
     setCard('cardLP', useLP);
-    const lpTotal = 0.2 * vol;
+    const lpTotal = getAdmixtureDosage('LP') * vol;
     setResult('resLP', useLP,
         `Hinzufügen: <strong>${fmtQty(lpTotal, 'l')} Luftporenbildner</strong>`);
     if (useLP) items.push(
