@@ -50,7 +50,7 @@ function fmt(n, decimals = 0) {
 function fmtQty(n, unit) {
     if (unit === 'kg' && n < 1) return `${fmt(n * 1000)} g`;
     if (unit === 'l'  && n < 1) return `${fmt(n * 1000)} ml`;
-    return `${fmt(n, n < 10 ? 1 : 0)} ${unit}`;
+    return `${fmt(n, 2)} ${unit}`;
 }
 
 function getVolume() {

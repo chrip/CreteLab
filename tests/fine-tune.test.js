@@ -124,16 +124,15 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         const { z } = PRESETS.c25;
         check('useExtraCement');
         const expected = Math.round(z * 0.10); // 30 kg for c25 at 1 m³
-        assert.ok(getSteps()[0].includes(`${expected} kg`),
-            `expected ${expected} kg in step`);
+        assert.ok(getSteps()[0].includes(`${expected},00 kg`),
+            `expected ${expected},00 kg in step, got: ${getSteps()[0]}`);
     });
 
     it('extra cement: quantity scales with volume', () => {
-        const { z } = PRESETS.c25;
         check('useExtraCement');
-        const qty1 = parseInt(/(\d+) kg/.exec(getSteps()[0])[1], 10);
+        const qty1 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[0])[1].replace(',', '.'));
         setVolume(2);
-        const qty2 = parseInt(/(\d+) kg/.exec(getSteps()[0])[1], 10);
+        const qty2 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[0])[1].replace(',', '.'));
         assert.strictEqual(qty2, qty1 * 2);
     });
 
@@ -154,7 +153,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         const step = getSteps().find(s => s.includes('Flugasche'));
         assert.ok(step, 'fly ash step must appear');
         const expected = Math.round(z * 0.15); // 45 kg
-        assert.ok(step.includes(`${expected} kg`));
+        assert.ok(step.includes(`${expected},00 kg`),
+            `expected ${expected},00 kg in: ${step}`);
     });
 
     it('fly ash: B20 dosage (15%) is within the 33% ceiling for all presets', () => {
@@ -182,7 +182,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         const step = getSteps().find(s => s.includes('Silikastaub'));
         assert.ok(step, 'silica step must appear');
         const expected = Math.round(z * 0.08); // 24 kg
-        assert.ok(step.includes(`${expected} kg`));
+        assert.ok(step.includes(`${expected},00 kg`),
+            `expected ${expected},00 kg in: ${step}`);
     });
 
     it('silica: B20 dosage (8%) is within the 11% ceiling for all presets', () => {
@@ -381,10 +382,11 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
 
     it('switching preset updates additive quantities', () => {
         check('useExtraCement');
-        const kg25 = parseInt(/(\d+) kg/.exec(getSteps()[0])[1], 10);
+        const parseKg = step => parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(step)[1].replace(',', '.'));
+        const kg25 = parseKg(getSteps()[0]);
 
         setPreset('c30'); // z=340, 10% = 34 kg
-        const kg30 = parseInt(/(\d+) kg/.exec(getSteps()[0])[1], 10);
+        const kg30 = parseKg(getSteps()[0]);
 
         assert.ok(kg30 > kg25, `c30 (z=340) should give larger extra cement than c25 (z=300)`);
         assert.strictEqual(kg30, Math.round(PRESETS.c30.z * 0.10));
