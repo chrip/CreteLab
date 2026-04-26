@@ -115,12 +115,30 @@ function isPreApplied(id) {
 // Called on every preset switch so switching to a standard preset frees all checkboxes.
 function syncPreAppliedState() {
     const onCustom = sel.value === 'custom' && !!customRecipe;
+
+    // Reset every potentially-locked checkbox so switching back to a standard
+    // preset frees both pre-applied additives and any partner-locks below.
+    PRE_APPLIED_IDS.forEach(id => { document.getElementById(id).disabled = false; });
+
     PRE_APPLIED_IDS.forEach(id => {
         if (!customRecipe?.[id]) return;
         const el = document.getElementById(id);
         el.checked  = onCustom;  // re-check when returning to custom preset
         el.disabled = onCustom;
     });
+
+    // BV ⊕ FM: a pre-applied plasticizer also locks out its mutually-exclusive
+    // partner so the user can't add the wrong one on top.
+    if (onCustom && customRecipe?.useBV) {
+        const fm = document.getElementById('useFM');
+        fm.checked  = false;
+        fm.disabled = true;
+    }
+    if (onCustom && customRecipe?.useFM) {
+        const bv = document.getElementById('useBV');
+        bv.checked  = false;
+        bv.disabled = true;
+    }
 }
 
 // Select the right entry and sync state
