@@ -48,8 +48,8 @@ function fmt(n, decimals = 0) {
 }
 
 function fmtQty(n, unit) {
-    if (unit === 'kg' && n < 1)   return `${fmt(n * 1000)} g`;
-    if (unit === 'l'  && n < 0.1) return `${fmt(n * 1000)} ml`;
+    if (unit === 'kg' && n < 1) return `${fmt(n * 1000)} g`;
+    if (unit === 'l'  && n < 1) return `${fmt(n * 1000)} ml`;
     return `${fmt(n, n < 10 ? 1 : 0)} ${unit}`;
 }
 
@@ -309,10 +309,14 @@ function update() {
     const shoppingList  = document.getElementById('shoppingList');
     const shoppingItems = document.getElementById('shoppingItems');
     if (items.length > 0) {
-        // Water is always the last step; note dissolved additives if present
-        let waterTotal = Math.round(waterPerM3 * vol);
-        if (useBV) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'BV');
-        if (useFM) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'FM');
+        // Water is always the last step; note dissolved additives if present.
+        // Apply BV/FM reduction at per-m³ scale (where rounding is safe) and
+        // multiply by volume last — otherwise small batches (e.g. 0.001 m³)
+        // round to zero before fmtQty can pick the ml unit.
+        let waterPerM3Adj = waterPerM3;
+        if (useBV) waterPerM3Adj = applyAdmixtureWaterReduction(waterPerM3Adj, 'BV');
+        if (useFM) waterPerM3Adj = applyAdmixtureWaterReduction(waterPerM3Adj, 'FM');
+        const waterTotal = waterPerM3Adj * vol;
         const hasUserWetAdditives = (useBV && !bvPre) || (useFM && !fmPre) || (useLP && !lpPre);
         const waterNote = hasUserWetAdditives ? ' (mit eingerührten Zusatzmitteln)' : '';
         items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);

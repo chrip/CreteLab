@@ -208,8 +208,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useBV');
         const step = getSteps().find(s => s.includes('Betonverflüssiger'));
         assert.ok(step, 'BV step must appear');
-        // fmtQty(0.5, 'l') → '0,5 l'
-        assert.ok(step.match(/0[,.]5\s*l/), `expected 0,5 l in: ${step}`);
+        // fmtQty(0.5, 'l') → '500 ml'
+        assert.ok(step.match(/500\s*ml/), `expected 500 ml in: ${step}`);
         assert.strictEqual(getAdmixtureDosage('BV'), 0.5);
     });
 
@@ -239,8 +239,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useLP');
         const step = getSteps().find(s => s.includes('Luftporenbildner'));
         assert.ok(step, 'LP step must appear');
-        // fmtQty(0.2, 'l') → '0,2 l'
-        assert.ok(step.match(/0[,.]2\s*l/), `expected 0,2 l in: ${step}`);
+        // fmtQty(0.2, 'l') → '200 ml'
+        assert.ok(step.match(/200\s*ml/), `expected 200 ml in: ${step}`);
         assert.strictEqual(getAdmixtureDosage('LP'), 0.2);
     });
 
@@ -270,6 +270,39 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useLP');
         assert.ok(getSteps().at(-1).includes('eingerührten'),
             'water step should mention dissolved additives');
+    });
+
+    // ── Small-volume precision (regression: 0.001 m³ rendered "0 ml") ─────────
+
+    it('volume 0.001 m³: water step shows a positive amount, not "0 ml"', () => {
+        // c25 preset has 190 l/m³ → 0.001 m³ = 0.19 l = 190 ml.
+        // Bug was Math.round(190 * 0.001) = 0 → fmtQty(0,'l') → "0 ml".
+        check('useExtraCement');  // need at least one item to make the step list visible
+        setVolume(0.001);
+
+        const waterStep = getSteps().at(-1);
+        assert.ok(waterStep.includes('Wasser'), `last step must be water, got: ${waterStep}`);
+        assert.ok(!/\b0\s*ml\b/.test(waterStep), `water must not render as "0 ml": ${waterStep}`);
+        assert.ok(!/\b0\s*l\b/.test(waterStep),  `water must not render as "0 l": ${waterStep}`);
+
+        // c25 default: 190 l/m³ × 0.001 m³ = 0.19 l → 190 ml
+        const m = /(\d+(?:[.,]\d+)?)\s*(ml|l)\b/.exec(waterStep);
+        assert.ok(m, `expected a numeric water amount, got: ${waterStep}`);
+        const value = parseFloat(m[1].replace(',', '.'));
+        const inLiters = m[2] === 'ml' ? value / 1000 : value;
+        assert.ok(inLiters > 0.15 && inLiters < 0.25,
+            `water amount should be ~0.19 l (190 ml), got ${value} ${m[2]} = ${inLiters} l`);
+    });
+
+    it('volume 0.001 m³ with BV: water reduction still leaves a positive amount', () => {
+        check('useBV');
+        setVolume(0.001);
+
+        const waterStep = getSteps().at(-1);
+        assert.ok(!/\b0\s*ml\b/.test(waterStep),
+            `BV-reduced water must not render as "0 ml": ${waterStep}`);
+        // 190 × 0.93 ≈ 177 l/m³ × 0.001 = 0.177 l ≈ 177 ml
+        assert.ok(/\d+\s*ml/.test(waterStep), `expected ml-scale water, got: ${waterStep}`);
     });
 
     // ── LP + Silica combination warning ───────────────────────────────────────
@@ -394,8 +427,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useFM');
         const step = getSteps().find(s => s.includes('Fließmittel'));
         assert.ok(step, 'FM step must appear');
-        // getAdmixtureDosage('FM') = 0.2 l/m³ → fmtQty(0.2, 'l') → '0,2 l'
-        assert.ok(step.match(/0[,.]2\s*l/), `expected 0,2 l in: ${step}`);
+        // getAdmixtureDosage('FM') = 0.2 l/m³ → fmtQty(0.2, 'l') → '200 ml'
+        assert.ok(step.match(/200\s*ml/), `expected 200 ml in: ${step}`);
     });
 
     it('FM: reduces water demand by 20% (B20 typical for FM)', () => {
