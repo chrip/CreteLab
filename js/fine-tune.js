@@ -102,6 +102,27 @@ PRESETS.forEach(p => {
     sel.appendChild(opt);
 });
 
+// IDs that can be pre-applied (from the main recipe).  Extra cement has no equivalent.
+const PRE_APPLIED_IDS = ['useFlyAsh', 'useSilica', 'useBV', 'useFM', 'useLP'];
+
+// Returns true when this additive was already active in the main-form recipe AND
+// the user is currently viewing the custom preset (not a standard one).
+function isPreApplied(id) {
+    return sel.value === 'custom' && !!(customRecipe?.[id]);
+}
+
+// Lock or unlock additives that were part of the original recipe.
+// Called on every preset switch so switching to a standard preset frees all checkboxes.
+function syncPreAppliedState() {
+    const onCustom = sel.value === 'custom' && !!customRecipe;
+    PRE_APPLIED_IDS.forEach(id => {
+        if (!customRecipe?.[id]) return;
+        const el = document.getElementById(id);
+        el.checked  = onCustom;  // re-check when returning to custom preset
+        el.disabled = onCustom;
+    });
+}
+
 // Select the right entry and sync state
 function applySelection() {
     const val = sel.value;
@@ -119,17 +140,8 @@ function applySelection() {
         }
         infoBox.style.display = 'none';
     }
+    syncPreAppliedState();
     update();
-}
-
-// Pre-check additives that were already active in the main recipe.
-// Must happen before applySelection() so the first update() sees the right state.
-if (customRecipe) {
-    if (customRecipe.useFlyAsh) document.getElementById('useFlyAsh').checked = true;
-    if (customRecipe.useSilica) document.getElementById('useSilica').checked = true;
-    if (customRecipe.useBV)     document.getElementById('useBV').checked     = true;
-    if (customRecipe.useFM)     document.getElementById('useFM').checked     = true;
-    if (customRecipe.useLP)     document.getElementById('useLP').checked     = true;
 }
 
 // Initial selection
@@ -171,22 +183,28 @@ function update() {
     const vol = getVolume();
     const items = [];
 
-    function setCard(cardId, checked) {
-        document.getElementById(cardId).classList.toggle('selected', checked);
+    const ALREADY_IN = '<span class="already-in-note">✓ Bereits im Rezept enthalten – wird in der Festigkeitsschätzung berücksichtigt</span>';
+
+    function setCard(cardId, checked, pre) {
+        const card = document.getElementById(cardId);
+        card.classList.toggle('selected',     checked && !pre);
+        card.classList.toggle('pre-applied',  !!pre);
     }
 
-    function setResult(resultId, checked, html) {
+    function setResult(resultId, visible, html, pre) {
         const el = document.getElementById(resultId);
-        el.style.display = checked ? 'block' : 'none';
-        if (checked) el.innerHTML = html;
+        el.style.display = visible ? 'block' : 'none';
+        el.className = 'option-result' + (pre ? ' already-in' : '');
+        if (visible) el.innerHTML = html;
     }
 
-    // Mixing order: dry additions first (cement, fly ash, silica), then wet (BV, LP in water).
+    // Mixing order: dry additions first (cement, fly ash, silica), then wet (BV, FM, LP in water).
     // Each item has only a mix instruction — no buy steps.
+    // Pre-applied additives (from the main recipe) are shown as locked; no step is generated.
 
     // Extra cement – 10 % more (dry)
     const useExtraCement = document.getElementById('useExtraCement').checked;
-    setCard('cardCement', useExtraCement);
+    setCard('cardCement', useExtraCement, false);
     const extraCementTotal = Math.round(cementPerM3 * 0.10) * vol;
     setResult('resExtraCement', useExtraCement,
         `Hinzufügen: <strong>${fmtQty(extraCementTotal, 'kg')} Zement extra</strong>`);
@@ -195,58 +213,68 @@ function update() {
     );
 
     // Flugasche – 15 % of cement (dry)
-    const useFlyAsh = document.getElementById('useFlyAsh').checked;
-    setCard('cardFlyAsh', useFlyAsh);
+    const useFlyAsh  = document.getElementById('useFlyAsh').checked;
+    const flyAshPre  = isPreApplied('useFlyAsh');
+    setCard('cardFlyAsh', useFlyAsh, flyAshPre);
     const flyAshTotal = Math.round(cementPerM3 * 0.15) * vol;
     setResult('resFlyAsh', useFlyAsh,
-        `Hinzufügen: <strong>${fmtQty(flyAshTotal, 'kg')} Flugasche</strong>`);
-    if (useFlyAsh) items.push(
+        flyAshPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(flyAshTotal, 'kg')} Flugasche</strong>`,
+        flyAshPre);
+    if (useFlyAsh && !flyAshPre) items.push(
         `${fmtQty(flyAshTotal, 'kg')} Flugasche trocken mit Zement und Gesteinskörnung mischen`
     );
 
     // Silikastaub – 8 % of cement (dry)
-    const useSilica = document.getElementById('useSilica').checked;
-    setCard('cardSilica', useSilica);
+    const useSilica  = document.getElementById('useSilica').checked;
+    const silicaPre  = isPreApplied('useSilica');
+    setCard('cardSilica', useSilica, silicaPre);
     const silicaTotal = Math.round(cementPerM3 * 0.08) * vol;
     setResult('resSilica', useSilica,
-        `Hinzufügen: <strong>${fmtQty(silicaTotal, 'kg')} Silikastaub</strong>`);
-    if (useSilica) items.push(
+        silicaPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(silicaTotal, 'kg')} Silikastaub</strong>`,
+        silicaPre);
+    if (useSilica && !silicaPre) items.push(
         `${fmtQty(silicaTotal, 'kg')} Silikastaub trocken in den Trockenmix einmischen`
     );
 
     // Betonverflüssiger (into water)
-    const useBV = document.getElementById('useBV').checked;
-    setCard('cardBV', useBV);
+    const useBV  = document.getElementById('useBV').checked;
+    const bvPre  = isPreApplied('useBV');
+    setCard('cardBV', useBV, bvPre);
     const bvTotal = getAdmixtureDosage('BV') * vol;
     setResult('resBV', useBV,
-        `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`);
-    if (useBV) items.push(
+        bvPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`,
+        bvPre);
+    if (useBV && !bvPre) items.push(
         `${fmtQty(bvTotal, 'l')} Betonverflüssiger ins Anmachwasser einrühren, dann langsam zugeben`
     );
 
     // Fließmittel (into water)
-    const useFM = document.getElementById('useFM').checked;
-    setCard('cardFM', useFM);
+    const useFM  = document.getElementById('useFM').checked;
+    const fmPre  = isPreApplied('useFM');
+    setCard('cardFM', useFM, fmPre);
     const fmTotal = getAdmixtureDosage('FM') * vol;
     setResult('resFM', useFM,
-        `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`);
-    if (useFM) items.push(
+        fmPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`,
+        fmPre);
+    if (useFM && !fmPre) items.push(
         `${fmtQty(fmTotal, 'l')} Fließmittel ins Anmachwasser einrühren, dann langsam zugeben`
     );
 
     // Luftporenbildner (into water)
-    const useLP = document.getElementById('useLP').checked;
-    setCard('cardLP', useLP);
+    const useLP  = document.getElementById('useLP').checked;
+    const lpPre  = isPreApplied('useLP');
+    setCard('cardLP', useLP, lpPre);
     const lpTotal = getAdmixtureDosage('LP') * vol;
     setResult('resLP', useLP,
-        `Hinzufügen: <strong>${fmtQty(lpTotal, 'l')} Luftporenbildner</strong>`);
-    if (useLP) items.push(
+        lpPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(lpTotal, 'l')} Luftporenbildner</strong>`,
+        lpPre);
+    if (useLP && !lpPre) items.push(
         `${fmtQty(lpTotal, 'l')} Luftporenbildner ins Anmachwasser mischen, dann zugeben`
     );
 
     // Combination warning: BV and FM are mutually exclusive plasticizer types
     const plasticWarning = document.getElementById('plasticWarning');
-    if (useBV && useFM) {
+    if (useBV && useFM && !bvPre && !fmPre) {
         plasticWarning.style.display = 'block';
         plasticWarning.textContent = '⚠️ Betonverflüssiger (BV) und Fließmittel (FM) nicht zusammen verwenden – bitte nur eines der beiden auswählen.';
     } else {
@@ -285,7 +313,8 @@ function update() {
         let waterTotal = Math.round(waterPerM3 * vol);
         if (useBV) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'BV');
         if (useFM) waterTotal = applyAdmixtureWaterReduction(waterTotal, 'FM');
-        const waterNote = (useBV || useFM || useLP) ? ' (mit eingerührten Zusatzmitteln)' : '';
+        const hasUserWetAdditives = (useBV && !bvPre) || (useFM && !fmPre) || (useLP && !lpPre);
+        const waterNote = hasUserWetAdditives ? ' (mit eingerührten Zusatzmitteln)' : '';
         items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
 
         shoppingList.style.display = 'block';
