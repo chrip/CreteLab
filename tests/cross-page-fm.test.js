@@ -87,6 +87,23 @@ describe('Cross-page handoff: FM in main form locks out BV in fine-tune', () => 
             'BV must be disabled — selecting it would conflict with pre-applied FM');
     });
 
+    it('fine-tune: BV card is visually grayed out with an explanatory message', () => {
+        const card = tuneDoc.getElementById('cardBV');
+        const result = tuneDoc.getElementById('resBV');
+
+        assert.ok(card.classList.contains('locked-out'),
+            'BV card must carry the .locked-out class for the gray styling');
+        assert.ok(!card.classList.contains('selected'),
+            'BV card must not be styled as selected');
+
+        assert.ok(!result.classList.contains('hidden'),
+            'BV result panel must be visible to show the lock-out reason');
+        assert.ok(result.classList.contains('locked-out'),
+            'BV result panel must carry .locked-out for the gray accent');
+        assert.ok(/Fließmittel.*bereits/i.test(result.textContent),
+            `BV result should explain that FM is already in the recipe, got: "${result.textContent}"`);
+    });
+
     it('fine-tune: switching to a standard preset re-enables both BV and FM', () => {
         const sel = tuneDoc.getElementById('mixPreset');
         sel.value = 'c25';

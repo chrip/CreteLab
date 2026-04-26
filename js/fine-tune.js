@@ -201,17 +201,24 @@ function update() {
     const vol = getVolume();
     const items = [];
 
-    const ALREADY_IN = '<span class="already-in-note">✓ Bereits im Rezept enthalten – wird in der Festigkeitsschätzung berücksichtigt</span>';
+    const ALREADY_IN    = '<span class="already-in-note">✓ Bereits im Rezept enthalten – wird in der Festigkeitsschätzung berücksichtigt</span>';
+    const LOCKED_BY_FM  = '<span class="locked-out-note">✕ Fließmittel ist bereits im Rezept enthalten – Betonverflüssiger nicht zusätzlich verwenden (gegenseitig ausschließend).</span>';
+    const LOCKED_BY_BV  = '<span class="locked-out-note">✕ Betonverflüssiger ist bereits im Rezept enthalten – Fließmittel nicht zusätzlich verwenden (gegenseitig ausschließend).</span>';
 
-    function setCard(cardId, checked, pre) {
+    function setCard(cardId, checked, pre, lockedOut) {
         const card = document.getElementById(cardId);
-        card.classList.toggle('selected',     checked && !pre);
-        card.classList.toggle('pre-applied',  !!pre);
+        card.classList.toggle('selected',    checked && !pre && !lockedOut);
+        card.classList.toggle('pre-applied', !!pre);
+        card.classList.toggle('locked-out',  !!lockedOut);
     }
 
-    function setResult(resultId, visible, html, pre) {
+    function setResult(resultId, visible, html, pre, lockedOut) {
         const el = document.getElementById(resultId);
-        el.className = 'option-result' + (pre ? ' already-in' : '') + (visible ? '' : ' hidden');
+        let cls = 'option-result';
+        if (pre)        cls += ' already-in';
+        if (lockedOut)  cls += ' locked-out';
+        if (!visible)   cls += ' hidden';
+        el.className = cls;
         if (visible) el.innerHTML = html;
     }
 
@@ -253,26 +260,34 @@ function update() {
         `${fmtQty(silicaTotal, 'kg')} Silikastaub trocken in den Trockenmix einmischen`
     );
 
+    // BV ⊕ FM mutual exclusion: when one is pre-applied, the other is locked out.
+    const bvPre = isPreApplied('useBV');
+    const fmPre = isPreApplied('useFM');
+    const bvLockedOut = !bvPre && fmPre;
+    const fmLockedOut = !fmPre && bvPre;
+
     // Betonverflüssiger (into water)
     const useBV  = document.getElementById('useBV').checked;
-    const bvPre  = isPreApplied('useBV');
-    setCard('cardBV', useBV, bvPre);
+    setCard('cardBV', useBV, bvPre, bvLockedOut);
     const bvTotal = getAdmixtureDosage('BV') * vol;
-    setResult('resBV', useBV,
-        bvPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`,
-        bvPre);
+    const bvVisible = useBV || bvLockedOut;
+    const bvHtml = bvLockedOut ? LOCKED_BY_FM
+        : bvPre ? ALREADY_IN
+        : `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`;
+    setResult('resBV', bvVisible, bvHtml, bvPre, bvLockedOut);
     if (useBV && !bvPre) items.push(
         `${fmtQty(bvTotal, 'l')} Betonverflüssiger ins Anmachwasser einrühren, dann langsam zugeben`
     );
 
     // Fließmittel (into water)
     const useFM  = document.getElementById('useFM').checked;
-    const fmPre  = isPreApplied('useFM');
-    setCard('cardFM', useFM, fmPre);
+    setCard('cardFM', useFM, fmPre, fmLockedOut);
     const fmTotal = getAdmixtureDosage('FM') * vol;
-    setResult('resFM', useFM,
-        fmPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`,
-        fmPre);
+    const fmVisible = useFM || fmLockedOut;
+    const fmHtml = fmLockedOut ? LOCKED_BY_BV
+        : fmPre ? ALREADY_IN
+        : `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`;
+    setResult('resFM', fmVisible, fmHtml, fmPre, fmLockedOut);
     if (useFM && !fmPre) items.push(
         `${fmtQty(fmTotal, 'l')} Fließmittel ins Anmachwasser einrühren, dann langsam zugeben`
     );
