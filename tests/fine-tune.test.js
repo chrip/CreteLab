@@ -73,7 +73,7 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
     }
 
     function isListVisible() {
-        return doc.getElementById('shoppingList').style.display !== 'none';
+        return !doc.getElementById('shoppingList').classList.contains('hidden');
     }
 
     function getStrengthText() {
@@ -87,7 +87,7 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
     }
 
     function isWarningVisible() {
-        return doc.getElementById('combineWarning').style.display !== 'none';
+        return !doc.getElementById('combineWarning').classList.contains('hidden');
     }
 
     const ALL_CHECKBOXES = ['useExtraCement', 'useFlyAsh', 'useSilica', 'useBV', 'useFM', 'useLP'];
@@ -437,7 +437,7 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useBV');
         check('useFM');
         const warn = doc.getElementById('plasticWarning');
-        assert.ok(warn.style.display !== 'none', 'plasticWarning must be visible');
+        assert.ok(!warn.classList.contains('hidden'), 'plasticWarning must be visible');
         assert.ok(warn.textContent.includes('BV') && warn.textContent.includes('FM'));
     });
 
@@ -445,14 +445,14 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         check('useBV');
         check('useFM');
         check('useBV', false);
-        assert.strictEqual(doc.getElementById('plasticWarning').style.display, 'none');
+        assert.ok(doc.getElementById('plasticWarning').classList.contains('hidden'));
     });
 
     it('BV + FM: warning disappears when FM is unchecked', () => {
         check('useBV');
         check('useFM');
         check('useFM', false);
-        assert.strictEqual(doc.getElementById('plasticWarning').style.display, 'none');
+        assert.ok(doc.getElementById('plasticWarning').classList.contains('hidden'));
     });
 
     it('LP cancels out gains when combined with all strength-increasing additives', () => {

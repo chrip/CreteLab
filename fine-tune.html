@@ -113,14 +113,14 @@
             <section class="form-section">
                 <h2>Ihr Basisrezept</h2>
 
-                <div id="mixSelector" style="display:none;">
+                <div id="mixSelector" class="hidden">
                     <div class="form-group">
                         <label for="mixPreset">Ausgangsbeton (was ich kaufe / gekauft habe):</label>
                         <select id="mixPreset"></select>
                         <small class="form-hint">Wählen Sie das Basisrezept, das Sie tunen möchten.</small>
                     </div>
                     <!-- Shown only when "Aus dem Betonrechner" is selected -->
-                    <div id="baseRecipeInfo" class="base-recipe-box" style="display:none;"></div>
+                    <div id="baseRecipeInfo" class="base-recipe-box hidden"></div>
                 </div>
 
                 <div class="form-group">
@@ -139,7 +139,7 @@
                         🧱 Mehr Zement – einfach mehr Festigkeit
                     </label>
                     <p class="form-hint">10% mehr Zement in denselben Mix – der einfachste Weg für spürbar mehr Druckfestigkeit. Kein Spezialprodukt, im Baumarkt erhältlich.</p>
-                    <div class="option-result" id="resExtraCement" style="display:none;"></div>
+                    <div class="option-result hidden" id="resExtraCement"></div>
                 </div>
 
                 <div class="option-card" id="cardFlyAsh">
@@ -148,7 +148,7 @@
                         🌿 Flugasche – Dauerhaftigkeit &amp; Verarbeitbarkeit
                     </label>
                     <p class="form-hint">Zusatzstoff aus Kraftwerksasche. Verbessert die Langzeitfestigkeit, macht den Beton dichter und etwas flüssiger. Im Baustoffhandel erhältlich.</p>
-                    <div class="option-result" id="resFlyAsh" style="display:none;"></div>
+                    <div class="option-result hidden" id="resFlyAsh"></div>
                 </div>
 
                 <div class="option-card" id="cardBV">
@@ -157,7 +157,7 @@
                         💧 Betonverflüssiger (BV) – besser verarbeitbar
                     </label>
                     <p class="form-hint">Reduziert den Wasserbedarf um ca. 7 %, der Beton fließt gleichmäßiger in die Schalung. Im Baumarkt erhältlich. Nicht zusammen mit Fließmittel verwenden.</p>
-                    <div class="option-result" id="resBV" style="display:none;"></div>
+                    <div class="option-result hidden" id="resBV"></div>
                 </div>
 
                 <div class="option-card" id="cardFM">
@@ -166,7 +166,7 @@
                         🌊 Fließmittel (FM) – maximale Verarbeitbarkeit
                     </label>
                     <p class="form-hint">Stärkerer Verflüssiger: reduziert den Wasserbedarf um ca. 20 %. Für sehr fließfähigen Beton (F4–F6). Dosierung je nach Produkt prüfen. Nicht zusammen mit BV verwenden.</p>
-                    <div class="option-result" id="resFM" style="display:none;"></div>
+                    <div class="option-result hidden" id="resFM"></div>
                 </div>
 
                 <div class="option-card" id="cardSilica">
@@ -175,7 +175,7 @@
                         💪 Silikastaub – deutlich mehr Festigkeit
                     </label>
                     <p class="form-hint">Mikrosilika macht Beton spürbar fester und dichter. Für hochbeanspruchte Böden, Stützen und Fertigteile. Nur im Baustoffhandel oder online erhältlich (Spezialprodukt).</p>
-                    <div class="option-result" id="resSilica" style="display:none;"></div>
+                    <div class="option-result hidden" id="resSilica"></div>
                 </div>
 
                 <div class="option-card" id="cardLP">
@@ -184,17 +184,17 @@
                         ❄️ Luftporenbildner – Frostsicherheit
                     </label>
                     <p class="form-hint">Erzeugt feine Luftporen, die Frostschäden verhindern. Wichtig für Terrassen, Einfahrten und Außentreppen. Senkt die Druckfestigkeit um ca. 14 N/mm².</p>
-                    <div class="option-result" id="resLP" style="display:none;"></div>
+                    <div class="option-result hidden" id="resLP"></div>
                 </div>
 
-                <div class="plausibility-warning" id="plasticWarning"  style="display:none;"></div>
-                <div class="plausibility-warning" id="combineWarning" style="display:none;"></div>
+                <div class="plausibility-warning hidden" id="plasticWarning"></div>
+                <div class="plausibility-warning hidden" id="combineWarning"></div>
 
                 <div class="zugabewasser-info" id="strengthResult" style="margin-top:16px;"></div>
             </section>
 
             <!-- Step-by-step list shown when at least one option is selected -->
-            <div class="instructions" id="shoppingList" style="display:none;">
+            <div class="instructions hidden" id="shoppingList">
                 <h3>Schritt für Schritt:</h3>
                 <ol id="shoppingItems"></ol>
             </div>

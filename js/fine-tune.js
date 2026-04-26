@@ -60,7 +60,7 @@ function getVolume() {
 }
 
 // --- Build dropdown (always visible) ---
-document.getElementById('mixSelector').style.display = 'block';
+document.getElementById('mixSelector').classList.remove('hidden');
 
 const sel = document.getElementById('mixPreset');
 const infoBox = document.getElementById('baseRecipeInfo');
@@ -130,7 +130,7 @@ function applySelection() {
         cementPerM3    = customRecipe.z;
         waterPerM3     = customRecipe.w;
         aggregatePerM3 = customRecipe.g;
-        infoBox.style.display = 'block';
+        infoBox.classList.remove('hidden');
     } else {
         const preset = PRESETS.find(p => p.value === val);
         if (preset) {
@@ -138,7 +138,7 @@ function applySelection() {
             waterPerM3     = preset.w;
             aggregatePerM3 = preset.g;
         }
-        infoBox.style.display = 'none';
+        infoBox.classList.add('hidden');
     }
     syncPreAppliedState();
     update();
@@ -193,8 +193,7 @@ function update() {
 
     function setResult(resultId, visible, html, pre) {
         const el = document.getElementById(resultId);
-        el.style.display = visible ? 'block' : 'none';
-        el.className = 'option-result' + (pre ? ' already-in' : '');
+        el.className = 'option-result' + (pre ? ' already-in' : '') + (visible ? '' : ' hidden');
         if (visible) el.innerHTML = html;
     }
 
@@ -275,19 +274,19 @@ function update() {
     // Combination warning: BV and FM are mutually exclusive plasticizer types
     const plasticWarning = document.getElementById('plasticWarning');
     if (useBV && useFM && !bvPre && !fmPre) {
-        plasticWarning.style.display = 'block';
+        plasticWarning.classList.remove('hidden');
         plasticWarning.textContent = '⚠️ Betonverflüssiger (BV) und Fließmittel (FM) nicht zusammen verwenden – bitte nur eines der beiden auswählen.';
     } else {
-        plasticWarning.style.display = 'none';
+        plasticWarning.classList.add('hidden');
     }
 
     // Combination warning: LP (frost) + Silikastaub not recommended together
     const combineWarning = document.getElementById('combineWarning');
     if (useLP && useSilica) {
-        combineWarning.style.display = 'block';
+        combineWarning.classList.remove('hidden');
         combineWarning.textContent = '⚠️ Silikastaub ist bei frostbeanspruchtem Beton (LP-Einsatz) nicht empfohlen. Bitte nur einen der beiden verwenden.';
     } else {
-        combineWarning.style.display = 'none';
+        combineWarning.classList.add('hidden');
     }
 
     // Strength result — always visible, updates with each selection change
@@ -317,10 +316,10 @@ function update() {
         const waterNote = hasUserWetAdditives ? ' (mit eingerührten Zusatzmitteln)' : '';
         items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
 
-        shoppingList.style.display = 'block';
+        shoppingList.classList.remove('hidden');
         shoppingItems.innerHTML = items.map(step => `<li>${step}</li>`).join('');
     } else {
-        shoppingList.style.display = 'none';
+        shoppingList.classList.add('hidden');
     }
 }
 

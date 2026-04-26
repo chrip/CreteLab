@@ -39,7 +39,7 @@
         </header>
 
         <main id="calculator">
-            <form id="recipeForm" onsubmit="return false;">
+            <form id="recipeForm">
                 <section class="form-section">
                     <h2 id="section-properties">Betoneigenschaften</h2>
                     
@@ -69,7 +69,7 @@
                         <div class="checkbox-grid" id="exposureClassContainer" role="group" aria-labelledby="exposureLabel">
                             <!-- Options will be populated dynamically -->
                         </div>
-                        <div id="governingExposureInfo" class="exposure-info-box" style="display: none; margin-top: 10px; padding: 8px; background: #f9f9f9; border-left: 4px solid #3498db; font-size: 0.9em;">
+                        <div id="governingExposureInfo" class="exposure-info-box hidden">
                             <strong>Maßgebliche Klasse: </strong> <span id="govClassCode"></span><br>
                             <span id="govClassDesc"></span>
                         </div>
@@ -123,7 +123,7 @@
                         </label>
                         <small class="form-hint">Aktiviert Feuchtekorrektur für die Gesteinskörnung. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).</small>
                     </div>
-                    <div class="form-group" id="moistureContainer" style="display: none;">
+                    <div class="form-group hidden" id="moistureContainer">
                         <div class="moisture-grid">
                             <div class="moisture-field">
                                 <label for="moisture0_2">Feuchte 0/2 mm (%):</label>
@@ -159,7 +159,7 @@
                         </label>
                     </div>
 
-                    <div class="form-group" id="airEntrainingContainer" style="display: none;">
+                    <div class="form-group hidden" id="airEntrainingContainer">
                         <label for="airEntrainingPercent">Ziel-Luftgehalt (Vol.-%):</label>
                         <input type="number" id="airEntrainingPercent" name="airEntrainingPercent" step="0.5" min="1.5" max="10" value="4">
                         <small class="form-hint">Empfohlen für frostbelastete Bauteile (z.B. Außenbereiche). Ein höherer Luftgehalt reduziert den Wasserbedarf, senkt jedoch die Druckfestigkeit.</small>
@@ -173,7 +173,7 @@
                         </label>
                     </div>
 
-                    <div class="form-group" id="flyAshContainer" style="display: none;">
+                    <div class="form-group hidden" id="flyAshContainer">
                         <label for="flyAshPercent">Flugasche-Gehalt (% vom Zement):</label>
                         <input type="number" id="flyAshPercent" name="flyAshPercent" step="1" min="0" max="33" value="15">
                         <small class="form-hint">Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I.</small>
@@ -187,7 +187,7 @@
                         </label>
                     </div>
 
-                    <div class="form-group" id="silicaFumeContainer" style="display: none;">
+                    <div class="form-group hidden" id="silicaFumeContainer">
                         <label for="silicaFumePercent">Silikastaub-Gehalt (% vom Zement):</label>
                         <input type="number" id="silicaFumePercent" name="silicaFumePercent" step="1" min="0" max="11" value="8">
                         <small class="form-hint">Erhöht Festigkeit deutlich, verbessert Dichtheit. Max. 11% vom Zementgewicht.</small>
@@ -202,7 +202,7 @@
                         <small class="form-hint">WU = wasserundurchlässig; erhöht Abdichtung gegen Wasser/Druck. Setze 1-2% vom Zementgewicht.</small>
                     </div>
 
-                    <div class="form-group" id="waterproofContainer" style="display: none;">
+                    <div class="form-group hidden" id="waterproofContainer">
                         <label for="waterproofPercent">WU-Additiv-Gehalt (% vom Zement):</label>
                         <input type="number" id="waterproofPercent" name="waterproofPercent" step="0.5" min="0" max="5" value="2">
                         <small class="form-hint">Verwendet zur Reduzierung von Wasserdurchlässigkeit und Frostbeständigkeit.</small>
@@ -212,7 +212,7 @@
                 </section>
             </form>
 
-            <section id="results" class="result-section" style="display: none;" aria-labelledby="results-title">
+            <section id="results" class="result-section hidden" aria-labelledby="results-title">
                 <h2 id="results-title">📋 Ihr Betonrezept</h2>
 
                 <!-- Collapsible calculation steps -->
@@ -236,7 +236,7 @@
                 </table>
 
                 <!-- Korngruppen breakdown -->
-                <div id="kornGruppenSection" style="display: none;">
+                <div id="kornGruppenSection" class="hidden">
                     <h4>Gesteinskörnung – Aufteilung in Korngruppen:</h4>
                     <table class="korngruppen-table">
                         <thead>
@@ -253,7 +253,7 @@
                     <p class="zugabewasser-info" id="zugabewasserInfo"></p>
                 </div>
 
-                <div class="zugabewasser-info" id="additivesSummary" style="display: none;">
+                <div class="zugabewasser-info hidden" id="additivesSummary">
                     <p id="effectsList"></p>
                 </div>
 

@@ -215,7 +215,7 @@ function setError(message) {
     error.className = 'error-message';
     error.textContent = message;
     elements.resultsSection.parentNode.insertBefore(error, elements.resultsSection);
-    elements.resultsSection.style.display = 'none';
+    elements.resultsSection.classList.add('hidden');
 }
 
 function clearError() {
@@ -327,9 +327,9 @@ function updateGoverningExposureInfo() {
         const data = getExposureClass(governingCode);
         elements.govClassCode.textContent = governingCode;
         elements.govClassDesc.textContent = data ? data.description : '';
-        elements.governingExposureInfo.style.display = 'block';
+        elements.governingExposureInfo.classList.remove('hidden');
     } else {
-        elements.governingExposureInfo.style.display = 'none';
+        elements.governingExposureInfo.classList.add('hidden');
     }
 }
 
@@ -338,11 +338,11 @@ function getSelectedExposureClasses() {
 }
 
 function updateOptionalSections() {
-    elements.airEntrainingContainer.style.display = elements.useAirEntraining.checked ? 'block' : 'none';
-    elements.flyAshContainer.style.display = elements.useFlyAsh.checked ? 'block' : 'none';
-    elements.silicaFumeContainer.style.display = elements.useSilicaFume.checked ? 'block' : 'none';
-    elements.waterproofContainer.style.display = elements.useWaterproofing.checked ? 'block' : 'none';
-    elements.moistureContainer.style.display = elements.useMoisture.checked ? 'block' : 'none';
+    elements.airEntrainingContainer.classList.toggle('hidden', !elements.useAirEntraining.checked);
+    elements.flyAshContainer.classList.toggle('hidden',        !elements.useFlyAsh.checked);
+    elements.silicaFumeContainer.classList.toggle('hidden',    !elements.useSilicaFume.checked);
+    elements.waterproofContainer.classList.toggle('hidden',    !elements.useWaterproofing.checked);
+    elements.moistureContainer.classList.toggle('hidden',      !elements.useMoisture.checked);
 }
 
 function updateHints() {
@@ -646,7 +646,7 @@ function calculateRecipe() {
 
     if (elements.effectsList) {
         elements.effectsList.innerHTML = effectNotes.join('<br>');
-        elements.additivesSummary.style.display = effectNotes.length ? 'block' : 'none';
+        elements.additivesSummary.classList.toggle('hidden', effectNotes.length === 0);
     }
 
     displayRecipe(recipe);
@@ -656,7 +656,7 @@ function displayRecipe(recipe) {
     const existingError = document.querySelector('.error-message');
     if (existingError) existingError.remove();
 
-    elements.resultsSection.style.display = 'block';
+    elements.resultsSection.classList.remove('hidden');
 
 
     // ── Plausibility warnings ─────────────────────────────────────────────────
@@ -779,7 +779,7 @@ function displayRecipe(recipe) {
 
     // ── Korngruppen table ─────────────────────────────────────────────────────
     if (recipe.korngruppen && recipe.korngruppen.length > 0) {
-        elements.kornGruppenSection.style.display = 'block';
+        elements.kornGruppenSection.classList.remove('hidden');
         let kgRows = '';
         let totalDry = 0, totalMoist = 0;
     recipe.korngruppen.forEach(kg => {
@@ -808,7 +808,7 @@ function displayRecipe(recipe) {
             `<strong>Oberflächenfeuchte:</strong> ${formatQuantity(moistureTotal, 'l')} &nbsp;=&nbsp; ` +
             `<strong>Zugabewasser:</strong> ${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}`;
     } else {
-        elements.kornGruppenSection.style.display = 'none';
+        elements.kornGruppenSection.classList.add('hidden');
     }
 
     // ── Mixing instructions ───────────────────────────────────────────────────
@@ -920,6 +920,9 @@ function initialize() {
         event.preventDefault();
         calculateRecipe();
     });
+
+    const recipeForm = document.getElementById('recipeForm');
+    if (recipeForm) recipeForm.addEventListener('submit', (event) => event.preventDefault());
 
     updateGoverningExposureInfo();
     calculateRecipe();

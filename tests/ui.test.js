@@ -58,7 +58,7 @@ describe('UI End-to-End Tests (JSDOM)', () => {
 
         elements.calculateBtn.click();
 
-        assert.strictEqual(elements.resultsSection.style.display, 'block', 'Results section should be visible');
+        assert.ok(!elements.resultsSection.classList.contains('hidden'), 'Results section should be visible');
         // Use regex to allow both 2,5 and 2.5 due to locale differences in JSDOM
         const heading = document.getElementById('results-title').textContent;
         assert.ok(/2[.,]5\s*m³/i.test(heading), `Expected volume 2,5 m³ in heading, got: ${heading}`);
@@ -106,7 +106,7 @@ describe('UI End-to-End Tests (JSDOM)', () => {
             elements.volume.value = vol;
             elements.calculateBtn.click();
 
-            assert.strictEqual(elements.resultsSection.style.display, 'block', `Results should be visible for volume ${vol}`);
+            assert.ok(!elements.resultsSection.classList.contains('hidden'), `Results should be visible for volume ${vol}`);
             
             const tableText = elements.recipeBody.textContent;
             assert.ok(!tableText.includes('NaN') && !tableText.includes('undefined'), `Values should be plausible for volume ${vol}`);
