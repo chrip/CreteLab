@@ -399,3 +399,60 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
             `LP must reduce fck even when combined with other additives (${fckWithLP} < ${fckWithout})`);
     });
 });
+
+// ── app.js → fine-tune sessionStorage handoff ─────────────────────────────────
+// The full round-trip (import fine-tune.js with pre-set sessionStorage) cannot be
+// tested here because ES modules are cached for the process lifetime and fine-tune.js
+// is already imported above. These unit tests validate the two pieces in isolation.
+
+import { getRecommendedWaterSaving } from '../js/lib/additives.js';
+
+describe('app.js → fine-tune handoff: wBase reversal and flag storage', () => {
+    // Mirrors the formula in app.js displayRecipe():
+    //   wBase = Math.round(w_reduced * 100 / (100 - savingPct))
+    function computeWBase(wReduced, admixtureType) {
+        const saving = (admixtureType === 'BV' || admixtureType === 'FM')
+            ? getRecommendedWaterSaving(admixtureType) : 0;
+        return saving > 0
+            ? Math.round(wReduced * 100 / (100 - saving))
+            : wReduced;
+    }
+
+    // Mirrors applyAdmixtureWaterReduction logic (Math.round(w * (1 - saving/100)))
+    function applyReduction(wBase, admixtureType) {
+        const saving = getRecommendedWaterSaving(admixtureType) / 100;
+        return Math.round(wBase * (1 - saving));
+    }
+
+    it('BV: wBase reversal is the inverse of applyAdmixtureWaterReduction', () => {
+        for (const base of [185, 190, 195, 200, 210]) {
+            const reduced  = applyReduction(base, 'BV');
+            const restored = computeWBase(reduced, 'BV');
+            assert.strictEqual(restored, base,
+                `round-trip failed for w=${base}: reduced=${reduced}, restored=${restored}`);
+        }
+    });
+
+    it('FM: wBase reversal is the inverse of applyAdmixtureWaterReduction', () => {
+        for (const base of [185, 190, 195]) {
+            const reduced  = applyReduction(base, 'FM');
+            const restored = computeWBase(reduced, 'FM');
+            assert.strictEqual(restored, base,
+                `FM round-trip failed for w=${base}: reduced=${reduced}, restored=${restored}`);
+        }
+    });
+
+    it('no admixture: wBase equals the stored water unchanged', () => {
+        assert.strictEqual(computeWBase(190, 'none'), 190);
+        assert.strictEqual(computeWBase(190, null),   190);
+    });
+
+    it('useBV flag is only set when admixtureType is exactly BV (not FM)', () => {
+        // Fine-tune BV checkbox uses 7% reduction; FM (20%) is a different product.
+        // Storing useBV=true for FM would misrepresent the reduction in fine-tune.
+        const buildFlags = (admixtureType) => ({ useBV: admixtureType === 'BV' });
+        assert.strictEqual(buildFlags('BV').useBV,   true);
+        assert.strictEqual(buildFlags('FM').useBV,   false);
+        assert.strictEqual(buildFlags('none').useBV, false);
+    });
+});

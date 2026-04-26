@@ -122,6 +122,15 @@ function applySelection() {
     update();
 }
 
+// Pre-check additives that were already active in the main recipe.
+// Must happen before applySelection() so the first update() sees the right state.
+if (customRecipe) {
+    if (customRecipe.useFlyAsh) document.getElementById('useFlyAsh').checked = true;
+    if (customRecipe.useSilica) document.getElementById('useSilica').checked = true;
+    if (customRecipe.useBV)     document.getElementById('useBV').checked     = true;
+    if (customRecipe.useLP)     document.getElementById('useLP').checked     = true;
+}
+
 // Initial selection
 sel.value = customRecipe ? 'custom' : PRESETS[1].value;
 sel.addEventListener('change', applySelection);

@@ -840,14 +840,27 @@ function displayRecipe(recipe) {
     // Store recipe in sessionStorage so fine-tune.html gets it regardless of
     // how the dev server handles query strings (some strip them on clean URLs).
     try {
+        // Reverse any plasticizer water reduction so fine-tune starts from the
+        // pre-admixture base water and re-applies only the additives it knows about.
+        const plasticizer = appState.admixtureType;
+        const savingPct   = (plasticizer === 'BV' || plasticizer === 'FM')
+            ? getRecommendedWaterSaving(plasticizer) : 0;
+        const wBase = savingPct > 0
+            ? Math.round(recipe.materials.water * 100 / (100 - savingPct))
+            : Math.round(recipe.materials.water);
+
         sessionStorage.setItem('creteLab_finetune', JSON.stringify({
-            v:      vol,
-            z:      Math.round(recipe.materials.cement),
-            w:      Math.round(recipe.materials.water),
-            g:      Math.round(recipe.materials.aggregate),
-            wz:     recipe.wzLimit,
-            klasse: appState.strengthClass,
-            zement: appState.cementType,
+            v:         vol,
+            z:         Math.round(recipe.materials.cement),
+            w:         wBase,
+            g:         Math.round(recipe.materials.aggregate),
+            wz:        recipe.wzLimit,
+            klasse:    appState.strengthClass,
+            zement:    appState.cementType,
+            useFlyAsh: appState.useFlyAsh        || false,
+            useSilica: appState.useSilicaFume    || false,
+            useBV:     plasticizer === 'BV',
+            useLP:     appState.useAirEntraining || false,
         }));
     } catch (_) { /* sessionStorage blocked */ }
 
