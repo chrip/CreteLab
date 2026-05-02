@@ -102,15 +102,6 @@
             line-height: 1.7;
         }
 
-        .back-link {
-            display: inline-block;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-bottom: 22px;
-        }
-
-        .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -125,9 +116,13 @@
             </div>
         </header>
 
-        <main id="calculator">
-            <a href="index.html" class="back-link">← Zurück zum Betonrechner</a>
+        <nav class="main-nav" aria-label="Hauptmenü">
+            <a href="index.html">Betonrechner</a>
+            <a href="fine-tune.html" class="active" aria-current="page">Rezept feintunen</a>
+            <a href="uhpc.html">Hochleistungsbeton</a>
+        </nav>
 
+        <main id="calculator">
             <section class="form-section">
                 <h2>Ihr Basisrezept</h2>
 
@@ -218,7 +213,7 @@
         </main>
 
         <footer>
-            <p>&copy; 2026 CreteLab. <a href="index.html">Zum Betonrechner</a> &nbsp;·&nbsp; <a href="uhpc.html">Hochleistungsbeton (UHPC)</a> &nbsp;·&nbsp; <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+            <p>&copy; 2026 CreteLab. &nbsp;·&nbsp; <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">GitHub</a></p>
         </footer>
     </div>
 
