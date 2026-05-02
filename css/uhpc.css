@@ -1,21 +1,21 @@
 /* uhpc.css — page-specific styling for the UHPC scaler.
    General element styles live in styles.css and are reused. */
 
-.uhpc-banner {
-    background: #fff7ed;
-    border: 1px solid #fdba74;
-    border-left: 4px solid #ea580c;
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin-bottom: 24px;
-    color: #7c2d12;
-    font-size: 0.95rem;
+.uhpc-note {
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-left: 3px solid var(--secondary-color);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 24px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
     line-height: 1.6;
 }
 
-.uhpc-banner em {
-    font-style: italic;
-    color: inherit;
+.uhpc-note strong {
+    color: var(--text-primary);
+    font-weight: 600;
 }
 
 .source-panel {
@@ -112,23 +112,6 @@
 
 .step-list li {
     margin-bottom: 6px;
-}
-
-.uhpc-disclaimer {
-    background: #f8fafc;
-    border-left: 3px solid var(--secondary-color);
-}
-
-.uhpc-disclaimer h3 {
-    margin-top: 0;
-    color: var(--text-secondary);
-    font-size: 1rem;
-}
-
-.uhpc-disclaimer p {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-    line-height: 1.6;
 }
 
 #uhpcResultTable td:nth-child(2),

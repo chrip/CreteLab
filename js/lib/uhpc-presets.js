@@ -94,7 +94,7 @@ export const UHPC_PRESETS = [
         source: {
             type: 'youtube',
             title: 'Ultra-Hochleistungsbeton (UHPC) selber mischen — DIY-Tutorial',
-            url:   'https://www.youtube.com/@GreyElement', // channel; recipe is in the video description
+            url:   'https://www.youtube.com/watch?v=DHYNh2xqijs',
             author: 'Grey Element',
             retrieved: '2026-04-28',
         },

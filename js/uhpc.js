@@ -118,8 +118,8 @@ function decimalsForChip(id) {
 }
 
 function renderSteps(preset, recipe) {
-    const sourceSteps = preset.notes;
-    // Concrete-mass references in the steps adapt to the user's batch size.
+    // Concrete-mass references adapt to the user's batch size so a 30-l
+    // tutorial scales to a 5-l planter mix without arithmetic.
     const items = [
         `<strong>Trockenmischung vormischen</strong> (${fmtQty(recipe.cementKg, 'kg')} Zement
           + ${fmtQty(recipe.sandKg, 'kg')} Sand
@@ -134,24 +134,7 @@ function renderSteps(preset, recipe) {
         `<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig
           ausschalen, mehrere Tage nachhärten lassen.`,
     ];
-
     els.steps.innerHTML = items.map(s => `<li>${s}</li>`).join('');
-
-    // Source notes appear separately so the user can see the original
-    // author's mixing remarks verbatim.
-    if (sourceSteps && sourceSteps.length) {
-        const sourceList = document.createElement('details');
-        sourceList.className = 'source-panel';
-        sourceList.innerHTML =
-            `<summary>Hinweise des Original-Autors anzeigen</summary>` +
-            `<ul style="padding-left:1.4em;margin-top:8px">` +
-            sourceSteps.map(n => `<li>${escapeHtml(n)}</li>`).join('') +
-            `</ul>`;
-        els.steps.parentElement.appendChild(sourceList);
-        // Replace any previously appended source-notes panel.
-        const previous = els.steps.parentElement.querySelectorAll('.source-panel');
-        for (let i = 0; i < previous.length - 1; i++) previous[i].remove();
-    }
 }
 
 // ── HTML escaping (defence in depth — preset data is trusted, but we
