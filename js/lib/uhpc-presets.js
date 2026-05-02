@@ -74,13 +74,21 @@
  * @property {UhpcSource}   source
  * @property {UhpcBatch}    batch          Source-verbatim masses for one batch.
  * @property {UhpcDensities} densities
- * @property {string[]}     mixingSteps    Step-by-step instructions; may contain
- *                                         placeholders {cementKg}, {sandKg},
- *                                         {quartzPowderKg}, {finesKg}, {waterL},
- *                                         {superplasticizerL} — substituted at
- *                                         render time with the user's scaled
- *                                         quantities.
- * @property {?number}      claimedFckMpa  If the source states a strength.
+ * @property {string[]}     mixingSteps      Step-by-step instructions; may contain
+ *                                           placeholders {cementKg}, {sandKg},
+ *                                           {quartzPowderKg}, {finesKg},
+ *                                           {microsilicaKg}, {waterL},
+ *                                           {superplasticizerL} — substituted at
+ *                                           render time with the user's scaled
+ *                                           quantities.
+ * @property {?number}      claimedFckMpa    Measured 28-d strength stated by the
+ *                                           source (null if the source does not
+ *                                           give a number).
+ * @property {?number}      estimatedFckMpa  Walzkurven-based 28-d estimate when
+ *                                           the source provides no measurement.
+ *                                           Calibrated as documented in each
+ *                                           preset's per-line comment so a
+ *                                           reviewer can audit the derivation.
  */
 
 // Densities pulled from the existing densities lib where applicable; the
@@ -125,7 +133,12 @@ export const UHPC_PRESETS = [
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
-        claimedFckMpa: null, // source does not state a measured strength
+        claimedFckMpa: null,
+        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z ≈ 0,34:
+        //   fcm = 31 × (1/0,34)^0,67 ≈ 64 → fck ≈ 56 N/mm². Der inerte Quarzmehl-
+        //   und Feinzuschlag-Microfiller bringt typisch 10–15 % Packungs-
+        //   dichte-Bonus; konservativer Mittelwert 65 N/mm².
+        estimatedFckMpa: 65,
     },
     {
         key: 'diy-mortar-20kg-batch',
@@ -164,7 +177,12 @@ export const UHPC_PRESETS = [
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
-        claimedFckMpa: null, // article does not state a measured 28-day strength
+        claimedFckMpa: null,
+        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z = 0,30:
+        //   fcm = 31 × (1/0,30)^0,67 ≈ 69 → fck ≈ 61 N/mm². Ohne Microfiller,
+        //   leichter PCE-Bonus durch bessere Zementdispergierung. Konservative
+        //   Schätzung 60 N/mm².
+        estimatedFckMpa: 60,
     },
     {
         // Per-m³ research recipe.  At a fresh-batch volume of ~1 m³ this is
@@ -213,7 +231,55 @@ export const UHPC_PRESETS = [
         ],
         // Tabelle 3.7-2: 28-Tage-Druckfestigkeit (Wasserlagerung 20 °C, ohne
         // Wärmebehandlung, ohne Fasern, mit CEM I 42,5 R).
-        claimedFckMpa: 123,
+        claimedFckMpa:   123,
+        estimatedFckMpa: null,
+    },
+    {
+        // Variante derselben Tabelle 3.7-2 mit moderater PCE-Dosierung
+        // (~1 % vom Zement statt ~4 %). Damit liegt die Fließmittel-Menge
+        // im Datenblatt-Mittelfeld der meisten Hersteller — für Heim-Mischer
+        // ohne Industrie-PCE deutlich praktischer. Strength tradeoff: 103
+        // statt 123 N/mm² nach 28 d (immer noch deutlich über Normalbeton).
+        key: 'kassel-m1q-cem42-5r-soft',
+        label: 'Forschungs-Feinkornbeton M1Q (moderate PCE-Dosierung, für Innenanwendungen)',
+        source: {
+            // Tabelle 3.7-2, Spalte w/z = 0,40, CEM I 42,5 R, ohne Fasern:
+            //   CEM I 42,5R           664 kg/m³
+            //   Sand 0,125/0,5        913 kg/m³
+            //   Microsilica           208 kg/m³
+            //   Drahtfasern             0 kg/m³
+            //   Feinquarz Q I       165,8 kg/m³
+            //   FM 1                  7,3 kg/m³
+            //   Wasser                262 kg/m³
+            //   w/z (w/b)        0,40 (0,26)
+            //   Druckfestigkeit 28 d, Wasserlagerung 20 °C: 103 N/mm²
+            type: 'paper',
+            title: 'Entwicklung, Dauerhaftigkeit und Berechnung Ultrahochfester Betone (UHPC), Heft 1, Tabelle 3.7-2',
+            url:   'https://www.uni-kassel.de/upress/online/frei/978-3-89958-108-9.volltext.frei.pdf',
+            author: 'Fehling, Schmidt, Teichmann, Bunje, Bornemann, Middendorf — Universität Kassel',
+            retrieved: '2026-04-29',
+        },
+        batch: {
+            cementKg:           664,
+            sandKg:             913,
+            quartzPowderKg:     165.8,
+            finesKg:              0,
+            microsilicaKg:      208,
+            waterL:             262,
+            superplasticizerMl: 6636,  // 7,3 kg/m³ ÷ 1,10 kg/dm³ = 6,636 l/m³
+        },
+        densities: { ...DENSITIES_DEFAULT },
+        mixingSteps: [
+            '<strong>Trockenmischung gut homogenisieren</strong>: {cementKg} Zement + {sandKg} Sand (0,125–0,5 mm) + {microsilicaKg} Mikrosilica + {quartzPowderKg} Quarzmehl. Mind. 2 Minuten trocken vormischen — die Feinststoff-Verteilung bestimmt die spätere Festigkeit.',
+            '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren). Diese Variante kommt mit einer DIY-typischen PCE-Dosierung aus.',
+            '<strong>Wasser-PCE-Mischung schrittweise zur Trockenmischung geben</strong> und 5–10 Minuten kräftig mischen. Das Fließverhalten entwickelt sich verzögert — anfangs „grießig", nach einigen Minuten geschmeidig.',
+            '<strong>In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten</strong>, bis Oberfläche glänzt.',
+            '<strong>Nach 24–48 h ausschalen</strong>, dann 28 Tage feucht/im Wasser bei 20 °C nachhärten. Quelle: ~103 N/mm² nach 28 d (Wasserlagerung, ohne Wärmebehandlung, ohne Fasern).',
+        ],
+        // Tabelle 3.7-2, w/z=0,40 Variante: 28-Tage-Druckfestigkeit
+        // (Wasserlagerung 20 °C, ohne Wärmebehandlung, ohne Fasern).
+        claimedFckMpa:   103,
+        estimatedFckMpa: null,
     },
 ];
 

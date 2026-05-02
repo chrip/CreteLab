@@ -48,10 +48,21 @@ function currentPreset() {
 // ── Renderers ──────────────────────────────────────────────────────────
 
 function renderSource(preset) {
-    const { source, batch, claimedFckMpa } = preset;
-    const fckRow = claimedFckMpa
-        ? `<dt>Festigkeit (Quelle)</dt><dd>${fmt(claimedFckMpa, 0)} N/mm²</dd>`
-        : '<dt>Festigkeit (Quelle)</dt><dd>nicht angegeben</dd>';
+    const { source, batch, claimedFckMpa, estimatedFckMpa } = preset;
+    // Prefer measured strength from the source. Fall back to a Walzkurven-
+    // derived estimate when the source provides no measurement; the per-
+    // preset comment in uhpc-presets.js documents the derivation so a
+    // reviewer can audit each estimate.
+    let fckRow;
+    if (claimedFckMpa) {
+        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
+                 `<dd>${fmt(claimedFckMpa, 0)} N/mm² <em>(Quelle, gemessen)</em></dd>`;
+    } else if (estimatedFckMpa) {
+        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
+                 `<dd>ca. ${fmt(estimatedFckMpa, 0)} N/mm² <em>(geschätzt aus w/z &amp; Microfiller)</em></dd>`;
+    } else {
+        fckRow = `<dt>Druckfestigkeit nach 28 d</dt><dd>nicht angegeben</dd>`;
+    }
     // Build a verbatim summary of the source's batch — zero-mass components
     // are omitted so the line stays focused on what's actually in the recipe.
     const recipeParts = [
