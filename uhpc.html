@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreteLab – Hochleistungsbeton (UHPC)</title>
+    <meta name="description" content="Skalieren Sie veröffentlichte UHPC-Rezepte (Ultra-Hochleistungsbeton) auf Ihr Volumen — mit Plausibilitätsprüfung und Schritt-für-Schritt-Anleitung.">
+    <link rel="icon" type="image/png" href="assets/CreteLab_emoji.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/uhpc.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-brand">
+                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo">
+                <div class="header-text">
+                    <h1>CreteLab</h1>
+                    <p class="tagline">Hochleistungsbeton skalieren</p>
+                </div>
+            </div>
+        </header>
+
+        <main id="calculator">
+            <a href="index.html" class="back-link">← Zurück zum Betonrechner</a>
+
+            <section class="uhpc-banner" role="note" aria-label="Wichtiger Hinweis">
+                <strong>⚠️ Hinweis:</strong>
+                Hochleistungsbeton (UHPC) liegt <em>außerhalb des Industriestandards</em>
+                für Normalbeton. Die hier angebotenen Rezepte stammen aus
+                genannten Quellen und werden <strong>linear auf Ihr Volumen
+                skaliert</strong>. CreteLab schätzt für UHPC <em>keine</em> Festigkeit —
+                die echten Werte hängen u. a. von Mischzeit, Verdichtung und
+                ggf. Faserbewehrung ab und stehen, sofern bekannt, in der
+                Quellenangabe.
+            </section>
+
+            <section class="form-section">
+                <h2>1. Rezept wählen</h2>
+                <div class="form-group">
+                    <label for="uhpcPreset">Ausgangsrezept:</label>
+                    <select id="uhpcPreset" aria-describedby="uhpcPresetHint"></select>
+                    <small class="form-hint" id="uhpcPresetHint">
+                        Veröffentlichte DIY- und Forschungs-Rezepturen mit
+                        Quellenangabe.
+                    </small>
+                </div>
+
+                <details id="uhpcSource" class="source-panel">
+                    <summary>Quelle &amp; Originalrezept anzeigen</summary>
+                    <div id="uhpcSourceBody"></div>
+                </details>
+            </section>
+
+            <section class="form-section">
+                <h2>2. Ihr Volumen</h2>
+                <div class="form-group">
+                    <label for="uhpcVolume">Benötigtes Volumen (m³):</label>
+                    <input type="text" id="uhpcVolume" inputmode="decimal" value="0,03" placeholder="z. B. 0,03">
+                    <small class="form-hint">
+                        Anhaltspunkte: kleine Schale ≈ 0,005 m³, Pflanzkübel
+                        ≈ 0,02 m³, Tischplatte 80 × 40 × 4 cm ≈ 0,013 m³.
+                    </small>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>3. Ihre Mischung</h2>
+                <table class="recipe-table" id="uhpcResultTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Zutat</th>
+                            <th scope="col">Menge gesamt</th>
+                            <th scope="col">Anteil am Zement</th>
+                            <th scope="col">Hinweis</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uhpcResultBody"></tbody>
+                </table>
+
+                <div id="uhpcChips" class="plausibility-chips" aria-label="Plausibilitätsprüfung"></div>
+            </section>
+
+            <section class="form-section">
+                <h2>4. Schritt für Schritt</h2>
+                <ol id="uhpcSteps" class="step-list"></ol>
+            </section>
+
+            <section class="form-section uhpc-disclaimer">
+                <h3>Warum keine Festigkeit angezeigt wird</h3>
+                <p>
+                    Die Druckfestigkeit von UHPC entsteht nicht nur durch das
+                    Wasser-Zement-Verhältnis, sondern v. a. durch Korn­packung
+                    und puzzolanische Reaktion des Quarzmehls. Diese Effekte
+                    bildet kein einfaches Modell zuverlässig ab. Bewährte
+                    DIY-Werte: <strong>~120–150 N/mm²</strong> nach 28 Tagen,
+                    bei guter Verdichtung. Verbindliche Werte erfordern eine
+                    Druckprüfung am Probewürfel.
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                &copy; 2026 CreteLab.
+                <a href="index.html">Normalbeton-Rechner</a>
+                &nbsp;·&nbsp;
+                <a href="fine-tune.html">Rezept feintunen</a>
+                &nbsp;·&nbsp;
+                <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <script type="module" src="js/uhpc.js"></script>
+</body>
+</html>

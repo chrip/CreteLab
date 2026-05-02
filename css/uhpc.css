@@ -1,0 +1,138 @@
+/* uhpc.css — page-specific styling for the UHPC scaler.
+   General element styles live in styles.css and are reused. */
+
+.uhpc-banner {
+    background: #fff7ed;
+    border: 1px solid #fdba74;
+    border-left: 4px solid #ea580c;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    color: #7c2d12;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.uhpc-banner em {
+    font-style: italic;
+    color: inherit;
+}
+
+.source-panel {
+    margin-top: 14px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+}
+
+.source-panel > summary {
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.source-panel[open] > summary {
+    margin-bottom: 10px;
+}
+
+.source-panel a {
+    color: var(--primary-color);
+    word-break: break-all;
+}
+
+.source-panel dl {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    row-gap: 4px;
+    column-gap: 14px;
+    margin: 0;
+}
+
+.source-panel dt {
+    color: var(--text-secondary);
+}
+
+.plausibility-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.plausibility-chip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid;
+    font-size: 0.85rem;
+    line-height: 1.3;
+    min-width: 220px;
+}
+
+.plausibility-chip .chip-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.plausibility-chip .chip-msg {
+    font-weight: 400;
+    color: inherit;
+    opacity: 0.9;
+}
+
+.plausibility-chip.level-ok {
+    background: #f0fdf4;
+    border-color: #86efac;
+    color: #166534;
+}
+
+.plausibility-chip.level-warn {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+}
+
+.plausibility-chip.level-error {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+.step-list {
+    padding-left: 1.4em;
+    line-height: 1.7;
+}
+
+.step-list li {
+    margin-bottom: 6px;
+}
+
+.uhpc-disclaimer {
+    background: #f8fafc;
+    border-left: 3px solid var(--secondary-color);
+}
+
+.uhpc-disclaimer h3 {
+    margin-top: 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.uhpc-disclaimer p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+#uhpcResultTable td:nth-child(2),
+#uhpcResultTable td:nth-child(3) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
