@@ -152,6 +152,7 @@ describe('Volume balance invariant', () => {
             b.sandKg         / rho.sand +
             b.quartzPowderKg / rho.quartzPowder +
             b.finesKg        / rho.fines +
+            b.microsilicaKg  / rho.microsilica +
             b.waterL         / rho.water +
             pceKg            / rho.superplasticizer;
         assert.ok(Math.abs(v - sumOfVols) < 1e-9);

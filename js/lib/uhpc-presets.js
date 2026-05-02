@@ -117,7 +117,7 @@ const DENSITIES_DEFAULT = Object.freeze({
 export const UHPC_PRESETS = [
     {
         key: 'diy-pce-30l-batch',
-        label: 'DIY-Hochleistungsbeton (mit Quarzmehl & Feinzuschlägen)',
+        label: 'DIY-Hochleistungsbeton (mit Quarzmehl & Mikrosilica)',
         source: {
             type: 'youtube',
             title: 'Ultra-Hochleistungsbeton (UHPC) selber mischen — DIY-Tutorial',
@@ -129,14 +129,20 @@ export const UHPC_PRESETS = [
             cementKg:           25,    // Portlandzement CEM I
             sandKg:             30,    // 0/2 mm
             quartzPowderKg:     9,     // 0,063–0,25 mm
-            finesKg:            2.5,   // Feinzuschläge < 63 µm
-            microsilicaKg:      0,     // not used in this DIY recipe
+            finesKg:            0,     // see microsilica below
+            // The video description lists "2,5 kg Feinzuschläge" without
+            // further specification; in context (Grey Element shop sells
+            // silicafusion / Mikrosilica, the 9 kg quartz fraction starts
+            // at 63 µm, and 10 % of cement is the typical microsilica dose)
+            // this is the most plausible mapping. Rendered as "Mikrosilica"
+            // in the UI; ρ = 2,20 kg/dm³ and k_s = 1,0 in w/b accordingly.
+            microsilicaKg:      2.5,
             waterL:             8.5,
             superplasticizerMl: 375,   // midpoint of stated range 350–400 ml
         },
         densities: { ...DENSITIES_DEFAULT },
         mixingSteps: [
-            '<strong>Trockenmischung vormischen</strong> ({cementKg} Zement + {sandKg} Sand + {quartzPowderKg} Quarzmehl + {finesKg} Feinzuschläge) — gut homogenisieren.',
+            '<strong>Trockenmischung vormischen</strong> ({cementKg} Zement + {sandKg} Sand + {quartzPowderKg} Quarzmehl + {microsilicaKg} Mikrosilica) — gut homogenisieren.',
             '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren).',
             '<strong>Wasser-PCE-Mischung langsam zur Trockenmischung geben</strong> und mindestens 5 Minuten kräftig mischen — Fließverhalten entwickelt sich verzögert.',
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
@@ -144,13 +150,13 @@ export const UHPC_PRESETS = [
         ],
         claimedFckMpa:    null,
         airCuredFckMpa:   null,
-        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z ≈ 0,34:
-        //   fcm = 31 × (1/0,34)^0,67 ≈ 64 → fck ≈ 56 N/mm². Der inerte Quarzmehl-
-        //   und Feinzuschlag-Microfiller bringt typisch 10–15 % Packungs-
-        //   dichte-Bonus; konservativer Mittelwert 65 N/mm².
-        // Bezieht sich auf typische DIY-Bedingungen (feucht abgedeckt, ohne
-        // Wasserbad) — daher kein separater airCuredFckMpa nötig.
-        estimatedFckMpa: 65,
+        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei effektivem
+        //   w/b = 0,32 (mit 10 % Mikrosilica im Bindemittel, k_s = 1,0):
+        //   fcm = 31 × (1/0,32)^0,67 ≈ 66 → fck ≈ 58 N/mm². Mikrosilica
+        //   bringt zusätzlich pozzolanischen Bonus (typisch +15–25 % bei
+        //   10 % MS-Dosierung); konservativer Mittelwert 70 N/mm² für
+        //   typische DIY-Bedingungen (feucht abgedeckt, ohne Wasserbad).
+        estimatedFckMpa: 70,
     },
     {
         key: 'diy-mortar-20kg-batch',

@@ -128,12 +128,16 @@ describe('UHPC page – DOM wiring', () => {
     });
 
     it('renders the six expected ingredient rows in the table', () => {
+        // Default preset is the DIY-Hochleistungsbeton: cement, sand,
+        // microsilica, quartz powder, water, PCE. The Feinzuschläge slot
+        // is zero (its 2,5 kg are correctly attributed to microsilica)
+        // and therefore filtered out of the rendered table.
         const rows = getRecipeRows();
         assert.strictEqual(rows.length, 6);
         assert.ok(rows[0].name.includes('Zement'));
         assert.ok(rows[1].name.includes('Sand'));
-        assert.ok(rows[2].name.includes('Quarzmehl'));
-        assert.ok(rows[3].name.includes('Feinzuschläge'));
+        assert.ok(rows[2].name.includes('Mikrosilica'));
+        assert.ok(rows[3].name.includes('Quarzmehl'));
         assert.ok(rows[4].name.includes('Wasser'));
         assert.ok(rows[5].name.includes('PCE'));
     });
