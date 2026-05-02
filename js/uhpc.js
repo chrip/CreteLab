@@ -27,8 +27,17 @@ const els = {
 
 // ── Initial render ─────────────────────────────────────────────────────
 
+// Sort the dropdown ascending by 28-d strength (claimed-or-estimated) so
+// users see "easy starter → extreme" rather than catalog/source order.
+function effective28dStrength(preset) {
+    return preset.claimedFckMpa ?? preset.estimatedFckMpa ?? 0;
+}
+
 function populatePresetDropdown() {
-    for (const p of UHPC_PRESETS) {
+    const sorted = [...UHPC_PRESETS].sort(
+        (a, b) => effective28dStrength(a) - effective28dStrength(b)
+    );
+    for (const p of sorted) {
         const option = document.createElement('option');
         option.value = p.key;
         option.textContent = p.label;

@@ -65,13 +65,27 @@ describe('UHPC page – DOM wiring', () => {
         setVolume('0,03');
     });
 
-    it('populates the preset dropdown from the catalog', () => {
+    it('populates the preset dropdown with every catalog entry, ascending by 28-d strength', () => {
         const opts = Array.from(doc.querySelectorAll('#uhpcPreset option'));
-        assert.strictEqual(opts.length, UHPC_PRESETS.length);
+        assert.strictEqual(opts.length, UHPC_PRESETS.length,
+            'every catalog entry must be present');
+
+        // Same set of keys, but the order in the dropdown must be sorted
+        // by claimed-or-estimated strength (non-decreasing).
         assert.deepStrictEqual(
-            opts.map(o => o.value),
-            UHPC_PRESETS.map(p => p.key),
+            new Set(opts.map(o => o.value)),
+            new Set(UHPC_PRESETS.map(p => p.key)),
         );
+
+        const fckOf = (key) => {
+            const p = UHPC_PRESETS.find(x => x.key === key);
+            return p.claimedFckMpa ?? p.estimatedFckMpa ?? 0;
+        };
+        const strengths = opts.map(o => fckOf(o.value));
+        for (let i = 1; i < strengths.length; i++) {
+            assert.ok(strengths[i] >= strengths[i - 1],
+                `dropdown not sorted ascending at index ${i}: ${strengths.join(' → ')}`);
+        }
     });
 
     it('does not surface the original author name in the visible UI', () => {
