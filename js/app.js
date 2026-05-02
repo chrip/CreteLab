@@ -875,6 +875,20 @@ function displayRecipe(recipe) {
     }
     fineTuneBtn.href = 'fine-tune.html';
     fineTuneBtn.textContent = 'Rezept feintunen →';
+
+    // Secondary path: surface the UHPC scaler for users who want extreme
+    // strengths (~120–150 N/mm²), which is outside the industry standard
+    // implemented by the main calculator.
+    let uhpcHint = document.getElementById('uhpcHint');
+    if (!uhpcHint) {
+        uhpcHint = document.createElement('p');
+        uhpcHint.id = 'uhpcHint';
+        uhpcHint.style.cssText = 'margin-top:14px; font-size:0.9rem; color:var(--text-secondary);';
+        uhpcHint.innerHTML =
+            'Suchen Sie extreme Festigkeit (DIY-Hochleistungsbeton)? ' +
+            '<a href="uhpc.html">UHPC-Rezept skalieren →</a>';
+        elements.resultsSection.appendChild(uhpcHint);
+    }
 }
 
 function initialize() {
