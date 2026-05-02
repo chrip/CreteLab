@@ -38,7 +38,7 @@ function populatePresetDropdown() {
 
 function readVolumeM3() {
     const v = parseDecimal(els.volumeInput.value);
-    return isNaN(v) || v <= 0 ? 0.03 : v;  // default fallback matches the input placeholder
+    return isNaN(v) || v <= 0 ? 1 : v;  // default fallback matches the input placeholder
 }
 
 function currentPreset() {

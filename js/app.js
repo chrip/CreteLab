@@ -865,30 +865,32 @@ function displayRecipe(recipe) {
         }));
     } catch (_) { /* sessionStorage blocked */ }
 
-    let fineTuneBtn = document.getElementById('fineTuneBtn');
-    if (!fineTuneBtn) {
-        fineTuneBtn = document.createElement('a');
-        fineTuneBtn.id = 'fineTuneBtn';
-        fineTuneBtn.className = 'btn btn-secondary';
-        fineTuneBtn.style.cssText = 'display:inline-block; margin-top:20px;';
-        elements.resultsSection.appendChild(fineTuneBtn);
-    }
-    fineTuneBtn.href = 'fine-tune.html';
-    fineTuneBtn.textContent = 'Rezept feintunen →';
+    // Two follow-up paths shown as uniform hint paragraphs below the recipe:
+    //   1. Fine-tune the current B 20 recipe with additives.
+    //   2. Switch to the UHPC scaler for extreme strengths.
+    // Idempotent against repeated displayRecipe() calls — the IDs are reused.
+    ensureFollowupHint('fineTuneHint', '20px',
+        'Sie wollen noch etwas mehr aus Ihrer Rezeptur herausholen? ' +
+        '<a href="fine-tune.html">Rezept feintunen →</a>');
+    ensureFollowupHint('uhpcHint', '8px',
+        'Suchen Sie extreme Festigkeit (DIY-Hochleistungsbeton)? ' +
+        '<a href="uhpc.html">UHPC-Rezept skalieren →</a>');
 
-    // Secondary path: surface the UHPC scaler for users who want extreme
-    // strengths (~120–150 N/mm²), which is outside the industry standard
-    // implemented by the main calculator.
-    let uhpcHint = document.getElementById('uhpcHint');
-    if (!uhpcHint) {
-        uhpcHint = document.createElement('p');
-        uhpcHint.id = 'uhpcHint';
-        uhpcHint.style.cssText = 'margin-top:14px; font-size:0.9rem; color:var(--text-secondary);';
-        uhpcHint.innerHTML =
-            'Suchen Sie extreme Festigkeit (DIY-Hochleistungsbeton)? ' +
-            '<a href="uhpc.html">UHPC-Rezept skalieren →</a>';
-        elements.resultsSection.appendChild(uhpcHint);
+    // Old button-styled fine-tune link from a previous render — drop it.
+    const legacy = document.getElementById('fineTuneBtn');
+    if (legacy) legacy.remove();
+}
+
+function ensureFollowupHint(id, marginTop, html) {
+    let el = document.getElementById(id);
+    if (!el) {
+        el = document.createElement('p');
+        el.id = id;
+        el.className = 'followup-hint';
+        elements.resultsSection.appendChild(el);
     }
+    el.style.marginTop = marginTop;
+    el.innerHTML = html;
 }
 
 function initialize() {

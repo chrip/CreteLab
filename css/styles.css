@@ -242,6 +242,24 @@ h4 {
     color: white;
 }
 
+/* Follow-up hint links (e.g. "Rezept feintunen", "UHPC-Rezept skalieren")
+   shown below the recipe table — uniform muted-paragraph style. */
+.followup-hint {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.followup-hint a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.followup-hint a:hover {
+    text-decoration: underline;
+}
+
 /* Results Section */
 .result-section {
     margin-top: 30px;

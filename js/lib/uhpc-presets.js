@@ -95,7 +95,7 @@ const DENSITIES_DEFAULT = Object.freeze({
 export const UHPC_PRESETS = [
     {
         key: 'diy-pce-30l-batch',
-        label: 'DIY-Hochleistungsbeton (~30 l Charge, mit Quarzmehl & Feinzuschlägen)',
+        label: 'DIY-Hochleistungsbeton (mit Quarzmehl & Feinzuschlägen)',
         source: {
             type: 'youtube',
             title: 'Ultra-Hochleistungsbeton (UHPC) selber mischen — DIY-Tutorial',
@@ -123,7 +123,7 @@ export const UHPC_PRESETS = [
     },
     {
         key: 'diy-mortar-20kg-batch',
-        label: 'DIY-Hochfester Mörtel (~20 kg Charge, ohne Quarzmehl)',
+        label: 'DIY-Hochfester Mörtel (ohne Quarzmehl)',
         source: {
             // Quoted recipe (verbatim) from the article body:
             //   "Meine Mischung für ca. 20 kg hochfesten Mörtel setzt sich
