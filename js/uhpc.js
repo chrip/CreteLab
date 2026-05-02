@@ -33,6 +33,14 @@ function effective28dStrength(preset) {
     return preset.claimedFckMpa ?? preset.estimatedFckMpa ?? 0;
 }
 
+// "ca. 60 N/mm²" for estimated values, "60 N/mm²" for measured ones —
+// the prefix flags basis at a glance without a second column.
+function strengthPrefix(preset) {
+    if (preset.claimedFckMpa)   return `${fmt(preset.claimedFckMpa, 0)} N/mm²`;
+    if (preset.estimatedFckMpa) return `ca. ${fmt(preset.estimatedFckMpa, 0)} N/mm²`;
+    return '–';
+}
+
 function populatePresetDropdown() {
     const sorted = [...UHPC_PRESETS].sort(
         (a, b) => effective28dStrength(a) - effective28dStrength(b)
@@ -40,7 +48,7 @@ function populatePresetDropdown() {
     for (const p of sorted) {
         const option = document.createElement('option');
         option.value = p.key;
-        option.textContent = p.label;
+        option.textContent = `${strengthPrefix(p)} — ${p.label}`;
         els.presetSelect.appendChild(option);
     }
 }

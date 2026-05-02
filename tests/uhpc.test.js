@@ -88,6 +88,33 @@ describe('UHPC page – DOM wiring', () => {
         }
     });
 
+    it('every dropdown option starts with its 28-d strength (estimated values prefixed with "ca.")', () => {
+        const opts = Array.from(doc.querySelectorAll('#uhpcPreset option'));
+        for (const opt of opts) {
+            const preset = UHPC_PRESETS.find(p => p.key === opt.value);
+            const fck = preset.claimedFckMpa ?? preset.estimatedFckMpa;
+            assert.ok(fck > 0, `${preset.key}: must have a strength`);
+
+            const text = opt.textContent;
+            // Every option's text must contain the strength figure.
+            assert.ok(text.includes(`${fck} N/mm²`),
+                `option for ${preset.key} should mention "${fck} N/mm²", got: "${text}"`);
+
+            // Estimated values are prefixed with "ca.", measured ones are not.
+            if (preset.claimedFckMpa) {
+                assert.ok(!/^ca\./.test(text),
+                    `measured-strength preset ${preset.key} must not have "ca." prefix, got: "${text}"`);
+            } else {
+                assert.ok(/^ca\.\s/.test(text),
+                    `estimated-strength preset ${preset.key} must start with "ca. ", got: "${text}"`);
+            }
+
+            // The original preset.label must still be present after the strength prefix.
+            assert.ok(text.includes(preset.label),
+                `option text must still include the preset label, got: "${text}"`);
+        }
+    });
+
     it('does not surface the original author name in the visible UI', () => {
         // Copyright-safety: the dropdown label must be the generic preset.label,
         // not the author. (The author appears only inside the collapsed source

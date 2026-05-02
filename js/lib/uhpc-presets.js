@@ -189,7 +189,7 @@ export const UHPC_PRESETS = [
         // a much larger mix than the two DIY presets above; users typically
         // scale it down to 5–30 l for hobby-sized projects.
         key: 'kassel-m1q-cem42-5r',
-        label: 'Forschungs-Feinkornbeton M1Q (mit Mikrosilica, Hochschul-Quelle)',
+        label: 'Forschungs-Feinkornbeton (volle PCE-Dosierung)',
         source: {
             // Verbatim from Tabelle 3.7-2 (M1Q, w/z=0,24, CEM I 42,5 R variant):
             //   CEM I 42,5R           733 kg/m³
@@ -241,7 +241,7 @@ export const UHPC_PRESETS = [
         // ohne Industrie-PCE deutlich praktischer. Strength tradeoff: 103
         // statt 123 N/mm² nach 28 d (immer noch deutlich über Normalbeton).
         key: 'kassel-m1q-cem42-5r-soft',
-        label: 'Forschungs-Feinkornbeton M1Q (moderate PCE-Dosierung, für Innenanwendungen)',
+        label: 'Forschungs-Feinkornbeton (moderate PCE-Dosierung, für Innenbereich)',
         source: {
             // Tabelle 3.7-2, Spalte w/z = 0,40, CEM I 42,5 R, ohne Fasern:
             //   CEM I 42,5R           664 kg/m³
