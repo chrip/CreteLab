@@ -179,7 +179,17 @@ const PCE_PCT_WARN   = [0.3,  4.0];    // datasheet absolute window
 const DENSITY_OK     = [2300, 2500];   // fib MC 2010 §5.1 typical [2]
 const DENSITY_WARN   = [2200, 2600];   // tolerant outer band
 
+// Each chip is classified on the rounded-to-display value, so a chip
+// rendered as "4,0 %" never lands in the 'error' band on an underlying
+// 4,01 % that rounds down to 4,0 %. Precisions match decimalsForChip in
+// js/uhpc.js — keep the two in sync if either changes.
+const CHIP_PRECISION = { wb: 2, pce: 1, density: 0 };
+
 const inRange = (x, [lo, hi]) => x >= lo && x <= hi;
+const roundTo = (x, decimals) => {
+    const f = 10 ** decimals;
+    return Math.round(x * f) / f;
+};
 
 /**
  * Classify a recipe against three literature-backed windows:
@@ -195,7 +205,7 @@ export function evaluatePlausibility(recipe) {
             label: 'Wasser/Bindemittel-Verhältnis',
             value: recipe.wbRatio,
             unit:  '',
-            ...classify(recipe.wbRatio, WB_RATIO_OK, WB_RATIO_WARN, [
+            ...classify(roundTo(recipe.wbRatio, CHIP_PRECISION.wb), WB_RATIO_OK, WB_RATIO_WARN, [
                 'Im UHPC-typischen Bereich (0,20–0,32).',
                 'Außerhalb des Literatur-Mittelbereichs, aber für DIY noch tolerierbar.',
                 'Außerhalb des UHPC-Bereichs (0,18–0,40) — Festigkeit wird stark abweichen.',
@@ -206,10 +216,10 @@ export function evaluatePlausibility(recipe) {
             label: 'PCE-Dosierung (% vom Zement)',
             value: recipe.pceDosagePctOfCement,
             unit:  '%',
-            ...classify(recipe.pceDosagePctOfCement, PCE_PCT_OK, PCE_PCT_WARN, [
+            ...classify(roundTo(recipe.pceDosagePctOfCement, CHIP_PRECISION.pce), PCE_PCT_OK, PCE_PCT_WARN, [
                 'Im Datenblatt-Bereich (0,8–3,0 %).',
-                'Außerhalb des Mittelbereichs — Produktangabe prüfen.',
-                'Außerhalb des Datenblatt-Fensters (0,3–4 %) — Produkt prüfen.',
+                'Am oberen Rand des Datenblatt-Fensters (bis 4,0 %) — bei dieser Dosierung das Produktdatenblatt des konkreten Fließmittels prüfen.',
+                'Über dem Datenblatt-Fenster (0,3–4,0 %) — Produkt unbedingt prüfen, evtl. ist eine andere PCE-Sorte nötig.',
             ]),
         },
         {
@@ -217,7 +227,7 @@ export function evaluatePlausibility(recipe) {
             label: 'Frischbeton-Rohdichte',
             value: recipe.freshDensityKgPerM3,
             unit:  'kg/m³',
-            ...classify(recipe.freshDensityKgPerM3, DENSITY_OK, DENSITY_WARN, [
+            ...classify(roundTo(recipe.freshDensityKgPerM3, CHIP_PRECISION.density), DENSITY_OK, DENSITY_WARN, [
                 'Im UHPC-typischen Bereich (2300–2500 kg/m³).',
                 'Etwas außerhalb (2200–2600 kg/m³) — Lufteinschluss / Sandkorn prüfen.',
                 'Deutlich außerhalb des UHPC-Dichtebereichs — Rezept prüfen.',

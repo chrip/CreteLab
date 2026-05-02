@@ -126,9 +126,9 @@ describe('evaluatePlausibility', () => {
 
     it('flags an error when w/b is far below the UHPC envelope', () => {
         const batchM3 = calculateBatchVolumeL(PRESET.batch, PRESET.densities) / 1000;
-        // Extreme override: half the water → w/b drops to ~0.16, below the
-        // 0.18 "warn" floor → 'error'.
-        const r = computeUhpcRecipe(PRESET, batchM3, { waterL: PRESET.batch.waterL / 2 });
+        // Extreme override: a third of the water → w/b drops to ~0.12, well
+        // below the 0.18 'warn' floor even after rounding to two decimals.
+        const r = computeUhpcRecipe(PRESET, batchM3, { waterL: PRESET.batch.waterL / 3 });
         const wb = evaluatePlausibility(r).find(c => c.id === 'wb');
         assert.strictEqual(wb.level, 'error');
     });
@@ -202,14 +202,18 @@ describe('Kassel M1Q (CEM I 42,5 R) — engine reproduces published figures', { 
             `fresh density ${r.freshDensityKgPerM3.toFixed(0)} kg/m³ outside [2300, 2500]`);
     });
 
-    it('PCE dosage lies in the datasheet warn band (research mixes lean high)', () => {
-        // 29,4 kg/m³ ÷ 733 kg/m³ ≈ 4,01 %. That sits at the upper edge of the
-        // PCE_PCT_WARN band [0.3, 4.0]; either 'warn' (≤ 4.0) or 'error' (> 4.0)
-        // is engineering-honest depending on rounding. Lock both as acceptable.
+    it('PCE dosage at the upper edge classifies as warn (rounded-to-display 4,0 %)', () => {
+        // 29,4 kg/m³ ÷ 733 kg/m³ ≈ 4,011 %, which displays as "4,0 %" in the UI.
+        // Classification matches the displayed precision (CHIP_PRECISION.pce = 1),
+        // so the chip stays inside the warn band [0.3, 4.0] and never escalates
+        // to 'error' on what looks like an exactly-4 % dosage.
         const r = computeUhpcRecipe(KASSEL, 1);
         const pce = evaluatePlausibility(r).find(c => c.id === 'pce');
-        assert.ok(['warn', 'error'].includes(pce.level),
-            `PCE chip should be warn-or-error for the Kassel research mix, got ${pce.level}`);
+        assert.strictEqual(pce.level, 'warn',
+            `PCE chip should be 'warn' (yellow) for displayed 4,0 %, got ${pce.level}`);
+        // And the message must reflect "borderline / am Rand", not "über dem Fenster".
+        assert.ok(/Rand/.test(pce.message),
+            `PCE warn message should reference the upper edge, got: ${pce.message}`);
     });
 
     it('volume balance: Σ(m/ρ) ≈ 1 m³ within ~3 % (typical air content tolerance)', () => {
