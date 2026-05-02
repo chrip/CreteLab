@@ -63,4 +63,55 @@ describe('UHPC preset catalog', () => {
                 `${p.key}: w/b = ${wb.toFixed(2)} outside [0.18, 0.40]`);
         }
     });
+
+    it('every preset carries its own non-empty mixingSteps array', () => {
+        for (const p of UHPC_PRESETS) {
+            assert.ok(Array.isArray(p.mixingSteps),
+                `${p.key}: mixingSteps must be an array`);
+            assert.ok(p.mixingSteps.length >= 3,
+                `${p.key}: mixingSteps should have at least 3 entries (got ${p.mixingSteps.length})`);
+            for (const step of p.mixingSteps) {
+                assert.ok(typeof step === 'string' && step.trim().length > 0,
+                    `${p.key}: every mixingSteps entry must be a non-empty string`);
+            }
+        }
+    });
+
+    it('mixingSteps placeholders only reference known component keys', () => {
+        const KNOWN = new Set([
+            'cementKg', 'sandKg', 'quartzPowderKg', 'finesKg',
+            'waterL', 'superplasticizerL',
+        ]);
+        for (const p of UHPC_PRESETS) {
+            for (const step of p.mixingSteps) {
+                const matches = [...step.matchAll(/\{(\w+)\}/g)].map(m => m[1]);
+                for (const key of matches) {
+                    assert.ok(KNOWN.has(key),
+                        `${p.key}: unknown placeholder {${key}} in mixingSteps`);
+                }
+            }
+        }
+    });
+
+    it('placeholders never reference a component that is zero in the batch', () => {
+        // Otherwise the rendered step would say "0,00 kg Quarzmehl" — silly.
+        const COMPONENT_TO_BATCH = {
+            cementKg:          'cementKg',
+            sandKg:            'sandKg',
+            quartzPowderKg:    'quartzPowderKg',
+            finesKg:           'finesKg',
+            waterL:            'waterL',
+            superplasticizerL: 'superplasticizerMl',
+        };
+        for (const p of UHPC_PRESETS) {
+            for (const step of p.mixingSteps) {
+                const matches = [...step.matchAll(/\{(\w+)\}/g)].map(m => m[1]);
+                for (const key of matches) {
+                    const batchKey = COMPONENT_TO_BATCH[key];
+                    assert.ok(p.batch[batchKey] > 0,
+                        `${p.key}: step references {${key}} but batch.${batchKey} = ${p.batch[batchKey]}`);
+                }
+            }
+        }
+    });
 });

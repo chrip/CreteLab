@@ -151,6 +151,54 @@ describe('UHPC page – DOM wiring', () => {
         assert.deepStrictEqual(a.map(c => c.level), b.map(c => c.level),
             'plausibility chips must not change with volume alone');
     });
+
+    // ── Second preset (DIY hochfester Mörtel without Quarzmehl) ─────────
+    // This block runs only if the catalog actually contains a "no-microfiller"
+    // preset; otherwise it skips so the suite stays valid for catalog edits.
+
+    const noFillerPreset = UHPC_PRESETS.find(
+        p => p.batch.quartzPowderKg === 0 && p.batch.finesKg === 0
+    );
+
+    function selectPreset(key) {
+        const sel = doc.getElementById('uhpcPreset');
+        sel.value = key;
+        sel.dispatchEvent(new win.Event('change'));
+    }
+
+    it('preset without Quarzmehl/Feinzuschläge: table hides their rows', { skip: !noFillerPreset }, () => {
+        selectPreset(noFillerPreset.key);
+        const rows = getRecipeRows();
+        // The preset has cement, sand, water, PCE — exactly four ingredients.
+        assert.strictEqual(rows.length, 4,
+            `expected 4 rows for the no-microfiller preset, got ${rows.length}`);
+        const names = rows.map(r => r.name).join(' | ');
+        assert.ok(!/Quarzmehl/.test(names),  `Quarzmehl row must be hidden: ${names}`);
+        assert.ok(!/Feinzuschläge/.test(names), `Feinzuschläge row must be hidden: ${names}`);
+        assert.ok(/Zement/.test(names));
+        assert.ok(/Sand/.test(names));
+        assert.ok(/Wasser/.test(names));
+        assert.ok(/PCE/.test(names));
+    });
+
+    it('preset without Quarzmehl: mixing steps come from the preset and never mention Quarzmehl', { skip: !noFillerPreset }, () => {
+        selectPreset(noFillerPreset.key);
+        const steps = Array.from(doc.querySelectorAll('#uhpcSteps li')).map(li => li.textContent);
+        assert.ok(steps.length >= 3, `expected >= 3 steps, got ${steps.length}`);
+        const blob = steps.join(' | ');
+        assert.ok(!/Quarzmehl/.test(blob),
+            `mixing steps must not mention Quarzmehl for this preset: ${blob}`);
+        assert.ok(/Zement/.test(blob));
+        assert.ok(/Sand/.test(blob));
+    });
+
+    it('preset without Quarzmehl: w/b chip stays in ok-or-warn (recipe is right at 0.30)', { skip: !noFillerPreset }, () => {
+        selectPreset(noFillerPreset.key);
+        const wb = getChips().find(c => c.text.includes('Wasser/Bindemittel'));
+        assert.ok(wb, 'w/b chip must be rendered');
+        assert.ok(['ok', 'warn'].includes(wb.level),
+            `w/b chip should be ok or warn for the published recipe, got ${wb.level} (${wb.text})`);
+    });
 });
 
 function parseValue(text) {

@@ -78,18 +78,24 @@ function renderRecipeTable(preset, recipe) {
         ? `${fmt(kg / cementKg * 100, 0)} %`
         : '–';
 
+    // Each row: [name, mass, unit, magnitudeForFiltering, pctMass, hint].
+    // Rows whose magnitude is zero are filtered out so a recipe without
+    // (e.g.) Quarzmehl does not render an empty "0,00 kg" row.
     const rows = [
-        ['🧱 Zement (CEM I)',                     fmtQty(recipe.cementKg,         'kg'), '100 %',                     'Bindemittel; Portlandzement'],
-        ['🏖️ Sand 0/2 mm',                        fmtQty(recipe.sandKg,           'kg'), pctOfCement(recipe.sandKg),  'Hauptzuschlag, gewaschen'],
-        ['💎 Quarzmehl 0,063–0,25 mm',            fmtQty(recipe.quartzPowderKg,   'kg'), pctOfCement(recipe.quartzPowderKg), 'Microfiller — wirkt puzzolanisch'],
-        ['🌫️ Feinzuschläge < 63 µm',              fmtQty(recipe.finesKg,          'kg'), pctOfCement(recipe.finesKg), 'Schließt Kornpackung dichter'],
-        ['💧 Wasser',                             fmtQty(recipe.waterL,           'l'),  pctOfCement(recipe.waterL),  'Möglichst kalt (verzögert Abbinden)'],
-        ['🌊 PCE-Fließmittel',                    fmtQty(recipe.superplasticizerL,'l'),  pctOfCement(recipe.superplasticizerL * preset.densities.superplasticizer), 'Erst im Wasser auflösen'],
+        ['🧱 Zement (CEM I)',          recipe.cementKg,        'kg', recipe.cementKg,        recipe.cementKg,                                              'Bindemittel; Portlandzement'],
+        ['🏖️ Sand 0/2 mm',             recipe.sandKg,          'kg', recipe.sandKg,          recipe.sandKg,                                                'Hauptzuschlag, gewaschen'],
+        ['💎 Quarzmehl 0,063–0,25 mm', recipe.quartzPowderKg,  'kg', recipe.quartzPowderKg,  recipe.quartzPowderKg,                                        'Microfiller — wirkt puzzolanisch'],
+        ['🌫️ Feinzuschläge < 63 µm',   recipe.finesKg,         'kg', recipe.finesKg,         recipe.finesKg,                                               'Schließt Kornpackung dichter'],
+        ['💧 Wasser',                  recipe.waterL,          'l',  recipe.waterL,          recipe.waterL,                                                'Möglichst kalt (verzögert Abbinden)'],
+        ['🌊 PCE-Fließmittel',         recipe.superplasticizerL,'l', recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, 'Erst im Wasser auflösen'],
     ];
 
-    els.resultBody.innerHTML = rows.map(r =>
-        `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`
-    ).join('');
+    els.resultBody.innerHTML = rows
+        .filter(r => r[3] > 0)
+        .map(([name, value, unit, , pctMass, hint]) =>
+            `<tr><td>${name}</td><td>${fmtQty(value, unit)}</td><td>${pctOfCement(pctMass)}</td><td>${hint}</td></tr>`
+        )
+        .join('');
 }
 
 function renderChips(checks) {
@@ -118,23 +124,25 @@ function decimalsForChip(id) {
 }
 
 function renderSteps(preset, recipe) {
-    // Concrete-mass references adapt to the user's batch size so a 30-l
-    // tutorial scales to a 5-l planter mix without arithmetic.
-    const items = [
-        `<strong>Trockenmischung vormischen</strong> (${fmtQty(recipe.cementKg, 'kg')} Zement
-          + ${fmtQty(recipe.sandKg, 'kg')} Sand
-          + ${fmtQty(recipe.quartzPowderKg, 'kg')} Quarzmehl
-          + ${fmtQty(recipe.finesKg, 'kg')} Feinzuschläge) — gut homogenisieren.`,
-        `<strong>PCE-Fließmittel im Anmachwasser auflösen</strong>
-          (${fmtQty(recipe.superplasticizerL, 'l')} PCE in ${fmtQty(recipe.waterL, 'l')} Wasser einrühren).`,
-        `<strong>Wasser-PCE-Mischung langsam zur Trockenmischung geben</strong> und
-          mindestens 5 Minuten kräftig mischen — Fließverhalten entwickelt sich verzögert.`,
-        `<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen,
-          bis keine Luftblasen mehr aufsteigen.`,
-        `<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig
-          ausschalen, mehrere Tage nachhärten lassen.`,
-    ];
-    els.steps.innerHTML = items.map(s => `<li>${s}</li>`).join('');
+    // Each preset carries its own mixing instructions in preset.mixingSteps
+    // because the order varies between sources (e.g. one author dissolves
+    // PCE in all the water, another in only part of it). We substitute
+    // {placeholder} tokens with the user's scaled batch quantities so the
+    // text always reflects the current target volume.
+    const vars = {
+        cementKg:          fmtQty(recipe.cementKg,          'kg'),
+        sandKg:            fmtQty(recipe.sandKg,            'kg'),
+        quartzPowderKg:    fmtQty(recipe.quartzPowderKg,    'kg'),
+        finesKg:           fmtQty(recipe.finesKg,           'kg'),
+        waterL:            fmtQty(recipe.waterL,            'l'),
+        superplasticizerL: fmtQty(recipe.superplasticizerL, 'l'),
+    };
+    const substitute = (template) =>
+        template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '');
+
+    els.steps.innerHTML = preset.mixingSteps
+        .map(step => `<li>${substitute(step)}</li>`)
+        .join('');
 }
 
 // ── HTML escaping (defence in depth — preset data is trusted, but we

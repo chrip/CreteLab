@@ -66,12 +66,17 @@
 
 /**
  * @typedef {Object} UhpcPreset
- * @property {string}       key       Stable identifier (used in URLs / storage).
- * @property {string}       label     Generic, copyright-safe UI label.
+ * @property {string}       key            Stable identifier (used in URLs / storage).
+ * @property {string}       label          Generic, copyright-safe UI label.
  * @property {UhpcSource}   source
- * @property {UhpcBatch}    batch     Source-verbatim masses for one batch.
+ * @property {UhpcBatch}    batch          Source-verbatim masses for one batch.
  * @property {UhpcDensities} densities
- * @property {string[]}     notes     Author's mixing notes (verbatim or paraphrased).
+ * @property {string[]}     mixingSteps    Step-by-step instructions; may contain
+ *                                         placeholders {cementKg}, {sandKg},
+ *                                         {quartzPowderKg}, {finesKg}, {waterL},
+ *                                         {superplasticizerL} — substituted at
+ *                                         render time with the user's scaled
+ *                                         quantities.
  * @property {?number}      claimedFckMpa  If the source states a strength.
  */
 
@@ -90,7 +95,7 @@ const DENSITIES_DEFAULT = Object.freeze({
 export const UHPC_PRESETS = [
     {
         key: 'diy-pce-30l-batch',
-        label: 'DIY-Hochleistungsbeton (~30 l Charge, PCE-Fließmittel)',
+        label: 'DIY-Hochleistungsbeton (~30 l Charge, mit Quarzmehl & Feinzuschlägen)',
         source: {
             type: 'youtube',
             title: 'Ultra-Hochleistungsbeton (UHPC) selber mischen — DIY-Tutorial',
@@ -107,13 +112,52 @@ export const UHPC_PRESETS = [
             superplasticizerMl: 375,   // midpoint of stated range 350–400 ml
         },
         densities: { ...DENSITIES_DEFAULT },
-        notes: [
-            'Trockenmischung erst gut vormischen (Zement + Sand + Quarzmehl + Feinzuschläge).',
-            'PCE-Fließmittel im Anmachwasser auflösen, dann langsam zugeben.',
-            'Mindestens 5 Minuten kräftig mischen — Fließverhalten entwickelt sich verzögert.',
-            'In geölte Form gießen und vibrieren / leicht klopfen für blasenfreies Ergebnis.',
+        mixingSteps: [
+            '<strong>Trockenmischung vormischen</strong> ({cementKg} Zement + {sandKg} Sand + {quartzPowderKg} Quarzmehl + {finesKg} Feinzuschläge) — gut homogenisieren.',
+            '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren).',
+            '<strong>Wasser-PCE-Mischung langsam zur Trockenmischung geben</strong> und mindestens 5 Minuten kräftig mischen — Fließverhalten entwickelt sich verzögert.',
+            '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
+            '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
         claimedFckMpa: null, // source does not state a measured strength
+    },
+    {
+        key: 'diy-mortar-20kg-batch',
+        label: 'DIY-Hochfester Mörtel (~20 kg Charge, ohne Quarzmehl)',
+        source: {
+            // Quoted recipe (verbatim) from the article body:
+            //   "Meine Mischung für ca. 20 kg hochfesten Mörtel setzt sich
+            //    wie folgt zusammen:
+            //      - 8 kg Zement (CEM I)
+            //      - 10 kg Sandkörnung 0 - 2 mm
+            //      - 2,4 Liter Wasser
+            //      - 150 ml Hochleistungsfließmittel EasyFlow Pro"
+            type: 'datasheet',
+            title: 'Hochfesten Beton (UHPC) selber herstellen — Beton-Basics',
+            url:   'https://www.grey-element.de/beton-basics/hochfesten-beton-uhpc-selber-herstellen/',
+            author: 'Grey Element',
+            retrieved: '2026-04-28',
+        },
+        batch: {
+            cementKg:           8,    // CEM I
+            sandKg:             10,   // 0/2 mm — Quarz- oder Basaltsand
+            quartzPowderKg:     0,    // not used in this simpler recipe
+            finesKg:            0,
+            waterL:             2.4,  // → w/z = 0.30 (within UHPC literature range)
+            superplasticizerMl: 150,  // EasyFlow Pro PCE — ~2 % of cement mass
+        },
+        densities: { ...DENSITIES_DEFAULT },
+        // Author's mixing order (paraphrased from the article):
+        //   "Zement und Zuschläge mit einem Teil des Anmischwassers anmischen,
+        //    dann das Fließmittel mit dem Rest des Anmischwassers zugeben."
+        mixingSteps: [
+            '<strong>Zement und trockenen Sand mit ca. einem Drittel des Anmachwassers anmischen</strong> ({cementKg} Zement + {sandKg} Sand + ca. 0,8 l Wasser). Sand muss <em>trocken</em> sein — feuchter Sand verschiebt den w/z-Wert.',
+            '<strong>PCE-Fließmittel im restlichen Wasser auflösen</strong> ({superplasticizerL} PCE in den restlichen ca. 1,6 l Wasser einrühren).',
+            '<strong>Wasser-PCE-Mischung schrittweise zugeben und mindestens 5 Minuten kräftig mischen</strong> — idealerweise im Zwangsmischer. Das Fließmittel entwickelt seine volle Wirkung erst nach gleichmäßiger Verteilung.',
+            '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
+            '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
+        ],
+        claimedFckMpa: null, // article does not state a measured 28-day strength
     },
 ];
 
