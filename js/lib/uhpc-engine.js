@@ -28,10 +28,19 @@
 //
 // 3. Plausibility checks (see uhpc-presets.js refs [1]–[4] for sources):
 //
-//    - w/b ratio:        0.18 ≤ w/(z + 0.4·q) ≤ 0.40
-//      (binder = cement + 40 % of quartz powder; conservative, see note
-//       in evaluatePlausibility for why 0.4 is used as an indicative
-//       k-value rather than k_s = 1.0 we use for silica fume in B 20).
+//    - w/b ratio (B 20-style equivalent binder, see WB_RATIO_FORMULA below):
+//
+//          w/b = (waterL + 0.6·m_PCE) / (cementKg + k_s·microsilicaKg)
+//
+//      with k_s = 1.0 (microsilica is highly reactive). Quartzmehl is
+//      treated as inert filler (k = 0) per B 20 supplementary-material
+//      conventions. The 0.6·m_PCE term accounts for the water content of
+//      PCE-based superplasticisers (Kassel Heft 1, Tabelle 3.2-1 footnote 1:
+//      "Unter Berücksichtigung des Fließmittels (60 % Wassergehalt)").
+//      Without these two corrections the engine underestimates w/b by
+//      ~0.02–0.04 vs. published values.
+//
+//      Window: 0.20 ≤ w/b ≤ 0.32 (ok), 0.18 ≤ w/b ≤ 0.40 (warn).
 //
 //    - PCE dosage (% of cement mass): 0.3 % ≤ d ≤ 4 %
 //      (Sika ViscoCrete / BASF MasterGlenium datasheets, ref [4]).
@@ -54,13 +63,14 @@
  * @property {number} sandKg
  * @property {number} quartzPowderKg
  * @property {number} finesKg
+ * @property {number} microsilicaKg
  * @property {number} waterL
  * @property {number} superplasticizerL    L (litres) for unit consistency.
  * @property {number} totalSolidMassKg
  * @property {number} batchVolumeL         the *preset* batch's fresh volume.
  * @property {number} scaleFactor          target_volume_dm3 / batch_volume_dm3.
  * @property {number} freshDensityKgPerM3
- * @property {number} wbRatio              water / (cement + 0.4·quartzPowder).
+ * @property {number} wbRatio              see WB_RATIO_FORMULA in the file header.
  * @property {number} pceDosagePctOfCement (PCE_kg / cement_kg) × 100.
  */
 
@@ -73,6 +83,17 @@
  * @property {string}  unit
  * @property {string}  message
  */
+
+// PCE-based superplasticisers contain ~60 wt-% water; this fraction is
+// added to the effective water term in the w/b calculation so our value
+// matches published research recipes (Kassel Heft 1, Tabelle 3.2-1 fn 1).
+const PCE_WATER_FRACTION = 0.60;
+
+// k-values for the equivalent-binder term in w/b (B 20 Tafel 9 conventions).
+// Microsilica is highly reactive (k = 1.0); quartz powder is inert filler
+// (k = 0). Anything else falls outside the binder term.
+const K_MICROSILICA   = 1.0;
+const K_QUARTZ_POWDER = 0.0;
 
 /**
  * Compute the fresh volume of one batch from component masses and densities.
@@ -91,6 +112,7 @@ export function calculateBatchVolumeL(batch, densities) {
         batch.sandKg         / densities.sand +
         batch.quartzPowderKg / densities.quartzPowder +
         batch.finesKg        / densities.fines +
+        batch.microsilicaKg  / densities.microsilica +
         batch.waterL         / densities.water +
         pceKg                / densities.superplasticizer
     );
@@ -121,13 +143,21 @@ export function computeUhpcRecipe(preset, volumeM3, overrides = {}) {
     const pceKgPerBatch = (batch.superplasticizerMl / 1000) * rho.superplasticizer;
     const totalMassBatchKg =
         batch.cementKg + batch.sandKg + batch.quartzPowderKg +
-        batch.finesKg  + batch.waterL + pceKgPerBatch;
+        batch.finesKg  + batch.microsilicaKg + batch.waterL + pceKgPerBatch;
+
+    // Equivalent binder + PCE water (see file header WB_RATIO_FORMULA).
+    const effectiveBinderKg =
+        batch.cementKg +
+        K_MICROSILICA   * batch.microsilicaKg +
+        K_QUARTZ_POWDER * batch.quartzPowderKg;
+    const effectiveWaterL = batch.waterL + PCE_WATER_FRACTION * pceKgPerBatch;
 
     return {
         cementKg:           batch.cementKg       * scale,
         sandKg:             batch.sandKg         * scale,
         quartzPowderKg:     batch.quartzPowderKg * scale,
         finesKg:            batch.finesKg        * scale,
+        microsilicaKg:      batch.microsilicaKg  * scale,
         waterL:             batch.waterL         * scale,
         superplasticizerL:  (batch.superplasticizerMl / 1000) * scale,
 
@@ -135,7 +165,7 @@ export function computeUhpcRecipe(preset, volumeM3, overrides = {}) {
         batchVolumeL,
         scaleFactor:        scale,
         freshDensityKgPerM3: totalMassBatchKg / batchVolumeL * 1000,
-        wbRatio:            batch.waterL / (batch.cementKg + 0.4 * batch.quartzPowderKg),
+        wbRatio:             effectiveWaterL / effectiveBinderKg,
         pceDosagePctOfCement: pceKgPerBatch / batch.cementKg * 100,
     };
 }

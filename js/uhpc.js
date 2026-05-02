@@ -52,6 +52,21 @@ function renderSource(preset) {
     const fckRow = claimedFckMpa
         ? `<dt>Festigkeit (Quelle)</dt><dd>${fmt(claimedFckMpa, 0)} N/mm²</dd>`
         : '<dt>Festigkeit (Quelle)</dt><dd>nicht angegeben</dd>';
+    // Build a verbatim summary of the source's batch — zero-mass components
+    // are omitted so the line stays focused on what's actually in the recipe.
+    const recipeParts = [
+        [batch.cementKg,           'kg', 'Zement'],
+        [batch.sandKg,             'kg', 'Sand'],
+        [batch.microsilicaKg,      'kg', 'Mikrosilica'],
+        [batch.quartzPowderKg,     'kg', 'Quarzmehl'],
+        [batch.finesKg,            'kg', 'Feinzuschläge'],
+        [batch.waterL,             'l',  'Wasser'],
+        [batch.superplasticizerMl, 'ml', 'PCE-Fließmittel'],
+    ]
+        .filter(([m]) => m > 0)
+        .map(([m, unit, name]) => `${fmt(m, m < 10 ? 1 : 0)} ${unit} ${name}`)
+        .join(', ');
+
     els.sourceBody.innerHTML = `
         <dl>
             <dt>Titel</dt>      <dd>${escapeHtml(source.title)}</dd>
@@ -61,13 +76,7 @@ function renderSource(preset) {
             ${fckRow}
         </dl>
         <p style="margin-top:10px;color:var(--text-secondary)">
-            Originalrezept (eine Charge):
-            ${fmt(batch.cementKg, 0)} kg Zement,
-            ${fmt(batch.sandKg, 0)} kg Sand 0/2,
-            ${fmt(batch.quartzPowderKg, 0)} kg Quarzmehl,
-            ${fmt(batch.finesKg, 1)} kg Feinzuschläge,
-            ${fmt(batch.waterL, 1)} l Wasser,
-            ${fmt(batch.superplasticizerMl, 0)} ml PCE-Fließmittel.
+            Originalrezept: ${recipeParts}.
         </p>
     `;
 }
@@ -82,12 +91,13 @@ function renderRecipeTable(preset, recipe) {
     // Rows whose magnitude is zero are filtered out so a recipe without
     // (e.g.) Quarzmehl does not render an empty "0,00 kg" row.
     const rows = [
-        ['🧱 Zement (CEM I)',          recipe.cementKg,        'kg', recipe.cementKg,        recipe.cementKg,                                              'Bindemittel; Portlandzement'],
-        ['🏖️ Sand 0/2 mm',             recipe.sandKg,          'kg', recipe.sandKg,          recipe.sandKg,                                                'Hauptzuschlag, gewaschen'],
-        ['💎 Quarzmehl 0,063–0,25 mm', recipe.quartzPowderKg,  'kg', recipe.quartzPowderKg,  recipe.quartzPowderKg,                                        'Microfiller — wirkt puzzolanisch'],
-        ['🌫️ Feinzuschläge < 63 µm',   recipe.finesKg,         'kg', recipe.finesKg,         recipe.finesKg,                                               'Schließt Kornpackung dichter'],
-        ['💧 Wasser',                  recipe.waterL,          'l',  recipe.waterL,          recipe.waterL,                                                'Möglichst kalt (verzögert Abbinden)'],
-        ['🌊 PCE-Fließmittel',         recipe.superplasticizerL,'l', recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, 'Erst im Wasser auflösen'],
+        ['🧱 Zement (CEM I)',          recipe.cementKg,         'kg', recipe.cementKg,         recipe.cementKg,                                              'Bindemittel; Portlandzement'],
+        ['🏖️ Sand',                    recipe.sandKg,           'kg', recipe.sandKg,           recipe.sandKg,                                                'Hauptzuschlag, gewaschen'],
+        ['🧪 Mikrosilica',             recipe.microsilicaKg,    'kg', recipe.microsilicaKg,    recipe.microsilicaKg,                                         'Hochreaktiver Microfiller (k = 1,0)'],
+        ['💎 Quarzmehl',               recipe.quartzPowderKg,   'kg', recipe.quartzPowderKg,   recipe.quartzPowderKg,                                        'Inerter Microfiller (Korn­packung)'],
+        ['🌫️ Feinzuschläge < 63 µm',   recipe.finesKg,          'kg', recipe.finesKg,          recipe.finesKg,                                               'Schließt Kornpackung dichter'],
+        ['💧 Wasser',                  recipe.waterL,           'l',  recipe.waterL,           recipe.waterL,                                                'Möglichst kalt (verzögert Abbinden)'],
+        ['🌊 PCE-Fließmittel',         recipe.superplasticizerL,'l',  recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, 'Erst im Wasser auflösen'],
     ];
 
     els.resultBody.innerHTML = rows
@@ -134,6 +144,7 @@ function renderSteps(preset, recipe) {
         sandKg:            fmtQty(recipe.sandKg,            'kg'),
         quartzPowderKg:    fmtQty(recipe.quartzPowderKg,    'kg'),
         finesKg:           fmtQty(recipe.finesKg,           'kg'),
+        microsilicaKg:     fmtQty(recipe.microsilicaKg,     'kg'),
         waterL:            fmtQty(recipe.waterL,            'l'),
         superplasticizerL: fmtQty(recipe.superplasticizerL, 'l'),
     };

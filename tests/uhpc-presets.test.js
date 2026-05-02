@@ -80,7 +80,7 @@ describe('UHPC preset catalog', () => {
     it('mixingSteps placeholders only reference known component keys', () => {
         const KNOWN = new Set([
             'cementKg', 'sandKg', 'quartzPowderKg', 'finesKg',
-            'waterL', 'superplasticizerL',
+            'microsilicaKg', 'waterL', 'superplasticizerL',
         ]);
         for (const p of UHPC_PRESETS) {
             for (const step of p.mixingSteps) {
@@ -100,6 +100,7 @@ describe('UHPC preset catalog', () => {
             sandKg:            'sandKg',
             quartzPowderKg:    'quartzPowderKg',
             finesKg:           'finesKg',
+            microsilicaKg:     'microsilicaKg',
             waterL:            'waterL',
             superplasticizerL: 'superplasticizerMl',
         };

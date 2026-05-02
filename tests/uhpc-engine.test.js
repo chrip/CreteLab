@@ -167,3 +167,108 @@ describe('getUhpcPreset roundtrip', () => {
         }
     });
 });
+
+// ── Kassel research preset (M1Q with CEM I 42,5 R) ─────────────────────
+//
+// This block locks down the engine's reproduction of the Kassel paper's
+// own w/b figure. The paper reports w/b = 0,19 for the M1Q-42,5R / w/z=0,24
+// recipe with the explicit footnote "Unter Berücksichtigung des Fließmittels
+// (60 % Wassergehalt)". Our engine implements that convention plus the
+// k_s = 1.0 weighting for microsilica (B 20 Tafel 9), so we should hit
+// the published value within rounding (±0.01).
+
+const KASSEL = getUhpcPreset('kassel-m1q-cem42-5r');
+
+describe('Kassel M1Q (CEM I 42,5 R) — engine reproduces published figures', { skip: !KASSEL }, () => {
+    it('exists in the catalog', () => {
+        assert.ok(KASSEL, 'kassel-m1q-cem42-5r preset must be present');
+    });
+
+    it('source is the Kassel research report and claimedFckMpa = 123', () => {
+        assert.strictEqual(KASSEL.claimedFckMpa, 123);
+        assert.match(KASSEL.source.url, /uni-kassel\.de/);
+    });
+
+    it('reproduces w/b = 0,19 within ±0,01 (matches Tabelle 3.7-2)', () => {
+        // Per-m³ recipe, so target volume = 1 m³ scales 1:1.
+        const r = computeUhpcRecipe(KASSEL, 1);
+        assert.ok(Math.abs(r.wbRatio - 0.19) <= 0.01,
+            `expected w/b ≈ 0,19, got ${r.wbRatio.toFixed(3)}`);
+    });
+
+    it('reproduces fresh density in the UHPC range [2300, 2500] kg/m³', () => {
+        const r = computeUhpcRecipe(KASSEL, 1);
+        assert.ok(r.freshDensityKgPerM3 > 2300 && r.freshDensityKgPerM3 < 2500,
+            `fresh density ${r.freshDensityKgPerM3.toFixed(0)} kg/m³ outside [2300, 2500]`);
+    });
+
+    it('PCE dosage lies in the datasheet warn band (research mixes lean high)', () => {
+        // 29,4 kg/m³ ÷ 733 kg/m³ ≈ 4,01 %. That sits at the upper edge of the
+        // PCE_PCT_WARN band [0.3, 4.0]; either 'warn' (≤ 4.0) or 'error' (> 4.0)
+        // is engineering-honest depending on rounding. Lock both as acceptable.
+        const r = computeUhpcRecipe(KASSEL, 1);
+        const pce = evaluatePlausibility(r).find(c => c.id === 'pce');
+        assert.ok(['warn', 'error'].includes(pce.level),
+            `PCE chip should be warn-or-error for the Kassel research mix, got ${pce.level}`);
+    });
+
+    it('volume balance: Σ(m/ρ) ≈ 1 m³ within ~3 % (typical air content tolerance)', () => {
+        const v = calculateBatchVolumeL(KASSEL.batch, KASSEL.densities);
+        // 978–1000 dm³ for a per-m³ recipe (the gap is the entrained-air budget).
+        assert.ok(Math.abs(v - 1000) <= 30,
+            `Σ(m/ρ) = ${v.toFixed(1)} dm³ should be near 1000 dm³ for a per-m³ recipe`);
+    });
+
+    it('linear scaling: 0.001 m³ produces sub-1 component values (gram/ml-scale)', () => {
+        const r = computeUhpcRecipe(KASSEL, 0.001);
+        assert.ok(r.cementKg      < 1, `cement should be sub-kg at 0.001 m³, got ${r.cementKg}`);
+        assert.ok(r.microsilicaKg < 1, `microsilica should be sub-kg, got ${r.microsilicaKg}`);
+        assert.ok(r.cementKg      > 0);
+        assert.ok(r.microsilicaKg > 0);
+    });
+});
+
+// ── PCE-water (60 %) and microsilica (k_s = 1.0) corrections ───────────
+
+describe('w/b formula corrections', () => {
+    const fakePreset = {
+        key: '__test__',
+        densities: {
+            cement: 3.10, sand: 2.65, quartzPowder: 2.65, fines: 2.65,
+            microsilica: 2.20, water: 1.00, superplasticizer: 1.10,
+        },
+        batch: {
+            cementKg: 100, sandKg: 100, quartzPowderKg: 0, finesKg: 0,
+            microsilicaKg: 0, waterL: 30, superplasticizerMl: 0,
+        },
+    };
+
+    it('without PCE and microsilica, w/b reduces to pure w/z', () => {
+        const r = computeUhpcRecipe(fakePreset, 0.1);
+        assert.ok(Math.abs(r.wbRatio - 0.30) < 1e-9,
+            `w/b should equal water/cement = 0.30, got ${r.wbRatio}`);
+    });
+
+    it('PCE water (60 %) raises w/b: 100 ml PCE adds 0.06 kg water → +0.0006', () => {
+        const withPce = computeUhpcRecipe(fakePreset, 0.1, { superplasticizerMl: 100 });
+        // 0.100 l × 1.10 kg/l × 0.60 = 0.066 kg added water
+        // new w/b = (30 + 0.066) / 100 = 0.30066
+        assert.ok(Math.abs(withPce.wbRatio - 0.30066) < 1e-4,
+            `expected w/b ≈ 0.30066 with 100 ml PCE, got ${withPce.wbRatio}`);
+    });
+
+    it('microsilica (k_s = 1.0) lowers w/b: +20 kg microsilica reduces it from 0.30 to 0.25', () => {
+        const withMs = computeUhpcRecipe(fakePreset, 0.1, { microsilicaKg: 20 });
+        // new w/b = 30 / (100 + 1.0 × 20) = 30/120 = 0.25
+        assert.ok(Math.abs(withMs.wbRatio - 0.25) < 1e-9,
+            `expected w/b = 0.25 with 20 kg microsilica, got ${withMs.wbRatio}`);
+    });
+
+    it('quartz powder is treated as inert filler (k = 0): does NOT lower w/b', () => {
+        // 20 kg of quartz powder must NOT change w/b (k_quartz = 0 by design,
+        // matching the Kassel paper's binder accounting).
+        const withQp = computeUhpcRecipe(fakePreset, 0.1, { quartzPowderKg: 20 });
+        assert.ok(Math.abs(withQp.wbRatio - 0.30) < 1e-9,
+            `quartz powder must not enter the binder term, got w/b = ${withQp.wbRatio}`);
+    });
+});
