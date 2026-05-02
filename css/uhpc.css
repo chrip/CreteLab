@@ -1,6 +1,26 @@
 /* uhpc.css — page-specific styling for the UHPC scaler.
    General element styles live in styles.css and are reused. */
 
+/* Stronger optical separation between the page's main steps
+   (1. Rezept wählen, 2. Ihr Volumen, 3. Ihre Mischung, 4. Schritt für Schritt).
+   Each section gets generous breathing room above; the heading is pulled
+   close to its own content so it reads as a single block. */
+#calculator > .form-section {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+#calculator > .form-section:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+#calculator > .form-section > h2 {
+    margin-bottom: 10px;
+}
+
 .uhpc-note {
     background: #f8fafc;
     border: 1px solid var(--border-color);
