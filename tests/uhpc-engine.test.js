@@ -267,19 +267,35 @@ describe('Kassel M1Q-soft (w/z = 0,40, moderate PCE) — DIY-friendly variant', 
 // ── Estimated 28-d strengths for DIY presets ───────────────────────────
 
 describe('DIY presets carry an estimated 28-d strength', () => {
-    it('every preset has either a measured (claimed) or estimated 28-d strength', () => {
+    it('every preset has at least one of {airCured, claimed, estimated} 28-d strength', () => {
         for (const p of UHPC_PRESETS) {
-            const has = (p.claimedFckMpa != null) || (p.estimatedFckMpa != null);
+            const has = (p.airCuredFckMpa != null) ||
+                        (p.claimedFckMpa  != null) ||
+                        (p.estimatedFckMpa != null);
             assert.ok(has,
-                `${p.key}: must provide either claimedFckMpa or estimatedFckMpa`);
+                `${p.key}: must provide at least one strength field`);
         }
     });
 
     it('every reported strength lies in a plausible UHPC/HSC range (40–250 N/mm²)', () => {
         for (const p of UHPC_PRESETS) {
-            const fck = p.claimedFckMpa ?? p.estimatedFckMpa;
+            const fck = p.airCuredFckMpa ?? p.claimedFckMpa ?? p.estimatedFckMpa;
             assert.ok(fck >= 40 && fck <= 250,
                 `${p.key}: 28-d strength ${fck} outside [40, 250] N/mm²`);
+        }
+    });
+
+    it('when a preset has both claimed and air-cured strengths, air-cured is lower (70–95 % of claimed)', () => {
+        const both = UHPC_PRESETS.filter(p =>
+            p.claimedFckMpa != null && p.airCuredFckMpa != null
+        );
+        assert.ok(both.length >= 1, 'expected at least one preset with both fields');
+        for (const p of both) {
+            assert.ok(p.airCuredFckMpa < p.claimedFckMpa,
+                `${p.key}: airCuredFckMpa (${p.airCuredFckMpa}) must be < claimedFckMpa (${p.claimedFckMpa})`);
+            const ratio = p.airCuredFckMpa / p.claimedFckMpa;
+            assert.ok(ratio >= 0.70 && ratio <= 0.95,
+                `${p.key}: air/water ratio ${ratio.toFixed(2)} outside literature range [0.70, 0.95]`);
         }
     });
 });

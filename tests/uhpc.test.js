@@ -79,7 +79,7 @@ describe('UHPC page – DOM wiring', () => {
 
         const fckOf = (key) => {
             const p = UHPC_PRESETS.find(x => x.key === key);
-            return p.claimedFckMpa ?? p.estimatedFckMpa ?? 0;
+            return p.airCuredFckMpa ?? p.claimedFckMpa ?? p.estimatedFckMpa ?? 0;
         };
         const strengths = opts.map(o => fckOf(o.value));
         for (let i = 1; i < strengths.length; i++) {
@@ -88,25 +88,27 @@ describe('UHPC page – DOM wiring', () => {
         }
     });
 
-    it('every dropdown option starts with its 28-d strength (estimated values prefixed with "ca.")', () => {
+    it('every dropdown option starts with its realistic-DIY 28-d strength (engineering estimates flagged "ca.")', () => {
         const opts = Array.from(doc.querySelectorAll('#uhpcPreset option'));
         for (const opt of opts) {
             const preset = UHPC_PRESETS.find(p => p.key === opt.value);
-            const fck = preset.claimedFckMpa ?? preset.estimatedFckMpa;
+            const fck = preset.airCuredFckMpa ?? preset.claimedFckMpa ?? preset.estimatedFckMpa;
             assert.ok(fck > 0, `${preset.key}: must have a strength`);
 
             const text = opt.textContent;
-            // Every option's text must contain the strength figure.
+            // Every option's text must contain the displayed strength figure.
             assert.ok(text.includes(`${fck} N/mm²`),
                 `option for ${preset.key} should mention "${fck} N/mm²", got: "${text}"`);
 
-            // Estimated values are prefixed with "ca.", measured ones are not.
-            if (preset.claimedFckMpa) {
+            // "ca." prefix iff the displayed value is engineering-derived
+            // (airCured or estimated). Raw source measurements render bare.
+            const isDerived = preset.airCuredFckMpa != null || preset.estimatedFckMpa != null;
+            if (isDerived) {
+                assert.ok(/^ca\.\s/.test(text),
+                    `derived-strength preset ${preset.key} must start with "ca. ", got: "${text}"`);
+            } else {
                 assert.ok(!/^ca\./.test(text),
                     `measured-strength preset ${preset.key} must not have "ca." prefix, got: "${text}"`);
-            } else {
-                assert.ok(/^ca\.\s/.test(text),
-                    `estimated-strength preset ${preset.key} must start with "ca. ", got: "${text}"`);
             }
 
             // The original preset.label must still be present after the strength prefix.

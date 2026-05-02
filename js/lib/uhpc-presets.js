@@ -83,7 +83,16 @@
  *                                           quantities.
  * @property {?number}      claimedFckMpa    Measured 28-d strength stated by the
  *                                           source (null if the source does not
- *                                           give a number).
+ *                                           give a number). For sources that
+ *                                           measure under water curing, this is
+ *                                           the verbatim water-cured value.
+ * @property {?number}      airCuredFckMpa   Engineering estimate of the 28-d
+ *                                           strength under typical home-shop
+ *                                           air curing (no water bath). Only
+ *                                           set on presets whose source uses
+ *                                           water curing — for the dropdown's
+ *                                           realistic-DIY display the renderer
+ *                                           prefers this value.
  * @property {?number}      estimatedFckMpa  Walzkurven-based 28-d estimate when
  *                                           the source provides no measurement.
  *                                           Calibrated as documented in each
@@ -133,11 +142,14 @@ export const UHPC_PRESETS = [
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
-        claimedFckMpa: null,
+        claimedFckMpa:    null,
+        airCuredFckMpa:   null,
         // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z ≈ 0,34:
         //   fcm = 31 × (1/0,34)^0,67 ≈ 64 → fck ≈ 56 N/mm². Der inerte Quarzmehl-
         //   und Feinzuschlag-Microfiller bringt typisch 10–15 % Packungs-
         //   dichte-Bonus; konservativer Mittelwert 65 N/mm².
+        // Bezieht sich auf typische DIY-Bedingungen (feucht abgedeckt, ohne
+        // Wasserbad) — daher kein separater airCuredFckMpa nötig.
         estimatedFckMpa: 65,
     },
     {
@@ -177,11 +189,12 @@ export const UHPC_PRESETS = [
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
-        claimedFckMpa: null,
+        claimedFckMpa:    null,
+        airCuredFckMpa:   null,
         // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z = 0,30:
         //   fcm = 31 × (1/0,30)^0,67 ≈ 69 → fck ≈ 61 N/mm². Ohne Microfiller,
         //   leichter PCE-Bonus durch bessere Zementdispergierung. Konservative
-        //   Schätzung 60 N/mm².
+        //   Schätzung 60 N/mm² unter typischen DIY-Bedingungen.
         estimatedFckMpa: 60,
     },
     {
@@ -227,11 +240,19 @@ export const UHPC_PRESETS = [
             '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren).',
             '<strong>Wasser-PCE-Mischung schrittweise zur Trockenmischung geben</strong> und insgesamt 5–10 Minuten kräftig mischen — idealerweise im Zwangsmischer. Achtung: Die Frischbetontemperatur kann bei größeren Mengen auf bis zu 40 °C steigen — der Beton steift dann schneller an.',
             '<strong>In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten</strong>, bis der Beton selbstnivellierend wirkt.',
-            '<strong>Nach 24–48 Stunden ausschalen</strong> (je nach Verzögererwirkung des Fließmittels), dann 28 Tage unter Wasser bei 20 °C lagern. Druckfestigkeit ohne Wärmebehandlung lt. Quelle: ~123 N/mm² nach 28 d. Mit 48 h Wärmebehandlung bei 90 °C deutlich höher.',
+            '<strong>Nach 24–48 Stunden ausschalen</strong> (je nach Verzögererwirkung des Fließmittels), dann mind. eine Woche feucht abgedeckt nachhärten lassen (z. B. unter feuchtem Tuch + Folie). Druckfestigkeit nach 28 d: ca. 100 N/mm².',
+            '<strong>Optional für maximale Festigkeit:</strong> 28 Tage komplett unter Wasser bei 20 °C lagern → ~123 N/mm² (+23 %). Bei dieser sehr dichten Mischung wirkt das Wasserbad besonders stark gegen Selbst-Austrocknung der Matrix.',
         ],
-        // Tabelle 3.7-2: 28-Tage-Druckfestigkeit (Wasserlagerung 20 °C, ohne
-        // Wärmebehandlung, ohne Fasern, mit CEM I 42,5 R).
+        // Tabelle 3.7-2: 28-d Druckfestigkeit unter Wasserlagerung 20 °C (ohne
+        // Wärmebehandlung, ohne Fasern, CEM I 42,5 R).
         claimedFckMpa:   123,
+        // Engineering estimate für übliche DIY-Bedingungen ohne Wasserbad.
+        // Begründung: bei sehr niedrigem w/z (0,24) hat die dichte Matrix
+        // eine ausgeprägte Selbst-Austrocknungs-Tendenz, die Hydratation
+        // bleibt ohne externe Wasserzufuhr unvollständig. Literatur (UHPC-
+        // Reviews, RILEM TC 188-CSC) nennt 80–85 % der Wasserlagerungs-
+        // festigkeit; konservativer Mittelwert: ~100 N/mm².
+        airCuredFckMpa:  100,
         estimatedFckMpa: null,
     },
     {
@@ -274,11 +295,17 @@ export const UHPC_PRESETS = [
             '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren). Diese Variante kommt mit einer DIY-typischen PCE-Dosierung aus.',
             '<strong>Wasser-PCE-Mischung schrittweise zur Trockenmischung geben</strong> und 5–10 Minuten kräftig mischen. Das Fließverhalten entwickelt sich verzögert — anfangs „grießig", nach einigen Minuten geschmeidig.',
             '<strong>In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten</strong>, bis Oberfläche glänzt.',
-            '<strong>Nach 24–48 h ausschalen</strong>, dann 28 Tage feucht/im Wasser bei 20 °C nachhärten. Quelle: ~103 N/mm² nach 28 d (Wasserlagerung, ohne Wärmebehandlung, ohne Fasern).',
+            '<strong>Nach 24–48 h ausschalen</strong>, dann mind. eine Woche feucht abgedeckt nachhärten lassen. Druckfestigkeit nach 28 d: ca. 95 N/mm².',
+            '<strong>Optional für maximale Festigkeit:</strong> 28 Tage komplett unter Wasser bei 20 °C lagern → ~103 N/mm² (+8 %). Bei dieser etwas weniger dichten Variante (w/z = 0,40) ist der Wasserbad-Effekt geringer, aber spürbar.',
         ],
-        // Tabelle 3.7-2, w/z=0,40 Variante: 28-Tage-Druckfestigkeit
-        // (Wasserlagerung 20 °C, ohne Wärmebehandlung, ohne Fasern).
+        // Tabelle 3.7-2, w/z=0,40 Variante: 28-d Druckfestigkeit unter
+        // Wasserlagerung 20 °C (ohne Wärmebehandlung, ohne Fasern).
         claimedFckMpa:   103,
+        // Engineering estimate für übliche DIY-Bedingungen ohne Wasserbad.
+        // Bei höherem w/z (0,40) ist die Selbst-Austrocknung deutlich
+        // schwächer ausgeprägt — Literatur nennt 90–95 % der Wasser-
+        // lagerungsfestigkeit; konservativer Mittelwert: ~95 N/mm².
+        airCuredFckMpa:  95,
         estimatedFckMpa: null,
     },
 ];

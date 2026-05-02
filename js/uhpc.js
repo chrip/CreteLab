@@ -27,15 +27,24 @@ const els = {
 
 // ── Initial render ─────────────────────────────────────────────────────
 
-// Sort the dropdown ascending by 28-d strength (claimed-or-estimated) so
-// users see "easy starter → extreme" rather than catalog/source order.
+// Sort the dropdown ascending by the realistic-DIY 28-d strength so users
+// see "easy starter → extreme" rather than catalog/source order.
+//
+// Priority: airCuredFckMpa  (Kassel presets — derived from the source's
+//                            water-cured value minus an air-curing penalty)
+//        →  claimedFckMpa   (raw source value when no airCured is set)
+//        →  estimatedFckMpa (DIY presets — Walzkurven-based)
 function effective28dStrength(preset) {
-    return preset.claimedFckMpa ?? preset.estimatedFckMpa ?? 0;
+    return preset.airCuredFckMpa
+        ?? preset.claimedFckMpa
+        ?? preset.estimatedFckMpa
+        ?? 0;
 }
 
-// "ca. 60 N/mm²" for estimated values, "60 N/mm²" for measured ones —
-// the prefix flags basis at a glance without a second column.
+// Engineering-derived values (airCured, estimated) get a "ca." prefix;
+// raw source measurements without further derivation render bare.
 function strengthPrefix(preset) {
+    if (preset.airCuredFckMpa)  return `ca. ${fmt(preset.airCuredFckMpa, 0)} N/mm²`;
     if (preset.claimedFckMpa)   return `${fmt(preset.claimedFckMpa, 0)} N/mm²`;
     if (preset.estimatedFckMpa) return `ca. ${fmt(preset.estimatedFckMpa, 0)} N/mm²`;
     return '–';
@@ -65,13 +74,19 @@ function currentPreset() {
 // ── Renderers ──────────────────────────────────────────────────────────
 
 function renderSource(preset) {
-    const { source, batch, claimedFckMpa, estimatedFckMpa } = preset;
-    // Prefer measured strength from the source. Fall back to a Walzkurven-
-    // derived estimate when the source provides no measurement; the per-
-    // preset comment in uhpc-presets.js documents the derivation so a
-    // reviewer can audit each estimate.
+    const { source, batch, claimedFckMpa, airCuredFckMpa, estimatedFckMpa } = preset;
+    // Display priority for the source panel:
+    //   - both airCured + claimed: show both (DIY estimate first, then
+    //     verbatim source value as the "+water curing" upgrade)
+    //   - claimed only: source-stated value verbatim
+    //   - estimated only: Walzkurven estimate flagged as "ca."
     let fckRow;
-    if (claimedFckMpa) {
+    if (airCuredFckMpa && claimedFckMpa) {
+        const bonusPct = Math.round((claimedFckMpa - airCuredFckMpa) / airCuredFckMpa * 100);
+        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
+                 `<dd>ca. ${fmt(airCuredFckMpa, 0)} N/mm² <em>(typische DIY-Bedingungen, geschätzt)</em>` +
+                 `<br>${fmt(claimedFckMpa, 0)} N/mm² <em>(Quelle: 28 d Wasserlagerung, +${bonusPct} %)</em></dd>`;
+    } else if (claimedFckMpa) {
         fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
                  `<dd>${fmt(claimedFckMpa, 0)} N/mm² <em>(Quelle, gemessen)</em></dd>`;
     } else if (estimatedFckMpa) {
