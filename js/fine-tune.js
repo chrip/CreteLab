@@ -10,6 +10,7 @@ import {
     SUPPLEMENTARY_MATERIALS,
 } from './lib/additives.js';
 import { calculateStrengthFromWalzkurven, STRENGTH_CLASSES } from './lib/strength.js';
+import { fmt, fmtQty, parseDecimal } from './lib/format.js';
 
 const PRESETS = [
     { value: 'c20', label: 'Einfach – C20/25 (Fundamente, Pflasterbett)',     z: 280, w: 195, g: 1820, klasse: 'C20/25' },
@@ -39,23 +40,8 @@ let cementPerM3    = customRecipe ? customRecipe.z : PRESETS[1].z;
 let waterPerM3     = customRecipe ? customRecipe.w : PRESETS[1].w;
 let aggregatePerM3 = customRecipe ? customRecipe.g : PRESETS[1].g;
 
-// --- Formatting helpers ---
-function fmt(n, decimals = 0) {
-    return n.toLocaleString('de-DE', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-    });
-}
-
-function fmtQty(n, unit) {
-    if (unit === 'kg' && n < 1) return `${fmt(n * 1000)} g`;
-    if (unit === 'l'  && n < 1) return `${fmt(n * 1000)} ml`;
-    return `${fmt(n, 2)} ${unit}`;
-}
-
 function getVolume() {
-    const raw = document.getElementById('tuneVolume').value.replace(',', '.');
-    const v = parseFloat(raw);
+    const v = parseDecimal(document.getElementById('tuneVolume').value);
     return isNaN(v) || v <= 0 ? 1 : v;
 }
 
