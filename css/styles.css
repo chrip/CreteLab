@@ -600,12 +600,33 @@ footer a:hover {
 }
 
 /* 4-column recipe table: right-align quantity cols */
+.recipe-table {
+    table-layout: auto;
+}
+.recipe-table td {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
 .recipe-table th:nth-child(2),
 .recipe-table td:nth-child(2),
 .recipe-table th:nth-child(3),
 .recipe-table td:nth-child(3) {
     text-align: right;
-    white-space: nowrap;
+}
+@media (min-width: 901px) {
+    .recipe-table th:nth-child(2),
+    .recipe-table td:nth-child(2),
+    .recipe-table th:nth-child(3),
+    .recipe-table td:nth-child(3) {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 900px) {
+    .recipe-table th,
+    .recipe-table td {
+        padding: 8px 6px;
+    }
 }
 
 @media (max-width: 600px) {
