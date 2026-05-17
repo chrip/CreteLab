@@ -77,20 +77,26 @@ export const i18n = {
 	},
 
 	/** Switch locale; fetch the catalogue over the network if needed. */
-	async setLocale(lang) {
-		if (lang === _locale) return;
-		_locale = lang;
-		if (!_catalogues[lang]) {
-			try {
-				const res = await fetch('./locales/' + lang + '.json');
-				if (!res.ok) throw new Error(`HTTP ${res.status}`);
-				_catalogues[lang] = await res.json();
-			} catch (e) {
-				console.warn(`i18n: could not fetch locale '${lang}'`, e);
+	async setLocale(lang, opts) {
+		const changed = lang !== _locale;
+		if (changed) {
+			_locale = lang;
+			if (!_catalogues[lang]) {
+				try {
+					const res = await fetch('./locales/' + lang + '.json');
+					if (!res.ok) throw new Error(`HTTP ${res.status}`);
+					_catalogues[lang] = await res.json();
+				} catch (e) {
+					console.warn(`i18n: could not fetch locale '${lang}'`, e);
+				}
 			}
 		}
-		i18n.patchDom();
-		document.dispatchEvent(new CustomEvent('languagechange', { detail: _locale }));
+		if (changed || (opts && opts.force)) {
+			i18n.patchDom();
+		}
+		if (changed) {
+			document.dispatchEvent(new CustomEvent('languagechange', { detail: _locale }));
+		}
 	},
 
 	/** Refresh all data-i18n attributes in the DOM. */

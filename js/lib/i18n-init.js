@@ -41,7 +41,7 @@ export async function initI18n() {
   const locale = stored || detected;
 
   document.documentElement.lang = locale;
-  await i18n.setLocale(locale);
+  await i18n.setLocale(locale, { force: true });
   createSwitcher();
 
   document.addEventListener('languagechange', rebuildSwitcher);
