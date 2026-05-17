@@ -83,7 +83,13 @@ export const i18n = {
 			_locale = lang;
 			if (!_catalogues[lang]) {
 				try {
-					const res = await fetch('./locales/' + lang + '.json');
+					const prefix = (() => {
+						const segments = location.pathname.split('/').filter(Boolean);
+						const idx = segments.findIndex(s => ['de', 'en'].includes(s) && segments.indexOf(s) > 0);
+						if (idx > 0) return '/' + segments.slice(0, idx + 1).join('/') + '/';
+						return '/';
+					})();
+					const res = await fetch(prefix + 'locales/' + lang + '.json');
 					if (!res.ok) throw new Error(`HTTP ${res.status}`);
 					_catalogues[lang] = await res.json();
 				} catch (e) {

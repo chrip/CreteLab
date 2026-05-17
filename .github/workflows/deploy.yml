@@ -1,4 +1,4 @@
-name: Test and Deploy
+name: Test, Build & Deploy
 
 on:
   push:
@@ -38,10 +38,36 @@ jobs:
       - name: Run tests
         run: npm test
 
-  deploy:
+  build:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        if: hashFiles('package-lock.json') != ''
+
+      - name: Pre-render localized pages
+        run: node scripts/render.js
+
+      - name: Generate sitemap + robots
+        run: node scripts/sitemap.js
+
+      - name: List build output
+        run: find build -type f | head -30
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -49,13 +75,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        if: hashFiles('package-lock.json') != ''
+
+      - name: Pre-render localized pages
+        run: node scripts/render.js
+
+      - name: Generate sitemap + robots
+        run: node scripts/sitemap.js
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'build'
 
       - name: Deploy to GitHub Pages
         id: deployment
