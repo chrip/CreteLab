@@ -52,8 +52,25 @@ document.getElementById('mixSelector').classList.remove('hidden');
 const sel = document.getElementById('mixPreset');
 const infoBox = document.getElementById('baseRecipeInfo');
 
+function rebuildCustomRecipe() {
+    if (!customRecipe) return;
+    const customLabel = customRecipe.klasse
+        ? i18n.t('fine.tune.custom.label.alt', { klasse: customRecipe.klasse })
+        : i18n.t('fine.tune.custom.generic.label');
+    const customOpt = sel.querySelector('option[value="custom"]');
+    if (customOpt) customOpt.textContent = customLabel;
+    const sep = sel.querySelector('option[disabled]');
+    if (sep) sep.textContent = i18n.t('fine.tune.divider');
+    const parts = [
+        `${i18n.t('fine.tune.base.label.z')}: ${fmt(customRecipe.z)} kg/m³`,
+        `${i18n.t('fine.tune.base.label.w')}: ${fmt(customRecipe.w)} l/m³`,
+        `${i18n.t('fine.tune.base.label.g')}: ${fmt(customRecipe.g)} kg/m³`,
+        customRecipe.zement || '',
+    ].filter(Boolean);
+    infoBox.innerHTML = parts.join(' &nbsp;·&nbsp; ');
+}
+
 if (customRecipe) {
-    // Custom entry at the top derived from recipe data
     const customLabel = customRecipe.klasse
         ? i18n.t('fine.tune.custom.label.alt', { klasse: customRecipe.klasse })
         : i18n.t('fine.tune.custom.generic.label');
@@ -62,13 +79,11 @@ if (customRecipe) {
     customOpt.textContent = customLabel;
     sel.appendChild(customOpt);
 
-    // Visual divider
     const sep = document.createElement('option');
     sep.disabled = true;
     sep.textContent = i18n.t('fine.tune.divider');
     sel.appendChild(sep);
 
-    // Pre-fill info box content (shown only when "custom" is selected)
     const parts = [
         `${i18n.t('fine.tune.base.label.z')}: ${fmt(customRecipe.z)} kg/m³`,
         `${i18n.t('fine.tune.base.label.w')}: ${fmt(customRecipe.w)} l/m³`,
@@ -399,5 +414,6 @@ i18n.patchDom();
 document.addEventListener('languagechange', () => {
     i18n.patchDom();
     rebuildDropdowns();
+    rebuildCustomRecipe();
     update();
 });

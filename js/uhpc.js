@@ -257,5 +257,6 @@ update();
 i18n.patchDom();
 document.addEventListener('languagechange', () => {
     i18n.patchDom();
+    rebuildDropdown();
     update();
 });

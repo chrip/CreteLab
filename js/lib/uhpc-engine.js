@@ -1,55 +1,4 @@
-// uhpc-engine.js — pure functions for UHPC mix scaling and plausibility.
-//
-// DESIGN
-// ------
-// All functions in this module are pure: they take inputs, return outputs,
-// touch no globals, no DOM, no storage. They are exercised by
-// tests/uhpc-scaling.test.js without any DOM harness. The DOM glue lives
-// separately in js/uhpc.js.
-//
-// MATH
-// ----
-// 1. Batch volume (Stoffraumrechnung — the only B 20 formula reused here,
-//    because mass-volume balance is purely arithmetic, not B 20-specific):
-//
-//        V_batch [dm³] = Σ ( m_i / ρ_i )
-//
-//    Source: B 20 Tafel 9 step 6, also DIN EN 206. Implemented in
-//    js/lib/densities.js for normal concrete; we re-derive here only
-//    because the UHPC component set differs (no aggregate gradation).
-//
-// 2. Linear scaling to a target volume V (m³):
-//
-//        s = V × 1000 [dm³] / V_batch [dm³]
-//        m_i_scaled = m_i × s
-//
-//    No model, just proportion. UHPC mix design is a particle-packing
-//    optimisation problem we deliberately do NOT solve here.
-//
-// 3. Plausibility checks (see uhpc-presets.js refs [1]–[4] for sources):
-//
-//    - w/b ratio (B 20-style equivalent binder, see WB_RATIO_FORMULA below):
-//
-//          w/b = (waterL + 0.6·m_PCE) / (cementKg + k_s·microsilicaKg)
-//
-//      with k_s = 1.0 (microsilica is highly reactive). Quartzmehl is
-//      treated as inert filler (k = 0) per B 20 supplementary-material
-//      conventions. The 0.6·m_PCE term accounts for the water content of
-//      PCE-based superplasticisers (Kassel Heft 1, Tabelle 3.2-1 footnote 1:
-//      "Unter Berücksichtigung des Fließmittels (60 % Wassergehalt)").
-//      Without these two corrections the engine underestimates w/b by
-//      ~0.02–0.04 vs. published values.
-//
-//      Window: 0.20 ≤ w/b ≤ 0.32 (ok), 0.18 ≤ w/b ≤ 0.40 (warn).
-//
-//    - PCE dosage (% of cement mass): 0.3 % ≤ d ≤ 4 %
-//      (Sika ViscoCrete / BASF MasterGlenium datasheets, ref [4]).
-//
-//    - Fresh density: 2200 ≤ ρ_fresh ≤ 2600 kg/m³
-//      (fib Model Code 2010 §5.1, ref [2]).
-//
-//    Each check returns a level: 'ok' | 'warn' | 'error'. The engine
-//    never *adjusts* a recipe — only reports.
+import { i18n } from './i18n.js';
 
 /**
  * @typedef {import('./uhpc-presets.js').UhpcPreset}    UhpcPreset
@@ -202,35 +151,35 @@ export function evaluatePlausibility(recipe) {
     return [
         {
             id:    'wb',
-            label: 'Wasser/Bindemittel-Verhältnis',
+            label: i18n.t('pl.wb.label'),
             value: recipe.wbRatio,
             unit:  '',
             ...classify(roundTo(recipe.wbRatio, CHIP_PRECISION.wb), WB_RATIO_OK, WB_RATIO_WARN, [
-                'Im UHPC-typischen Bereich (0,20–0,32).',
-                'Außerhalb des Literatur-Mittelbereichs, aber für DIY noch tolerierbar.',
-                'Außerhalb des UHPC-Bereichs (0,18–0,40) — Festigkeit wird stark abweichen.',
+                i18n.t('pl.wb.ok'),
+                i18n.t('pl.wb.warn'),
+                i18n.t('pl.wb.err'),
             ]),
         },
         {
             id:    'pce',
-            label: 'PCE-Dosierung (% vom Zement)',
+            label: i18n.t('pl.pce.label'),
             value: recipe.pceDosagePctOfCement,
             unit:  '%',
             ...classify(roundTo(recipe.pceDosagePctOfCement, CHIP_PRECISION.pce), PCE_PCT_OK, PCE_PCT_WARN, [
-                'Im Datenblatt-Bereich (0,8–3,0 %).',
-                'Am oberen Rand des Datenblatt-Fensters (bis 4,0 %) — bei dieser Dosierung das Produktdatenblatt des konkreten Fließmittels prüfen.',
-                'Über dem Datenblatt-Fenster (0,3–4,0 %) — Produkt unbedingt prüfen, evtl. ist eine andere PCE-Sorte nötig.',
+                i18n.t('pl.pce.ok'),
+                i18n.t('pl.pce.warn'),
+                i18n.t('pl.pce.err'),
             ]),
         },
         {
             id:    'density',
-            label: 'Frischbeton-Rohdichte',
+            label: i18n.t('pl.density.label'),
             value: recipe.freshDensityKgPerM3,
             unit:  'kg/m³',
             ...classify(roundTo(recipe.freshDensityKgPerM3, CHIP_PRECISION.density), DENSITY_OK, DENSITY_WARN, [
-                'Im UHPC-typischen Bereich (2300–2500 kg/m³).',
-                'Etwas außerhalb (2200–2600 kg/m³) — Lufteinschluss / Sandkorn prüfen.',
-                'Deutlich außerhalb des UHPC-Dichtebereichs — Rezept prüfen.',
+                i18n.t('pl.density.ok'),
+                i18n.t('pl.density.warn'),
+                i18n.t('pl.density.err'),
             ]),
         },
     ];

@@ -489,5 +489,6 @@
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.3": "<strong>Wasser-PCE-Mischung schrittweise zur Trockenmischung geben</strong> und 5–10 Minuten kräftig mischen. Das Fließverhalten entwickelt sich verzögert — anfangs „grießig\", nach einigen Minuten geschmeidig.",
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.4": "<strong>In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten</strong>, bis Oberfläche glänzt.",
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.5": "<strong>Nach 24–48 h ausschalen</strong>, dann mind. eine Woche feucht abgedeckt nachhärten lassen. Druckfestigkeit nach 28 d: ca. 95 N/mm².",
-  "uhpc.preset.kassel-m1q-cem42-5r-soft.step.6": "<strong>Optional für maximale Festigkeit:</strong> 28 Tage komplett unter Wasser bei 20 °C lagern → ~103 N/mm² (+8 %). Bei dieser etwas weniger dichten Variante (w/z = 0,40) ist der Wasserbad-Effekt geringer, aber spürbar."
+  "uhpc.preset.kassel-m1q-cem42-5r-soft.step.6": "<strong>Optional für maximale Festigkeit:</strong> 28 Tage komplett unter Wasser bei 20 °C lagern → ~103 N/mm² (+8 %). Bei dieser etwas weniger dichten Variante (w/z = 0,40) ist der Wasserbad-Effekt geringer, aber spürbar.",
+  "pl.pce.err": "Über dem Datenblatt-Fenster (0,3–4,0 %) — Produkt unbedingt prüfen, evtl. ist eine andere PCE-Sorte nötig."
 }

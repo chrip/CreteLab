@@ -492,5 +492,6 @@
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.3": "<strong>Add the water-PCE mixture in stages to the dry mix</strong> and mix for 5–10 minutes. Flow properties develop slowly — initially \"grainy\", then smooth after a few minutes.",
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.4": "<strong>Pour into oiled form and compact with a standard immersion vibrator</strong> until the surface shines.",
   "uhpc.preset.kassel-m1q-cem42-5r-soft.step.5": "<strong>Demold after 24–48 h</strong>, then keep covered moist for at least one week. Compressive strength after 28 d: approx. 95 N/mm².",
-  "uhpc.preset.kassel-m1q-cem42-5r-soft.step.6": "<strong>Optional for maximum strength:</strong> Store completely underwater at 20 °C for 28 days → ~103 N/mm² (+8%). With this slightly less dense variant (w/c = 0.40), the water bath effect is smaller but noticeable."
+  "uhpc.preset.kassel-m1q-cem42-5r-soft.step.6": "<strong>Optional for maximum strength:</strong> Store completely underwater at 20 °C for 28 days → ~103 N/mm² (+8%). With this slightly less dense variant (w/c = 0.40), the water bath effect is smaller but noticeable.",
+  "pl.pce.err": "Above the datasheet window (0.3–4.0 %) — check your PCE product, may need a different type."
 }
