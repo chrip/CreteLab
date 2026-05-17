@@ -3,46 +3,42 @@ import { i18n } from './i18n.js';
 const STORAGE_KEY = 'cretelab_locale';
 
 function createSwitcher() {
-  const nav = document.querySelector('.main-nav');
-  if (!nav) return;
+  const footer = document.querySelector('footer p');
+  if (!footer) return;
 
-  // Visual separator
-  const sep = document.createElement('span');
-  sep.className = 'lang-sep';
-  sep.textContent = '·';
-  sep.style.cssText = 'color:var(--border-color);padding:8px 2px 8px 12px;user-select:none;';
-  nav.appendChild(sep);
+  const wrap = document.createElement('span');
+  wrap.id = 'langSwitcher';
 
-  const current = i18n.locale;
+  const select = document.createElement('select');
+  select.title = i18n.t('global.language');
 
   for (const code of ['de', 'en']) {
-    const a = document.createElement('a');
-    a.href = '#';
-    a.textContent = code.toUpperCase();
-    a.dataset.lang = code;
-    a.id = `lang-${code}`;
-    if (code === current) a.classList.add('active', 'lang-current');
-    a.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const val = a.dataset.lang;
-      localStorage.setItem(STORAGE_KEY, val);
-      document.documentElement.lang = val;
-      await i18n.setLocale(val);
-    });
-    nav.appendChild(a);
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = code.toUpperCase();
+    if (code === i18n.locale) opt.selected = true;
+    select.appendChild(opt);
   }
+
+  select.addEventListener('change', async () => {
+    const val = select.value;
+    localStorage.setItem(STORAGE_KEY, val);
+    document.documentElement.lang = val;
+    await i18n.setLocale(val);
+  });
+
+  wrap.appendChild(select);
+  insertBeforeLast(footer, wrap);
+}
+
+function insertBeforeLast(parent, child) {
+  if (parent.lastChild) parent.insertBefore(child, parent.lastChild);
+  else parent.appendChild(child);
 }
 
 function rebuildSwitcher() {
-  for (const code of ['de', 'en']) {
-    const a = document.getElementById(`lang-${code}`);
-    if (!a) continue;
-    if (code === i18n.locale) {
-      a.classList.add('active', 'lang-current');
-    } else {
-      a.classList.remove('active', 'lang-current');
-    }
-  }
+  const select = document.querySelector('#langSwitcher select');
+  if (select) select.value = i18n.locale;
 }
 
 export async function initI18n() {
