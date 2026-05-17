@@ -3,54 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CreteLab – Hochleistungsbeton (UHPC)</title>
-    <meta name="description" content="Skalieren Sie veröffentlichte UHPC-Rezepte (Ultra-Hochleistungsbeton) auf Ihr Volumen — mit Plausibilitätsprüfung und Schritt-für-Schritt-Anleitung.">
+    <title data-i18n-titlepage="head.uhpc.title">CreteLab – Hochleistungsbeton (UHPC)</title>
+    <meta name="description" content="Skalieren Sie veröffentlichte UHPC-Rezepte (Ultra-Hochleistungsbeton) auf Ihr Volumen — mit Plausibilitätsprüfung und Schritt-für-Schritt-Anleitung." data-i18n-meta="head.uhpc.meta.desc">
     <link rel="icon" type="image/png" href="assets/CreteLab_emoji.png">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/uhpc.css">
+    <style>
+        #langSwitcher {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            margin-left: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.9);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-brand">
-                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo">
+                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo" data-i18n-alt="global.logo.alt">
                 <div class="header-text">
                     <h1>CreteLab</h1>
-                    <p class="tagline">Hochleistungsbeton skalieren</p>
+                    <p class="tagline" data-i18n="global.tagline.uhpc">Hochleistungsbeton skalieren</p>
                 </div>
             </div>
         </header>
 
         <nav class="main-nav" aria-label="Hauptmenü">
-            <a href="index.html">Betonrechner</a>
-            <a href="fine-tune.html">Rezept feintunen</a>
-            <a href="uhpc.html" class="active" aria-current="page">Hochleistungsbeton</a>
+            <a href="index.html" data-i18n="global.nav.calculator">Betonrechner</a>
+            <a href="fine-tune.html" data-i18n="global.nav.fine.tune">Rezept feintunen</a>
+            <a href="uhpc.html" class="active" aria-current="page" data-i18n="global.nav.uhpc">Hochleistungsbeton</a>
         </nav>
 
         <main id="calculator">
             <section class="form-section">
-                <h2>1. Rezept wählen</h2>
+                <h2 data-i18n="uhpc.section.preset">1. Rezept wählen</h2>
                 <div class="form-group">
-                    <label for="uhpcPreset">Ausgangsrezept:</label>
+                    <label for="uhpcPreset" data-i18n="uhpc.preset.label">Ausgangsrezept:</label>
                     <select id="uhpcPreset" aria-describedby="uhpcPresetHint"></select>
-                    <small class="form-hint" id="uhpcPresetHint">
+                    <small class="form-hint" id="uhpcPresetHint" data-i18n="uhpc.preset.hint">
                         Veröffentlichte DIY- und Forschungs-Rezepturen mit
                         Quellenangabe.
                     </small>
                 </div>
 
                 <details id="uhpcSource" class="source-panel">
-                    <summary>Quelle &amp; Originalrezept anzeigen</summary>
+                    <summary data-i18n="uhpc.source.btn">Quelle &amp; Originalrezept anzeigen</summary>
                     <div id="uhpcSourceBody"></div>
                 </details>
             </section>
 
             <section class="form-section">
-                <h2>2. Ihr Volumen</h2>
+                <h2 data-i18n="uhpc.section.vol">2. Ihr Volumen</h2>
                 <div class="form-group">
-                    <label for="uhpcVolume">Benötigtes Volumen (m³):</label>
-                    <input type="text" id="uhpcVolume" inputmode="decimal" value="1" placeholder="z. B. 1">
-                    <small class="form-hint">
+                    <label for="uhpcVolume" data-i18n="fine.tune.volume.label">Benötigtes Volumen (m³):</label>
+                    <input type="text" id="uhpcVolume" inputmode="decimal" value="1" placeholder="z. B. 1" data-i18n-placeholder="fine.tune.volume.placeholder">
+                    <small class="form-hint" data-i18n="uhpc.volume.hint">
                         Anhaltspunkte: kleine Schale ≈ 0,005 m³, Pflanzkübel
                         ≈ 0,02 m³, Tischplatte 80 × 40 × 4 cm ≈ 0,013 m³.
                     </small>
@@ -58,14 +69,14 @@
             </section>
 
             <section class="form-section">
-                <h2>3. Ihre Mischung</h2>
+                <h2 data-i18n="uhpc.section.mix">3. Ihre Mischung</h2>
                 <table class="recipe-table" id="uhpcResultTable">
                     <thead>
                         <tr>
-                            <th scope="col">Zutat</th>
-                            <th scope="col">Menge gesamt</th>
-                            <th scope="col">Anteil am Zement</th>
-                            <th scope="col">Hinweis</th>
+                            <th scope="col" data-i18n="table.ingredient">Zutat</th>
+                            <th scope="col" data-i18n="table.qty.total">Menge gesamt</th>
+                            <th scope="col" data-i18n="uhpc.result.col.cement.pct">Anteil am Zement</th>
+                            <th scope="col" data-i18n="uhpc.result.col.note">Hinweis</th>
                         </tr>
                     </thead>
                     <tbody id="uhpcResultBody"></tbody>
@@ -75,19 +86,19 @@
             </section>
 
             <section class="form-section">
-                <h2>4. Schritt für Schritt</h2>
+                <h2 data-i18n="uhpc.section.steps">4. Schritt für Schritt</h2>
                 <ol id="uhpcSteps" class="step-list"></ol>
             </section>
 
             <aside class="uhpc-note" role="note" aria-label="Hinweis zur Methodik">
-                <strong>ℹ️ Hinweis:</strong>
-                Hochleistungsbeton (UHPC) liegt außerhalb des Industriestandards
+                <strong data-i18n="uhpc.source.note">ℹ️ Hinweis:</strong>
+                <span data-i18n="uhpc.note.body">Hochleistungsbeton (UHPC) liegt außerhalb des Industriestandards
                 für Normalbeton. Die hier angebotenen Rezepte stammen aus den
                 in der Quellenangabe verlinkten Veröffentlichungen und werden
                 linear auf Ihr Volumen skaliert. CreteLab schätzt für UHPC
                 keine Festigkeit — die echten Werte hängen u. a. von Mischzeit,
                 Verdichtung und ggf. Faserbewehrung ab und stehen, sofern
-                bekannt, in der Quellenangabe.
+                bekannt, in der Quellenangabe.</span>
             </aside>
         </main>
 
@@ -100,6 +111,9 @@
         </footer>
     </div>
 
+    <script type="module">
+        import './js/lib/i18n-init.js';
+    </script>
     <script type="module" src="js/uhpc.js"></script>
 </body>
 </html>

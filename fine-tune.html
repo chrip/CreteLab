@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CreteLab – Rezept feintunen</title>
-    <meta name="description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner.">
+    <title data-i18n-titlepage="head.fine.tune.title">CreteLab – Rezept feintunen</title>
+    <meta name="description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner." data-i18n-meta="head.fine.tune.meta.desc">
     <link rel="icon" type="image/png" href="assets/CreteLab_emoji.png">
     <link rel="stylesheet" href="css/styles.css">
     <style>
@@ -102,101 +102,110 @@
             line-height: 1.7;
         }
 
+        #langSwitcher {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            margin-left: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.9);
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-brand">
-                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo">
+                <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo" data-i18n-alt="global.logo.alt">
                 <div class="header-text">
                     <h1>CreteLab</h1>
-                    <p class="tagline">Rezept verfeinern</p>
+                    <p class="tagline" data-i18n="global.tagline.fine.tune">Rezept verfeinern</p>
                 </div>
             </div>
         </header>
 
         <nav class="main-nav" aria-label="Hauptmenü">
-            <a href="index.html">Betonrechner</a>
-            <a href="fine-tune.html" class="active" aria-current="page">Rezept feintunen</a>
-            <a href="uhpc.html">Hochleistungsbeton</a>
+            <a href="index.html" data-i18n="global.nav.calculator">Betonrechner</a>
+            <a href="fine-tune.html" class="active" aria-current="page" data-i18n="global.nav.fine.tune">Rezept feintunen</a>
+            <a href="uhpc.html" data-i18n="global.nav.uhpc">Hochleistungsbeton</a>
         </nav>
 
         <main id="calculator">
             <section class="form-section">
-                <h2>Ihr Basisrezept</h2>
+                <h2 data-i18n="fine.tune.h1.your.base">Ihr Basisrezept</h2>
 
                 <div id="mixSelector" class="hidden">
                     <div class="form-group">
-                        <label for="mixPreset">Ausgangsbeton (was ich kaufe / gekauft habe):</label>
+                        <label for="mixPreset" data-i18n="fine.tune.label.preset">Ausgangsbeton (was ich kaufe / gekauft habe):</label>
                         <select id="mixPreset"></select>
-                        <small class="form-hint">Wählen Sie das Basisrezept, das Sie tunen möchten.</small>
+                        <small class="form-hint" data-i18n="fine.tune.hint.preset">Wählen Sie das Basisrezept, das Sie tunen möchten.</small>
                     </div>
-                    <!-- Shown only when "Aus dem Betonrechner" is selected -->
                     <div id="baseRecipeInfo" class="base-recipe-box hidden"></div>
                 </div>
 
                 <div class="form-group">
-                    <label for="tuneVolume">Benötigtes Volumen (m³):</label>
-                    <input type="text" id="tuneVolume" inputmode="decimal" value="1" placeholder="z.B. 0,3">
-                    <small class="form-hint">Tragen Sie hier die Menge ein, die Sie mischen möchten.</small>
+                    <label for="tuneVolume" data-i18n="fine.tune.volume.label">Benötigtes Volumen (m³):</label>
+                    <input type="text" id="tuneVolume" inputmode="decimal" value="1" placeholder="z.B. 0,3" data-i18n-placeholder="fine.tune.volume.placeholder">
+                    <small class="form-hint" data-i18n="fine.tune.volume.hint">Tragen Sie hier die Menge ein, die Sie mischen möchten.</small>
                 </div>
             </section>
 
             <section class="form-section">
-                <h2>Was möchten Sie verbessern?</h2>
+                <h2 data-i18n="fine.tune.section.goals">Was möchten Sie verbessern?</h2>
 
                 <div class="option-card" id="cardCement">
-                    <label>
+                    <label id="labelExtraCement">
                         <input type="checkbox" id="useExtraCement">
-                        🧱 Mehr Zement – einfach mehr Festigkeit
+                        <span data-i18n="fine.tune.card.cement"> Mehr Zement – einfach mehr Festigkeit</span>
                     </label>
-                    <p class="form-hint">10% mehr Zement in denselben Mix – der einfachste Weg für spürbar mehr Druckfestigkeit. Kein Spezialprodukt, im Baumarkt erhältlich.</p>
+                    <p class="form-hint" data-i18n="fine.tune.card.cement.desc">10% mehr Zement in denselben Mix – der einfachste Weg für spürbar mehr Druckfestigkeit. Kein Spezialprodukt, im Baumarkt erhältlich.</p>
                     <div class="option-result hidden" id="resExtraCement"></div>
                 </div>
 
                 <div class="option-card" id="cardFlyAsh">
-                    <label>
+                    <label id="labelFlyAsh">
                         <input type="checkbox" id="useFlyAsh">
-                        🌿 Flugasche – Dauerhaftigkeit &amp; Verarbeitbarkeit
+                        <span data-i18n="fine.tune.card.flyash"> Flugasche – Dauerhaftigkeit &amp; Verarbeitbarkeit</span>
                     </label>
-                    <p class="form-hint">Zusatzstoff aus Kraftwerksasche. Verbessert die Langzeitfestigkeit, macht den Beton dichter und etwas flüssiger. Im Baustoffhandel erhältlich.</p>
+                    <p class="form-hint" data-i18n="fine.tune.card.flyash.desc">Zusatzstoff aus Kraftwerksasche. Verbessert die Langzeitfestigkeit, macht den Beton dichter und etwas flüssiger. Im Baustoffhandel erhältlich.</p>
                     <div class="option-result hidden" id="resFlyAsh"></div>
                 </div>
 
                 <div class="option-card" id="cardBV">
-                    <label>
+                    <label id="labelBV">
                         <input type="checkbox" id="useBV">
-                        💧 Betonverflüssiger (BV) – besser verarbeitbar
+                        <span data-i18n="fine.tune.beton.verf">💧 Betonverflüssiger (BV) – besser verarbeitbar</span>
                     </label>
-                    <p class="form-hint">Reduziert den Wasserbedarf um ca. 7 %, der Beton fließt gleichmäßiger in die Schalung. Im Baumarkt erhältlich. Schließt Fließmittel aus.</p>
+                    <p class="form-hint" data-i18n="fine.tune.beton.verf.desc">Reduziert den Wasserbedarf um ca. 7 %, der Beton fließt gleichmäßiger in die Schalung. Im Baumarkt erhältlich. Schließt Fließmittel aus.</p>
                     <div class="option-result hidden" id="resBV"></div>
                 </div>
 
                 <div class="option-card" id="cardFM">
-                    <label>
+                    <label id="labelFM">
                         <input type="checkbox" id="useFM">
-                        🌊 Fließmittel (FM) – maximale Verarbeitbarkeit
+                        <span data-i18n="fine.tune.card.fm"> Fließmittel (FM) – maximale Verarbeitbarkeit</span>
                     </label>
-                    <p class="form-hint">Stärkerer Verflüssiger: reduziert den Wasserbedarf um ca. 20 %. Für sehr fließfähigen Beton (F4–F6). Dosierung je nach Produkt prüfen. Schließt Betonverflüssiger aus.</p>
+                    <p class="form-hint" data-i18n="fine.tune.card.fm.desc">Stärkerer Verflüssiger: reduziert den Wasserbedarf um ca. 20 %. Für sehr fließfähigen Beton (F4–F6). Dosierung je nach Produkt prüfen. Schließt Betonverflüssiger aus.</p>
                     <div class="option-result hidden" id="resFM"></div>
                 </div>
 
                 <div class="option-card" id="cardSilica">
-                    <label>
+                    <label id="labelSilica">
                         <input type="checkbox" id="useSilica">
-                        💪 Silikastaub – deutlich mehr Festigkeit
+                        <span data-i18n="fine.tune.card.silica"> Silikastaub – deutlich mehr Festigkeit</span>
                     </label>
-                    <p class="form-hint">Mikrosilika macht Beton spürbar fester und dichter. Für hochbeanspruchte Böden, Stützen und Fertigteile. Nur im Baustoffhandel oder online erhältlich (Spezialprodukt).</p>
+                    <p class="form-hint" data-i18n="fine.tune.card.silica.desc">Mikrosilika macht Beton spürbar fester und dichter. Für hochbeanspruchte Böden, Stützen und Fertigteile. Nur im Baustoffhandel oder online erhältlich (Spezialprodukt).</p>
                     <div class="option-result hidden" id="resSilica"></div>
                 </div>
 
                 <div class="option-card" id="cardLP">
-                    <label>
+                    <label id="labelLP">
                         <input type="checkbox" id="useLP">
-                        ❄️ Luftporenbildner – Frostsicherheit
+                        <span data-i18n="fine.tune.card.lp"> Luftporenbildner – Frostsicherheit</span>
                     </label>
-                    <p class="form-hint">Erzeugt feine Luftporen, die Frostschäden verhindern. Wichtig für Terrassen, Einfahrten und Außentreppen. Senkt die Druckfestigkeit um ca. 14 N/mm².</p>
+                    <p class="form-hint" data-i18n="fine.tune.card.lp.desc">Erzeugt feine Luftporen, die Frostschäden verhindern. Wichtig für Terrassen, Einfahrten und Außentreppen. Senkt die Druckfestigkeit um ca. 14 N/mm².</p>
                     <div class="option-result hidden" id="resLP"></div>
                 </div>
 
@@ -205,9 +214,8 @@
                 <div class="zugabewasser-info" id="strengthResult" style="margin-top:16px;"></div>
             </section>
 
-            <!-- Step-by-step list shown when at least one option is selected -->
             <div class="instructions hidden" id="shoppingList">
-                <h3>Schritt für Schritt:</h3>
+                <h3 data-i18n="fine.tune.shopping">Schritt für Schritt:</h3>
                 <ol id="shoppingItems"></ol>
             </div>
         </main>
@@ -217,6 +225,9 @@
         </footer>
     </div>
 
+    <script type="module">
+        import './js/lib/i18n-init.js';
+    </script>
     <script type="module" src="js/fine-tune.js"></script>
 </body>
 </html>
