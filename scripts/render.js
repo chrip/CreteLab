@@ -143,7 +143,7 @@ function structuredData(locale, page) {
 function copyStaticAssets() {
   const entries = readdirSync(ROOT);
   for (const name of entries) {
-    if (['css', 'js', 'locales', 'assets', 'B20'].includes(name)) {
+    if (['css', 'js', 'locales', 'assets'].includes(name)) {
       const src = join(ROOT, name);
       const dest = join(BUILD, name);
       syncCopy(src, dest);
@@ -199,7 +199,7 @@ async function main() {
       // Flat URLs: href="uhpc.html" → href="uhpc/"
       let flatHtml = html.replace(/href="(fine-tune|uhpc)\.html"/g, 'href="$1/"');
       // Assets live at build/css/, build/js/, etc. — flat pages in build/en/ need ../
-      flatHtml = flatHtml.replace(/(src|href|hreflang)="(css|js|assets|locales|B20)\//g, '$1="../$2/');
+      flatHtml = flatHtml.replace(/(src|href|hreflang)="(css|js|assets|locales)\//g, '$1="../$2/');
       flatHtml = flatHtml.replace(/import ['"]\.\/(js\/lib|js\/)/g, "import '../$1");
 
       const out = page === 'index.html' ? 'index.html' : page;
@@ -208,7 +208,7 @@ async function main() {
       // Also write as locale/uhpc/index.html (clean subdirectory URLs)
       if (page !== 'index.html') {
         // flatHtml has ../css/; subdirs need ../../css/ (one level up)
-        let subHtml = flatHtml.replace(/\.\.\/((css|js|assets|locales|B20)\/)/g, '../../$1');
+        let subHtml = flatHtml.replace(/\.\.\/((css|js|assets|locales)\/)/g, '../../$1');
         subHtml = subHtml.replace(/href="index\.html"/g, 'href="../"');
         subHtml = subHtml.replace(/href="(fine-tune|uhpc)\/"/g, 'href="../$1/"');
         const subDir = join(dir, page.replace('.html', ''));
