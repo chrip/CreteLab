@@ -58,7 +58,8 @@ function populatePresetDropdown() {
     for (const p of sorted) {
         const option = document.createElement('option');
         option.value = p.key;
-        option.textContent = `${strengthPrefix(p)} — ${p.label}`;
+        const label = i18n.t(`uhpc.preset.${p.key}.label`) || p.label || '';
+        option.textContent = `${strengthPrefix(p)} — ${label}`;
         els.presetSelect.appendChild(option);
     }
 }
@@ -120,7 +121,7 @@ function renderSource(preset) {
             ${fckRow}
         </dl>
         <p style="margin-top:10px;color:var(--text-secondary)">
-            Originalrezept: ${recipeParts}.
+            ${i18n.t('uhpc.source.original')}: ${recipeParts}.
         </p>
     `;
 }
@@ -196,7 +197,10 @@ function renderSteps(preset, recipe) {
         template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '');
 
     els.steps.innerHTML = preset.mixingSteps
-        .map(step => `<li>${substitute(step)}</li>`)
+        .map((step, idx) => {
+            const translated = i18n.t(`uhpc.preset.${preset.key}.step.${idx + 1}`) || step;
+            return `<li>${substitute(translated)}</li>`;
+        })
         .join('');
 }
 
@@ -237,7 +241,8 @@ function rebuildDropdown() {
     for (const p of sorted) {
         const option = document.createElement('option');
         option.value = p.key;
-        option.textContent = `${strengthPrefix(p)} — ${p.label}`;
+        const label = i18n.t(`uhpc.preset.${p.key}.label`) || p.label || '';
+        option.textContent = `${strengthPrefix(p)} — ${label}`;
         els.presetSelect.appendChild(option);
     }
 }

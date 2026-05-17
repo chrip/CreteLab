@@ -339,7 +339,8 @@ function update() {
         const waterTotal = waterPerM3Adj * vol;
         const hasUserWetAdditives = (useBV && !bvPre) || (useFM && !fmPre) || (useLP && !lpPre);
         const waterNote = hasUserWetAdditives ? ` ${i18n.t('fine.tune.with.add')}` : '';
-        items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} ${i18n.t('fine.tune.water.note')}`);
+        const waterLabel = i18n.t('mixdesign.water');
+        items.push(`${fmtQty(waterTotal, 'l')} ${waterLabel}${waterNote} ${i18n.t('fine.tune.water.note')}`);
 
         shoppingList.classList.remove('hidden');
         shoppingItems.innerHTML = items.map(step => `<li>${step}</li>`).join('');
