@@ -11,12 +11,13 @@ import {
 } from './lib/additives.js';
 import { calculateStrengthFromWalzkurven, STRENGTH_CLASSES } from './lib/strength.js';
 import { fmt, fmtQty, parseDecimal } from './lib/format.js';
+import { i18n } from './lib/i18n.js';
 
 const PRESETS = [
-    { value: 'c20', label: 'Einfach – C20/25 (Fundamente, Pflasterbett)',     z: 280, w: 195, g: 1820, klasse: 'C20/25' },
-    { value: 'c25', label: 'Standard – C25/30 (Wände, Bodenplatten)',         z: 300, w: 190, g: 1800, klasse: 'C25/30' },
-    { value: 'c30', label: 'Stark – C30/37 (Außenbereiche, Stützen)',         z: 340, w: 185, g: 1740, klasse: 'C30/37' },
-    { value: 'c40', label: 'Sehr stark – C40/50 (Industrieböden, Garagen)',   z: 400, w: 175, g: 1660, klasse: 'C40/50' },
+    { value: 'c20', labelKey: 'index.usecase.cheap',       z: 280, w: 195, g: 1820, klasse: 'C20/25' },
+    { value: 'c25', labelKey: 'index.usecase.standard',    z: 300, w: 190, g: 1800, klasse: 'C25/30' },
+    { value: 'c30', labelKey: 'index.usecase.strong',      z: 340, w: 185, g: 1740, klasse: 'C30/37' },
+    { value: 'c40', labelKey: 'index.usecase.ultrastrong', z: 400, w: 175, g: 1660, klasse: 'C40/50' },
 ];
 
 // Try sessionStorage first (survives server-side URL rewriting),
@@ -54,8 +55,8 @@ const infoBox = document.getElementById('baseRecipeInfo');
 if (customRecipe) {
     // Custom entry at the top derived from recipe data
     const customLabel = customRecipe.klasse
-        ? `Aus dem Betonrechner – ${customRecipe.klasse}`
-        : 'Aus dem Betonrechner (individuelles Rezept)';
+        ? i18n.t('fine.tune.custom.label.alt', { klasse: customRecipe.klasse })
+        : i18n.t('fine.tune.custom.generic.label');
     const customOpt = document.createElement('option');
     customOpt.value = 'custom';
     customOpt.textContent = customLabel;
@@ -64,14 +65,14 @@ if (customRecipe) {
     // Visual divider
     const sep = document.createElement('option');
     sep.disabled = true;
-    sep.textContent = '──── Standardmischungen ────';
+    sep.textContent = i18n.t('fine.tune.divider');
     sel.appendChild(sep);
 
     // Pre-fill info box content (shown only when "custom" is selected)
     const parts = [
-        `Zement: ${fmt(customRecipe.z)} kg/m³`,
-        `Wasser: ${fmt(customRecipe.w)} l/m³`,
-        `Körnung: ${fmt(customRecipe.g)} kg/m³`,
+        `${i18n.t('fine.tune.base.label.z')}: ${fmt(customRecipe.z)} kg/m³`,
+        `${i18n.t('fine.tune.base.label.w')}: ${fmt(customRecipe.w)} l/m³`,
+        `${i18n.t('fine.tune.base.label.g')}: ${fmt(customRecipe.g)} kg/m³`,
         customRecipe.zement || '',
     ].filter(Boolean);
     infoBox.innerHTML = parts.join(' &nbsp;·&nbsp; ');
@@ -84,7 +85,7 @@ if (customRecipe) {
 PRESETS.forEach(p => {
     const opt = document.createElement('option');
     opt.value = p.value;
-    opt.textContent = p.label;
+    opt.textContent = i18n.t(p.labelKey);
     sel.appendChild(opt);
 });
 
@@ -187,9 +188,9 @@ function update() {
     const vol = getVolume();
     const items = [];
 
-    const ALREADY_IN    = '<span class="already-in-note">✓ Bereits im Rezept enthalten – wird in der Festigkeitsschätzung berücksichtigt</span>';
-    const LOCKED_BY_FM  = '<span class="locked-out-note">✕ Fließmittel ist bereits im Rezept enthalten – Betonverflüssiger nicht zusätzlich verwenden (gegenseitig ausschließend).</span>';
-    const LOCKED_BY_BV  = '<span class="locked-out-note">✕ Betonverflüssiger ist bereits im Rezept enthalten – Fließmittel nicht zusätzlich verwenden (gegenseitig ausschließend).</span>';
+    const ALREADY_IN    = `<span class="already-in-note">✓ ${i18n.t('fine.tune.already')}</span>`;
+    const LOCKED_BY_FM  = `<span class="locked-out-note">✕ ${i18n.t('fine.tune.locked.by.fm')}</span>`;
+    const LOCKED_BY_BV  = `<span class="locked-out-note">✕ ${i18n.t('fine.tune.locked.by.bv')}</span>`;
 
     function setCard(cardId, checked, pre, lockedOut) {
         const card = document.getElementById(cardId);
@@ -217,9 +218,9 @@ function update() {
     setCard('cardCement', useExtraCement, false);
     const extraCementTotal = Math.round(cementPerM3 * 0.10) * vol;
     setResult('resExtraCement', useExtraCement,
-        `Hinzufügen: <strong>${fmtQty(extraCementTotal, 'kg')} Zement extra</strong>`);
+        i18n.t('fine.tune.result.add.cement', { qty: fmtQty(extraCementTotal, 'kg') }));
     if (useExtraCement) items.push(
-        `${fmtQty(extraCementTotal, 'kg')} Zement zusätzlich trocken zur Gesteinskörnung geben`
+        i18n.t('fine.tune.steps.1.extra.cement', { qty: fmtQty(extraCementTotal, 'kg') })
     );
 
     // Flugasche – 15 % of cement (dry)
@@ -228,10 +229,10 @@ function update() {
     setCard('cardFlyAsh', useFlyAsh, flyAshPre);
     const flyAshTotal = Math.round(cementPerM3 * 0.15) * vol;
     setResult('resFlyAsh', useFlyAsh,
-        flyAshPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(flyAshTotal, 'kg')} Flugasche</strong>`,
+        flyAshPre ? ALREADY_IN : i18n.t('fine.tune.result.add.flyash', { qty: fmtQty(flyAshTotal, 'kg') }),
         flyAshPre);
     if (useFlyAsh && !flyAshPre) items.push(
-        `${fmtQty(flyAshTotal, 'kg')} Flugasche trocken mit Zement und Gesteinskörnung mischen`
+        i18n.t('fine.tune.steps.2.flyash', { qty: fmtQty(flyAshTotal, 'kg') })
     );
 
     // Silikastaub – 8 % of cement (dry)
@@ -240,10 +241,10 @@ function update() {
     setCard('cardSilica', useSilica, silicaPre);
     const silicaTotal = Math.round(cementPerM3 * 0.08) * vol;
     setResult('resSilica', useSilica,
-        silicaPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(silicaTotal, 'kg')} Silikastaub</strong>`,
+        silicaPre ? ALREADY_IN : i18n.t('fine.tune.result.add.silica', { qty: fmtQty(silicaTotal, 'kg') }),
         silicaPre);
     if (useSilica && !silicaPre) items.push(
-        `${fmtQty(silicaTotal, 'kg')} Silikastaub trocken in den Trockenmix einmischen`
+        i18n.t('fine.tune.steps.3.silica', { qty: fmtQty(silicaTotal, 'kg') })
     );
 
     // BV ⊕ FM mutual exclusion: when one is pre-applied, the other is locked out.
@@ -259,10 +260,10 @@ function update() {
     const bvVisible = useBV || bvLockedOut;
     const bvHtml = bvLockedOut ? LOCKED_BY_FM
         : bvPre ? ALREADY_IN
-        : `Hinzufügen: <strong>${fmtQty(bvTotal, 'l')} Betonverflüssiger</strong>`;
+        : i18n.t('fine.tune.result.add.bv', { qty: fmtQty(bvTotal, 'l') });
     setResult('resBV', bvVisible, bvHtml, bvPre, bvLockedOut);
     if (useBV && !bvPre) items.push(
-        `${fmtQty(bvTotal, 'l')} Betonverflüssiger ins Anmachwasser einrühren, dann langsam zugeben`
+        i18n.t('fine.tune.steps.4.bv', { qty: fmtQty(bvTotal, 'l') })
     );
 
     // Fließmittel (into water)
@@ -272,10 +273,10 @@ function update() {
     const fmVisible = useFM || fmLockedOut;
     const fmHtml = fmLockedOut ? LOCKED_BY_BV
         : fmPre ? ALREADY_IN
-        : `Hinzufügen: <strong>${fmtQty(fmTotal, 'l')} Fließmittel</strong> (Produktdosierung prüfen)`;
+        : i18n.t('fine.tune.result.add.fm', { qty: fmtQty(fmTotal, 'l') });
     setResult('resFM', fmVisible, fmHtml, fmPre, fmLockedOut);
     if (useFM && !fmPre) items.push(
-        `${fmtQty(fmTotal, 'l')} Fließmittel ins Anmachwasser einrühren, dann langsam zugeben`
+        i18n.t('fine.tune.steps.5.fm', { qty: fmtQty(fmTotal, 'l') })
     );
 
     // Luftporenbildner (into water)
@@ -284,17 +285,17 @@ function update() {
     setCard('cardLP', useLP, lpPre);
     const lpTotal = getAdmixtureDosage('LP') * vol;
     setResult('resLP', useLP,
-        lpPre ? ALREADY_IN : `Hinzufügen: <strong>${fmtQty(lpTotal, 'l')} Luftporenbildner</strong>`,
+        lpPre ? ALREADY_IN : i18n.t('fine.tune.result.add.lp', { qty: fmtQty(lpTotal, 'l') }),
         lpPre);
     if (useLP && !lpPre) items.push(
-        `${fmtQty(lpTotal, 'l')} Luftporenbildner ins Anmachwasser mischen, dann zugeben`
+        i18n.t('fine.tune.steps.6.lp', { qty: fmtQty(lpTotal, 'l') })
     );
 
     // Combination warning: LP (frost) + Silikastaub not recommended together
     const combineWarning = document.getElementById('combineWarning');
     if (useLP && useSilica) {
         combineWarning.classList.remove('hidden');
-        combineWarning.textContent = '⚠️ Silikastaub ist bei frostbeanspruchtem Beton (LP-Einsatz) nicht empfohlen. Bitte nur einen der beiden verwenden.';
+        combineWarning.textContent = i18n.t('fine.tune.combine.warn');
     } else {
         combineWarning.classList.add('hidden');
     }
@@ -318,10 +319,10 @@ function update() {
         const tunedKlasse = fckToClass(tunedFck);
         const arrow = baseKlasse && baseKlasse !== tunedKlasse ? ` &nbsp;→&nbsp; <strong>${tunedKlasse}</strong>` : '';
         resultEl.innerHTML =
-            `<strong>Ausgangsbeton:</strong> ${baseKlasse || '–'}${arrow}` +
-            ` &nbsp;·&nbsp; <strong>Ergebnis: ca. ${tunedFck} N/mm²</strong>`;
+            `<strong>${i18n.t('fine.tune.result.base')}</strong> ${baseKlasse || '–'}${arrow}` +
+            ` &nbsp;·&nbsp; <strong>${i18n.t('fine.tune.result.result', { fck: tunedFck })}</strong>`;
     } else {
-        resultEl.innerHTML = `<strong>Ausgangsbeton:</strong> ${baseKlasse || '–'}`;
+        resultEl.innerHTML = `<strong>${i18n.t('fine.tune.result.base')}</strong> ${baseKlasse || '–'}`;
     }
 
     // Step-by-step mixing instructions only
@@ -337,8 +338,8 @@ function update() {
         if (useFM) waterPerM3Adj = applyAdmixtureWaterReduction(waterPerM3Adj, 'FM');
         const waterTotal = waterPerM3Adj * vol;
         const hasUserWetAdditives = (useBV && !bvPre) || (useFM && !fmPre) || (useLP && !lpPre);
-        const waterNote = hasUserWetAdditives ? ' (mit eingerührten Zusatzmitteln)' : '';
-        items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} zugeben und gründlich mischen`);
+        const waterNote = hasUserWetAdditives ? ` ${i18n.t('fine.tune.with.add')}` : '';
+        items.push(`${fmtQty(waterTotal, 'l')} Wasser${waterNote} ${i18n.t('fine.tune.water.note')}`);
 
         shoppingList.classList.remove('hidden');
         shoppingItems.innerHTML = items.map(step => `<li>${step}</li>`).join('');
@@ -367,3 +368,35 @@ function enforceBvFmXor(justChanged) {
 const volInput = document.getElementById('tuneVolume');
 volInput.addEventListener('input', update);
 volInput.addEventListener('change', update);
+
+// Re-render on language change
+function rebuildDropdowns() {
+    sel.innerHTML = '';
+    if (customRecipe) {
+        const customLabel = customRecipe.klasse
+            ? i18n.t('fine.tune.custom.label.alt', { klasse: customRecipe.klasse })
+            : i18n.t('fine.tune.custom.generic.label');
+        const customOpt = document.createElement('option');
+        customOpt.value = 'custom';
+        customOpt.textContent = customLabel;
+        sel.appendChild(customOpt);
+        const sep = document.createElement('option');
+        sep.disabled = true;
+        sep.textContent = i18n.t('fine.tune.divider');
+        sel.appendChild(sep);
+    }
+    PRESETS.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.value;
+        opt.textContent = i18n.t(p.labelKey);
+        sel.appendChild(opt);
+    });
+    sel.value = customRecipe ? 'custom' : PRESETS[1].value;
+}
+
+i18n.patchDom();
+document.addEventListener('languagechange', () => {
+    i18n.patchDom();
+    rebuildDropdowns();
+    update();
+});

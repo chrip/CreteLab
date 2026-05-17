@@ -12,6 +12,7 @@ import {
     evaluatePlausibility,
 } from './lib/uhpc-engine.js';
 import { fmt, fmtQty, parseDecimal } from './lib/format.js';
+import { i18n } from './lib/i18n.js';
 
 // ── DOM lookups ────────────────────────────────────────────────────────
 
@@ -83,28 +84,28 @@ function renderSource(preset) {
     let fckRow;
     if (airCuredFckMpa && claimedFckMpa) {
         const bonusPct = Math.round((claimedFckMpa - airCuredFckMpa) / airCuredFckMpa * 100);
-        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
-                 `<dd>ca. ${fmt(airCuredFckMpa, 0)} N/mm² <em>(typische DIY-Bedingungen, geschätzt)</em>` +
-                 `<br>${fmt(claimedFckMpa, 0)} N/mm² <em>(Quelle: 28 d Wasserlagerung, +${bonusPct} %)</em></dd>`;
+        fckRow = `<dt>${i18n.t('uhpc.source.str')}</dt>` +
+                 `<dd>ca. ${fmt(airCuredFckMpa, 0)} N/mm² <em>(${i18n.t('uhpc.source.strength.app')})</em>` +
+                 `<br>${fmt(claimedFckMpa, 0)} N/mm² <em>(${i18n.t('uhpc.source.strength.meas')}, +${bonusPct} %)</em></dd>`;
     } else if (claimedFckMpa) {
-        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
-                 `<dd>${fmt(claimedFckMpa, 0)} N/mm² <em>(Quelle, gemessen)</em></dd>`;
+        fckRow = `<dt>${i18n.t('uhpc.source.str')}</dt>` +
+                 `<dd>${fmt(claimedFckMpa, 0)} N/mm² <em>(${i18n.t('uhpc.source.strength.meas')})</em></dd>`;
     } else if (estimatedFckMpa) {
-        fckRow = `<dt>Druckfestigkeit nach 28 d</dt>` +
-                 `<dd>ca. ${fmt(estimatedFckMpa, 0)} N/mm² <em>(geschätzt aus w/z &amp; Microfiller)</em></dd>`;
+        fckRow = `<dt>${i18n.t('uhpc.source.str')}</dt>` +
+                 `<dd>ca. ${fmt(estimatedFckMpa, 0)} N/mm² <em>(${i18n.t('uhpc.source.strength.est')})</em></dd>`;
     } else {
-        fckRow = `<dt>Druckfestigkeit nach 28 d</dt><dd>nicht angegeben</dd>`;
+        fckRow = `<dt>${i18n.t('uhpc.source.str')}</dt><dd>${i18n.t('uhpc.source.strength.none')}</dd>`;
     }
     // Build a verbatim summary of the source's batch — zero-mass components
     // are omitted so the line stays focused on what's actually in the recipe.
     const recipeParts = [
-        [batch.cementKg,           'kg', 'Zement'],
-        [batch.sandKg,             'kg', 'Sand'],
-        [batch.microsilicaKg,      'kg', 'Mikrosilica'],
-        [batch.quartzPowderKg,     'kg', 'Quarzmehl'],
-        [batch.finesKg,            'kg', 'Feinzuschläge'],
-        [batch.waterL,             'l',  'Wasser'],
-        [batch.superplasticizerMl, 'ml', 'PCE-Fließmittel'],
+        [batch.cementKg,           'kg', i18n.t('mixdesign.zement')],
+        [batch.sandKg,             'kg', i18n.t('mixdesign.sand')],
+        [batch.microsilicaKg,      'kg', i18n.t('mixdesign.microsilica')],
+        [batch.quartzPowderKg,     'kg', i18n.t('mixdesign.quartz')],
+        [batch.finesKg,            'kg', i18n.t('mixdesign.fines')],
+        [batch.waterL,             'l',  i18n.t('mixdesign.water')],
+        [batch.superplasticizerMl, 'ml', i18n.t('mixdesign.pce')],
     ]
         .filter(([m]) => m > 0)
         .map(([m, unit, name]) => `${fmt(m, m < 10 ? 1 : 0)} ${unit} ${name}`)
@@ -112,10 +113,10 @@ function renderSource(preset) {
 
     els.sourceBody.innerHTML = `
         <dl>
-            <dt>Titel</dt>      <dd>${escapeHtml(source.title)}</dd>
-            <dt>Autor/in</dt>   <dd>${escapeHtml(source.author || '–')}</dd>
-            <dt>Link</dt>       <dd><a href="${escapeAttr(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.url)}</a></dd>
-            <dt>Geprüft am</dt> <dd>${escapeHtml(source.retrieved || '–')}</dd>
+            <dt>${i18n.t('uhpc.source.title')}</dt>      <dd>${escapeHtml(source.title)}</dd>
+            <dt>${i18n.t('uhpc.source.author')}</dt>   <dd>${escapeHtml(source.author || '–')}</dd>
+            <dt>${i18n.t('uhpc.source.link')}</dt>       <dd><a href="${escapeAttr(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.url)}</a></dd>
+            <dt>${i18n.t('uhpc.source.checked')}</dt> <dd>${escapeHtml(source.retrieved || '–')}</dd>
             ${fckRow}
         </dl>
         <p style="margin-top:10px;color:var(--text-secondary)">
@@ -134,13 +135,13 @@ function renderRecipeTable(preset, recipe) {
     // Rows whose magnitude is zero are filtered out so a recipe without
     // (e.g.) Quarzmehl does not render an empty "0,00 kg" row.
     const rows = [
-        ['🧱 Zement (CEM I)',          recipe.cementKg,         'kg', recipe.cementKg,         recipe.cementKg,                                              'Bindemittel; Portlandzement'],
-        ['🏖️ Sand',                    recipe.sandKg,           'kg', recipe.sandKg,           recipe.sandKg,                                                'Hauptzuschlag, gewaschen'],
-        ['🧪 Mikrosilica',             recipe.microsilicaKg,    'kg', recipe.microsilicaKg,    recipe.microsilicaKg,                                         'Hochreaktiver Microfiller (k = 1,0)'],
-        ['💎 Quarzmehl',               recipe.quartzPowderKg,   'kg', recipe.quartzPowderKg,   recipe.quartzPowderKg,                                        'Inerter Microfiller (Korn­packung)'],
-        ['🌫️ Feinzuschläge < 63 µm',   recipe.finesKg,          'kg', recipe.finesKg,          recipe.finesKg,                                               'Schließt Kornpackung dichter'],
-        ['💧 Wasser',                  recipe.waterL,           'l',  recipe.waterL,           recipe.waterL,                                                'Möglichst kalt (verzögert Abbinden)'],
-        ['🌊 PCE-Fließmittel',         recipe.superplasticizerL,'l',  recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, 'Erst im Wasser auflösen'],
+        ['🧱 ' + i18n.t('uhpc.row.cement'),          recipe.cementKg,         'kg', recipe.cementKg,         recipe.cementKg,                                              i18n.t('uhpc.row.cement.note')],
+        ['🏖️ ' + i18n.t('uhpc.row.sand'),            recipe.sandKg,           'kg', recipe.sandKg,           recipe.sandKg,                                                i18n.t('uhpc.row.sand.note')],
+        ['🧪 ' + i18n.t('uhpc.row.microsilica'),     recipe.microsilicaKg,    'kg', recipe.microsilicaKg,    recipe.microsilicaKg,                                         i18n.t('uhpc.row.microsilica.note')],
+        ['💎 ' + i18n.t('uhpc.row.quartz'),          recipe.quartzPowderKg,   'kg', recipe.quartzPowderKg,   recipe.quartzPowderKg,                                        i18n.t('uhpc.row.quartz.note')],
+        ['🌫️ ' + i18n.t('uhpc.row.fines'),           recipe.finesKg,          'kg', recipe.finesKg,          recipe.finesKg,                                               i18n.t('uhpc.row.fines.note')],
+        ['💧 ' + i18n.t('uhpc.row.water'),           recipe.waterL,           'l',  recipe.waterL,           recipe.waterL,                                                i18n.t('uhpc.row.water.note')],
+        ['🌊 ' + i18n.t('uhpc.row.pce'),             recipe.superplasticizerL,'l',  recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, i18n.t('uhpc.row.pce.note')],
     ];
 
     els.resultBody.innerHTML = rows
@@ -228,9 +229,28 @@ function update() {
 
 // ── Wire-up ────────────────────────────────────────────────────────────
 
+function rebuildDropdown() {
+    const sorted = [...UHPC_PRESETS].sort(
+        (a, b) => effective28dStrength(a) - effective28dStrength(b)
+    );
+    els.presetSelect.innerHTML = '';
+    for (const p of sorted) {
+        const option = document.createElement('option');
+        option.value = p.key;
+        option.textContent = `${strengthPrefix(p)} — ${p.label}`;
+        els.presetSelect.appendChild(option);
+    }
+}
+
 populatePresetDropdown();
 els.presetSelect.value = UHPC_PRESETS[0].key;
 els.presetSelect.addEventListener('change', update);
 els.volumeInput.addEventListener('input', update);
 els.volumeInput.addEventListener('change', update);
 update();
+
+i18n.patchDom();
+document.addEventListener('languagechange', () => {
+    i18n.patchDom();
+    update();
+});

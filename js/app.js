@@ -7,99 +7,100 @@ import { getAvailableAggregates, getAverageDensity } from './lib/densities.js';
 import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivalentWzWithBoth, getAdmixtureDosage, getRecommendedWaterSaving } from './lib/additives.js';
 import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPasteRequirements, checkCemIFlyAshSilicaFume } from './lib/fines-content.js';
 import { getFinesFraction, distributeAggregateBySiebline, calculateZugabewasser, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
+import { i18n } from './lib/i18n.js';
 
-const AGGREGATE_LABELS = {
-    'Kiessand (Quarz)':   'Kiessand (Quarz) – Standardkies aus Kiesgrube, gerundet ✓',
-    'Granit':             'Granit – Hartgestein, gerundet (regional verfügbar)',
-    'Dichter Kalkstein':  'Dichter Kalkstein – meist als Kalksteinsplitt (gebrochen)',
-    'Basalt':             'Basalt – Hartgestein, immer gebrochen, sehr dicht',
-    'Betonsplitt':        'Betonsplitt – Recyclingkörnung aus Abbruchbeton',
-    'Bauwerksplitt':      'Bauwerksplitt – Recyclingkörnung aus Abbruchbauwerken',
-    'Blähton':            'Blähton – Leichtkörnung für Leichtbeton',
-    'Naturbims':          'Naturbims – Natürliche Leichtkörnung (Vulkangestein)',
-    'Hüttenbims':         'Hüttenbims – Industrielle Leichtkörnung',
-    'Baryt (Schwerspat)': 'Baryt (Schwerspat) – Strahlenschutzbeton (Spezial)',
-    'Magnetit':           'Magnetit – Strahlenschutzbeton (Spezial)',
-    'Hämatit':            'Hämatit – Strahlenschutzbeton (Spezial)'
+const AGGREGATE_KEYS = {
+    'Kiessand (Quarz)':   'agg.kiessand',
+    'Granit':             'agg.granit',
+    'Dichter Kalkstein':  'agg.kalkstein',
+    'Basalt':             'agg.basalt',
+    'Betonsplitt':        'agg.betonsplitt',
+    'Bauwerksplitt':      'agg.bauwerksplitt',
+    'Blähton':            'agg.blahton',
+    'Naturbims':          'agg.naturbims',
+    'Hüttenbims':         'agg.huettenbims',
+    'Baryt (Schwerspat)': 'agg.baryt',
+    'Magnetit':           'agg.magnetit',
+    'Hämatit':            'agg.haematit'
 };
 
-const STRENGTH_CLASS_LABELS = {
-    'C8/10':    'C8/10 – sehr einfach, Magerbeton, Sauberkeitsschicht',
-    'C12/15':   'C12/15 – einfach, unbewehrte Füllkonstruktionen',
-    'C16/20':   'C16/20 – leicht, einfache Fundamente und Böden',
-    'C20/25':   'C20/25 – Standard, Fundamente und Bodenplatten ✓',
-    'C25/30':   'C25/30 – Standard, Wände, Decken und Treppen ✓',
-    'C30/37':   'C30/37 – erhöhte Anforderung, Außenbauteile und Stützen',
-    'C35/45':   'C35/45 – hochfest, Brücken, Tiefgaragen und Industrieböden',
-    'C40/50':   'C40/50 – sehr hochfest, stark beanspruchte Konstruktionen',
-    'C45/55':   'C45/55 – hochfest, Spannbeton und Fertigteile',
-    'C50/60':   'C50/60 – sehr hochfest, Hochbau und Ingenieurbau',
-    'C55/67':   'C55/67 – ultrahochfest, Spezialbau',
-    'C60/75':   'C60/75 – ultrahochfest, Spezialbau',
-    'C70/85':   'C70/85 – UHPC, Forschung und Spezialanwendungen',
-    'C80/95':   'C80/95 – UHPC, Forschung und Spezialanwendungen',
-    'C90/105':  'C90/105 – UHPC, Forschung und Spezialanwendungen',
-    'C100/115': 'C100/115 – UHPC, Forschung und Spezialanwendungen'
+const STRENGTH_CLASS_KEYS = {
+    'C8/10':    'strength.C8_10',
+    'C12/15':   'strength.C12_15',
+    'C16/20':   'strength.C16_20',
+    'C20/25':   'strength.C20_25',
+    'C25/30':   'strength.C25_30',
+    'C30/37':   'strength.C30_37',
+    'C35/45':   'strength.C35_45',
+    'C40/50':   'strength.C40_50',
+    'C45/55':   'strength.C45_55',
+    'C50/60':   'strength.C50_60',
+    'C55/67':   'strength.C55_67',
+    'C60/75':   'strength.C60_75',
+    'C70/85':   'strength.C70_85',
+    'C80/95':   'strength.C80_95',
+    'C90/105':  'strength.C90_105',
+    'C100/115': 'strength.C100_115'
 };
 
-const SIEBLINE_LABELS = {
-    'A8':    'A8 – Größtkorn 8 mm, wenig Sand (weniger Wasser)',
-    'B8':    'B8 – Größtkorn 8 mm, ausgewogen',
-    'C8':    'C8 – Größtkorn 8 mm, viel Sand (mehr Wasser)',
-    'A16':   'A16 – Größtkorn 16 mm, wenig Sand',
-    'B16':   'B16 – Größtkorn 16 mm, ausgewogen',
-    'C16':   'C16 – Größtkorn 16 mm, viel Sand',
-    'A/B16': 'A/B16 – Größtkorn 16 mm, Mittelwert A+B',
-    'A32':   'A32 – Größtkorn 32 mm, wenig Sand',
-    'B32':   'B32 – Größtkorn 32 mm, ausgewogen (Standard)',
-    'C32':   'C32 – Größtkorn 32 mm, viel Sand',
-    'A/B32': 'A/B32 – Größtkorn 32 mm, Mittelwert A+B'
+const SIEBLINE_KEYS = {
+    'A8':    'sieb.A8',
+    'B8':    'sieb.B8',
+    'C8':    'sieb.C8',
+    'A16':   'sieb.A16',
+    'B16':   'sieb.B16',
+    'C16':   'sieb.C16',
+    'A/B16': 'sieb.A_B16',
+    'A32':   'sieb.A32',
+    'B32':   'sieb.B32',
+    'C32':   'sieb.C32',
+    'A/B32': 'sieb.A_B32'
 };
 
-const SIEBLINE_HINTS = {
-    '8':  'Für dünne Bauteile < 10 cm und dicht bewehrte Konstruktionen.',
-    '16': 'Standard für Wände, Decken, Stützen und Treppen.',
-    '32': 'Für Fundamente, Bodenplatten und massige Bauteile.'
+const SIEBLINE_HINT_KEYS = {
+    '8':  'sieb.hint.8',
+    '16': 'sieb.hint.16',
+    '32': 'sieb.hint.32'
 };
 
-const CONSISTENCY_LABELS = {
-    'C0': 'C0 – sehr steif, nur maschinell verdichtbar',
-    'F1': 'F1 – steif, einfache Fundamente ohne Bewehrung',
-    'F2': 'F2 – plastisch, gut verdichtbar mit Stochern',
-    'F3': 'F3 – weich, Standard für die meisten Anwendungen ✓',
-    'F4': 'F4 – sehr weich, Fließmittel erforderlich',
-    'F5': 'F5 – fließfähig, Fließmittel erforderlich',
-    'F6': 'F6 – sehr fließfähig, Fließmittel erforderlich'
+const CONSISTENCY_KEYS = {
+    'C0': 'cons.C0',
+    'F1': 'cons.F1',
+    'F2': 'cons.F2',
+    'F3': 'cons.F3',
+    'F4': 'cons.F4',
+    'F5': 'cons.F5',
+    'F6': 'cons.F6'
 };
 
-const CONSISTENCY_HINTS = {
-    'C0': 'Sehr trocken, kaum von Hand verarbeitbar. Nur für Rütteltische oder Betonfertigteile.',
-    'F1': 'Trockener Beton, hält Form ohne Schalung. Für einfache Wegplatten oder Pflasterbettung.',
-    'F2': 'Gut verdichtbar mit Stocherstab. Typisch für Fundamente und Bodenplatten.',
-    'F3': 'Fließt leicht in die Schalung, einfach zu verarbeiten. DIY-Standard.',
-    'F4': 'Sehr fließfähig – Fließmittel (FM) zwingend erforderlich. Für dicht bewehrte Bauteile.',
-    'F5': 'Selbstverdichtend – Fließmittel (FM) zwingend erforderlich. Für Sichtbeton.',
-    'F6': 'Sehr dünnflüssig – Fließmittel (FM) zwingend erforderlich. Spezialanwendungen.'
+const CONSISTENCY_HINT_KEYS = {
+    'C0': 'cons.hint.C0',
+    'F1': 'cons.hint.F1',
+    'F2': 'cons.hint.F2',
+    'F3': 'cons.hint.F3',
+    'F4': 'cons.hint.F4',
+    'F5': 'cons.hint.F5',
+    'F6': 'cons.hint.F6'
 };
 
-const CEMENT_TYPE_LABELS = {
-    'CEM I 32.5 N':       'CEM I 32.5 N – Portlandzement, langsam erhärtend',
-    'CEM I 42.5 N':       'CEM I 42.5 N – Standard Portlandzement ✓',
-    'CEM I 42.5 R':       'CEM I 42.5 R – Portlandzement, schnell erhärtend',
-    'CEM I 52.5 N':       'CEM I 52.5 N – Hochfester Portlandzement',
-    'CEM I 52.5 R':       'CEM I 52.5 R – Hochfest, schnell erhärtend',
-    'CEM II/A-S 42.5 N':  'CEM II/A-S 42.5 N – Portlandhüttenzement, weniger Wärme',
-    'CEM II/B-S 42.5 N':  'CEM II/B-S 42.5 N – Portlandhüttenzement, hoher Schlackeanteil',
-    'CEM II/A-LL 42.5 N': 'CEM II/A-LL 42.5 N – Portlandkalksteinzement',
-    'CEM III/A 42.5 N':   'CEM III/A 42.5 N – Hochofenzement, sulfatbeständig',
-    'CEM III/B 42.5 N':   'CEM III/B 42.5 N – Hochofenzement, sehr wärmearm'
+const CEMENT_TYPE_KEYS = {
+    'CEM I 32.5 N':       'cem.CEM_I_32.5_N',
+    'CEM I 42.5 N':       'cem.CEM_I_42.5_N',
+    'CEM I 42.5 R':       'cem.CEM_I_42.5_R',
+    'CEM I 52.5 N':       'cem.CEM_I_52.5_N',
+    'CEM I 52.5 R':       'cem.CEM_I_52.5_R',
+    'CEM II/A-S 42.5 N':  'cem.CEM_II_A_S_42.5_N',
+    'CEM II/B-S 42.5 N':  'cem.CEM_II_B_S_42.5_N',
+    'CEM II/A-LL 42.5 N': 'cem.CEM_II_A_LL_42.5_N',
+    'CEM III/A 42.5 N':   'cem.CEM_III_A_42.5_N',
+    'CEM III/B 42.5 N':   'cem.CEM_III_B_42.5_N'
 };
 
 const USE_CASES = {
-    cheap:       { label: 'Einfach – Fundamente, Verfüllung (C20/25)', strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
-    standard:    { label: 'Standard – Wände, Decken, Treppen (C25/30)', strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
-    strong:      { label: 'Stark – Außenbereiche, Stützen (C30/37)',    strength: 'C30/37', exposure: 'XC3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'BV',   cementType: 'CEM I 42.5 N', vorhaltemas: 5 },
-    ultraStrong: { label: 'Sehr stark – Industrieböden, XF3 (C40/50)', strength: 'C40/50', exposure: 'XF3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'FM',   cementType: 'CEM I 52.5 R', vorhaltemas: 5 }
+    cheap:       { labelKey: 'index.usecase.cheap',       strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
+    standard:    { labelKey: 'index.usecase.standard',    strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
+    strong:      { labelKey: 'index.usecase.strong',      strength: 'C30/37', exposure: 'XC3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'BV',   cementType: 'CEM I 42.5 N', vorhaltemas: 5 },
+    ultraStrong: { labelKey: 'index.usecase.ultrastrong', strength: 'C40/50', exposure: 'XF3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'FM',   cementType: 'CEM I 52.5 R', vorhaltemas: 5 }
 };
 
 const elements = {
@@ -169,7 +170,7 @@ let appState = {
 
 function formatNumber(value, digits = 0) {
     if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
-    return Number(value).toLocaleString('de-DE', {
+    return i18n.formatNumber(Number(value), {
         minimumFractionDigits: digits,
         maximumFractionDigits: digits
     });
@@ -199,13 +200,13 @@ function formatQuantity(value, unit) {
 
     // Dynamic precision based on the (possibly converted) value
     if (val < 0.1) {
-        return val.toLocaleString('de-DE', { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' ' + displayUnit;
+        return i18n.formatNumber(val, { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + ' ' + displayUnit;
     } else if (val < 1) {
-        return val.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + displayUnit;
+        return i18n.formatNumber(val, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + displayUnit;
     } else if (val < 10) {
-        return val.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ' + displayUnit;
+        return i18n.formatNumber(val, { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ' + displayUnit;
     } else {
-        return val.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ' + displayUnit;
+        return i18n.formatNumber(val, { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ' + displayUnit;
     }
 }
 
@@ -230,17 +231,17 @@ function evaluatePlausibility(state, recipe) {
     if (limits) {
         const strengthMeta = getStrengthClass(state.strengthClass);
         if (strengthMeta && strengthMeta.f_ck_cube < limits.minFck) {
-            warnings.push(`Betonklasse ${state.strengthClass} ist zu schwach für die gewählten Expositionsklassen – mindestens ${limits.minFck} N/mm² Würfeldruckfestigkeit erforderlich.`);
+            warnings.push(i18n.t('warn.strength.too.low', { klasse: state.strengthClass, minFck: limits.minFck }));
         }
 
         if (recipe.materials.cement < limits.minZ) {
-            warnings.push(`Zementgehalt ${formatNumber(recipe.materials.cement, 0)} kg/m³ liegt unter dem Mindestwert von ${limits.minZ} kg/m³ für die gewählten Expositionsklassen.`);
+            warnings.push(i18n.t('warn.cement.below.min', { cement: formatNumber(recipe.materials.cement, 0), minZ: limits.minZ }));
         }
 
         if (limits.maxWz < Infinity) {
             const wzc = recipe.materials.water / recipe.materials.cement;
             if (wzc > limits.maxWz + 0.005) {
-                warnings.push(`Wasser-Zement-Wert ${wzc.toFixed(2)} überschreitet den zulässigen Grenzwert ${limits.maxWz.toFixed(2)} der gewählten Expositionsklassen.`);
+                warnings.push(i18n.t('warn.wz.exceeded', { wzc: wzc.toFixed(2), maxWz: limits.maxWz.toFixed(2) }));
             }
         }
     }
@@ -248,7 +249,7 @@ function evaluatePlausibility(state, recipe) {
     // Paste volume check (Zementleimgehalt)
     const paste = calculatePasteVolume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
     if (paste && !checkPasteRequirements(paste, state.exposureClass).meetsRequirement) {
-        warnings.push(`Leimgehalt ${formatNumber(paste.pasteVolume, 0)} kg/m³ ist zu niedrig für die Expositionsklasse ${state.exposureClass}.`);
+        warnings.push(i18n.t('warn.paste.too.low', { paste: formatNumber(paste.pasteVolume, 0), klasse: state.exposureClass }));
     }
 
     // Fines content check (Mehlkorngehalt) – including aggregate fines from sieve line
@@ -262,7 +263,7 @@ function evaluatePlausibility(state, recipe) {
     if (fines) {
         const finesCheck = checkFinesLimits(fines, state.exposureClass);
         if (finesCheck && finesCheck.exceedsLimit) {
-            warnings.push(`Mehlkorngehalt ${formatNumber(fines.finesContent0125, 0)} kg/m³ zu hoch – Maximum ${finesCheck.maxAllowed} kg/m³ für Expositionsklasse ${state.exposureClass}.`);
+            warnings.push(i18n.t('warn.fines.too.high', { fines: formatNumber(fines.finesContent0125, 0), maxAllowed: finesCheck.maxAllowed, klasse: state.exposureClass }));
         }
     }
 
@@ -270,23 +271,23 @@ function evaluatePlausibility(state, recipe) {
     if (recipe.materials.flyAsh > 0 && recipe.materials.silicaFume > 0) {
         const cemICheck = checkCemIFlyAshSilicaFume(recipe.materials.cement, recipe.materials.flyAsh, recipe.materials.silicaFume);
         if (!cemICheck.meetsLimit) {
-            warnings.push(`Flugasche-Anteil zu hoch für die kombinierte Verwendung mit Silikastaub bei diesem Zement – bitte Anteile reduzieren.`);
+            warnings.push(i18n.t('warn.flyash.silica'));
         }
     }
 
     if (state.useAirEntraining && state.airEntrainingPercent > 10) {
-        warnings.push(`Luftgehalt ${state.airEntrainingPercent}% ist ungewöhnlich hoch – dies kann die Festigkeit stark reduzieren.`);
+        warnings.push(i18n.t('warn.high.air', { pct: state.airEntrainingPercent }));
     }
 
     return warnings;
 }
 
-function buildSelectOptions(select, options, selectedValue) {
+function buildSelectOptions(select, options, selectedValue, keyMap) {
     select.innerHTML = '';
     options.forEach(({ value, label }) => {
         const option = document.createElement('option');
         option.value = value;
-        option.textContent = label;
+        option.textContent = keyMap ? i18n.t(keyMap[value] || value) : label;
         if (value === selectedValue) option.selected = true;
         select.appendChild(option);
     });
@@ -297,8 +298,8 @@ function buildExposureCheckboxes() {
     elements.exposureClassContainer.innerHTML = '';
 
     values.forEach(exposureCode => {
-        const exposureData = getExposureClass(exposureCode);
-        const labelText = exposureData ? `${exposureCode} - ${exposureData.name}` : exposureCode;
+        const expLabel = i18n.t(`exp.${exposureCode}`) || exposureCode;
+        const labelText = `${exposureCode} - ${expLabel}`;
 
         const wrapper = document.createElement('label');
         wrapper.style.display = 'inline-flex';
@@ -324,9 +325,8 @@ function updateGoverningExposureInfo() {
     const governingCode = getGoverningExposureClass(selected);
     
     if (governingCode) {
-        const data = getExposureClass(governingCode);
         elements.govClassCode.textContent = governingCode;
-        elements.govClassDesc.textContent = data ? data.description : '';
+        elements.govClassDesc.textContent = i18n.t(`exp.${governingCode}.d`) || '';
         elements.governingExposureInfo.classList.remove('hidden');
     } else {
         elements.governingExposureInfo.classList.add('hidden');
@@ -350,19 +350,18 @@ function updateHints() {
     const sc = getStrengthClass(elements.strengthClass.value);
     if (elements.strengthHint) {
         elements.strengthHint.textContent = sc
-            ? `Charakteristische Würfeldruckfestigkeit: ${sc.f_ck_cube} N/mm²`
-            : 'Wählen Sie eine Klasse gemäß statischen Anforderungen.';
+            ? i18n.t('index.strength.hint', { fck: sc.f_ck_cube })
+            : i18n.t('index.strength.hint.default');
     }
 
     // Sieve line hint
     const siebKey = elements.siebline.value;
     const sieb = SIEBLINIES[siebKey];
     if (elements.sieblinieHint) {
-        const maxGrain = siebKey.replace(/[A-Z/]/g, '') || '?';
-        const usageHint = SIEBLINE_HINTS[maxGrain] || '';
+        const hintKey = SIEBLINE_HINT_KEYS[siebKey.replace(/[A-Z/]/g, '')];
         elements.sieblinieHint.textContent = sieb
-            ? usageHint
-            : 'Sieblinie nicht gefunden.';
+            ? (hintKey ? i18n.t(hintKey) : '')
+            : i18n.t('index.siebline.hint.not.found');
     }
 
     // Consistency class hint
@@ -370,14 +369,15 @@ function updateHints() {
     const admForHint = elements.admixtureType.value;
     const consHintEl = document.getElementById('consistencyHint');
     if (consHintEl) {
+        const consHint = i18n.t(CONSISTENCY_HINT_KEYS[cons] || cons);
         if (['F4', 'F5', 'F6'].includes(cons) && admForHint !== 'FM') {
-            consHintEl.textContent = `Fließmittel (FM) zwingend erforderlich – bitte unter "Verflüssigungsmittel" FM wählen.`;
+            consHintEl.textContent = i18n.t('index.consistency_fm_required', { cls: cons });
             consHintEl.style.color = '#c0392b';
         } else if (['F4', 'F5', 'F6'].includes(cons) && admForHint === 'FM') {
-            consHintEl.textContent = `${CONSISTENCY_HINTS[cons] || ''} Wasseransatz wie F3, FM reduziert Wasser und erhöht Fließfähigkeit.`;
+            consHintEl.textContent = `${consHint} ${i18n.t('index.consistency.hint.fm.active')}`;
             consHintEl.style.color = '#27ae60';
         } else {
-            consHintEl.textContent = CONSISTENCY_HINTS[cons] || '';
+            consHintEl.textContent = consHint;
             consHintEl.style.color = '';
         }
     }
@@ -386,17 +386,17 @@ function updateHints() {
     const adm = elements.admixtureType.value;
     if (elements.admixtureHint) {
         if (adm === 'none') {
-            elements.admixtureHint.textContent = 'Kein Zusatzmittel verwendet.';
+            elements.admixtureHint.textContent = i18n.t('index.admixture.none');
         } else if (adm === 'BV') {
-            elements.admixtureHint.textContent = `Betonverflüssiger: ~${getRecommendedWaterSaving('BV')} % Wasserersparnis | Dosierung ~${getAdmixtureDosage('BV')} l/m³`;
+            elements.admixtureHint.textContent = i18n.t('index.admixture.bv.hint', { saving: getRecommendedWaterSaving('BV'), dosage: getAdmixtureDosage('BV') });
         } else if (adm === 'FM') {
-            elements.admixtureHint.textContent = `Fließmittel: ~${getRecommendedWaterSaving('FM')} % Wasserersparnis | Dosierung ~${getAdmixtureDosage('FM')} l/m³`;
+            elements.admixtureHint.textContent = i18n.t('index.admixture.fm.hint', { saving: getRecommendedWaterSaving('FM'), dosage: getAdmixtureDosage('FM') });
         }
     }
 
     // Use case hint
     if (elements.useCaseHint) {
-        elements.useCaseHint.textContent = 'Setzt Voreinstellung für alle Parameter – einzelne Werte können danach angepasst werden.';
+        elements.useCaseHint.textContent = i18n.t('index.usecase.hint');
     }
 }
 
@@ -470,7 +470,7 @@ function calculateRecipe() {
     clearError();
 
     if (getSelectedExposureClasses().length === 0) {
-        return setError('Bitte wählen Sie mindestens eine Expositionsklasse aus (z.B. XC1 für trockene Innenbereiche).');
+        return setError(i18n.t('err.no.exp'));
     }
 
     const values = collectFormValues();
@@ -486,12 +486,12 @@ function calculateRecipe() {
     // F4–F6 require FM (Fließmittel) per B20 – fluidity is achieved via admixture
     const highConsistency = ['F4', 'F5', 'F6'].includes(appState.consistencyClass);
     if (highConsistency && appState.admixtureType !== 'FM') {
-        return setError(`Konsistenzklasse ${appState.consistencyClass} erfordert Fließmittel (FM) nach B20. Bitte FM unter "Verflüssigungsmittel" wählen.`);
+        return setError(i18n.t('err.missing.fm', { cls: appState.consistencyClass }));
     }
 
     const baseWater = calculateWaterDemand(appState.siebline, appState.consistencyClass);
     if (baseWater === null) {
-        return setError('Ungültige Sieblinie oder Konsistenzklasse, bitte prüfen.');
+        return setError(i18n.t('err.invalid'));
     }
 
     let waterTarget = baseWater;
@@ -520,13 +520,13 @@ function calculateRecipe() {
 
     let wz_walz = calculateWzFromTargetStrength(f_cm_target, walzkurveKey);
     let maxWz = maxWz_exposure;
-    let wzSource = 'Expositionsklasse';
+    let wzSource = 'exposure'; // i18n key resolved at display time
 
     if (wz_walz !== null) {
         if (wz_walz < maxWz_exposure) {
             // Walzkurven w/z is tighter — strength governs
             maxWz = wz_walz;
-            wzSource = 'Walzkurven (Festigkeit maßgebend)';
+            wzSource = 'walz'; // i18n key resolved at display time
         } else {
             // Exposure governs — apply betontechnologische Abminderung –0.02
             maxWz = maxWz_exposure - 0.02;
@@ -553,7 +553,7 @@ function calculateRecipe() {
     cementAmount = Math.round(cementAmount);
 
     if (!cementAmount || cementAmount <= 0) {
-        return setError('Berechnung des Zementgehalts fehlgeschlagen. Bitte Eingabewerte prüfen.');
+        return setError(i18n.t('err.cement'));
     }
 
     // Supplementary materials (fractions of the now-reduced cement content)
@@ -632,16 +632,16 @@ function calculateRecipe() {
     // Fill effect list
     const effectNotes = [];
     if (appState.useAirEntraining) {
-        effectNotes.push(`Luftporenbildner ${appState.airEntrainingPercent}% reduziert Wasserbedarf und Festigkeit. (ca. ${Math.round(appState.airEntrainingPercent * 3.5)} N/mm²)`);
+        effectNotes.push(i18n.t('effect.lp', { airPct: appState.airEntrainingPercent, loss: Math.round(appState.airEntrainingPercent * 3.5) }));
     }
     if (appState.useFlyAsh) {
-        effectNotes.push(`Flugasche ${appState.flyAshPercent}% – reduziert Zementbedarf und verbessert Dauerhaftigkeit.`);
+        effectNotes.push(i18n.t('effect.flyash', { pct: appState.flyAshPercent }));
     }
     if (appState.useSilicaFume) {
-        effectNotes.push(`Silikastaub ${appState.silicaFumePercent}% – erhöht Festigkeit und Dichtheit signifikant.`);
+        effectNotes.push(i18n.t('effect.silica', { pct: appState.silicaFumePercent }));
     }
     if (appState.useWaterproofing) {
-        effectNotes.push(`WU-Additiv ${appState.waterproofPercent}% – erhöht Wasserdichtheit.`);
+        effectNotes.push(i18n.t('effect.waterproof', { pct: appState.waterproofPercent }));
     }
 
     if (elements.effectsList) {
@@ -674,15 +674,19 @@ function displayRecipe(recipe) {
     // ── Collapsible calculation steps (B20 Tafel 9) ──────────────────────────
     const wzWalzStr = recipe.wzWalz ? `w/z_Walz = ${recipe.wzWalz.toFixed(2)} (–0.02 Abminderung)` : '–';
     const eqWzStr = recipe.equivalentWz ? ` | (w/z)_eq = ${recipe.equivalentWz.toFixed(2)}` : '';
+    const fck = getStrengthClass(appState.strengthClass)?.f_ck_cube ?? '–';
+    const sourceLabel = recipe.wzSource === 'walz'
+        ? i18n.t('step.source.walz')
+        : i18n.t('step.source.exposure');
     const steps = [
-        ['1', 'Grenzwerte (Expositionsklassen)', `max w/z = ${recipe.wzExposure.toFixed(2)}, min z = ${recipe.minZeff} kg/m³ (strengste aller Klassen)`],
-        ['2', 'Wassergehalt (Sieblinie / Konsistenz)', `erf. w = ${formatNumber(recipe.materials.water, 0)} l/m³`],
-        ['3', 'Zielfestigkeit', `f_ck,Würfel = ${getStrengthClass(appState.strengthClass)?.f_ck_cube ?? '–'} N/mm² → f_cm,dry,cube = ${formatNumber(recipe.fCmTarget, 1)} N/mm² (σ=${recipe.sigma}, v=${recipe.vorhaltemas})`],
-        ['4', 'max w/z-Wert', `${wzWalzStr} | Expositionsklasse: ${recipe.wzExposure.toFixed(2)} → maßgebend (${recipe.wzSource}): w/z = ${recipe.wzLimit.toFixed(2)}`],
-        ['5', 'Zementgehalt', `z = w/(w/z) = ${formatNumber(recipe.materials.water,0)}/${recipe.wzLimit.toFixed(2)} = ${formatNumber(recipe.materials.cement,0)} kg/m³${eqWzStr}`],
-        ['6', 'Stoffraumrechnung', `V_z=${recipe.stoffraum.vz} + V_w=${recipe.stoffraum.vw} + V_f=${recipe.stoffraum.vf + recipe.stoffraum.vs} + LP=${recipe.stoffraum.vLP} + V_g=${recipe.stoffraum.vg} = 1000 dm³`],
-        ['7', 'Zugabewasser', `w_gesamt = ${formatNumber(recipe.materials.water,0)} l/m³ → Zugabewasser = ${formatNumber(recipe.materials.zugabewasser,0)} l/m³ (nach Feuchteabzug)`],
-        ['8', 'Mehlkorngehalt', `Zement + Zusatzstoffe + Gesteinskörnungsanteil ≤0.125mm = ${formatNumber(recipe.mehlkorngehalt,0)} kg/m³`]
+        ['1', i18n.t('step.1.label'), i18n.t('step.1.value', { wz: recipe.wzExposure.toFixed(2), minZ: recipe.minZeff })],
+        ['2', i18n.t('step.2.label'), i18n.t('step.2.value', { water: formatNumber(recipe.materials.water, 0) })],
+        ['3', i18n.t('step.3.label'), i18n.t('step.3.value', { fck, fcm: formatNumber(recipe.fCmTarget, 1), sigma: recipe.sigma, vorhaltemas: recipe.vorhaltemas })],
+        ['4', i18n.t('step.4.label'), i18n.t('step.4.value', { wzWalz: wzWalzStr, wzExp: recipe.wzExposure.toFixed(2), source: sourceLabel, wzLimit: recipe.wzLimit.toFixed(2) })],
+        ['5', i18n.t('step.5.label'), i18n.t('step.5.value', { water: formatNumber(recipe.materials.water, 0), wz: recipe.wzLimit.toFixed(2), cement: formatNumber(recipe.materials.cement, 0), eqWz: eqWzStr })],
+        ['6', i18n.t('step.6.label'), i18n.t('step.6.value', { vz: recipe.stoffraum.vz, vw: recipe.stoffraum.vw, vf: recipe.stoffraum.vf + recipe.stoffraum.vs, lp: recipe.stoffraum.vLP, vg: recipe.stoffraum.vg })],
+        ['7', i18n.t('step.7.label'), i18n.t('step.7.value', { water: formatNumber(recipe.materials.water, 0), zugabe: formatNumber(recipe.materials.zugabewasser, 0) })],
+        ['8', i18n.t('step.8.label'), i18n.t('step.8.value', { fines: formatNumber(recipe.mehlkorngehalt, 0) })]
     ];
 
     elements.calcStepsBody.innerHTML = steps.map(([n, label, value]) =>
@@ -691,8 +695,8 @@ function displayRecipe(recipe) {
 
     // ── Ingredients header ────────────────────────────────────────────────────
     const vol = appState.volume;
-    elements.ingredientsHeader.textContent = `📋 Zutaten für ${vol} m³ – ${appState.strengthClass} (Zielwert: ≈ ${formatNumber(recipe.fCmTarget, 1)} N/mm²)`;
-    elements.volumeColHeader.textContent = vol !== 1 ? `Menge für ${vol} m³` : 'Menge gesamt';
+    elements.ingredientsHeader.textContent = i18n.t('index.results.detail', { vol, klasse: appState.strengthClass, fcm: formatNumber(recipe.fCmTarget, 1) });
+    elements.volumeColHeader.textContent = vol !== 1 ? i18n.t('index.vol.prefix') + ` ${vol} m³` : i18n.t('index.vol.default');
 
     // ── Main ingredients table ────────────────────────────────────────────────
     const tableRows = [];
@@ -707,15 +711,15 @@ function displayRecipe(recipe) {
     };
 
     addRow(appState.cementType, recipe.materials.cement, 'kg', recipe.materials.cement * vol, 'kg',
-        'Bindemittel – bestimmt Festigkeit und Dauerhaftigkeit');
+        i18n.t('recipe.cement.note'));
 
     if (recipe.materials.flyAsh > 0) {
-        addRow('Flugasche', recipe.materials.flyAsh, 'kg', recipe.materials.flyAsh * vol, 'kg',
-            'Ersetzt einen Teil des Zements – weniger Wärme, bessere Langzeitfestigkeit');
+        addRow(i18n.t('mixdesign.flyash'), recipe.materials.flyAsh, 'kg', recipe.materials.flyAsh * vol, 'kg',
+            i18n.t('recipe.flyash.note'));
     }
     if (recipe.materials.silicaFume > 0) {
-        addRow('Silikastaub', recipe.materials.silicaFume, 'kg', recipe.materials.silicaFume * vol, 'kg',
-            'Füllt Kapillarporen – deutlich dichter und fester als reiner Zement');
+        addRow(i18n.t('mixdesign.silica'), recipe.materials.silicaFume, 'kg', recipe.materials.silicaFume * vol, 'kg',
+            i18n.t('recipe.silica.note'));
     }
 
     // Water rows
@@ -723,56 +727,56 @@ function displayRecipe(recipe) {
     const hasZugabe = eigenfeuchte > 0;
     if (hasZugabe) {
         tableRows.push(`<tr>
-            <td>Eigenfeuchte Gesteinskörnung</td>
+            <td>${i18n.t('recipe.eigenfeuchte.label')}</td>
             <td>${formatNumber(eigenfeuchte, 0)} l/m³</td>
             <td>${formatQuantity(eigenfeuchte * vol, 'l')}</td>
-            <td>Im Kies / Sand bereits enthaltenes Wasser</td>
+            <td>${i18n.t('recipe.eigenfeuchte.note')}</td>
         </tr>`);
         tableRows.push(`<tr>
-            <td><strong>Zugabewasser</strong></td>
+            <td><strong>${i18n.t('recipe.zugabewasser.label')}</strong></td>
             <td><strong>${formatNumber(recipe.materials.zugabewasser, 0)} l/m³</strong></td>
             <td><strong>${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}</strong></td>
-            <td><strong>Tatsächlich zuzugebendes Mischwasser</strong></td>
+            <td><strong>${i18n.t('recipe.zugabewasser.note')}</strong></td>
         </tr>`);
     } else {
         tableRows.push(`<tr>
-            <td>Wasser</td>
+            <td>${i18n.t('recipe.water.label')}</td>
             <td>${formatNumber(recipe.materials.water, 0)} l/m³</td>
             <td>${formatQuantity(recipe.materials.water * vol, 'l')}</td>
-            <td>Mischwasser – bestimmt Verarbeitbarkeit und Festigkeit</td>
+            <td>${i18n.t('recipe.water.note')}</td>
         </tr>`);
     }
 
     if (appState.admixtureType !== 'none') {
         const saving = getRecommendedWaterSaving(appState.admixtureType) ?? 0;
         addRow(
-            appState.admixtureType === 'BV' ? 'Betonverflüssiger (BV)' : 'Fließmittel (FM)',
+            i18n.t(appState.admixtureType === 'BV' ? 'admixture.BV' : 'admixture.FM'),
             recipe.materials.admixture, 'l',
             recipe.materials.admixture * vol, 'l',
-            `Spart ca. ${saving}% Anmachwasser – verbessert Fließfähigkeit ohne mehr Wasser`
+            i18n.t('recipe.bv.note', { saving })
         );
     }
 
     if (appState.useAirEntraining) {
         const lpDosage = getAdmixtureDosage('LP', appState.airEntrainingPercent);
         addRow(
-            'Luftporenbildner (LP)',
+            i18n.t('mixdesign.air.entry'),
             lpDosage, 'l',
             lpDosage * vol, 'l',
-            `Erzeugt ${recipe.airEntraining}% feine Luftporen für Frostsicherheit – senkt Festigkeit um ca. ${Math.round(recipe.airEntraining * 3.5)} N/mm²`
+            i18n.t('recipe.lp.note', { airPct: recipe.airEntraining, loss: Math.round(recipe.airEntraining * 3.5) })
         );
     }
 
     // Aggregate: total row (detail breakdown follows in Korngruppen table)
-    addRow(`Gesteinskörnung gesamt (${appState.aggregateType})`,
+    addRow(`${i18n.t('mixdesign.aggregate')} (${appState.aggregateType})`,
         recipe.materials.aggregate, 'kg',
         recipe.materials.aggregate * vol, 'kg',
-        'Füllstoff – bildet das Gerüst des Betons, je dichter desto weniger Zement nötig');
+        i18n.t('recipe.aggregate.note'));
 
 
     if (recipe.materials.waterproofing > 0) {
-        addRow('WU-Additiv', recipe.materials.waterproofing, 'kg', recipe.materials.waterproofing * vol, 'kg',
-            'Dichtet Kapillarporen ab – verhindert Wasserdurchdringung');
+        addRow(i18n.t('mixdesign.waterproofing'), recipe.materials.waterproofing, 'kg', recipe.materials.waterproofing * vol, 'kg',
+            i18n.t('recipe.waterproof.note'));
     }
 
     elements.recipeBody.innerHTML = tableRows.join('');
@@ -794,7 +798,7 @@ function displayRecipe(recipe) {
         </tr>`;
     });
     kgRows += `<tr class="total-row">
-        <td><strong>Summe</strong></td>
+        <td><strong>${i18n.t('recipe.sum.label')}</strong></td>
         <td>100</td>
         <td><strong>${formatQuantity(totalDry * vol, 'kg')}</strong></td>
         <td>–</td>
@@ -804,9 +808,9 @@ function displayRecipe(recipe) {
 
         const moistureTotal = (totalMoist - totalDry) * vol;
         elements.zugabewasserInfo.innerHTML =
-            `<strong>Gesamtwasser:</strong> ${formatQuantity(recipe.materials.water * vol, 'l')} &nbsp;–&nbsp; ` +
-            `<strong>Oberflächenfeuchte:</strong> ${formatQuantity(moistureTotal, 'l')} &nbsp;=&nbsp; ` +
-            `<strong>Zugabewasser:</strong> ${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}`;
+            `<strong>${i18n.t('recipe.water.label')}:</strong> ${formatQuantity(recipe.materials.water * vol, 'l')} &nbsp;–&nbsp; ` +
+            `<strong>${i18n.t('recipe.eigenfeuchte.label')}:</strong> ${formatQuantity(moistureTotal, 'l')} &nbsp;=&nbsp; ` +
+            `<strong>${i18n.t('recipe.zugabewasser.label')}:</strong> ${formatQuantity(recipe.materials.zugabewasser * vol, 'l')}`;
     } else {
         elements.kornGruppenSection.classList.add('hidden');
     }
@@ -823,15 +827,15 @@ function displayRecipe(recipe) {
     const lpDosage = appState.useAirEntraining ? getAdmixtureDosage('LP', appState.airEntrainingPercent) * vol : 0;
 
     const baseInstructions = [
-        `Trockenmischung: ${formatQuantity(totalCement, 'kg')} ${appState.cementType} und ${formatQuantity(totalAgg, 'kg')} Gesteinskörnung gleichmäßig mischen.`,
-        totalFA > 0 ? `Zusatzstoff: ${formatQuantity(totalFA, 'kg')} Flugasche untermischen.` : '',
-        totalSF > 0 ? `Zusatzstoff: ${formatQuantity(totalSF, 'kg')} Silikastaub gleichmäßig einmischen.` : '',
-        totalWU > 0 ? `Additiv: ${formatQuantity(totalWU, 'kg')} WU-Additiv einmischen.` : '',
-        `Wasserzugabe: ${formatQuantity(totalWater, 'l')} Zugabewasser langsam zugeben und gründlich mischen.`,
-        totalAdm > 0 ? `Verflüssiger: ${formatQuantity(totalAdm, 'l')} ${appState.admixtureType === 'BV' ? 'Betonverflüssiger (BV)' : 'Fließmittel (FM)'} hinzufügen.` : '',
-        lpDosage > 0 ? `Luftporenbildner: ${formatQuantity(lpDosage, 'l')} LP-Mittel hinzufügen, um Luftgehalt von ${recipe.airEntraining}% sicherzustellen.` : '',
-        `Durchmischen: Beton bis zur gewünschten Konsistenz (${appState.consistencyClass}) durchmischen.`,
-        `Verarbeitung: Sofort verbauen oder max. 30 min frische Lagerung beachten.`
+        i18n.t('step.mixer.1.dry', { cement: formatQuantity(totalCement, 'kg'), cementType: appState.cementType, aggregate: formatQuantity(totalAgg, 'kg') }),
+        totalFA > 0 ? i18n.t('step.mixer.2.flyash', { flyash: formatQuantity(totalFA, 'kg') }) : '',
+        totalSF > 0 ? i18n.t('step.mixer.3.silica', { silica: formatQuantity(totalSF, 'kg') }) : '',
+        totalWU > 0 ? i18n.t('step.mixer.4.wu', { wu: formatQuantity(totalWU, 'kg') }) : '',
+        i18n.t('step.mixer.5.water', { water: formatQuantity(totalWater, 'l') }),
+        totalAdm > 0 ? i18n.t('step.mixer.6.admixture', { admixture: formatQuantity(totalAdm, 'l'), label: i18n.t(appState.admixtureType === 'BV' ? 'admixture.BV' : 'admixture.FM') }) : '',
+        lpDosage > 0 ? i18n.t('step.mixer.7.lp', { lp: formatQuantity(lpDosage, 'l'), airPct: recipe.airEntraining }) : '',
+        i18n.t('step.mixer.8.mix', { consistency: appState.consistencyClass }),
+        i18n.t('step.mixer.9.handle')
     ].filter(ii => ii);
 
     elements.instructionList.innerHTML = baseInstructions.map(inst => `<li>${inst}</li>`).join('');
@@ -869,12 +873,8 @@ function displayRecipe(recipe) {
     //   1. Fine-tune the current B 20 recipe with additives.
     //   2. Switch to the UHPC scaler for extreme strengths.
     // Idempotent against repeated displayRecipe() calls — the IDs are reused.
-    ensureFollowupHint('fineTuneHint', '20px',
-        'Sie wollen noch etwas mehr aus Ihrer Rezeptur herausholen? ' +
-        '<a href="fine-tune.html">Rezept feintunen →</a>');
-    ensureFollowupHint('uhpcHint', '8px',
-        'Suchen Sie extreme Festigkeit (DIY-Hochleistungsbeton)? ' +
-        '<a href="uhpc.html">UHPC-Rezept skalieren →</a>');
+    ensureFollowupHint('fineTuneHint', '20px', i18n.t('index.fine.tune.hint'));
+    ensureFollowupHint('uhpcHint', '8px', i18n.t('index.uhpc.hint'));
 
     // Old button-styled fine-tune link from a previous render — drop it.
     const legacy = document.getElementById('fineTuneBtn');
@@ -894,26 +894,26 @@ function ensureFollowupHint(id, marginTop, html) {
 }
 
 function initialize() {
-    buildSelectOptions(elements.useCase, Object.entries(USE_CASES).map(([key, data]) => ({ value: key, label: data.label })), 'standard');
-    buildSelectOptions(elements.strengthClass, getAvailableClasses().map(value => ({ value, label: STRENGTH_CLASS_LABELS[value] || value })), 'C20/25');
+    buildSelectOptions(elements.useCase, Object.entries(USE_CASES).map(([key, data]) => ({ value: key, label: '' })), 'standard',
+        Object.fromEntries(Object.entries(USE_CASES).map(([k, v]) => [k, v.labelKey])));
+    buildSelectOptions(elements.strengthClass, getAvailableClasses().map(value => ({ value, label: '' })), 'C20/25', STRENGTH_CLASS_KEYS);
     buildExposureCheckboxes();
 
-    // Build sieve line options with A/B16 and A/B32 included
     const sieblineOptions = Object.keys(GRAIN_GROUPS_BY_SIEBLINE).sort();
-    buildSelectOptions(elements.siebline, sieblineOptions.map(v => ({ value: v, label: SIEBLINE_LABELS[v] || v })), 'B32');
+    buildSelectOptions(elements.siebline, sieblineOptions.map(v => ({ value: v, label: '' })), 'B32', SIEBLINE_KEYS);
 
-    buildSelectOptions(elements.consistencyClass, getAvailableConsistencyClasses().map(value => ({ value, label: CONSISTENCY_LABELS[value] || value })), 'F3');
-    buildSelectOptions(elements.aggregateType, getAvailableAggregates().map(value => ({ value, label: AGGREGATE_LABELS[value] || value })), 'Kiessand (Quarz)');
+    buildSelectOptions(elements.consistencyClass, getAvailableConsistencyClasses().map(value => ({ value, label: '' })), 'F3', CONSISTENCY_KEYS);
+    buildSelectOptions(elements.aggregateType, getAvailableAggregates().map(value => ({ value, label: '' })), 'Kiessand (Quarz)', AGGREGATE_KEYS);
 
     buildSelectOptions(elements.cementType,
-        getAvailableCementTypes().map(v => ({ value: v, label: CEMENT_TYPE_LABELS[v] || v })),
-        'CEM I 42.5 N');
+        getAvailableCementTypes().map(v => ({ value: v, label: '' })),
+        'CEM I 42.5 N', CEMENT_TYPE_KEYS);
 
     buildSelectOptions(elements.admixtureType, [
-        { value: 'none', label: 'Kein Zusatzmittel' },
-        { value: 'BV', label: 'Betonverflüssiger (BV)' },
-        { value: 'FM', label: 'Fließmittel (FM)' }
-    ], 'none');
+        { value: 'none', label: '' },
+        { value: 'BV', label: '' },
+        { value: 'FM', label: '' }
+    ], 'none', { none: 'admixture.none', BV: 'admixture.BV', FM: 'admixture.FM' });
 
     applyUseCaseDefaults();
     updateOptionalSections();
@@ -942,6 +942,12 @@ function initialize() {
 
     updateGoverningExposureInfo();
     calculateRecipe();
+
+    // Re-render on language change
+    document.addEventListener('languagechange', () => {
+        initialize();
+        if (appState.strengthClass) calculateRecipe();
+    });
 }
 
 window.addEventListener('DOMContentLoaded', initialize);

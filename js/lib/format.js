@@ -4,6 +4,8 @@
 // so that engineering-style precision and DIY-style precision can evolve
 // independently.
 
+import { i18n } from './i18n.js';
+
 /**
  * Locale-aware number formatter (de-DE: comma decimal, dot thousands).
  *
@@ -12,7 +14,7 @@
  * @returns {string}
  */
 export function fmt(n, decimals = 0) {
-    return n.toLocaleString('de-DE', {
+    return i18n.formatNumber(n, {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
     });

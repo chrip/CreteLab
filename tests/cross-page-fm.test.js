@@ -100,7 +100,7 @@ describe('Cross-page handoff: FM in main form locks out BV in fine-tune', () => 
             'BV result panel must be visible to show the lock-out reason');
         assert.ok(result.classList.contains('locked-out'),
             'BV result panel must carry .locked-out for the gray accent');
-        assert.ok(/Fließmittel.*bereits/i.test(result.textContent),
+        assert.ok(/Fließmittel.*zusätzlich|bereits.*Fließmittel/i.test(result.textContent),
             `BV result should explain that FM is already in the recipe, got: "${result.textContent}"`);
     });
 
