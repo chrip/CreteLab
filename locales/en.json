@@ -448,5 +448,21 @@
   "warn.high.air": "Air content {pct}% is unusually high – this may significantly reduce strength.",
   "warn.paste.too.low": "Paste content {paste} kg/m³ is too low for exposure class {klasse}.",
   "warn.strength.too.low": "Concrete class {klasse} is too weak for selected exposure classes – at least {minFck} N/mm² cube strength required.",
-  "warn.wz.exceeded": "Water-cement ratio {wzc} exceeds the allowable limit {maxWz} of selected exposure classes."
+  "warn.wz.exceeded": "Water-cement ratio {wzc} exceeds the allowable limit {maxWz} of selected exposure classes.",
+  "index.hint.air.entailing": "Recommended for frost-exposed components (e.g., outdoor areas). Higher air content reduces water demand but also reduces compressive strength.",
+  "fine.tune.beton.verf": "💧 Concrete plasticizer (CP) – better workability",
+  "fine.tune.beton.verf.desc": "Reduces water demand by approx. 7%, the concrete flows more evenly into the formwork. Available at hardware stores. Excludes flow agent.",
+  "index.label.exposure": "Environmental exposure (multiple selection possible):",
+  "index.label.cement.type": "Cement type / strength class:",
+  "index.label.air.entaining": "Use air-entraining agent (for frost resistance)",
+  "index.label.air.target": "Target air content (vol.%):",
+  "index.label.fly.ash": "Use fly ash",
+  "index.label.fly.ash.pct": "Fly ash content (% of cement):",
+  "index.label.volume": "Required volume (m³):",
+  "index.label.admixture": "Superplasticizer:",
+  "index.label.aggregate": "Aggregate:",
+  "index.label.consistency": "Consistency class:",
+  "index.hint.cement.type": "Available at hardware stores: CEM I 42.5 N (Portland cement, standard recommendation). CEM II is suitable for less demanding applications, CEM III for sulfate-resistant or lower-heat mixes.",
+  "index.hint.fly.ash": "Reduces hydration heat, improves durability. Max. 33% of cement weight in CEM I.",
+  "uhpc.result.col.note": "Note"
 }

@@ -448,5 +448,18 @@
   "warn.high.air": "Luftgehalt {pct}% ist ungewöhnlich hoch – dies kann die Festigkeit stark reduzieren.",
   "warn.paste.too.low": "Leimgehalt {paste} kg/m³ ist zu niedrig für die Expositionsklasse {klasse}.",
   "warn.strength.too.low": "Betonklasse {klasse} ist zu schwach für die gewählten Expositionsklassen – mindestens {minFck} N/mm² Würfeldruckfestigkeit erforderlich.",
-  "warn.wz.exceeded": "Wasser-Zement-Wert {wzc} überschreitet den zulässigen Grenzwert {maxWz} der gewählten Expositionsklassen."
+  "warn.wz.exceeded": "Wasser-Zement-Wert {wzc} überschreitet den zulässigen Grenzwert {maxWz} der gewählten Expositionsklassen.",
+  "index.hint.air.entailing": "Empfohlen für frostbelastete Bauteile (z. B. Außenbereiche). Ein höherer Luftgehalt reduziert den Wasserbedarf, senkt jedoch die Druckfestigkeit.",
+  "index.label.exposure": "Umgebungseinwirkung (Mehrfachauswahl möglich):",
+  "index.label.cement.type": "Zementart / Festigkeitsklasse:",
+  "index.label.air.entaining": "Luftporenbildner verwenden (für Frostsicherheit)",
+  "index.label.air.target": "Ziel-Luftgehalt (Vol.-%):",
+  "index.label.fly.ash": "Flugasche verwenden",
+  "index.label.fly.ash.pct": "Flugasche-Gehalt (% vom Zement):",
+  "index.label.volume": "Benötigtes Volumen (m³):",
+  "index.label.admixture": "Verflüssigungsmittel:",
+  "index.label.aggregate": "Gesteinskörnung:",
+  "index.label.consistency": "Konsistenzklasse:",
+  "index.hint.cement.type": "Im Baumarkt erhältlich: CEM I 42.5 N (Portlandzement, Standardempfehlung). CEM II eignet sich für weniger anspruchsvolle Anwendungen, CEM III für sulfatbeständige oder wärmeärmere Mischungen.",
+  "index.hint.fly.ash": "Vermindert Hydratationswärme, verbessert Dauerhaftigkeit. Max. 33% vom Zementgewicht bei CEM I."
 }
