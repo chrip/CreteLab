@@ -6,33 +6,43 @@ function createSwitcher() {
   const nav = document.querySelector('.main-nav');
   if (!nav) return;
 
-  const select = document.createElement('select');
-  select.id = 'langSwitcher';
-  select.title = i18n.t('global.language');
+  // Visual separator
+  const sep = document.createElement('span');
+  sep.className = 'lang-sep';
+  sep.textContent = '·';
+  sep.style.cssText = 'color:var(--border-color);padding:8px 2px 8px 12px;user-select:none;';
+  nav.appendChild(sep);
+
+  const current = i18n.locale;
 
   for (const code of ['de', 'en']) {
-    const opt = document.createElement('option');
-    opt.value = code;
-    opt.textContent = code.toUpperCase();
-    if (code === i18n.locale) opt.selected = true;
-    select.appendChild(opt);
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = code.toUpperCase();
+    a.dataset.lang = code;
+    a.id = `lang-${code}`;
+    if (code === current) a.classList.add('active', 'lang-current');
+    a.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const val = a.dataset.lang;
+      localStorage.setItem(STORAGE_KEY, val);
+      document.documentElement.lang = val;
+      await i18n.setLocale(val);
+    });
+    nav.appendChild(a);
   }
-
-  select.addEventListener('change', async () => {
-    const val = select.value;
-    localStorage.setItem(STORAGE_KEY, val);
-    document.documentElement.lang = val;
-    await i18n.setLocale(val);
-    select.value = val;
-  });
-
-  nav.appendChild(select);
 }
 
 function rebuildSwitcher() {
-  const select = document.getElementById('langSwitcher');
-  if (!select) return;
-  select.value = i18n.locale;
+  for (const code of ['de', 'en']) {
+    const a = document.getElementById(`lang-${code}`);
+    if (!a) continue;
+    if (code === i18n.locale) {
+      a.classList.add('active', 'lang-current');
+    } else {
+      a.classList.remove('active', 'lang-current');
+    }
+  }
 }
 
 export async function initI18n() {
