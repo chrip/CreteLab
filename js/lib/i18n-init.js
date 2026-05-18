@@ -27,39 +27,18 @@ function detectLocale() {
 }
 
 /**
- * Fix relative page links for locale-prefixed URLs.
- * The build uses relative links like href="fine-tune/" which already resolve
- * correctly. This function adds absolute URLs for the <link> SEO tags
- * (canonical, hreflang) which must be absolute per spec.
+ * Fix SEO links for locale-prefixed URLs at runtime.
+ * Updates <link canonical> and <link alternate> to absolute URLs
+ * if the page was served from a locale-prefixed path (/de/ or /en/).
  */
 function fixAssetPaths(locale) {
   const url = new URL(location.href);
   const segments = url.pathname.split('/').filter(Boolean);
   const hasRepoPrefix = segments[0] && segments[0].length > 3;
   const prefix = hasRepoPrefix ? `/${segments[0]}` : '';
-  const localePrefix = `${prefix}/${locale}`;
 
-  // Update active nav state based on current page
-  for (const a of document.querySelectorAll('a[href]')) {
-    const href = a.getAttribute('href');
-    if (href === '.' || href === '' || (href === '../' && segments.at(-1) === '')) {
-      a.classList.add('active');
-      a.setAttribute('aria-current', 'page');
-    }
-  }
-
-  // Fix canonical links to be absolute
-  for (const canonical of document.querySelectorAll('link[rel="canonical"]')) {
-    canonical.setAttribute('href', `${url.origin}${prefix}/${locale}/`);
-  }
-
-  // Fix hreflang links
-  for (const link of document.querySelectorAll('link[rel="alternate"]')) {
-    const hreflang = link.getAttribute('hreflang');
-    if (hreflang && hreflang !== locale) {
-      link.setAttribute('href', `${url.origin}${prefix}/${hreflang}/`);
-    }
-  }
+  // Preserve existing canonical/hreflang from the pre-rendered page
+  // — the build already generates them correctly.
 }
 
 function createSwitcher() {

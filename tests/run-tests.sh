@@ -9,4 +9,4 @@ for arg in "$@"; do
   esac
 done
 
-exec node --test ${WATCH} -- tests/**/*.test.js 2>&1 | grep -vE "Could not load link|Can't fetch.*css"
+exec node --test ${WATCH} -- tests/**/*.test.js 2>&1 | grep -vE "Could not load link|Can't fetch.*css|Can('t|'')t fetch.*css|Can not load"

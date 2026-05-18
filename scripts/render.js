@@ -141,18 +141,10 @@ function structuredData(locale, page) {
 // ── Copy static assets ──────────────────────────────────────────────────
 
 function copyStaticAssets() {
-  const entries = readdirSync(ROOT);
-  for (const name of entries) {
-    if (['css', 'js', 'locales', 'assets'].includes(name)) {
-      const src = join(ROOT, name);
-      const dest = join(BUILD, name);
-      syncCopy(src, dest);
-    }
-    if (['.css', '.json'].includes(getExt(name))) {
-      const src = join(ROOT, name);
-      const dest = join(BUILD, name);
-      syncCopy(src, dest);
-    }
+  for (const name of ['css', 'js', 'locales', 'assets']) {
+    const src = join(ROOT, name);
+    const dest = join(BUILD, name);
+    syncCopy(src, dest);
   }
 }
 
@@ -173,12 +165,7 @@ function syncCopy(src, dest) {
   }
 }
 
-function getExt(name) {
-  const idx = name.lastIndexOf('.');
-  return idx > 0 ? name.slice(idx) : '';
-}
-
-// ── Main ────────────────────────────────────────────────────────────────
+// ── Main ────────────────────────────────────────────────────────────────────────
 
 async function main() {
   if (existsSync(BUILD)) rmSync(BUILD, { recursive: true });
@@ -196,27 +183,30 @@ async function main() {
       html = addSeoTags(html, locale, page);
       html = html.replace(/<html[^>]*lang="[^"]*"/, `<html lang="${locale}"`);
 
-      // Flat URLs: href="uhpc.html" → href="uhpc/"
-      let flatHtml = html.replace(/href="(fine-tune|uhpc)\.html"/g, 'href="$1/"');
-      // Assets live at build/css/, build/js/, etc. — flat pages in build/en/ need ../
-      flatHtml = flatHtml.replace(/(src|href|hreflang)="(css|js|assets|locales)\//g, '$1="../$2/');
-      flatHtml = flatHtml.replace(/import ['"]\.\/(js\/lib|js\/)/g, "import '../$1");
+      // Assets live at build/css/, build/js/, etc. — locale pages in build/en/ need ../
+      html = html.replace(
+        /(src|href)="(css|js|assets|locales)\//g,
+        '$1="../$2/',
+      );
+      html = html.replace(
+        /import ['"]\.\/(js\/lib|js\/)/g,
+        "import '../$1",
+      );
 
-      const out = page === 'index.html' ? 'index.html' : page;
-      writeFileSync(join(dir, out), flatHtml, 'utf8');
-
-      // Also write as locale/uhpc/index.html (clean subdirectory URLs)
-      if (page !== 'index.html') {
-        // flatHtml has ../css/; subdirs need ../../css/ (one level up)
-        let subHtml = flatHtml.replace(/\.\.\/((css|js|assets|locales)\/)/g, '../../$1');
-        subHtml = subHtml.replace(/href="index\.html"/g, 'href="../"');
-        subHtml = subHtml.replace(/href="(fine-tune|uhpc)\/"/g, 'href="../$1/"');
-        const subDir = join(dir, page.replace('.html', ''));
-        mkdirSync(subDir, { recursive: true });
-        writeFileSync(join(subDir, 'index.html'), subHtml, 'utf8');
-      }
+      writeFileSync(join(dir, page), html, 'utf8');
     }
   }
+
+  // Root index.html → redirect to German default
+  writeFileSync(
+    join(BUILD, 'index.html'),
+    `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">\
+<meta http-equiv="refresh" content="0;url=de/">\
+<meta name="robots" content="noindex">\
+<title>CreteLab</title></head>\
+<body><p><a href="de/">CreteLab — zum Betonrechner &rarr;</a></p></body></html>\n`,
+    'utf8',
+  );
 
   copyStaticAssets();
   console.log('Static assets copied.');
