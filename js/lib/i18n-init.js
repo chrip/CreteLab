@@ -3,15 +3,13 @@ import { i18n } from './i18n.js';
 const STORAGE_KEY = 'cretelab_locale';
 
 /**
- * Detect locale from URL path (/de/ or /en/), URL param (?lang=),
- * stored preference, or browser language.
- * Also rewrites the current URL to include the locale prefix
- * so bookmarks and direct links stay consistent.
+ * Detect locale from URL path or stored preference.
  */
 function detectLocale() {
-  // 1. URL path: /de/ or /en/
-  const pathMatch = location.pathname.match(/^\/(de|en)\//);
-  if (pathMatch) return pathMatch[1];
+  const segments = location.pathname.split('/').filter(Boolean);
+  for (const loc of ['de', 'en']) {
+    if (segments.includes(loc)) return loc;
+  }
 
   // 2. URL param: ?lang=de
   const urlParams = new URLSearchParams(location.search);
@@ -57,14 +55,16 @@ function createSwitcher() {
     localStorage.setItem(STORAGE_KEY, val);
     const url = new URL(location.href);
     const segments = url.pathname.split('/').filter(Boolean);
-    const repoName = segments.find(s => s.length > 3);
-    const base = repoName ? `/${repoName}` : '';
-    const page = segments.at(-1);
-    if (page && ['index.html', 'fine-tune.html', 'uhpc.html'].includes(page)) {
-      url.pathname = `${base}/${val}/${page}`;
-    } else {
-      url.pathname = `${base}/${val}/`;
+    const locIdx = segments.indexOf(i18n.locale);
+    if (locIdx < 0) {
+      location.href = `${url.origin}/${val}/`;
+      return;
     }
+    const prefix = segments.slice(0, locIdx);
+    const page = segments.at(-1);
+    const parts = [prefix, val];
+    if (page && ['index.html', 'fine-tune.html', 'uhpc.html'].includes(page)) parts.push(page);
+    url.pathname = '/' + parts.flat().join('/');
     location.href = url.toString();
   });
 
