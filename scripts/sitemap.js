@@ -7,8 +7,8 @@
 //   build/robots.txt
 
 import { writeFileSync } from 'fs';
-import { join } from 'path';
-import { dirname, fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
