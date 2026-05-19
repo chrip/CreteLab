@@ -31,11 +31,17 @@ function parseArgs() {
 
 function generateSitemap(base) {
   const urls = [];
-  for (const locale of LOCALES) {
-    for (const page of PAGES) {
-      const path = page === 'index.html' ? `${locale}/` : `${locale}/${page}`;
-      urls.push({ loc: `${base}/${path}`, locale });
-    }
+
+  // Root index = German default (canonical)
+  urls.push({ loc: `${base}/`, locale: 'de', isRoot: true });
+  // /de/ index = alternate German
+  urls.push({ loc: `${base}/de/`, locale: 'de' });
+  // /en/ index = English
+  urls.push({ loc: `${base}/en/`, locale: 'en' });
+  // Sub-pages in both locales
+  for (const page of ['fine-tune.html', 'uhpc.html']) {
+    urls.push({ loc: `${base}/de/${page}`, locale: 'de' });
+    urls.push({ loc: `${base}/en/${page}`, locale: 'en' });
   }
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -45,8 +51,21 @@ function generateSitemap(base) {
   for (const url of urls) {
     xml += '  <url>\n';
     xml += `    <loc>${url.loc}</loc>\n`;
-    xml += `    <xhtml:link rel="alternate" hreflang="de" href="${url.locale === 'en' ? url.loc.replace('/en/', '/de/') : url.loc}"/>\n`;
-    xml += `    <xhtml:link rel="alternate" hreflang="en" href="${url.locale === 'de' ? url.loc.replace('/de/', '/en/') : url.loc}"/>\n`;
+    if (url.isRoot) {
+      // Root is German canonical → alternate to /en/
+      xml += `    <xhtml:link rel="alternate" hreflang="de" href="${url.loc}"/>\n`;
+      xml += `    <xhtml:link rel="alternate" hreflang="en" href="${base}/en/"/>\n`;
+    } else if (url.locale === 'de') {
+      // German alternate → self + English
+      xml += `    <xhtml:link rel="alternate" hreflang="de" href="${url.loc}"/>\n`;
+      const enLoc = url.isRoot ? `${base}/en/` : url.loc.replace('/de/', '/en/');
+      xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enLoc}"/>\n`;
+    } else {
+      // English alternate → German + root
+      xml += `    <xhtml:link rel="alternate" hreflang="en" href="${url.loc}"/>\n`;
+      const deLoc = url.isRoot ? `${base}/de/` : url.loc.replace('/en/', '/de/');
+      xml += `    <xhtml:link rel="alternate" hreflang="de" href="${deLoc}"/>\n`;
+    }
     xml += '  </url>\n';
   }
 

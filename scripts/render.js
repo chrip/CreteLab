@@ -8,7 +8,8 @@
 // Usage:  node scripts/render.js
 //
 // Output directory:  build/
-//   build/de/index.html
+//   build/index.html          (German, canonical root — no JS redirect)
+//   build/de/index.html       (German duplicate for /de/ path)
 //   build/de/fine-tune.html
 //   build/de/uhpc.html
 //   build/en/index.html
@@ -38,13 +39,18 @@ const BUILD = join(ROOT, 'build');
 //   4. data-i18n-alt="key"          → replace alt="..." on <img>
 //   5. data-i18n-titlepage="key"    → replace <title> text
 //   6. data-i18n-as-html="true"     → on #1, treat result as raw HTML
+//
+// After translation, replaces {base} placeholders in all output with the
+// given basePath (e.g. 'de/' for root index, '' for /de/ pages).
 
-function translatePage(html, locale) {
+function translatePage(html, locale, basePath = '') {
   // 1 & 6. data-i18n on inline elements (most are same-line)
   html = html.replace(
     /(<[^>]*data-i18n="([^"]+)"[^>]*>)([\s\S]*?)(<\/[^>]+>)/gi,
     (_match, open, key, _inner, close) => {
-      return open + i18n.t(key) + close;
+      let text = i18n.t(key);
+      if (basePath) text = text.replace(/\{base\}/g, basePath);
+      return open + text + close;
     },
   );
 
@@ -54,7 +60,9 @@ function translatePage(html, locale) {
     (tag) => {
       if (!tag.includes('placeholder=')) return tag;
       const key = tag.match(/data-i18n-placeholder="([^"]+)"/)[1];
-      return tag.replace(/placeholder="[^"]*"/, `placeholder="${i18n.t(key)}"`);
+      let val = i18n.t(key);
+      if (basePath) val = val.replace(/\{base\}/g, basePath);
+      return tag.replace(/placeholder="[^"]*"/, `placeholder="${val}"`);
     },
   );
 
@@ -64,7 +72,9 @@ function translatePage(html, locale) {
     (tag) => {
       if (!tag.includes('content=')) return tag;
       const key = tag.match(/data-i18n-meta="([^"]+)"/)[1];
-      return tag.replace(/content="[^"]*"/, `content="${i18n.t(key)}"`);
+      let val = i18n.t(key);
+      if (basePath) val = val.replace(/\{base\}/g, basePath);
+      return tag.replace(/content="[^"]*"/, `content="${val}"`);
     },
   );
 
@@ -74,7 +84,9 @@ function translatePage(html, locale) {
     (tag) => {
       if (!tag.includes('alt=')) return tag;
       const key = tag.match(/data-i18n-alt="([^"]+)"/)[1];
-      return tag.replace(/alt="[^"]*"/, `alt="${i18n.t(key)}"`);
+      let val = i18n.t(key);
+      if (basePath) val = val.replace(/\{base\}/g, basePath);
+      return tag.replace(/alt="[^"]*"/, `alt="${val}"`);
     },
   );
 
@@ -82,7 +94,9 @@ function translatePage(html, locale) {
   html = html.replace(
     /<title[^>]*data-i18n-titlepage="([^"]+)"[^>]*>[\s\S]*?<\/title>/gi,
     (_match, key) => {
-      return `<title>${i18n.t(key)}</title>`;
+      let text = i18n.t(key);
+      if (basePath) text = text.replace(/\{base\}/g, basePath);
+      return `<title>${text}</title>`;
     },
   );
 
@@ -107,13 +121,26 @@ function addSeoTags(html, locale, pageFile) {
   return html.replace('</head>', seoTags.join('\n') + '\n  </head>');
 }
 
+// ── SEO tag injection for root index (canonical = root URL) ─────────────
+
+function addSeoTagsRootIndex(html) {
+  const baseUrl = 'https://chrip.github.io/CreteLab';
+  const seoTags = [
+    '<link rel="alternate" hreflang="en" href="' + baseUrl + '/en/">',
+    '<meta property="og:locale" content="de_DE">',
+    '<link rel="canonical" href="' + baseUrl + '/">',
+    '<script type="application/ld+json">\n' + structuredData('de', 'index.html') + '\n</script>',
+  ];
+  return html.replace('</head>', seoTags.join('\n') + '\n  </head>');
+}
+
 // ── JSON-LD structured data ────────────────────────────────────────────
 
 function structuredData(locale, page) {
   const descriptions = {
     'de': {
       'index.html': 'Professioneller Betonrechner basierend auf dem Zement-Merkblatt B 20.',
-      'fine-tune.html': 'Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner.',
+      'fine-tune.html': 'Zusatzstoffe für Ihr Betonrezept optimieren: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner.',
       'uhpc.html': 'Skalieren Sie veröffentlichte UHPC-Rezepte auf Ihr Volumen.',
     },
     'en': {
@@ -123,18 +150,34 @@ function structuredData(locale, page) {
     },
   };
 
+  const pagePath = page === 'index.html' ? '' : page;
+  const pageUrl = page === 'index.html'
+    ? 'https://chrip.github.io/CreteLab/'
+    : `https://chrip.github.io/CreteLab/${locale}/${page}`;
+
+  const names = {
+    de: {
+      'index.html': 'CreteLab - Intelligenter Betonrezept Rechner',
+      'fine-tune.html': 'CreteLab – Rezept feintunen',
+      'uhpc.html': 'CreteLab – Hochleistungsbeton (UHPC)',
+    },
+    en: {
+      'index.html': 'CreteLab - Intelligent Concrete Recipe Calculator',
+      'fine-tune.html': 'CreteLab – Fine-Tune Your Recipe',
+      'uhpc.html': 'CreteLab – Ultra-High Performance Concrete (UHPC)',
+    },
+  };
+
   return JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "CreteLab Concrete Calculator",
+    "@type": "WebApplication",
+    "name": names[locale][page] || 'CreteLab',
     "description": descriptions[locale][page] || '',
-    "inLanguage": locale,
-    "url": `https://chrip.github.io/CreteLab/${locale}${page === 'index.html' ? '' : '/' + page}`,
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "CreteLab",
-      "url": "https://chrip.github.io/CreteLab/"
-    }
+    "url": pageUrl,
+    "applicationCategory": "EngineeringApplication",
+    "operatingSystem": "Web Browser",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": ["de", "en"]
   }, null, 2);
 }
 
@@ -179,7 +222,7 @@ async function main() {
     for (const page of PAGES) {
       console.log(`  ${locale}/${page}`);
       let html = readFileSync(join(ROOT, page), 'utf8');
-      html = translatePage(html, locale);
+      html = translatePage(html, locale, '');
       html = addSeoTags(html, locale, page);
       html = html.replace(/<html[^>]*lang="[^"]*"/, `<html lang="${locale}"`);
 
@@ -197,16 +240,29 @@ async function main() {
     }
   }
 
-  // Root index.html → redirect to German default
-  writeFileSync(
-    join(BUILD, 'index.html'),
-    `<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">\
-<meta http-equiv="refresh" content="0;url=de/">\
-<meta name="robots" content="noindex">\
-<title>CreteLab</title></head>\
-<body><p><a href="de/">CreteLab — zum Betonrechner &rarr;</a></p></body></html>\n`,
-    'utf8',
-  );
+  // Root index.html → actual German page (no JS redirect)
+  // Canonical points to root URL; alternate hreflang to /en/
+  {
+    await i18n.setLocale('de', { force: true });
+    let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
+    html = translatePage(html, 'de', 'de/');
+    html = addSeoTagsRootIndex(html);
+    html = html.replace(/<html[^>]*lang="[^"]*"/, `<html lang="de"`);
+
+    // Root pages keep ./js/... as-is (already correct for build/ root)
+    html = html.replace(
+      /(src|href)="(css|js|assets|locales)\//g,
+      '$1="$2/',
+    );
+    // Prefix page links with basePath (e.g. 'de/fine-tune.html') but not assets
+    html = html.replace(/href="([^"]*)"/g, (_m, href) => {
+      if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return `href="${href}"`;
+      if (/^(css|js|assets|locales)\//.test(href)) return `href="${href}"`;
+      return `href="${'de/'}${href}"`;
+    });
+
+    writeFileSync(join(BUILD, 'index.html'), html, 'utf8');
+  }
 
   copyStaticAssets();
   console.log('Static assets copied.');

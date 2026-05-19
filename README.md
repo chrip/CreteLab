@@ -37,6 +37,8 @@ Each page is available at `/de/` and `/en/` with:
 - JSON-LD structured data (Schema.org SoftwareApplication)
 - Canonical URLs
 
+The root URL (`/`) serves the German page directly — no JavaScript redirect.
+
 ### Runtime i18n
 
 After the initial render, the client-side i18n module takes over:
@@ -61,7 +63,7 @@ node scripts/sitemap.js
 
 # Serve from the build directory
 python3 -m http.server 8000 --directory build
-# Open http://localhost:8000/de/ or http://localhost:8000/en/
+# Open http://localhost:8000/ (German default) or http://localhost:8000/en/
 ```
 
 ### Preview source files directly (development)
@@ -99,25 +101,41 @@ The site is deployed via GitHub Actions on every push to `main`:
 CreteLab/
 ├── .github/workflows/deploy.yml   # CI/CD pipeline
 ├── build/                         # Pre-rendered output (gitignored)
-├── css/                           # Styles
-├── js/                            # Application logic
+│   ├── index.html                 # German default (root URL)
+│   ├── de/                        # German locale
+│   │   ├── index.html
+│   │   ├── fine-tune.html
+│   │   └── uhpc.html
+│   ├── en/                        # English locale
+│   │   ├── index.html
+│   │   ├── fine-tune.html
+│   │   └── uhpc.html
+│   ├── css/                       # Styles
+│   ├── js/                        # Application logic
+│   ├── locales/                   # i18n catalogues
+│   ├── assets/                    # Images, favicons
+│   ├── sitemap.xml
+│   └── robots.txt
+├── css/                           # Source styles
+├── js/                            # Source application logic
 │   ├── app.js                     # Main calculator
 │   ├── fine-tune.js               # Recipe fine-tuner
 │   ├── uhpc.js                    # UHPC scaler
 │   ├── lib/                       # Shared libraries
 │   │   ├── i18n.js                # Translation module
+│   │   ├── i18n-node.js           # Node.js i18n (server-side)
 │   │   └── i18n-init.js           # Language detection + switcher
 │   └── ...
 ├── locales/                       # i18n catalogues
-│   ├── de.json                    # 494 keys
-│   └── en.json                    # 497 keys
+│   ├── de.json
+│   └── en.json
 ├── scripts/                       # Build scripts
 │   ├── render.js                  # Pre-render localized HTML
 │   └── sitemap.js                 # sitemap.xml + robots.txt
 ├── tests/                         # 300 passing tests
-└── index.html                     # Main calculator
-    fine-tune.html                 # Recipe fine-tuner
-    uhpc.html                      # UHPC scaler
+├── index.html                     # Main calculator (source)
+├── fine-tune.html                 # Recipe fine-tuner (source)
+└── uhpc.html                      # UHPC scaler (source)
 ```
 
 ## License

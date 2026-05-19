@@ -3,11 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
     <title data-i18n-titlepage="head.fine.tune.title">CreteLab – Rezept feintunen</title>
     <meta name="description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner." data-i18n-meta="head.fine.tune.meta.desc">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://chrip.github.io/CreteLab/fine-tune.html">
+    <meta property="og:title" content="CreteLab – Rezept feintunen" data-i18n-meta="head.fine.tune.title">
+    <meta property="og:description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner." data-i18n-meta="head.fine.tune.meta.desc">
+    <meta property="og:image" content="https://chrip.github.io/CreteLab/assets/CreteLab_full.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CreteLab – Rezept feintunen" data-i18n-meta="head.fine.tune.title">
+    <meta name="twitter:description" content="Wählen Sie Zusatzstoffe für Ihr Betonrezept: Flugasche, Betonverflüssiger, Silikastaub oder Luftporenbildner." data-i18n-meta="head.fine.tune.meta.tw.desc">
+    <meta name="twitter:image" content="https://chrip.github.io/CreteLab/assets/CreteLab_full.png">
+    <!-- Structured Data: WebApplication JSON-LD (injected by render.js) -->
     <link rel="icon" type="image/png" href="assets/CreteLab_emoji.png">
     <link rel="stylesheet" href="css/styles.css">
-    <style>
+        <style>
         .option-card {
             background: rgba(255,255,255,0.85);
             border: 2px solid var(--border-color);
@@ -32,11 +45,12 @@
             color: var(--text-secondary);
         }
 
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
+        </style>
+    </head>
+    <body>
+        <a class="skip-link" href="#calculator" data-i18n="global.skip.to.content">Zum Inhalt springen</a>
+        <div class="container" role="main">
+            <header role="banner">
             <div class="header-brand">
                 <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo" data-i18n-alt="global.logo.alt">
                 <div class="header-text">
@@ -140,7 +154,7 @@
             </div>
         </main>
 
-        <footer>
+        <footer role="contentinfo">
             <p>&copy; 2026 CreteLab. &nbsp;·&nbsp; <a href="https://github.com/chrip/CreteLab" target="_blank" rel="noopener noreferrer">GitHub</a></p>
         </footer>
     </div>

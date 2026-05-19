@@ -8,9 +8,8 @@
         <title data-i18n-titlepage="head.calculator.title">CreteLab - Intelligenter Betonrezept Rechner</title>
         <meta name="title" content="CreteLab - Intelligenter Betonrezept Rechner" data-i18n-meta="head.calculator.title">
         <meta name="description" content="Professioneller Betonrechner basierend auf dem Zement-Merkblatt B 20. Berechnen Sie präzise Betonrezepte inklusive Stoffraumrechnung, Mehlkorngehalt und Zugabewasser-Korrektur." data-i18n-meta="head.main.meta.desc">
-        <meta name="keywords" content="Betonrechner, B 20, Zement-Merkblatt, Betonrezept, Stoffraumrechnung, Betontechnologie, Bauwesen">
+        <meta name="keywords" content="Betonrechner, B 20, Zement-Merkblatt, Betonrezept, Stoffraumrechnung, Betontechnologie, Bauwesen" data-i18n-meta="head.main.meta.keywords">
         <meta name="author" content="CreteLab">
-        <link rel="canonical" href="https://chrip.github.io/CreteLab/">
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
@@ -27,7 +26,8 @@
         <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
-        <div class="container">
+        <a class="skip-link" href="#calculator" data-i18n="global.skip.to.content">Zum Inhalt springen</a>
+        <div class="container" role="main">
             <header>
                 <div class="header-brand">
                     <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo" data-i18n-alt="global.logo.alt">
@@ -44,7 +44,7 @@
                 <a href="uhpc.html" data-i18n="global.nav.uhpc">Hochleistungsbeton</a>
             </nav>
 
-            <main id="calculator">
+            <main id="calculator" role="main" aria-label="Betonrezeptrechner">
                 <form id="recipeForm">
                     <section class="form-section">
                         <h2 id="section-properties" data-i18n="index.section.properties">Betoneigenschaften</h2>
@@ -271,7 +271,7 @@
                 </section>
             </main>
 
-            <footer>
+            <footer role="contentinfo">
                 <p>
                     &copy; 2026 CreteLab.
                     &nbsp;·&nbsp;
@@ -280,7 +280,6 @@
             </footer>
         </div>
 
-        <!-- Init i18n + language switcher, then load the page script -->
         <script type="module">
             import './js/lib/i18n-init.js';
         </script>
