@@ -50,6 +50,10 @@ function translatePage(html, locale, basePath = '') {
     (_match, open, key, _inner, close) => {
       let text = i18n.t(key);
       if (basePath) text = text.replace(/\{base\}/g, basePath);
+      // Convert markdown bold **text** to <strong>text</strong> when data-i18n-as-html is set
+      if (open.includes('data-i18n-as-html="true"')) {
+        text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      }
       return open + text + close;
     },
   );
@@ -99,6 +103,13 @@ function translatePage(html, locale, basePath = '') {
       return `<title>${text}</title>`;
     },
   );
+
+  // 3. Replace {base} in href attributes
+  if (basePath) {
+    html = html.replace(/href="([^"]*\{base\}[^"]*)"/g, (_m, val) => {
+      return `href="${val.replace(/\{base\}/g, basePath)}"`;
+    });
+  }
 
   return html;
 }
@@ -236,6 +247,11 @@ async function main() {
         "import '../$1",
       );
 
+      // Strip {base} from hrefs for locale pages (keep plain relative paths)
+      html = html.replace(/href="([^"]*\{base\}[^"]*)"/g, (_m, val) => {
+        return `href="${val.replace(/\{base\}/g, '')}"`;
+      });
+
       writeFileSync(join(dir, page), html, 'utf8');
     }
   }
@@ -258,6 +274,7 @@ async function main() {
     html = html.replace(/href="([^"]*)"/g, (_m, href) => {
       if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) return `href="${href}"`;
       if (/^(css|js|assets|locales)\//.test(href)) return `href="${href}"`;
+      if (/^(de|en)\//.test(href)) return `href="${href}"`;
       return `href="${'de/'}${href}"`;
     });
 

@@ -8,7 +8,7 @@ import { getStrengthClass } from './strength.js';
  * min z: Minimum cement content in kg/m³
  * min f_ck,cube: Minimum characteristic cube strength in N/mm²
  */
-export const EXPOSURE_CLASSES = {
+const EXPOSURE_CLASSES = {
     'X0': {
         name: 'Kein Angriff',
         description: 'Innenbereich, trocken oder permanent feucht',
@@ -165,24 +165,6 @@ export const EXPOSURE_CLASSES = {
  */
 export function getExposureClass(className) {
     return EXPOSURE_CLASSES[className] || null;
-}
-
-/**
- * Get recommended exposure class based on use case
- * @param {string} useCase - Use case identifier
- * @returns {object|null} Recommended exposure class data or null if not found
- */
-export function recommendExposureClass(useCase) {
-    const recommendations = {
-        foundation: 'XC1',      // Garden foundations, indoor conditions
-        tabletop: 'XC2',        // Table tops, balconies - constantly moist possible
-        driveway: 'XF1',        // Driveways need frost resistance
-        wall: 'XC1',            // Walls, masonry - dry to moist conditions
-        slab: 'XC2',            // Floor slabs - constantly moist possible
-        stairs: 'XF1'           // Stairs exposed to weather
-    };
-
-    return getExposureClass(recommendations[useCase] || 'XC1');
 }
 
 /**

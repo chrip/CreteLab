@@ -8,6 +8,12 @@
     display: none !important;
 }
 
+/* :focus-visible targets keyboard-only focus with a visible ring */
+*:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
 .exposure-info-box {
     margin-top: 10px;
     padding: 8px;
@@ -242,18 +248,22 @@ h4 {
     color: white;
 }
 
-/* Follow-up hint links (e.g. "Rezept feintunen", "UHPC-Rezept skalieren")
-   shown below the recipe table — uniform muted-paragraph style. */
+/* Follow-up hint links shown at the bottom of main. */
+.followup-hints {
+    margin: 24px 0 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
 .followup-hint {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .followup-hint a {
     color: var(--primary-color);
     text-decoration: none;
-    font-weight: 500;
 }
 
 .followup-hint a:hover {
@@ -377,26 +387,55 @@ footer a:hover {
 
 /* Print Styles */
 @media print {
+    .main-nav,
+    .btn {
+        display: none !important;
+    }
     body {
         background: white;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
-
     .container {
-        max-width: none;
+        max-width: 100%;
         padding: 0;
     }
-
-    #calculator, header, footer {
-        box-shadow: none;
-        border: none;
+    #calculator,
+    header,
+    footer {
+        box-shadow: none !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        background: transparent !important;
     }
-
-    .btn {
+    .form-section {
+        page-break-inside: avoid;
+    }
+    .result-section,
+    .recipe-table,
+    .instructions {
+        page-break-inside: avoid;
+    }
+    .calc-details {
+        all: initial;
+        display: block;
+        page-break-inside: avoid;
+    }
+    .calc-details summary {
         display: none;
     }
-
-    .result-section {
-        page-break-inside: avoid;
+    /* Show link URLs for print */
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: .8em;
+        color: #333;
+    }
+    /* Ensure all text is visible */
+    * {
+        color: inherit !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
     }
 }
 

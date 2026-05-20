@@ -25,9 +25,10 @@ Open-source concrete recipe calculator based on [Zement-Merkblatt B 20](https://
 The app uses a build step to pre-render every page for each supported language. This makes the content immediately visible to crawlers and AI tools:
 
 ```
-scripts/render.js    →  Pre-renders HTML for each locale using JSDOM
-scripts/sitemap.xml  →  Generates sitemap.xml with hreflang tags
-scripts/robots.txt   →  Generates robots.txt
+scripts/render.js       →  Pre-renders HTML for each locale using JSDOM
+scripts/sitemap.js      →  Generates sitemap.xml with hreflang tags
+scripts/robots.txt      →  Generates robots.txt
+scripts/embed-locales.js →  Embeds locales/de.json into js/lib/i18n.js as _deCatalogue
 ```
 
 Each page is available at `/de/` and `/en/` with:
@@ -58,6 +59,7 @@ npm install
 
 ```bash
 # Build the localized pages
+node scripts/embed-locales.js   # Embed de.json into i18n.js (required before render)
 node scripts/render.js
 node scripts/sitemap.js
 
@@ -84,7 +86,7 @@ npm test
 The GitHub Actions workflow runs tests, pre-renders pages, and generates the sitemap. To simulate locally:
 
 ```bash
-npm test && node scripts/render.js && node scripts/sitemap.js
+npm test && node scripts/embed-locales.js && node scripts/render.js && node scripts/sitemap.js
 ```
 
 ## Deployment
@@ -131,7 +133,8 @@ CreteLab/
 │   └── en.json
 ├── scripts/                       # Build scripts
 │   ├── render.js                  # Pre-render localized HTML
-│   └── sitemap.js                 # sitemap.xml + robots.txt
+│   ├── sitemap.js                 # sitemap.xml + robots.txt
+│   └── embed-locales.js           # Embed de.json into js/lib/i18n.js
 ├── tests/                         # 300 passing tests
 ├── index.html                     # Main calculator (source)
 ├── fine-tune.html                 # Recipe fine-tuner (source)

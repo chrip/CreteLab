@@ -1,0 +1,6 @@
+# Prebid.org
+
+User-agent: *
+Allow: /
+
+Sitemap: https://chrip.github.io/CreteLab/sitemap.xml

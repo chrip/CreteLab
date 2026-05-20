@@ -869,28 +869,9 @@ function displayRecipe(recipe) {
         }));
     } catch (_) { /* sessionStorage blocked */ }
 
-    // Two follow-up paths shown as uniform hint paragraphs below the recipe:
-    //   1. Fine-tune the current B 20 recipe with additives.
-    //   2. Switch to the UHPC scaler for extreme strengths.
-    // Idempotent against repeated displayRecipe() calls — the IDs are reused.
-    ensureFollowupHint('fineTuneHint', '20px', i18n.t('index.fine.tune.hint'));
-    ensureFollowupHint('uhpcHint', '8px', i18n.t('index.uhpc.hint'));
-
     // Old button-styled fine-tune link from a previous render — drop it.
     const legacy = document.getElementById('fineTuneBtn');
     if (legacy) legacy.remove();
-}
-
-function ensureFollowupHint(id, marginTop, html) {
-    let el = document.getElementById(id);
-    if (!el) {
-        el = document.createElement('p');
-        el.id = id;
-        el.className = 'followup-hint';
-        elements.resultsSection.appendChild(el);
-    }
-    el.style.marginTop = marginTop;
-    el.innerHTML = html;
 }
 
 function initialize() {

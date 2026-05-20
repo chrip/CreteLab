@@ -23,7 +23,7 @@ export const SIEBLINIES = {
  * Konsistenzklassen (Consistency Classes) according to DIN EN 12350-2
  * w = Wasseranspruch in kg/m³ (water demand per cubic meter)
  */
-export const CONSISTENCY_CLASSES = {
+const CONSISTENCY_CLASSES = {
     'C0': { name: 'sehr steif', formula: 'w = 1000/(k+3)' },
     'C1': { name: 'steif', formula: 'w = 1100/(k+3)' },
     'F1': { name: 'steif', formula: 'w = 1100/(k+3)' },
@@ -41,17 +41,8 @@ export const CONSISTENCY_CLASSES = {
  * @param {string} siebline - Sieve line identifier (e.g., 'B32')
  * @returns {object|null} Sieve curve data or null if not found
  */
-export function getSieblinie(siebline) {
+function getSieblinie(siebline) {
     return SIEBLINIES[siebline] || null;
-}
-
-/**
- * Get consistency class data by key
- * @param {string} className - Consistency class (e.g., 'F3')
- * @returns {object|null} Consistency class data or null if not found
- */
-export function getConsistencyClass(className) {
-    return CONSISTENCY_CLASSES[className] || null;
 }
 
 /**
@@ -114,51 +105,6 @@ export function calculateAverageK(siebline1, siebline2) {
     if (!s1 || !s2) return null;
 
     return (s1.k + s2.k) / 2;
-}
-
-/**
- * Get recommended siebline for use case and aggregate type
- * @param {string} useCase - Use case identifier
- * @param {boolean} isGravel - True if using gravel, false for crushed stone
- * @returns {string} Recommended sieve line
- */
-export function recommendSiebline(useCase, isGravel = true) {
-    // Gravel (Kies) typically uses coarser gradings
-    // Crushed stone (Splitt) typically uses finer gradings
-    const gravelRecommendations = ['B32', 'C32', 'A16'];
-    const crushedStoneRecommendations = ['B16', 'C16', 'A8'];
-
-    return isGravel ? gravelRecommendations[0] : crushedStoneRecommendations[0];
-}
-
-/**
- * Calculate water demand using average of table values
- * When multiple methods are available, take the larger value (safer)
- * @param {string} siebline - Sieve line identifier
- * @param {string} consistencyClass - Consistency class
- * @returns {object|null} Calculation results or null
- */
-export function calculateWaterDemandComparing(siebline, consistencyClass) {
-    const tableValue = calculateWaterDemand(siebline, consistencyClass);
-
-    // Alternative calculation using D-Summe (if available)
-    let formulaValue = null;
-    const sieb = SIEBLINIES[siebline];
-    if (sieb && consistencyClass === 'F3') {
-        // w = 1200/(k+3) for plastisch/weich with D-Summe consideration
-        formulaValue = calculateWaterDemand(siebline, consistencyClass);
-    }
-
-    if (!tableValue) return null;
-
-    // Return larger value (more conservative)
-    const result = {
-        table_value: tableValue,
-        formula_value: formulaValue,
-        recommended: Math.max(tableValue, formulaValue || 0)
-    };
-
-    return result;
 }
 
 /**

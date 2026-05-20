@@ -6,6 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 echo "Building..."
+node scripts/embed-locales.js
 node scripts/render.js
 
 echo ""

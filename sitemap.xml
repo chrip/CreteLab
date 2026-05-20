@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://chrip.github.io/CreteLab/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://chrip.github.io/CreteLab/"/>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://chrip.github.io/CreteLab/fine-tune.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://chrip.github.io/CreteLab/fine-tune.html"/>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chrip.github.io/CreteLab/uhpc.html</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://chrip.github.io/CreteLab/uhpc.html"/>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

@@ -26,8 +26,7 @@
         <link rel="stylesheet" href="css/styles.css">
     </head>
     <body>
-        <a class="skip-link" href="#calculator" data-i18n="global.skip.to.content">Zum Inhalt springen</a>
-        <div class="container" role="main">
+        <div class="container">
             <header>
                 <div class="header-brand">
                     <img src="assets/CreteLab_emoji.png" alt="CreteLab Logo" class="header-logo" data-i18n-alt="global.logo.alt">
@@ -44,7 +43,7 @@
                 <a href="uhpc.html" data-i18n="global.nav.uhpc">Hochleistungsbeton</a>
             </nav>
 
-            <main id="calculator" role="main" aria-label="Betonrezeptrechner">
+            <main id="calculator" aria-label="Betonrezeptrechner">
                 <form id="recipeForm">
                     <section class="form-section">
                         <h2 id="section-properties" data-i18n="index.section.properties">Betoneigenschaften</h2>
@@ -112,7 +111,7 @@
                             <select id="cementType" name="cementType">
                                 <!-- Options will be populated dynamically -->
                             </select>
-                            <small class="form-hint" data-i18n="index.hint.cement.type" data-i18n-as-html="true">Im Baumarkt erhältlich: <strong>CEM I 42.5 N</strong> (Portlandzement, Standardempfehlung). CEM II eignet sich für weniger anspruchsvolle Anwendungen, CEM III für sulfatbeständige oder wärmeärmere Mischungen.</small>
+                            <small class="form-hint" data-i18n="index.hint.cement.type" data-i18n-as-html="true">Im Baumarkt erhältlich: CEM I 42.5 N (Portlandzement, Standardempfehlung). CEM II eignet sich für weniger anspruchsvolle Anwendungen, CEM III für sulfatbeständige oder wärmeärmere Mischungen.</small>
                         </div>
 
                         <div class="form-group">
@@ -268,10 +267,21 @@
                         <ol id="instructionList">
                         </ol>
                     </div>
+
+                    <div class="followup-hints">
+                        <p class="followup-hint" id="fineTuneHint">
+                            <span data-i18n="index.fine.tune.hint.intro">Sie wollen noch etwas mehr aus Ihrer Rezeptur herausholen?</span>
+                            <a href="fine-tune.html" data-i18n="index.fine.tune.hint">Rezept feintunen →</a>
+                        </p>
+                        <p class="followup-hint" id="uhpcHint">
+                            <span data-i18n="index.uhpc.hint.intro">Suchen Sie extreme Festigkeit (DIY-Hochleistungsbeton)?</span>
+                            <a href="uhpc.html" data-i18n="index.uhpc.hint">UHPC-Rezept skalieren →</a>
+                        </p>
+                    </div>
                 </section>
             </main>
 
-            <footer role="contentinfo">
+            <footer>
                 <p>
                     &copy; 2026 CreteLab.
                     &nbsp;·&nbsp;

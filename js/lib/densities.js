@@ -2,31 +2,10 @@
 // Material densities for cements, aggregates, and supplementary materials
 
 /**
- * Rohdichte der Zemente (Bulk Density of Cements) - Tafel 4
- * in kg/dm³ (equivalent to t/m³ or g/cm³)
- */
-export const CEMENT_DENSITIES = {
-    'Portlandzement':          { density: 3.1, name: 'Portlandzement', unit: 'kg/dm³' },
-    'Portlandflugaschemzement': { density: 2.9, name: 'Portland-Flugasche-Zement', unit: 'kg/dm³' },
-    'Portlandpuzolanzzement':  { density: 2.9, name: 'Portland-Puzzolan-Zement', unit: 'kg/dm³' },
-    'Portlandhüttenzement':    { density: 3.0, name: 'Portland-Hüttensand-Zement', unit: 'kg/dm³' },
-    'Hochofenzement':          { density: 3.0, name: 'Hochofenzement', unit: 'kg/dm³' },
-    'Portlandschiefertzement': { density: 3.0, name: 'Portland-Schiefer-Zement', unit: 'kg/dm³' }
-};
-
-/**
- * Schüttungsdichte (Bulk Density) of cements in kg/dm³
- */
-export const CEMENT_BULK_DENSITIES = {
-    loose:  { min: 0.9, max: 1.2 },
-    compacted: { min: 1.6, max: 1.9 }
-};
-
-/**
  * Rohdichte der Gesteinskörnungen (Bulk Density of Aggregates) - Tafel 5
  * in kg/dm³
  */
-export const AGGREGATE_DENSITIES = {
+const AGGREGATE_DENSITIES = {
     // Leichte Gesteinskörnungen (Lightweight aggregates)
     'Naturbims':          { densityMin: 0.4, densityMax: 0.7, name: 'Naturbims', category: 'light' },
     'Hüttenbims':         { densityMin: 0.5, densityMax: 1.5, name: 'Hüttenbims', category: 'light' },
@@ -52,7 +31,7 @@ export const AGGREGATE_DENSITIES = {
  * Rohdichte von Zusatzstoffen (Bulk Density of Supplementary Materials) - Tafel 6
  * in kg/dm³
  */
-export const ADDITIVE_DENSITIES = {
+const ADDITIVE_DENSITIES = {
     'Quarzmehl':          { density: 2.65, name: 'Quarzmehl', reference: '[6]' },
     'Kalksteinmehl':      { densityMin: 2.6, densityMax: 2.7, name: 'Kalksteinmehl', reference: '[6]' },
     'Pigmente':           { densityMin: 4, densityMax: 5, name: 'Pigmente' },
@@ -66,41 +45,7 @@ export const ADDITIVE_DENSITIES = {
 /**
  * Density of water for calculations - Tafel 6
  */
-export const WATER_DENSITY = 1.0; // kg/dm³ or t/m³
-
-/**
- * Standard air content assumption for normal concrete
- * Typically 2% (20 dm³ per m³) for compacted concrete without LP-additives
- */
-export const STANDARD_AIR_CONTENT_VOL = 0.02; // 2% by volume
-export const AIR_DENSITY = null; // Air is considered as void space
-
-/**
- * Get cement density by type
- * @param {string} cementType - Cement type identifier (e.g., 'Portlandzement')
- * @returns {object|null} Cement density data or null if not found
- */
-export function getCementDensity(cementType) {
-    return CEMENT_DENSITIES[cementType] || null;
-}
-
-/**
- * Get aggregate density by type
- * @param {string} aggregateType - Aggregate type (e.g., 'Granit')
- * @returns {object|null} Aggregate density data or null if not found
- */
-export function getAggregateDensity(aggregateType) {
-    return AGGREGATE_DENSITIES[aggregateType] || null;
-}
-
-/**
- * Get additive density by type
- * @param {string} additiveType - Additive type (e.g., 'Flugasche')
- * @returns {object|null} Additive density data or null if not found
- */
-export function getAdditiveDensity(additiveType) {
-    return ADDITIVE_DENSITIES[additiveType] || null;
-}
+const WATER_DENSITY = 1.0; // kg/dm³ or t/m³
 
 /**
  * Get average density for a material with min/max range
@@ -129,39 +74,6 @@ export function getAverageDensity(materialType) {
 }
 
 /**
- * Calculate volume of a material based on mass and density
- * V = m / ρ
- * @param {number} mass - Mass in kg
- * @param {string} materialType - Material type for density lookup
- * @returns {number|null} Volume in dm³ or null if invalid
- */
-export function calculateVolume(mass, materialType) {
-    const density = getAverageDensity(materialType);
-
-    if (!density) return null;
-
-    // Convert to kg/dm³ if needed (some values are in t/m³ which is equivalent)
-    const rho = typeof density === 'number' ? density : (density + 0) / 1;
-
-    return mass / rho; // Volume in dm³
-}
-
-/**
- * Calculate mass of a material based on volume and density
- * m = V × ρ
- * @param {number} volume - Volume in dm³
- * @param {string} materialType - Material type for density lookup
- * @returns {number|null} Mass in kg or null if invalid
- */
-export function calculateMass(volume, materialType) {
-    const density = getAverageDensity(materialType);
-
-    if (!density) return null;
-
-    return volume * density; // Mass in kg (since 1 dm³ × 1 kg/dm³ = 1 kg)
-}
-
-/**
  * Get all available aggregate types sorted by density
  * @returns {string[]} Array of aggregate type names
  */
@@ -174,29 +86,10 @@ export function getAvailableAggregates() {
 }
 
 /**
- * Get all available additive types
- * @returns {string[]} Array of additive type names
- */
-export function getAvailableAdditives() {
-    return Object.keys(ADDITIVE_DENSITIES);
-}
-
-/**
- * Get aggregates by category (light, normal, heavy)
- * @param {string} category - Category filter ('light', 'normal', 'heavy')
- * @returns {string[]} Array of aggregate type names in category
- */
-export function getAggregatesByCategory(category) {
-    return Object.keys(AGGREGATE_DENSITIES).filter(type => 
-        AGGREGATE_DENSITIES[type].category === category
-    );
-}
-
-/**
  * Stoffraumrechnung constants - Tafel 6.1
  * Total volume of 1 m³ = 1000 dm³
  */
-export const STOFFRAUM_CONSTANTS = {
+const STOFFRAUM_CONSTANTS = {
     TOTAL_VOLUME: 1000, // dm³ per m³
     WATER_DENSITY: 1.0  // kg/dm³
 };

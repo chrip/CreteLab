@@ -122,33 +122,6 @@ export function getAvailableClasses() {
 }
 
 /**
- * Recommend strength class based on use case and exposure
- * @param {string} useCase - Use case identifier
- * @param {string} exposureClass - Exposure class (e.g., 'XC1')
- * @returns {string} Recommended strength class
- */
-export function recommendStrengthClass(useCase, exposureClass = null) {
-    const recommendations = {
-        foundation: 'C20/25',
-        tabletop: 'C25/30',
-        driveway: 'C25/30',
-        wall: 'C20/25',
-        slab: 'C20/25',
-        stairs: 'C25/30'
-    };
-
-    // For higher exposure classes, recommend stronger concrete
-    if (exposureClass) {
-        const highExposure = ['XC4', 'XD1', 'XS1', 'XF2', 'XF3', 'XA1', 'XA2', 'XM1'];
-        if (highExposure.includes(exposureClass)) {
-            return 'C30/37';
-        }
-    }
-
-    return recommendations[useCase] || 'C20/25';
-}
-
-/**
  * Get cement strength class data by key
  * @param {string} classKey - Cement class key (e.g., '42.5', '52.5R')
  * @returns {object|null} Cement class data with A and n parameters, or null if not found

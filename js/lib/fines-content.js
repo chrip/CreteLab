@@ -5,7 +5,7 @@
  * Mehlkorngehalt (Fines Content) limits according to B20 Tafel 23
  * Maximum permissible fines content in kg/m³ depending on cement content and exposure class
  */
-export const MAX_FINES_LIMITS = {
+const MAX_FINES_LIMITS = {
     // Expositionsklassen X0, XC, XD, XS, XA
     'non-exposed': {
         cementMax300: { limit: 450 },
