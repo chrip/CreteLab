@@ -1,12 +1,11 @@
-import { getAvailableClasses, getStrengthClass,
-         calculateTargetStrengthWithMargin, calculateWzFromTargetStrength,
-         getAvailableCementTypes, getCementType } from './lib/strength.js';
-import { getAvailableExposureClasses, getGoverningExposureClass, getMaxWz, getExposureClass, satisfiesExposureRequirements, getStrictestLimits } from './lib/exposure.js';
-import { getAvailableConsistencyClasses, calculateWaterDemand, adjustForAggregateType, SIEBLINIES } from './lib/consistency.js';
-import { getAvailableAggregates, getAverageDensity } from './lib/densities.js';
-import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivalentWzWithBoth, getAdmixtureDosage, getRecommendedWaterSaving } from './lib/additives.js';
+import { getAvailableClasses, getStrengthClass, getAvailableCementTypes, getCementType } from './lib/strength.js';
+import { getAvailableExposureClasses, getGoverningExposureClass, getMaxWz, getExposureClass, satisfiesExposureRequirements } from './lib/exposure.js';
+import { getAvailableConsistencyClasses, SIEBLINIES } from './lib/consistency.js';
+import { getAvailableAggregates } from './lib/densities.js';
+import { getAdmixtureDosage, getRecommendedWaterSaving } from './lib/additives.js';
 import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPasteRequirements, checkCemIFlyAshSilicaFume } from './lib/fines-content.js';
-import { getFinesFraction, distributeAggregateBySiebline, calculateZugabewasser, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
+import { getFinesFraction, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
+import { computeRecipe } from './lib/recipe.js';
 import { i18n } from './lib/i18n.js';
 
 const AGGREGATE_KEYS = {
@@ -476,156 +475,11 @@ function calculateRecipe() {
     const values = collectFormValues();
     appState = { ...appState, ...values };
 
-    // ── Step 1: Grenzwerte aus allen Expositionsklassen (DIN 1045-2: strengste Werte) ─
-    const selectedExposureClasses = getSelectedExposureClasses();
-    const strictLimits = getStrictestLimits(selectedExposureClasses);
-    const maxWz_exposure = strictLimits.maxWz < Infinity ? strictLimits.maxWz : 0.75;
-    const minZ_eff = strictLimits.minZ;
-
-    // ── Step 2: Wassergehalt aus Sieblinie / Konsistenz ───────────────────────
-    // F4–F6 require FM (Fließmittel) per B20 – fluidity is achieved via admixture
-    const highConsistency = ['F4', 'F5', 'F6'].includes(appState.consistencyClass);
-    if (highConsistency && appState.admixtureType !== 'FM') {
-        return setError(i18n.t('err.missing.fm', { cls: appState.consistencyClass }));
+    const result = computeRecipe(appState, getSelectedExposureClasses());
+    if (result.error) {
+        return setError(i18n.t(result.error, result.params));
     }
-
-    const baseWater = calculateWaterDemand(appState.siebline, appState.consistencyClass);
-    if (baseWater === null) {
-        return setError(i18n.t('err.invalid'));
-    }
-
-    let waterTarget = baseWater;
-    const isCrushed = /splitt/i.test(appState.aggregateType) || appState.aggregateType === 'Basalt' || appState.aggregateType === 'Dichter Kalkstein';
-    waterTarget = adjustForAggregateType(waterTarget, isCrushed);
-
-    if (appState.useAirEntraining && appState.airEntrainingPercent > 0) {
-        waterTarget = adjustForAirEntraining(waterTarget, appState.airEntrainingPercent);
-    }
-
-    if (appState.admixtureType && appState.admixtureType !== 'none') {
-        waterTarget = applyAdmixtureWaterReduction(waterTarget, appState.admixtureType);
-    }
-
-    waterTarget = Math.max(120, Math.min(waterTarget, 260));
-
-    // ── Step 3: Zielwert der mittleren Betondruckfestigkeit ───────────────────
-    const strengthMeta = getStrengthClass(appState.strengthClass);
-    const f_ck_cube = strengthMeta ? strengthMeta.f_ck_cube : 25;
-    const f_cm_target = calculateTargetStrengthWithMargin(f_ck_cube, 0, appState.vorhaltemas);
-
-    // ── Step 4: Maximaler w/z-Wert ────────────────────────────────────────────
-    const cementMeta = getCementType(appState.cementType);
-    const walzkurveKey = cementMeta ? cementMeta.walzkurveKey : '42.5';
-    const cementDensity = cementMeta ? cementMeta.density : 3.0;
-
-    let wz_walz = calculateWzFromTargetStrength(f_cm_target, walzkurveKey);
-    let maxWz = maxWz_exposure;
-    let wzSource = 'exposure'; // i18n key resolved at display time
-
-    if (wz_walz !== null) {
-        if (wz_walz < maxWz_exposure) {
-            // Walzkurven w/z is tighter — strength governs
-            maxWz = wz_walz;
-            wzSource = 'walz'; // i18n key resolved at display time
-        } else {
-            // Exposure governs — apply betontechnologische Abminderung –0.02
-            maxWz = maxWz_exposure - 0.02;
-        }
-    }
-    maxWz = Math.max(0.35, Math.min(maxWz, 0.95));
-
-    // ── Step 5: Zementgehalt ──────────────────────────────────────────────────
-    // SCMs lower required cement via the equivalent w/z concept (B20 Abschnitt 7.2):
-    //   (w/z)_eq = w / (z + k_FA·FA + k_SF·SF)  →  z = w / (maxWz · scmFactor)
-    // where scmFactor = 1 + k_FA·α_FA + k_SF·α_SF
-    const k_FA = 0.4; // Anrechenbarkeit Flugasche
-    const k_SF = 1.0; // Anrechenbarkeit Silikastaub
-    const alpha_FA = appState.useFlyAsh    ? appState.flyAshPercent    / 100 : 0;
-    const alpha_SF = appState.useSilicaFume ? appState.silicaFumePercent / 100 : 0;
-    const scmFactor = 1 + k_FA * alpha_FA + k_SF * alpha_SF;
-
-    let cementAmount = waterTarget / (maxWz * scmFactor);
-
-    // Enforce minimum cement from strictest of all selected exposure classes
-    if (cementAmount < minZ_eff) {
-        cementAmount = minZ_eff;
-    }
-    cementAmount = Math.round(cementAmount);
-
-    if (!cementAmount || cementAmount <= 0) {
-        return setError(i18n.t('err.cement'));
-    }
-
-    // Supplementary materials (fractions of the now-reduced cement content)
-    const flyAshMass       = appState.useFlyAsh       ? cementAmount * alpha_FA : 0;
-    const silicaFumeMass   = appState.useSilicaFume   ? cementAmount * alpha_SF : 0;
-    const waterProofingMass = appState.useWaterproofing ? (cementAmount * appState.waterproofPercent) / 100 : 0;
-
-    // Equivalent w/z (should equal maxWz exactly; shown in calculation steps)
-    let equivalentWz = null;
-    if (flyAshMass > 0 || silicaFumeMass > 0) {
-        equivalentWz = calculateEquivalentWzWithBoth(waterTarget, cementAmount, flyAshMass, silicaFumeMass);
-    }
-
-    // ── Step 6: Stoffraumrechnung – Gesteinskörnung ───────────────────────────
-    const airVolumeDm3 = 20 + (appState.useAirEntraining ? appState.airEntrainingPercent * 10 : 0);
-    const flyAshDensity = 2.3; // kg/dm³ (Tafel 6, middle of range 2.2–2.4)
-    const silicaDensity = 2.2; // kg/dm³ (Tafel 6)
-
-    // Stoffraumrechnung: 1000 = z/ρz + w/ρw + f/ρf + s/ρs + vWU + g/ρg + LP
-    const vz = cementAmount / cementDensity;
-    const vw = waterTarget / 1.0;
-    const vf = flyAshMass / flyAshDensity;
-    const vs = silicaFumeMass / silicaDensity;
-    const vWU = waterProofingMass / 2.0; // WU-Additiv density ≈ 2.0 kg/dm³
-    const vLP = airVolumeDm3;
-    const rhoG = getAverageDensity(appState.aggregateType) || 2.65;
-    const vg = 1000 - vz - vw - vf - vs - vWU - vLP;
-    const aggregateMass = Math.round(vg * rhoG);
-
-    // ── Step 7: Korngruppen und Zugabewasser ──────────────────────────────────
-    const moistures = appState.useMoisture
-        ? [appState.moisture0_2, appState.moisture2_8, appState.moisture8plus]
-        : [0, 0, 0];
-    const korngruppen = distributeAggregateBySiebline(aggregateMass, appState.siebline, moistures);
-    const zugabewasser = korngruppen
-        ? calculateZugabewasser(waterTarget, korngruppen)
-        : Math.round(waterTarget);
-
-    // ── Step 8: Mehlkorngehalt prüfen ────────────────────────────────────────
-    const finesFromAggregate = aggregateMass * getFinesFraction(appState.siebline);
-    const mehlkorngehalt = Math.round(cementAmount + flyAshMass + silicaFumeMass + finesFromAggregate);
-
-    const recipe = {
-        targetStrength: f_cm_target,
-        wzLimit: maxWz,
-        wzExposure: maxWz_exposure,
-        minZeff: minZ_eff,
-        strictLimits,
-        wzWalz: wz_walz ? Math.round(wz_walz * 100) / 100 : null,
-        wzSource,
-        fCmTarget: f_cm_target,
-        vorhaltemas: appState.vorhaltemas,
-        sigma: 0,
-        cementDensity,
-        airVolumeDm3,
-        mehlkorngehalt,
-        materials: {
-            cement: cementAmount,
-            flyAsh: flyAshMass,
-            silicaFume: silicaFumeMass,
-            waterproofing: waterProofingMass,
-            water: waterTarget,
-            zugabewasser,
-            aggregate: aggregateMass,
-            admixture: appState.admixtureType === 'none' ? 0 : getAdmixtureDosage(appState.admixtureType) || 0,
-            admixtureUnit: 'Liter'
-        },
-        korngruppen,
-        airEntraining: appState.useAirEntraining ? appState.airEntrainingPercent : 0,
-        equivalentWz,
-        stoffraum: { vz: Math.round(vz), vw: Math.round(vw), vf: Math.round(vf), vs: Math.round(vs), vWU: Math.round(vWU), vLP, vg: Math.round(vg) }
-    };
+    const recipe = result.recipe;
 
     appState.plausibilityWarnings = evaluatePlausibility(appState, recipe);
 
