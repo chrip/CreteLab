@@ -17,6 +17,7 @@
  */
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { readFileSync } from 'node:fs';
 
 import { calculateWaterDemand, calculateAverageK, adjustForAggregateType, SIEBLINIES } from '../js/lib/consistency.js';
 import { calculateTargetStrengthWithMargin } from '../js/lib/strength.js';
@@ -180,5 +181,22 @@ describe('DIN sieve lines reproduce B 20 Tafel 3 and drive the grain groups', ()
 
     it('A32 is coarse: only 14 % sand 0/2', () => {
         assert.strictEqual(GRAIN_GROUPS_BY_SIEBLINE.A32.groups[0].pct, 14);
+    });
+});
+
+describe('B 20 section 6.2: Vorhaltemaß without known standard deviation', () => {
+    // "Bei bekannter Standardabweichung ... kann ein Vorhaltemaß v an der unteren Grenze
+    //  gewählt werden (3 bis 6 N/mm²), anderenfalls sollte es sich im oberen Bereich
+    //  befinden (9 bis 12 N/mm²)." Hobby users never know σ, so the form starts at 9.
+    const read = f => readFileSync(new URL(`../${f}`, import.meta.url), 'utf8');
+
+    it('the form defaults to v = 9 N/mm²', () => {
+        assert.match(read('index.html'), /id="vorhaltemas"[^>]*value="9"/);
+    });
+
+    it('every use-case preset uses at least 9 N/mm²', () => {
+        const presets = [...read('js/app.js').matchAll(/vorhaltemas: (\d+) \}/g)].map(m => Number(m[1]));
+        assert.strictEqual(presets.length, 4);
+        for (const v of presets) assert.ok(v >= 9, `preset Vorhaltemaß ${v} < 9`);
     });
 });

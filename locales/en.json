@@ -460,7 +460,7 @@
   "index.label.siebline": "Aggregate gradation:",
   "index.hint.siebline": "Finer gradations need more water, coarser gradations save water.",
   "index.label.vorhaltemas": "Margin v (N/mm²):",
-  "index.hint.vorhaltemas": "Safety margin for target strength (B20 section 6.2). Typical: 3–5 for small batches, 9–12 for construction sites with unknown variability.",
+  "index.hint.vorhaltemas": "Safety margin for target strength (B20 section 6.2): 9–12 when the variability is unknown (default 9). 3–6 only with a known standard deviation σ ≤ 3 N/mm², e.g. from a ready-mix plant's production control.",
   "index.label.moisture": "Specify surface moisture of aggregate",
   "index.hint.moisture": "Enables moisture correction for aggregate. Without input: batch water = total water (no correction).",
   "index.moisture.0.2": "Moisture 0/2 mm (%):",

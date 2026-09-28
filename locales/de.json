@@ -455,7 +455,7 @@
   "index.label.siebline": "Sieblinie der Gesteinskörnung:",
   "index.hint.siebline": "Feinere Sieblinien benötigen mehr Wasser, gröbere Sieblinien sparen Wasser.",
   "index.label.vorhaltemas": "Vorhaltemaß v (N/mm²):",
-  "index.hint.vorhaltemas": "Sicherheitszuschlag für Zielfestigkeit (B20 Abschnitt 6.2). Typisch: 3–5 für kleine Chargen, 9–12 für Baustelle mit unbekannter Streuung.",
+  "index.hint.vorhaltemas": "Sicherheitszuschlag für Zielfestigkeit (B20 Abschnitt 6.2): 9–12, wenn die Streuung unbekannt ist (Standard 9). 3–6 nur bei bekannter Standardabweichung σ ≤ 3 N/mm², z. B. aus der Produktionskontrolle eines Transportbetonwerks.",
   "index.label.moisture": "Oberflächenfeuchte der Gesteinskörnung angeben",
   "index.hint.moisture": "Aktiviert Feuchtekorrektur für die Gesteinskörnung. Ohne Angabe: Zugabewasser = Gesamtwasser (keine Korrektur).",
   "index.moisture.0.2": "Feuchte 0/2 mm (%):",

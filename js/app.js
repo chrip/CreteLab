@@ -97,10 +97,10 @@ const CEMENT_TYPE_KEYS = {
 };
 
 const USE_CASES = {
-    cheap:       { labelKey: 'index.usecase.cheap',       strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
-    standard:    { labelKey: 'index.usecase.standard',    strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 3 },
-    strong:      { labelKey: 'index.usecase.strong',      strength: 'C30/37', exposure: 'XC3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'BV',   cementType: 'CEM I 42.5 N', vorhaltemas: 5 },
-    ultraStrong: { labelKey: 'index.usecase.ultrastrong', strength: 'C40/50', exposure: 'XF3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'FM',   cementType: 'CEM I 52.5 R', vorhaltemas: 5 }
+    cheap:       { labelKey: 'index.usecase.cheap',       strength: 'C20/25', exposure: 'XC1', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 9 },
+    standard:    { labelKey: 'index.usecase.standard',    strength: 'C25/30', exposure: 'XC2', siebline: 'B32', consistency: 'F3', aggregateType: 'Kiessand (Quarz)', admixtureType: 'none', cementType: 'CEM I 42.5 N', vorhaltemas: 9 },
+    strong:      { labelKey: 'index.usecase.strong',      strength: 'C30/37', exposure: 'XC3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'BV',   cementType: 'CEM I 42.5 N', vorhaltemas: 9 },
+    ultraStrong: { labelKey: 'index.usecase.ultrastrong', strength: 'C40/50', exposure: 'XF3', siebline: 'B16', consistency: 'F3', aggregateType: 'Betonsplitt', admixtureType: 'FM',   cementType: 'CEM I 52.5 R', vorhaltemas: 9 }
 };
 
 const elements = {
@@ -160,7 +160,7 @@ let appState = {
     volume: 1,
     aggregateType: 'Kiessand (Quarz)',
     cementType: 'CEM I 42.5 N',
-    vorhaltemas: 3,
+    vorhaltemas: 9,
     useFlyAsh: false,
     useSilicaFume: false,
     useWaterproofing: false,
@@ -417,7 +417,7 @@ function applyUseCaseDefaults() {
     elements.aggregateType.value = useCaseData.aggregateType || 'Granit';
     elements.admixtureType.value = useCaseData.admixtureType || 'none';
     elements.cementType.value = useCaseData.cementType || 'CEM I 42.5 N';
-    elements.vorhaltemas.value = useCaseData.vorhaltemas ?? 3;
+    elements.vorhaltemas.value = useCaseData.vorhaltemas ?? 9;
 
     elements.useAirEntraining.checked = false;
     elements.useFlyAsh.checked = false;
@@ -449,7 +449,7 @@ function collectFormValues() {
         consistencyClass: elements.consistencyClass.value || 'F3',
         aggregateType: elements.aggregateType.value || 'Granit',
         cementType: cementTypeName,
-        vorhaltemas: Math.max(3, Math.min(12, parseFloat(elements.vorhaltemas.value) || 3)),
+        vorhaltemas: Math.max(3, Math.min(12, parseFloat(elements.vorhaltemas.value) || 9)),
         admixtureType: elements.admixtureType.value || 'none',
         useAirEntraining: elements.useAirEntraining.checked,
         airEntrainingPercent: Math.max(0, parseFloat(elements.airEntrainingPercent.value) || 0),
