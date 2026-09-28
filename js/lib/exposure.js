@@ -6,7 +6,9 @@ import { getStrengthClass } from './strength.js';
  * Expositionklassen (Exposure Classes) according to DIN EN 206
  * max w/z: Maximum water-cement ratio for durability
  * min z: Minimum cement content in kg/m³
- * min f_ck,cube: Minimum characteristic cube strength in N/mm²
+ * min f_ck,cube: Minimum characteristic cube strength in N/mm² of the minimum strength
+ *   class per DIN 1045-2 (Zement-Merkblatt B 9, Tafel 3/4). XF2/XF3 give the value with air
+ *   entrainment (LP); without LP they need C35/45. XM2 without surface treatment: C35/45.
  */
 const EXPOSURE_CLASSES = {
     'X0': {
@@ -14,147 +16,147 @@ const EXPOSURE_CLASSES = {
         description: 'Innenbereich, trocken oder permanent feucht',
         max_wz: null,      // No limit for X0
         min_z: 240,        // kg/m³ minimum cement content
-        min_f_ck_cube: 16  // C 12/15 or C 8/10 for structural elements
+        min_f_ck_cube: 10  // C8/10
     },
     'XC1': {
         name: 'Trocken oder feucht wechselnd',
         description: 'Karbonatisierung, trocken oder ständig feucht',
         max_wz: 0.75,
         min_z: 240,
-        min_f_ck_cube: 16
+        min_f_ck_cube: 20  // C16/20
     },
     'XC2': {
         name: 'Ständig feucht',
         description: 'Karbonatisierung, ständig feucht',
         max_wz: 0.75,
         min_z: 240,
-        min_f_ck_cube: 16
+        min_f_ck_cube: 20  // C16/20
     },
     'XC3': {
         name: 'Mäßig feucht',
         description: 'Karbonatisierung, mäßig feucht oder zeitweise feucht',
         max_wz: 0.65,
         min_z: 260,
-        min_f_ck_cube: 20
+        min_f_ck_cube: 25  // C20/25
     },
     'XC4': {
         name: 'Nass/Trocken',
         description: 'Karbonatisierung, nass/trocken (z.B. Brücken)',
         max_wz: 0.60,
         min_z: 280,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 30  // C25/30
     },
     'XD1': {
         name: 'Feucht, mäßig chloridbelastet',
         description: 'Chloride aus Wasser, nicht aus Meerwasser',
         max_wz: 0.55,
         min_z: 300,
-        min_f_ck_cube: 30
+        min_f_ck_cube: 37  // C30/37
     },
     'XD2': {
         name: 'Feucht, stark chloridbelastet',
         description: 'Chloride aus Wasser, nicht aus Meerwasser',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XD3': {
         name: 'Trocken/stark chloridbelastet',
         description: 'Chloride aus Wasser, nicht aus Meerwasser',
         max_wz: 0.45,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XS1': {
         name: 'Mäßig feucht, See-/Brackwasser',
         description: 'Chloride aus Meerwasser, mäßige Wassersättigung ohne Tausalzmittel',
         max_wz: 0.60,
         min_z: 280,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 37  // C30/37
     },
     'XS2': {
         name: 'Feucht/stark chloridbelastet',
         description: 'Chloride aus Meerwasser, ständig Nass oder Wassersättigung mit Tausalzmittel',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XS3': {
         name: 'Trocken/stark chloridbelastet',
         description: 'Chloride aus Meerwasser, Nass/Trocken oder Wassersättigung mit Tausalzmittel',
         max_wz: 0.45,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XF1': {
         name: 'Frostsicher ohne Tausalz',
         description: 'Frost/Tau-Wechsel, mäßige Wassersättigung ohne Tausalzmittel',
         max_wz: 0.60,
         min_z: 280,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 30  // C25/30
     },
     'XF2': {
         name: 'Frostsicher mit Tausalz (mäßig)',
         description: 'Frost/Tau-Wechsel, mäßige Wassersättigung mit Tausalzmittel',
         max_wz: 0.55,
         min_z: 300,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 30  // C25/30 (LP)
     },
     'XF3': {
         name: 'Frostsicher mit Tausalz (stark)',
         description: 'Frost/Tau-Wechsel, hohe Wassersättigung ohne Tausalzmittel',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 30  // C25/30 (LP)
     },
     'XF4': {
         name: 'Frostsicher mit starkem Tausalz',
         description: 'Frost/Tau-Wechsel, hohe Wassersättigung mit Tausalzmittel',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 30
+        min_f_ck_cube: 37  // C30/37 (LP)
     },
     'XA1': {
         name: 'Schwach chemisch angreifend',
         description: 'Chemische Angriffe, schwach',
         max_wz: 0.60,
         min_z: 280,
-        min_f_ck_cube: 25
+        min_f_ck_cube: 30  // C25/30
     },
     'XA2': {
         name: 'Mäßig chemisch angreifend',
         description: 'Chemische Angriffe, mäßig',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XA3': {
         name: 'Stark chemisch angreifend',
         description: 'Chemische Angriffe, stark',
         max_wz: 0.45,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XM1': {
         name: 'Mäßiger Verschleiß',
         description: 'Mechanischer Verschleiß, mäßig',
         max_wz: 0.55,
         min_z: 300,
-        min_f_ck_cube: 30
+        min_f_ck_cube: 37  // C30/37
     },
     'XM2': {
         name: 'Starker Verschleiß',
         description: 'Mechanischer Verschleiß, stark',
         max_wz: 0.45,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     },
     'XM3': {
         name: 'Sehr starker Verschleiß',
         description: 'Mechanischer Verschleiß, sehr stark (Schwergewichtbeton)',
         max_wz: 0.45,
         min_z: 320,
-        min_f_ck_cube: 35
+        min_f_ck_cube: 45  // C35/45
     }
 };
 
