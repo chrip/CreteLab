@@ -237,8 +237,8 @@ describe('UHPC page – DOM wiring', () => {
         assert.ok(/Sand/.test(blob));
     });
 
-    it('preset without Quarzmehl: w/b chip stays in ok-or-warn (recipe is right at 0.30)', { skip: !noFillerPreset }, () => {
-        selectPreset(noFillerPreset.key);
+    it('DIY mortar preset: w/b chip stays in ok-or-warn (recipe is right at 0.30)', () => {
+        selectPreset('diy-mortar-20kg-batch');
         const wb = getChips().find(c => c.text.includes('Wasser/Bindemittel'));
         assert.ok(wb, 'w/b chip must be rendered');
         assert.ok(['ok', 'warn'].includes(wb.level),
