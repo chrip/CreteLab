@@ -261,11 +261,11 @@ describe('B20 Beispiel IV – XC4/XF1/XA1, F3, A/B16, CEM III/A 42.5 N, Flugasch
         assert.ok(zugabe >= 90 && zugabe <= 120, `Zugabewasser should be ~103 l, got ${zugabe}`);
     });
 
-    it('CEM III/A 42.5N has walzkurveKey=42.5 and faMaxFactor=0.25', () => {
+    it('CEM III/A 42.5N has walzkurveKey=42.5 and faMaxFactor=0.33 (as used in this example)', () => {
         const ct = getCementType('CEM III/A 42.5 N');
         assert.ok(ct, 'CEM III/A 42.5 N should be in CEMENT_TYPES');
         assert.strictEqual(ct.walzkurveKey, '42.5');
-        assert.strictEqual(ct.faMaxFactor, 0.25);
+        assert.strictEqual(ct.faMaxFactor, 0.33);
     });
 });
 

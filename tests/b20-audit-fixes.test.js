@@ -71,17 +71,20 @@ describe('Fly ash faMaxFactor per cement type', () => {
         assert.strictEqual(getCementType('CEM I 52.5 R').faMaxFactor, 0.33);
     });
 
-    it('CEM II/B-S and CEM III types have faMaxFactor = 0.25', () => {
-        assert.strictEqual(getCementType('CEM II/B-S 42.5 N').faMaxFactor, 0.25);
-        assert.strictEqual(getCementType('CEM III/A 42.5 N').faMaxFactor, 0.25);
-        assert.strictEqual(getCementType('CEM III/B 42.5 N').faMaxFactor, 0.25);
+    it('slag cements (no P, V or D) have faMaxFactor = 0.33 (B 20 p. 5, Beispiel IV)', () => {
+        // "fs ≤ 0,33 · z bei Zementen ohne P, V und D"; Beispiel IV: CEM III/A 42,5 N
+        // with "z = 322/(1 + 0,4 ∙ 0,33) = 285 kg", "f = 0,33 ∙ 285".
+        assert.strictEqual(getCementType('CEM II/A-S 42.5 N').faMaxFactor, 0.33);
+        assert.strictEqual(getCementType('CEM II/B-S 42.5 N').faMaxFactor, 0.33);
+        assert.strictEqual(getCementType('CEM III/A 42.5 N').faMaxFactor, 0.33);
+        assert.strictEqual(getCementType('CEM III/B 42.5 N').faMaxFactor, 0.33);
     });
 
-    it('faMaxFactor clamp logic: CEM III limits fly ash to 25%', () => {
+    it('faMaxFactor clamp logic: CEM III/A allows up to 33%', () => {
         const clamp = (val, meta) => Math.max(0, Math.min(Math.round(meta.faMaxFactor * 100), val));
         const cemIII = getCementType('CEM III/A 42.5 N');
-        assert.strictEqual(clamp(33, cemIII), 25, '33% clamped to 25 for CEM III');
-        assert.strictEqual(clamp(20, cemIII), 20, '20% passes through for CEM III');
+        assert.strictEqual(clamp(40, cemIII), 33, '40% clamped to 33 for CEM III/A');
+        assert.strictEqual(clamp(33, cemIII), 33, '33% passes through for CEM III/A');
     });
 
     it('faMaxFactor clamp logic: CEM I allows up to 33%', () => {

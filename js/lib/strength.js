@@ -26,6 +26,8 @@ export const CEMENT_CLASSES = {
  *   0.33 → Zemente ohne P, V und D  (CEM I, CEM II/A-S, CEM II/A-LL, …)
  *   0.25 → Zemente mit P oder V, aber ohne D
  *   0.15 → Zemente mit D
+ * (B 20, p. 5.) None of the listed cements contains P, V or D, so all get 0.33 —
+ * B 20 Beispiel IV applies 0.33 to CEM III/A 42,5 N.
  */
 export const CEMENT_TYPES = {
     'CEM I 32.5 N':    { walzkurveKey: '32.5',  density: 3.1, faMaxFactor: 0.33 },
@@ -33,11 +35,11 @@ export const CEMENT_TYPES = {
     'CEM I 42.5 R':    { walzkurveKey: '42.5R', density: 3.1, faMaxFactor: 0.33 },
     'CEM I 52.5 N':    { walzkurveKey: '52.5',  density: 3.1, faMaxFactor: 0.33 },
     'CEM I 52.5 R':    { walzkurveKey: '52.5R', density: 3.1, faMaxFactor: 0.33 },
-    'CEM II/A-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
-    'CEM II/B-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
+    'CEM II/A-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.33 },
+    'CEM II/B-S 42.5 N': { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.33 },
     'CEM II/A-LL 42.5 N':{ walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.33 },
-    'CEM III/A 42.5 N':  { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.25 },
-    'CEM III/B 42.5 N':  { walzkurveKey: '42.5', density: 2.9, faMaxFactor: 0.25 }
+    'CEM III/A 42.5 N':  { walzkurveKey: '42.5', density: 3.0, faMaxFactor: 0.33 },
+    'CEM III/B 42.5 N':  { walzkurveKey: '42.5', density: 2.9, faMaxFactor: 0.33 }
 };
 
 /**

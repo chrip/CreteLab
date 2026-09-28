@@ -172,7 +172,7 @@ describe('Scenario 3 – Straßenbrücke Widerlager C35/45 XD2/XF2', () => {
 // Scenario 4 – Außenstütze mit Flugasche (exterior column, fly ash blend)
 // Architectural concrete facade, mild frost, wet/dry cycling.
 // DIN 1045-2: XC4 + XF1, both max w/z = 0.60, min z = 280 kg/m³.
-// CEM III/A 42.5N with 20 % fly ash substitution (within faMaxFactor = 0.25 for CEM III).
+// CEM III/A 42.5N with 20 % fly ash substitution (within faMaxFactor = 0.33, B 20 p. 5).
 // ──────────────────────────────────────────────────────────────────────────────
 describe('Scenario 4 – Außenstütze C25/30 XC4/XF1, CEM III/A 42.5N, 20% Flugasche', () => {
     const inputs = {
