@@ -1,6 +1,6 @@
 // recipe.js - B20 mix design as a pure function (no DOM, no i18n)
 import { getStrengthClass, calculateTargetStrengthWithMargin, calculateWzFromTargetStrength, getCementType } from './strength.js';
-import { getStrictestLimits } from './exposure.js';
+import { getStrictestLimits, minAirContent } from './exposure.js';
 import { calculateWaterDemand, adjustForAggregateType } from './consistency.js';
 import { getAverageDensity } from './densities.js';
 import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivalentWzWithBoth, getAdmixtureDosage } from './additives.js';
@@ -20,7 +20,11 @@ const LP_STRENGTH_LOSS_PER_PCT = 3.5;  // N/mm² per Vol.-% added air (B 20 Tafe
  */
 export function computeRecipe(state, exposureClasses) {
     // ── Step 1: Grenzwerte aus allen Expositionsklassen (DIN 1045-2: strengste Werte) ─
-    const strictLimits = getStrictestLimits(exposureClasses);
+    // XF2/XF3 allow the LP limits only when the air reaches its minimum content.
+    const totalAirPct = state.useAirEntraining ? Math.max(NATURAL_AIR_PCT, state.airEntrainingPercent) : NATURAL_AIR_PCT;
+    const maxGrain = parseInt(String(state.siebline).replace(/^[A-Z/]+/, ''), 10);
+    const airEntrained = state.useAirEntraining && totalAirPct >= minAirContent(maxGrain, state.consistencyClass);
+    const strictLimits = getStrictestLimits(exposureClasses, { airEntrained });
     const maxWz_exposure = strictLimits.maxWz < Infinity ? strictLimits.maxWz : 0.75;
     const minZ_eff = strictLimits.minZ;
 
@@ -45,7 +49,6 @@ export function computeRecipe(state, exposureClasses) {
     }
 
     // After the plasticiser, as in B 20 Beispiel III: "w = 184 - 3 ∙ 5 = 169 l"
-    const totalAirPct = state.useAirEntraining ? Math.max(NATURAL_AIR_PCT, state.airEntrainingPercent) : NATURAL_AIR_PCT;
     const addedAirPct = totalAirPct - NATURAL_AIR_PCT;
     if (addedAirPct > 0) {
         waterTarget = adjustForAirEntraining(waterTarget, addedAirPct);
@@ -173,6 +176,7 @@ export function computeRecipe(state, exposureClasses) {
         airEntraining: state.useAirEntraining ? state.airEntrainingPercent : 0,
         addedAirPct,
         lpStrengthLoss,
+        airEntrained,
         equivalentWz,
         stoffraum: { vz: Math.round(vz), vw: Math.round(vw), vf: Math.round(vf), vs: Math.round(vs), vWU: Math.round(vWU), vLP, vg: Math.round(vg) }
     };

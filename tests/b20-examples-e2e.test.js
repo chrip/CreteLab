@@ -39,6 +39,15 @@ describe('B 20 Beispiel III (p. 15–18): XC4/XD1/XF2, B16, F2, Splitt, CEM I 52
         it('water "w = 0,93 ∙ 198 = 184 l"', () => assert.strictEqual(recipe.materials.water, 184));
         it('target "fcm,dry,cube ≥ 58,4 N/mm²"', () => near(recipe.fCmTarget, 58.4, 0.05, 'target'));
         it('Walz curve "w/zermittelt = 0,53"', () => near(recipe.wzWalz, 0.53, 0.02, 'w/z Walz'));
+        it('XF2 without LP governs: "w/z = 0,50 - 0,02 = 0,48"', () => {
+            assert.strictEqual(recipe.wzExposure, 0.50);
+            near(recipe.wzLimit, 0.48, 0.001, 'w/z');
+            assert.strictEqual(recipe.wzSource, 'exposure');
+        });
+        it('cement "z = 184/0,48 = 383 kg/m³" (≥ 320)', () => {
+            assert.strictEqual(recipe.materials.cement, 383);
+            assert.strictEqual(recipe.minZeff, 320);
+        });
     });
 
     describe('Variante 2: C30/37 as LP concrete, 4,5 Vol.-% air', () => {
@@ -50,5 +59,20 @@ describe('B 20 Beispiel III (p. 15–18): XC4/XD1/XF2, B16, F2, Splitt, CEM I 52
         it('w/z within 0,02 of "w/zermittelt = 0,52"', () => near(recipe.wzLimit, 0.52, 0.02, 'w/z'));
         it('cement within 2 % of "z = 170/0,52 = 327 kg/m3"', () => near(recipe.materials.cement, 327, 327 * 0.02, 'cement'));
         it('Stoffraum uses "Luftgehalt: Annahme 4,5 Vol.-%" = 45 dm³', () => assert.strictEqual(recipe.airVolumeDm3, 45));
+        it('4,5 % reaches the B16 minimum, so XF2 uses its LP limits: 0,55 − 0,02 = 0,53, z ≥ 300', () => {
+            assert.strictEqual(recipe.airEntrained, true);
+            assert.strictEqual(recipe.wzExposure, 0.55);
+            assert.strictEqual(recipe.minZeff, 300);
+        });
+    });
+});
+
+describe('XF2 with too little air falls back to the limits without LP', () => {
+    it('3,5 % air in a B16 mix (minimum 4,5 %) keeps w/z ≤ 0,50 and z ≥ 320', () => {
+        const { recipe } = computeRecipe({ ...base, strengthClass: 'C35/45', siebline: 'B16', consistencyClass: 'F2',
+            cementType: 'CEM I 52.5 R', vorhaltemas: 9, useAirEntraining: true, airEntrainingPercent: 3.5 }, ['XF2']);
+        assert.strictEqual(recipe.airEntrained, false);
+        assert.strictEqual(recipe.wzExposure, 0.50);
+        assert.strictEqual(recipe.minZeff, 320);
     });
 });

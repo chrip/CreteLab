@@ -15,7 +15,7 @@ const DIN_MIN_CLASS = {
     XC1: 'C16/20', XC2: 'C16/20', XC3: 'C20/25', XC4: 'C25/30',
     XD1: 'C30/37', XD2: 'C35/45', XD3: 'C35/45',
     XS1: 'C30/37', XS2: 'C35/45', XS3: 'C35/45',
-    XF1: 'C25/30', XF2: 'C25/30', XF3: 'C25/30', XF4: 'C30/37', // XF2–XF4 with air entrainment (LP)
+    XF1: 'C25/30', XF2: 'C35/45', XF3: 'C35/45', XF4: 'C30/37', // XF2/XF3 without LP (B 9 Tafel 8); XF4 always LP
     XA1: 'C25/30', XA2: 'C35/45', XA3: 'C35/45',
     XM1: 'C30/37', XM2: 'C35/45', XM3: 'C35/45'
 };
@@ -36,6 +36,15 @@ describe('Minimum strength class per exposure class (DIN 1045-2)', () => {
     it('rejects C20/25 for XC4 and accepts C25/30', () => {
         assert.strictEqual(satisfiesExposureRequirements('C20/25', 'XC4'), false);
         assert.strictEqual(satisfiesExposureRequirements('C25/30', 'XC4'), true);
+    });
+
+    it('XF2/XF3 with air entrainment: C25/30, w/z 0,55, z 300 (B 9 Tafel 8)', () => {
+        for (const cls of ['XF2', 'XF3']) {
+            assert.deepStrictEqual(getStrictestLimits([cls], { airEntrained: true }),
+                { maxWz: 0.55, minZ: 300, minFck: getStrengthClass('C25/30').f_ck_cube });
+            assert.deepStrictEqual(getStrictestLimits([cls]),
+                { maxWz: 0.50, minZ: 320, minFck: getStrengthClass('C35/45').f_ck_cube });
+        }
     });
 
     it('getStrictestLimits().minFck is a cube strength: XC4 + XF4 + XD3 needs C35/45', () => {

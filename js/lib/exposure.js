@@ -95,19 +95,23 @@ const EXPOSURE_CLASSES = {
         min_z: 280,
         min_f_ck_cube: 30  // C25/30
     },
+    // XF2/XF3: values without air entrainment; `lp` applies when the mix reaches the
+    // minimum air content (Zement-Merkblatt B 9, Tafel 8; B 20 Beispiel III).
     'XF2': {
         name: 'Frostsicher mit Tausalz (mäßig)',
         description: 'Frost/Tau-Wechsel, mäßige Wassersättigung mit Tausalzmittel',
-        max_wz: 0.55,
-        min_z: 300,
-        min_f_ck_cube: 30  // C25/30 (LP)
+        max_wz: 0.50,
+        min_z: 320,
+        min_f_ck_cube: 45, // C35/45
+        lp: { max_wz: 0.55, min_z: 300, min_f_ck_cube: 30 }  // C25/30 (LP)
     },
     'XF3': {
         name: 'Frostsicher mit Tausalz (stark)',
         description: 'Frost/Tau-Wechsel, hohe Wassersättigung ohne Tausalzmittel',
         max_wz: 0.50,
         min_z: 320,
-        min_f_ck_cube: 30  // C25/30 (LP)
+        min_f_ck_cube: 45, // C35/45
+        lp: { max_wz: 0.55, min_z: 300, min_f_ck_cube: 30 }  // C25/30 (LP)
     },
     'XF4': {
         name: 'Frostsicher mit starkem Tausalz',
@@ -220,18 +224,34 @@ export function getAvailableExposureClasses() {
  *   minZ   = max of all min_z values
  *   minFck = max of all min_f_ck_cube values
  * @param {string[]} classes - Array of applicable exposure classes
+ * @param {{airEntrained?: boolean}} [opts] - true when the mix reaches the minimum
+ *   air content (minAirContent()); XF2/XF3 then use their LP limits
  * @returns {{ maxWz: number, minZ: number, minFck: number }}
  */
-export function getStrictestLimits(classes) {
+export function getStrictestLimits(classes, { airEntrained = false } = {}) {
     if (!classes || classes.length === 0) {
         return { maxWz: Infinity, minZ: 0, minFck: 0 };
     }
-    const data = classes.map(c => EXPOSURE_CLASSES[c]).filter(Boolean);
+    const data = classes.map(c => EXPOSURE_CLASSES[c]).filter(Boolean)
+        .map(d => (airEntrained && d.lp ? { ...d, ...d.lp } : d));
     return {
         maxWz:  Math.min(...data.map(d => d.max_wz ?? Infinity)),
         minZ:   Math.max(...data.map(d => d.min_z)),
         minFck: Math.max(...data.map(d => d.min_f_ck_cube)),
     };
+}
+
+/**
+ * Mean minimum air content of air-entrained concrete in Vol.-% (Heidelberg Materials,
+ * Betontechnische Daten 2022, Tabelle 6.3.5.a): by maximum grain, one point more for
+ * flowable concrete (≥ F4).
+ * @param {number} maxGrain - 8, 16, 32 or 63 mm
+ * @param {string} consistencyClass
+ * @returns {number}
+ */
+export function minAirContent(maxGrain, consistencyClass) {
+    const base = maxGrain <= 8 ? 5.5 : maxGrain <= 16 ? 4.5 : maxGrain <= 32 ? 4.0 : 3.5;
+    return ['F4', 'F5', 'F6'].includes(consistencyClass) ? base + 1 : base;
 }
 
 /**
