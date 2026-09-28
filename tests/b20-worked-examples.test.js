@@ -22,7 +22,7 @@ import { calculateWaterDemand, calculateAverageK, adjustForAggregateType, SIEBLI
 import { calculateTargetStrengthWithMargin } from '../js/lib/strength.js';
 import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateStrengthReduction,
          calculateEquivalentWzWithBoth } from '../js/lib/additives.js';
-import { distributeAggregateBySiebline, calculateZugabewasser, getFinesFraction } from '../js/lib/aggregate-gradation.js';
+import { distributeAggregateBySiebline, calculateZugabewasser, getFinesFraction, SIEVE_LINE_PASSING, GRAIN_GROUPS_BY_SIEBLINE } from '../js/lib/aggregate-gradation.js';
 import { stofraumrechnung } from '../js/lib/densities.js';
 
 const near = (actual, expected, tol, what) =>
@@ -163,4 +163,22 @@ describe('B 20 Tafel 3 (p. 2): k-values and D-sums of the sieve lines', () => {
             assert.strictEqual(SIEBLINIES[line].dSum, dSum);
         });
     }
+});
+
+describe('DIN sieve lines reproduce B 20 Tafel 3 and drive the grain groups', () => {
+    for (const [line, passing] of Object.entries(SIEVE_LINE_PASSING)) {
+        it(`${line}: residues sum to k = ${SIEBLINIES[line].k}`, () => {
+            const k = passing.filter(p => p < 100).reduce((sum, p) => sum + (100 - p), 0) / 100;
+            assert.strictEqual(Math.round(k * 100) / 100, SIEBLINIES[line].k);
+        });
+    }
+
+    it('B16 splits 42/34/24 % (passing 42 % at 2 mm, 76 % at 8 mm), not the A/B16 mix', () => {
+        assert.deepStrictEqual(GRAIN_GROUPS_BY_SIEBLINE.B16.groups.map(g => g.pct), [42, 34, 24]);
+        assert.notDeepStrictEqual(GRAIN_GROUPS_BY_SIEBLINE.B16.groups, GRAIN_GROUPS_BY_SIEBLINE['A/B16'].groups);
+    });
+
+    it('A32 is coarse: only 14 % sand 0/2', () => {
+        assert.strictEqual(GRAIN_GROUPS_BY_SIEBLINE.A32.groups[0].pct, 14);
+    });
 });

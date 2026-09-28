@@ -22,107 +22,100 @@ export const SIEBLINIES = {
 };
 
 /**
- * Korngruppen (Grain groups) per sieve line – typical mass percentages and
- * fine-particle fractions validated against B20 Anhang worked examples.
+ * Passing percentages of the DIN 1045-2 sieve lines (Anhang L) at the sieves
+ * 0,25 / 0,5 / 1 / 2 / 4 / 8 / 16 / 31,5 mm. The residues of each line sum to the
+ * k-value of B 20 Tafel 3 (e.g. B16: 92+80+68+58+44+24 = 366 → k = 3,66); a test
+ * checks this for every line.
+ */
+export const SIEVE_LINE_PASSING = {
+    A8:  [5, 14, 21, 36, 61, 100],
+    B8:  [11, 26, 42, 57, 74, 100],
+    C8:  [21, 39, 57, 71, 85, 100],
+    A16: [3, 8, 12, 21, 36, 60, 100],
+    B16: [8, 20, 32, 42, 56, 76, 100],
+    C16: [18, 34, 49, 62, 74, 88, 100],
+    A32: [2, 5, 8, 14, 23, 38, 62, 100],
+    B32: [8, 18, 28, 37, 47, 62, 80, 100],
+    C32: [15, 29, 42, 53, 65, 77, 89, 100]
+};
+const SIEVES_MM = [0.25, 0.5, 1, 2, 4, 8, 16, 31.5];
+
+/** Grain groups 0/2, 2/8 and 8/D in mass-% from a passing curve. */
+function groupsFromPassing(passing, maxGrain) {
+    const at = mm => passing[SIEVES_MM.indexOf(mm)];
+    if (maxGrain === 8) {
+        return [{ range: '0/2', pct: at(2) }, { range: '2/8', pct: 100 - at(2) }];
+    }
+    return [
+        { range: '0/2', pct: at(2) },
+        { range: '2/8', pct: at(8) - at(2) },
+        { range: `8/${maxGrain}`, pct: 100 - at(8) }
+    ];
+}
+
+const midpoint = (a, b) => a.map((v, i) => (v + b[i]) / 2);
+
+/**
+ * Korngruppen (Grain groups) per sieve line – mass percentages and
+ * fine-particle fractions.
  *
- * groups[]: fraction of total aggregate mass per grain size range
+ * groups[]: fraction of total aggregate mass per grain size range, derived from
+ *           SIEVE_LINE_PASSING. A/B lines use the midpoint of A and B, except
+ *           A/B16, which uses the real aggregate mix of B 20 Beispiel IV (p. 19).
  * fines0125: fraction of total aggregate mass that passes the 0.125 mm sieve
  *            (used for Mehlkorngehalt calculation, B20 Section 8, Beispiel I p.14)
  * fines0250: fraction passing 0.250 mm (Mehlkorn- und Feinstsandanteil)
  *
- * Sources:
- *   B32  → B20 Beispiel I (p.13-14): groups 37/25/38, fines0125=0.04, fines0250=0.08
- *   A/B16 → B20 Beispiel II (p.15): groups 45/8/47, fines0125=0.03, fines0250=0.06
- *   A/B16 → B20 Beispiel IV (p.19): groups 38/22/40 (kies), fines confirmed 0.03
- *   B16  → interpolated between B32 and A/B16
+ * Sources for fines: B32 → B20 Beispiel I (p.13-14): 0.04 / 0.08;
+ *   A/B16 → B20 Beispiel II (p.15): 0.03 / 0.06, Beispiel IV (p.19): 0.03.
  */
 export const GRAIN_GROUPS_BY_SIEBLINE = {
-    // Max grain 32 mm
-    'A32':  {
-        groups: [
-            { range: '0/2',   pct: 33 },
-            { range: '2/8',   pct: 27 },
-            { range: '8/32',  pct: 40 }
-        ],
+    'A32': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.A32, 32),
         fines0125: 0.03, fines0250: 0.06
     },
-    'B32':  {
-        groups: [
-            { range: '0/2',   pct: 37 },
-            { range: '2/8',   pct: 25 },
-            { range: '8/32',  pct: 38 }
-        ],
-        fines0125: 0.04, fines0250: 0.08   // B20 Beispiel I confirmed
+    'B32': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.B32, 32),
+        fines0125: 0.04, fines0250: 0.08
     },
-    'A/B32':{
-        groups: [
-            { range: '0/2',   pct: 35 },
-            { range: '2/8',   pct: 26 },
-            { range: '8/32',  pct: 39 }
-        ],
+    'A/B32': {
+        groups: groupsFromPassing(midpoint(SIEVE_LINE_PASSING.A32, SIEVE_LINE_PASSING.B32), 32),
         fines0125: 0.035, fines0250: 0.07
     },
-    'C32':  {
-        groups: [
-            { range: '0/2',   pct: 42 },
-            { range: '2/8',   pct: 23 },
-            { range: '8/32',  pct: 35 }
-        ],
+    'C32': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.C32, 32),
         fines0125: 0.05, fines0250: 0.10
     },
-    // Max grain 16 mm
-    'A16':  {
-        groups: [
-            { range: '0/2',   pct: 40 },
-            { range: '2/8',   pct: 20 },
-            { range: '8/16',  pct: 40 }
-        ],
+    'A16': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.A16, 16),
         fines0125: 0.03, fines0250: 0.05
     },
-    'B16':  {
-        groups: [
-            { range: '0/2',   pct: 38 },
-            { range: '2/8',   pct: 22 },
-            { range: '8/16',  pct: 40 }
-        ],
+    'B16': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.B16, 16),
         fines0125: 0.035, fines0250: 0.065
     },
-    'A/B16':{
+    'A/B16': {
         groups: [
-            { range: '0/2',   pct: 38 },  // avg Beispiel II (45) and IV (38) → 38 (kies)
-            { range: '2/8',   pct: 22 },
-            { range: '8/16',  pct: 40 }
-        ],
-        fines0125: 0.03, fines0250: 0.06  // B20 Beispiel II confirmed
-    },
-    'C16':  {
-        groups: [
-            { range: '0/2',   pct: 45 },
-            { range: '2/8',   pct: 20 },
-            { range: '8/16',  pct: 35 }
-        ],
-        fines0125: 0.04, fines0250: 0.08
-    },
-    // Max grain 8 mm
-    'A8':   {
-        groups: [
-            { range: '0/2',   pct: 50 },
-            { range: '2/8',   pct: 50 }
+            { range: '0/2',  pct: 38 },   // B 20 Beispiel IV (p. 19), Sand und Kies A/B16
+            { range: '2/8',  pct: 22 },
+            { range: '8/16', pct: 40 }
         ],
         fines0125: 0.03, fines0250: 0.06
     },
-    'B8':   {
-        groups: [
-            { range: '0/2',   pct: 55 },
-            { range: '2/8',   pct: 45 }
-        ],
+    'C16': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.C16, 16),
         fines0125: 0.04, fines0250: 0.08
     },
-    'C8':   {
-        groups: [
-            { range: '0/2',   pct: 60 },
-            { range: '2/8',   pct: 40 }
-        ],
+    'A8': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.A8, 8),
+        fines0125: 0.03, fines0250: 0.06
+    },
+    'B8': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.B8, 8),
+        fines0125: 0.04, fines0250: 0.08
+    },
+    'C8': {
+        groups: groupsFromPassing(SIEVE_LINE_PASSING.C8, 8),
         fines0125: 0.05, fines0250: 0.10
     }
 };
