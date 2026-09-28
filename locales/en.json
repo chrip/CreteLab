@@ -480,5 +480,6 @@
   "index.strength.hint": "Cube compressive strength {fck} N/mm²",
   "index.strength.hint.default": "No strength class selected",
   "index.results.detail": "Calculation details",
+  "index.results.heading": "📋 Ingredients for {vol} m³ – {klasse} (target: ≈ {fcm} N/mm²)",
   "index.siebline.hint.not.found": "Hint not found"
 }

@@ -475,5 +475,6 @@
   "index.strength.hint": "Würfeldruckfestigkeit {fck} N/mm²",
   "index.strength.hint.default": "Keine Festigkeitsklasse ausgewählt",
   "index.results.detail": "Berechnungsdetails",
+  "index.results.heading": "📋 Zutaten für {vol} m³ – {klasse} (Zielwert: ≈ {fcm} N/mm²)",
   "index.siebline.hint.not.found": "Hinweis nicht gefunden"
 }

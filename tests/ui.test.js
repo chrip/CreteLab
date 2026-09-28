@@ -59,9 +59,9 @@ describe('UI End-to-End Tests (JSDOM)', () => {
         elements.calculateBtn.click();
 
         assert.ok(!elements.resultsSection.classList.contains('hidden'), 'Results section should be visible');
-        // Use regex to allow both 2,5 and 2.5 due to locale differences in JSDOM
+        // German page: decimal comma, like the other numbers on the page
         const heading = document.getElementById('results-title').textContent;
-        assert.ok(/2[.,]5\s*m³/i.test(heading), `Expected volume 2,5 m³ in heading, got: ${heading}`);
+        assert.ok(/2,5\s*m³/i.test(heading), `Expected volume 2,5 m³ in heading, got: ${heading}`);
         assert.ok(heading.includes('C25/30'), `Expected strength C25/30 in heading, got: ${heading}`);
         assert.ok(elements.recipeBody.innerHTML.length > 0, 'Recipe table should be populated');
         assert.ok(elements.recipeBody.textContent.includes('CEM I 42.5 N'), 'Cement should be present in the recipe');

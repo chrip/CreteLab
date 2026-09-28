@@ -549,8 +549,9 @@ function displayRecipe(recipe) {
 
     // ── Ingredients header ────────────────────────────────────────────────────
     const vol = appState.volume;
-    elements.ingredientsHeader.textContent = i18n.t('index.results.detail', { vol, klasse: appState.strengthClass, fcm: formatNumber(recipe.fCmTarget, 1) });
-    elements.volumeColHeader.textContent = vol !== 1 ? i18n.t('index.vol.prefix') + ` ${vol} m³` : i18n.t('index.vol.default');
+    const volText = i18n.formatNumber(vol, { maximumFractionDigits: 3 });  // "2,5" in German
+    elements.ingredientsHeader.textContent = i18n.t('index.results.heading', { vol: volText, klasse: appState.strengthClass, fcm: formatNumber(recipe.fCmTarget, 1) });
+    elements.volumeColHeader.textContent = vol !== 1 ? i18n.t('index.vol.prefix') + ` ${volText} m³` : i18n.t('index.vol.default');
 
     // ── Main ingredients table ────────────────────────────────────────────────
     const tableRows = [];
