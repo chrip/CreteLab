@@ -6,6 +6,12 @@ import { getAverageDensity } from './densities.js';
 import { applyAdmixtureWaterReduction, adjustForAirEntraining, calculateEquivalentWzWithBoth, getAdmixtureDosage } from './additives.js';
 import { getFinesFraction, distributeAggregateBySiebline, calculateZugabewasser } from './aggregate-gradation.js';
 
+// Fully compacted concrete holds about 2 Vol.-% air without admixture
+// (B 20 p. 5: "ca. 2 % Luftporen (20 l/m3)"). The LP field is the total target air
+// content, so only the air above this is added by the air-entraining agent.
+export const NATURAL_AIR_PCT = 2;
+const LP_STRENGTH_LOSS_PER_PCT = 3.5;  // N/mm² per Vol.-% added air (B 20 Tafel 7)
+
 /**
  * Calculate a concrete recipe per m³ according to Zement-Merkblatt B 20.
  * @param {object} state - Form values as returned by collectFormValues() in app.js
@@ -34,12 +40,15 @@ export function computeRecipe(state, exposureClasses) {
     const isCrushed = /splitt/i.test(state.aggregateType) || state.aggregateType === 'Basalt' || state.aggregateType === 'Dichter Kalkstein';
     waterTarget = adjustForAggregateType(waterTarget, isCrushed);
 
-    if (state.useAirEntraining && state.airEntrainingPercent > 0) {
-        waterTarget = adjustForAirEntraining(waterTarget, state.airEntrainingPercent);
-    }
-
     if (state.admixtureType && state.admixtureType !== 'none') {
         waterTarget = applyAdmixtureWaterReduction(waterTarget, state.admixtureType);
+    }
+
+    // After the plasticiser, as in B 20 Beispiel III: "w = 184 - 3 ∙ 5 = 169 l"
+    const totalAirPct = state.useAirEntraining ? Math.max(NATURAL_AIR_PCT, state.airEntrainingPercent) : NATURAL_AIR_PCT;
+    const addedAirPct = totalAirPct - NATURAL_AIR_PCT;
+    if (addedAirPct > 0) {
+        waterTarget = adjustForAirEntraining(waterTarget, addedAirPct);
     }
 
     waterTarget = Math.max(120, Math.min(waterTarget, 260));
@@ -47,7 +56,10 @@ export function computeRecipe(state, exposureClasses) {
     // ── Step 3: Zielwert der mittleren Betondruckfestigkeit ───────────────────
     const strengthMeta = getStrengthClass(state.strengthClass);
     const f_ck_cube = strengthMeta ? strengthMeta.f_ck_cube : 25;
-    const f_cm_target = calculateTargetStrengthWithMargin(f_ck_cube, 0, state.vorhaltemas);
+    // The added air costs 3,5 N/mm² per Vol.-%, so the target rises by that much
+    // (B 20 Beispiel III Variante 2: "... + 5 + 3 ∙ 3,5").
+    const lpStrengthLoss = addedAirPct * LP_STRENGTH_LOSS_PER_PCT;
+    const f_cm_target = Math.round((calculateTargetStrengthWithMargin(f_ck_cube, 0, state.vorhaltemas) + lpStrengthLoss) * 10) / 10;
 
     // ── Step 4: Maximaler w/z-Wert ────────────────────────────────────────────
     const cementMeta = getCementType(state.cementType);
@@ -104,7 +116,7 @@ export function computeRecipe(state, exposureClasses) {
     }
 
     // ── Step 6: Stoffraumrechnung – Gesteinskörnung ───────────────────────────
-    const airVolumeDm3 = 20 + (state.useAirEntraining ? state.airEntrainingPercent * 10 : 0);
+    const airVolumeDm3 = totalAirPct * 10;
     const flyAshDensity = 2.3; // kg/dm³ (Tafel 6, middle of range 2.2–2.4)
     const silicaDensity = 2.2; // kg/dm³ (Tafel 6)
 
@@ -159,6 +171,8 @@ export function computeRecipe(state, exposureClasses) {
         },
         korngruppen,
         airEntraining: state.useAirEntraining ? state.airEntrainingPercent : 0,
+        addedAirPct,
+        lpStrengthLoss,
         equivalentWz,
         stoffraum: { vz: Math.round(vz), vw: Math.round(vw), vf: Math.round(vf), vs: Math.round(vs), vWU: Math.round(vWU), vLP, vg: Math.round(vg) }
     };

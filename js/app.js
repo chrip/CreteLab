@@ -486,7 +486,7 @@ function calculateRecipe() {
     // Fill effect list
     const effectNotes = [];
     if (appState.useAirEntraining) {
-        effectNotes.push(i18n.t('effect.lp', { airPct: appState.airEntrainingPercent, loss: Math.round(appState.airEntrainingPercent * 3.5) }));
+        effectNotes.push(i18n.t('effect.lp', { airPct: appState.airEntrainingPercent, added: recipe.addedAirPct, loss: Math.round(recipe.lpStrengthLoss) }));
     }
     if (appState.useFlyAsh) {
         effectNotes.push(i18n.t('effect.flyash', { pct: appState.flyAshPercent }));
@@ -617,7 +617,7 @@ function displayRecipe(recipe) {
             i18n.t('mixdesign.air.entry'),
             lpDosage, 'l',
             lpDosage * vol, 'l',
-            i18n.t('recipe.lp.note', { airPct: recipe.airEntraining, loss: Math.round(recipe.airEntraining * 3.5) })
+            i18n.t('recipe.lp.note', { airPct: recipe.airEntraining, loss: Math.round(recipe.lpStrengthLoss) })
         );
     }
 
