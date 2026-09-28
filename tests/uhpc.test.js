@@ -127,19 +127,17 @@ describe('UHPC page – DOM wiring', () => {
             `dropdown label leaks the author: "${visibleLabel}"`);
     });
 
-    it('renders the six expected ingredient rows in the table', () => {
-        // Default preset is the DIY-Hochleistungsbeton: cement, sand,
-        // microsilica, quartz powder, water, PCE. The Feinzuschläge slot
-        // is zero (its 2,5 kg are correctly attributed to microsilica)
-        // and therefore filtered out of the rendered table.
+    it('renders the five expected ingredient rows in the table', () => {
+        // Default preset is the DIY-Hochleistungsbeton: cement, sand, quartz
+        // powder, water, PCE. The recipe has no microsilica and no
+        // Feinzuschläge, so those zero rows are filtered out of the table.
         const rows = getRecipeRows();
-        assert.strictEqual(rows.length, 6);
+        assert.strictEqual(rows.length, 5);
         assert.ok(rows[0].name.includes('Zement'));
         assert.ok(rows[1].name.includes('Sand'));
-        assert.ok(rows[2].name.includes('Mikrosilica'));
-        assert.ok(rows[3].name.includes('Quarzmehl'));
-        assert.ok(rows[4].name.includes('Wasser'));
-        assert.ok(rows[5].name.includes('PCE'));
+        assert.ok(rows[2].name.includes('Quarzmehl'));
+        assert.ok(rows[3].name.includes('Wasser'));
+        assert.ok(rows[4].name.includes('PCE'));
     });
 
     it('renders three plausibility chips, all ok or warn for the default preset', () => {

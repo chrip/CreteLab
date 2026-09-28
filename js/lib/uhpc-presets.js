@@ -117,89 +117,99 @@ const DENSITIES_DEFAULT = Object.freeze({
 export const UHPC_PRESETS = [
     {
         key: 'diy-pce-30l-batch',
-        label: 'DIY-Hochleistungsbeton (mit Quarzmehl & Mikrosilica)',
+        label: 'DIY-Hochleistungsbeton (mit Quarzsand & Quarzmehl)',
         source: {
-            type: 'youtube',
-            title: 'Ultra-Hochleistungsbeton (UHPC) selber mischen — DIY-Tutorial',
-            url:   'https://www.youtube.com/watch?v=DHYNh2xqijs',
+            // Quoted recipe (verbatim) from the article body:
+            //   "Bei meiner Mischung, bezogen auf ca. 67 kg UHPC, verwende ich
+            //    folgende Komponenten:
+            //      - 30 kg Sand (Korngröße bis 2 mm)
+            //      - 25 kg Zement (Portlandzement)
+            //      - 9 kg Quarzsand (Korngröße 0,063 - 0,3 mm)
+            //      - 2,5 kg Quarzmehl
+            //      - 8,5 Liter Wasser
+            //      - 350 - 400 ml Hochleistungs-Fließmittel (ich verwende hier
+            //        Pantarhit PC150 FM)"
+            // The same amounts appear in the video DHYNh2xqijs, but its
+            // description lists no amounts, so the article is the citation.
+            type: 'datasheet',
+            title: 'Welchen Beton kann ich zur Herstellung von Betonmöbeln verwenden? — Beton-Basics',
+            url:   'https://www.grey-element.de/beton-basics/beton-zur-herstellung-von-betonm%C3%B6beln/',
             author: 'Grey Element',
-            retrieved: '2026-04-28',
+            retrieved: '2026-09-28',
         },
         batch: {
-            cementKg:           25,    // Portlandzement CEM I
-            sandKg:             30,    // 0/2 mm
-            quartzPowderKg:     9,     // 0,063–0,25 mm
-            finesKg:            0,     // see microsilica below
-            // The video description lists "2,5 kg Feinzuschläge" without
-            // further specification; in context (Grey Element shop sells
-            // silicafusion / Mikrosilica, the 9 kg quartz fraction starts
-            // at 63 µm, and 10 % of cement is the typical microsilica dose)
-            // this is the most plausible mapping. Rendered as "Mikrosilica"
-            // in the UI; ρ = 2,20 kg/dm³ and k_s = 1,0 in w/b accordingly.
-            microsilicaKg:      2.5,
+            cementKg:           25,    // Portlandzement
+            sandKg:             39,    // 30 kg Sand 0–2 mm + 9 kg Quarzsand 0,063–0,3 mm
+            quartzPowderKg:     2.5,   // Quarzmehl (inert, k = 0)
+            finesKg:            0,
+            microsilicaKg:      0,     // not part of this recipe
             waterL:             8.5,
             superplasticizerMl: 375,   // midpoint of stated range 350–400 ml
         },
         densities: { ...DENSITIES_DEFAULT },
+        // Author's mixing order (paraphrased from the article): dry components
+        // 1–2 min, then ~80 % of the water, then the rest of the water with the
+        // plasticiser; at least 20 min in a free-fall mixer. Walls of 1–2,5 cm
+        // with textile reinforcement.
         mixingSteps: [
-            '<strong>Trockenmischung vormischen</strong> ({cementKg} Zement + {sandKg} Sand + {quartzPowderKg} Quarzmehl + {microsilicaKg} Mikrosilica) — gut homogenisieren.',
-            '<strong>PCE-Fließmittel im Anmachwasser auflösen</strong> ({superplasticizerL} PCE in {waterL} Wasser einrühren).',
-            '<strong>Wasser-PCE-Mischung langsam zur Trockenmischung geben</strong> und mindestens 5 Minuten kräftig mischen — Fließverhalten entwickelt sich verzögert.',
-            '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
+            '<strong>Trockenmischung 1–2 Minuten vormischen</strong> ({cementKg} Zement + {sandKg} Sand + {quartzPowderKg} Quarzmehl). Der Sand besteht im Verhältnis 30 : 9 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm.',
+            '<strong>Ca. 80 % des Wassers zugeben</strong> und weitermischen.',
+            '<strong>PCE-Fließmittel im restlichen Wasser auflösen</strong> ({superplasticizerL} PCE, gesamt {waterL} Wasser) und zugeben — insgesamt mindestens 20 Minuten mischen (Freifallmischer). Je nach Zement etwas mehr Wasser nötig.',
+            '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen. Für Wandstärken von 1–2,5 cm mit Textilbewehrung.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
         claimedFckMpa:    null,
         airCuredFckMpa:   null,
-        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei effektivem
-        //   w/b = 0,32 (mit 10 % Mikrosilica im Bindemittel, k_s = 1,0):
-        //   fcm = 31 × (1/0,32)^0,67 ≈ 66 → fck ≈ 58 N/mm². Mikrosilica
-        //   bringt zusätzlich pozzolanischen Bonus (typisch +15–25 % bei
-        //   10 % MS-Dosierung); konservativer Mittelwert 70 N/mm² für
-        //   typische DIY-Bedingungen (feucht abgedeckt, ohne Wasserbad).
-        estimatedFckMpa: 70,
+        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/b = 0,35
+        //   (8,5 l Wasser + 60 % des PCE, kein reaktiver Zusatzstoff):
+        //   fcm = 31 × (1/0,35)^0,67 ≈ 63 → fck ≈ 55 N/mm². Quarzmehl ist
+        //   inert und bringt keinen pozzolanischen Bonus.
+        estimatedFckMpa: 55,
     },
     {
         key: 'diy-mortar-20kg-batch',
-        label: 'DIY-Hochfester Mörtel (ohne Quarzmehl)',
+        label: 'DIY-Hochfester Mörtel (mit Kalksteinmehl & Mikrosilica)',
         source: {
             // Quoted recipe (verbatim) from the article body:
             //   "Meine Mischung für ca. 20 kg hochfesten Mörtel setzt sich
             //    wie folgt zusammen:
             //      - 8 kg Zement (CEM I)
             //      - 10 kg Sandkörnung 0 - 2 mm
+            //      - 1600 g Kalksteinmehl
+            //      - 400 g Microsilica Pulver
             //      - 2,4 Liter Wasser
             //      - 150 ml Hochleistungsfließmittel EasyFlow Pro"
             type: 'datasheet',
             title: 'Hochfesten Beton (UHPC) selber herstellen — Beton-Basics',
             url:   'https://www.grey-element.de/beton-basics/hochfesten-beton-uhpc-selber-herstellen/',
             author: 'Grey Element',
-            retrieved: '2026-04-28',
+            retrieved: '2026-09-28',
         },
         batch: {
             cementKg:           8,    // CEM I
-            sandKg:             10,   // 0/2 mm — Quarz- oder Basaltsand
-            quartzPowderKg:     0,    // not used in this simpler recipe
-            finesKg:            0,
-            microsilicaKg:      0,
-            waterL:             2.4,  // → w/z = 0.30 (within UHPC literature range)
-            superplasticizerMl: 150,  // EasyFlow Pro PCE — ~2 % of cement mass
+            sandKg:             10,   // 0/2 mm
+            quartzPowderKg:     0,    // not used in this recipe
+            finesKg:            1.6,  // Kalksteinmehl (< 63 µm, inert)
+            microsilicaKg:      0.4,  // Microsilica Pulver, k_s = 1,0
+            waterL:             2.4,
+            superplasticizerMl: 150,  // EasyFlow Pro PCE
         },
         densities: { ...DENSITIES_DEFAULT },
         // Author's mixing order (paraphrased from the article):
         //   "Zement und Zuschläge mit einem Teil des Anmischwassers anmischen,
         //    dann das Fließmittel mit dem Rest des Anmischwassers zugeben."
         mixingSteps: [
-            '<strong>Zement und trockenen Sand mit ca. einem Drittel des Anmachwassers anmischen</strong> ({cementKg} Zement + {sandKg} Sand + ca. 0,8 l Wasser). Sand muss <em>trocken</em> sein — feuchter Sand verschiebt den w/z-Wert.',
-            '<strong>PCE-Fließmittel im restlichen Wasser auflösen</strong> ({superplasticizerL} PCE in den restlichen ca. 1,6 l Wasser einrühren).',
-            '<strong>Wasser-PCE-Mischung schrittweise zugeben und mindestens 5 Minuten kräftig mischen</strong> — idealerweise im Zwangsmischer. Das Fließmittel entwickelt seine volle Wirkung erst nach gleichmäßiger Verteilung.',
+            '<strong>Zement, trockenen Sand und Feinstoffe mit ca. einem Drittel des Anmachwassers anmischen</strong> ({cementKg} Zement + {sandKg} Sand + {finesKg} Kalksteinmehl + {microsilicaKg} Mikrosilica + ca. ein Drittel von {waterL} Wasser). Sand muss <em>trocken</em> sein.',
+            '<strong>PCE-Fließmittel im restlichen Wasser auflösen</strong> ({superplasticizerL} PCE in den restlichen ca. zwei Dritteln des Wassers einrühren).',
+            '<strong>Wasser-PCE-Mischung schrittweise zugeben und mindestens 5 Minuten kräftig mischen</strong> — idealerweise im Zwangsmischer. Das Fließmittel entwickelt seine Wirkung verzögert.',
             '<strong>In geölte Form gießen und vibrieren</strong> oder leicht klopfen, bis keine Luftblasen mehr aufsteigen.',
             '<strong>Mindestens 24 h abdecken / feucht halten</strong>, vorsichtig ausschalen, mehrere Tage nachhärten lassen.',
         ],
         claimedFckMpa:    null,
         airCuredFckMpa:   null,
-        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/z = 0,30:
-        //   fcm = 31 × (1/0,30)^0,67 ≈ 69 → fck ≈ 61 N/mm². Ohne Microfiller,
-        //   leichter PCE-Bonus durch bessere Zementdispergierung. Konservative
+        // Walzkurven-Schätzung (CEM I 42,5R, A=31, n=0,67) bei w/b = 0,30
+        //   (2,4 l Wasser + 60 % des PCE auf 8 kg Zement + 0,4 kg Mikrosilica):
+        //   fcm = 31 × (1/0,30)^0,67 ≈ 70 → fck ≈ 62 N/mm². Konservative
         //   Schätzung 60 N/mm² unter typischen DIY-Bedingungen.
         estimatedFckMpa: 60,
     },
