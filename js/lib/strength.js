@@ -2,20 +2,25 @@
 // Characteristic compressive strength classes and Roll curves for concrete
 
 /**
- * Cement strength classes according to DIN EN 197-1
- * Used for Walzkurven (Roll curves) calculations
- * f_cm = A * (z/w)^n  (Bild 1, B20)
+ * Walz curves of Zement-Merkblatt B 20 (2.2017), Bild 1: mean concrete strength
+ * f_c,dry,cube over w/z for the cement strength classes 32,5 / 42,5 / 52,5
+ * (28-day cement strengths 42,5 / 52,5 / 62,5 N/mm² per the chart legend).
+ *
+ *   f = A · e^(−b · w/z)        (Abrams form)
+ *
+ * Fitted to Bild 1 digitised at 300 dpi (tests/fixtures/b20-bild1-points.json):
+ * within 1 N/mm² of the chart for w/z 0,35–1,0, and within 0,014 of every w/z the
+ * B 20 examples read from it (e.g. 42,5: 35 N/mm² → 0,68; 52,5: 59 N/mm² → 0,53).
+ * A is ~2,96 × the cement's 28-day strength; b is common to all classes.
+ * B 20 has one curve per strength class, so N and R share it.
  */
-// A values calibrated to the MEAN curve of B20 Bild 1.
-// Vorhaltemaß (v) is the sole statistical safety margin per B20; sigma must NOT
-// be added separately. Previous A values were calibrated to the lower boundary
-// while also adding 1.48·σ — double-counting the safety margin.
+const WALZ_B = 2.2;
 export const CEMENT_CLASSES = {
-    '32.5':  { name: 'CEM I 32.5 N', A: 22, n: 0.67 },
-    '42.5':  { name: 'CEM I 42.5 N', A: 31, n: 0.67 },
-    '42.5R': { name: 'CEM I 42.5 R', A: 37, n: 0.67 },
-    '52.5':  { name: 'CEM I 52.5 N', A: 44, n: 0.67 },
-    '52.5R': { name: 'CEM I 52.5 R', A: 48, n: 0.67 }
+    '32.5':  { name: 'CEM I 32.5 N', A: 127, b: WALZ_B },
+    '42.5':  { name: 'CEM I 42.5 N', A: 156, b: WALZ_B },
+    '42.5R': { name: 'CEM I 42.5 R', A: 156, b: WALZ_B },
+    '52.5':  { name: 'CEM I 52.5 N', A: 187, b: WALZ_B },
+    '52.5R': { name: 'CEM I 52.5 R', A: 187, b: WALZ_B }
 };
 
 /**
@@ -143,8 +148,8 @@ export function calculateWzFromTargetStrength(f_cm_target, cementClassKey) {
     if (!f_cm_target || f_cm_target <= 0) return null;
     const cementClass = CEMENT_CLASSES[cementClassKey];
     if (!cementClass) return null;
-    // w/z = (A / f_cm)^(1/n)
-    const wz = Math.pow(cementClass.A / f_cm_target, 1 / cementClass.n);
+    // Inverse of f = A · e^(−b · w/z)
+    const wz = Math.log(cementClass.A / f_cm_target) / cementClass.b;
     return Math.round(wz * 1000) / 1000; // 3 decimal places
 }
 
@@ -167,7 +172,7 @@ export function getCementType(typeName) {
 
 /**
  * Calculate concrete compressive strength using Walzkurven (Roll curves)
- * f_cm = A * (z/w)^n
+ * f_cm = A · e^(−b · w/z)  (B 20 Bild 1, see CEMENT_CLASSES)
  * 
  * Based on Zement-Merkblatt B 20 relationship between:
  * - Concrete compressive strength (f_cm)
@@ -184,9 +189,7 @@ export function calculateStrengthFromWalzkurven(waterCementRatio, cementClassKey
     const cementClass = CEMENT_CLASSES[cementClassKey];
     if (!cementClass) return null;
     
-    // f_cm = A * (z/w)^n where z/w = 1/(w/z)
-    const zWRatio = 1 / waterCementRatio;
-    const strength = cementClass.A * Math.pow(zWRatio, cementClass.n);
+    const strength = cementClass.A * Math.exp(-cementClass.b * waterCementRatio);
     
     return Math.round(strength * 10) / 10; // Round to 1 decimal
 }
@@ -214,8 +217,7 @@ export function calculateStrengthWithSupplementaryMaterials(waterCementRatio, ce
     
     const effectiveA = cementClass.A * flyAshEffect * silicaFumeEffect;
     
-    const zWRatio = 1 / waterCementRatio;
-    const strength = effectiveA * Math.pow(zWRatio, cementClass.n);
+    const strength = effectiveA * Math.exp(-cementClass.b * waterCementRatio);
     
     return Math.round(strength * 10) / 10; // Round to 1 decimal
 }

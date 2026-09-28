@@ -10,6 +10,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { readFileSync } from 'node:fs';
 
 import {
     CEMENT_CLASSES,
@@ -20,40 +21,18 @@ import {
     calculateTargetStrengthWithMargin
 } from '../js/lib/strength.js';
 
-describe('B20 cement strength classes', () => {
-    it('provides cement class data for 42.5 N', () => {
-        const result = getCementClass('42.5');
-        assert.ok(result);
-        assert.strictEqual(result.name, 'CEM I 42.5 N');
-        // A=31 calibrated to mean curve of B20 Bild 1
-        assert.strictEqual(result.A, 31);
-        assert.strictEqual(result.n, 0.67);
+const BILD_1 = JSON.parse(readFileSync(new URL('./fixtures/b20-bild1-points.json', import.meta.url), 'utf8'));
+
+describe('B20 cement strength classes (Walz curves f = A · e^(−b · w/z))', () => {
+    it('32,5 / 42,5 / 52,5 use A = 127 / 156 / 187 and a common b = 2,2', () => {
+        assert.deepStrictEqual([getCementClass('32.5').A, getCementClass('42.5').A, getCementClass('52.5').A], [127, 156, 187]);
+        for (const key of Object.keys(CEMENT_CLASSES)) assert.strictEqual(CEMENT_CLASSES[key].b, 2.2);
     });
 
-    it('provides cement class data for 32.5 N', () => {
-        const result = getCementClass('32.5');
-        assert.ok(result);
-        assert.strictEqual(result.A, 22);
-        assert.strictEqual(result.n, 0.67);
-    });
-
-    it('provides cement class data for 42.5 R', () => {
-        const result = getCementClass('42.5R');
-        assert.ok(result);
-        assert.strictEqual(result.A, 37);
-    });
-
-    it('provides cement class data for 52.5 N', () => {
-        const result = getCementClass('52.5');
-        assert.ok(result);
-        assert.strictEqual(result.A, 44);
-        assert.strictEqual(result.n, 0.67);
-    });
-
-    it('provides rapid hardening cement class data for 52.5 R', () => {
-        const result = getCementClass('52.5R');
-        assert.ok(result);
-        assert.strictEqual(result.A, 48);
+    it('B 20 Bild 1 has one curve per strength class, so R cements share it', () => {
+        assert.strictEqual(getCementClass('42.5R').A, getCementClass('42.5').A);
+        assert.strictEqual(getCementClass('52.5R').A, getCementClass('52.5').A);
+        assert.strictEqual(getCementClass('42.5').name, 'CEM I 42.5 N');
     });
 
     it('returns null for unknown cement class', () => {
@@ -61,51 +40,35 @@ describe('B20 cement strength classes', () => {
     });
 });
 
-describe('B20 Walzkurven calculation (no supplementary materials)', () => {
-    it('calculates strength for CEM I 42.5 N with w/z = 0.5', () => {
-        // f_cm = 31 * (1/0.5)^0.67 = 31 * 2^0.67 ≈ 31 * 1.591 ≈ 49.3
-        const result = calculateStrengthFromWalzkurven(0.5, '42.5');
-        assert.ok(result);
-        assert.ok(Math.abs(result - 49.3) < 1.0, `Expected ~49.3, got ${result}`);
-    });
+describe('Walz curves match B 20 Bild 1', () => {
+    for (const [cls, points] of Object.entries(BILD_1.curves)) {
+        it(`${cls}: within 1,2 N/mm² of the ${points.length} digitised chart points`, () => {
+            for (const [wz, fc] of points) {
+                const f = calculateStrengthFromWalzkurven(wz, cls);
+                assert.ok(Math.abs(f - fc) <= 1.2, `w/z ${wz}: chart ${fc}, model ${f}`);
+            }
+        });
+    }
 
-    it('calculates strength for CEM I 42.5 N with w/z = 0.6', () => {
-        // f_cm = 31 * (1/0.6)^0.67 = 31 * 1.667^0.67 ≈ 31 * 1.408 ≈ 43.6
-        const result = calculateStrengthFromWalzkurven(0.6, '42.5');
-        assert.ok(result);
-        assert.ok(Math.abs(result - 43.6) < 1.0, `Expected ~43.6, got ${result}`);
-    });
+    // w/z values the B 20 / BTD examples read from the chart (independent of the fit)
+    const READINGS = [
+        ['42.5', 35, 0.68, 'B 20 Beispiel I/II'],
+        ['42.5', 37, 0.65, 'B 20 Beispiel 4 (arrow in Bild 1)'],
+        ['42.5', 50, 0.53, 'B 20 Beispiel IV / Tafel 8'],
+        ['52.5R', 59, 0.53, 'B 20 Beispiel III Variante 1'],
+        ['52.5R', 60, 0.52, 'B 20 Beispiel III Variante 2'],
+        ['32.5', 35, 0.58, 'BTD 2022 9.2 (N28 = 42,5)']
+    ];
+    for (const [cls, fc, wz, src] of READINGS) {
+        it(`${src}: ${fc} N/mm² with ${cls} → w/z ${wz} (± 0,02 chart reading)`, () => {
+            const got = calculateWzFromTargetStrength(fc, cls);
+            assert.ok(Math.abs(got - wz) <= 0.02, `expected ${wz}, got ${got}`);
+        });
+    }
 
-    it('calculates strength for CEM I 52.5 N with w/z = 0.5', () => {
-        // f_cm = 44 * 2^0.67 ≈ 44 * 1.591 ≈ 70.0
-        const result = calculateStrengthFromWalzkurven(0.5, '52.5');
-        assert.ok(result);
-        assert.ok(Math.abs(result - 70.0) < 1.0, `Expected ~70.0, got ${result}`);
-    });
-
-    it('calculates strength for CEM I 52.5 N with w/z = 0.6', () => {
-        // f_cm = 44 * 1.408 ≈ 61.9
-        const result = calculateStrengthFromWalzkurven(0.6, '52.5');
-        assert.ok(result);
-        assert.ok(Math.abs(result - 61.9) < 1.0, `Expected ~61.9, got ${result}`);
-    });
-
-    it('calculates strength for CEM I 42.5 N with w/z = 0.55 (typical value)', () => {
-        // f_cm = 31 * (1/0.55)^0.67 ≈ 31 * 1.818^0.67 ≈ 31 * 1.493 ≈ 46.3
-        const result = calculateStrengthFromWalzkurven(0.55, '42.5');
-        assert.ok(result);
-        assert.ok(Math.abs(result - 46.3) < 1.0, `Expected ~46.3, got ${result}`);
-    });
-
-    it('returns null for invalid w/z ratio (zero)', () => {
+    it('returns null for invalid w/z ratio (zero, negative, undefined)', () => {
         assert.strictEqual(calculateStrengthFromWalzkurven(0, '42.5'), null);
-    });
-
-    it('returns null for invalid w/z ratio (negative)', () => {
         assert.strictEqual(calculateStrengthFromWalzkurven(-0.5, '42.5'), null);
-    });
-
-    it('returns null for undefined w/z ratio', () => {
         assert.strictEqual(calculateStrengthFromWalzkurven(undefined, '42.5'), null);
     });
 
@@ -115,31 +78,18 @@ describe('B20 Walzkurven calculation (no supplementary materials)', () => {
 });
 
 describe('B20 Walzkurven with fly ash (supplementary materials)', () => {
-    it('calculates strength reduction with 10% fly ash replacement', () => {
-        // effectiveA = 31 * (1 - 0.1*0.2) = 31 * 0.98 = 30.38
-        // f_cm = 30.38 * (1/0.5)^0.67 ≈ 30.38 * 1.591 ≈ 48.3
-        const result = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.1, 0);
-        assert.ok(result);
-        assert.ok(Math.abs(result - 48.3) < 1.0, `Expected ~48.3, got ${result}`);
-    });
-
-    it('calculates strength with 20% fly ash replacement', () => {
-        // effectiveA = 31 * (1 - 0.2*0.2) = 31 * 0.96 = 29.76
-        // f_cm = 29.76 * 1.591 ≈ 47.3
-        const result = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.2, 0);
-        assert.ok(result);
-        assert.ok(Math.abs(result - 47.3) < 1.0, `Expected ~47.3, got ${result}`);
-        // Should be lower than with 10% fly ash
-        const with10pct = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.1, 0);
-        assert.ok(result < with10pct);
+    it('10 % fly ash lowers A by 2 %, 20 % by 4 %', () => {
+        const base = calculateStrengthFromWalzkurven(0.5, '42.5');
+        const fa10 = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.1, 0);
+        const fa20 = calculateStrengthWithSupplementaryMaterials(0.5, '42.5', 0.2, 0);
+        assert.ok(Math.abs(fa10 / base - 0.98) < 0.003, `ratio ${fa10 / base}`);
+        assert.ok(Math.abs(fa20 / base - 0.96) < 0.003, `ratio ${fa20 / base}`);
+        assert.ok(fa20 < fa10);
     });
 
     it('returns same result as Walzkurven when no supplementary materials', () => {
-        const wz = 0.55;
-        const cementClass = '42.5';
-        const walzkurvenResult = calculateStrengthFromWalzkurven(wz, cementClass);
-        const supResult = calculateStrengthWithSupplementaryMaterials(wz, cementClass, 0, 0);
-        assert.strictEqual(walzkurvenResult, supResult);
+        assert.strictEqual(calculateStrengthWithSupplementaryMaterials(0.55, '42.5', 0, 0),
+                           calculateStrengthFromWalzkurven(0.55, '42.5'));
     });
 });
 
