@@ -56,14 +56,18 @@ function createSwitcher() {
     const url = new URL(location.href);
     const segments = url.pathname.split('/').filter(Boolean);
     const locIdx = segments.indexOf(i18n.locale);
+    const PAGES = ['index.html', 'fine-tune.html', 'uhpc.html', 'describe.html'];
+    const page = segments.at(-1);
     if (locIdx < 0) {
-      location.href = `${url.origin}/${val}/`;
+      // No language folder yet (e.g. /fine-tune.html): stay on the same page.
+      const base = segments.slice(0, page && PAGES.includes(page) ? -1 : segments.length);
+      url.pathname = '/' + [...base, val, ...(page && PAGES.includes(page) ? [page] : [])].join('/');
+      location.href = url.toString();
       return;
     }
     const prefix = segments.slice(0, locIdx);
-    const page = segments.at(-1);
     const parts = [prefix, val];
-    if (page && ['index.html', 'fine-tune.html', 'uhpc.html'].includes(page)) parts.push(page);
+    if (page && PAGES.includes(page)) parts.push(page);
     url.pathname = '/' + parts.flat().join('/');
     location.href = url.toString();
   });

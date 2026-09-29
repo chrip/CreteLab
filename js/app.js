@@ -7,6 +7,8 @@ import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPas
 import { getFinesFraction, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
 import { computeRecipe } from './lib/recipe.js';
 import { readStandard } from './lib/handoff.js';
+import { loadContext, saveContext, optsFromFields } from './lib/context.js';
+import { fineTunePresetFor } from './lib/fine-tune-presets.js';
 import { i18n } from './lib/i18n.js';
 
 const AGGREGATE_KEYS = {
@@ -481,6 +483,7 @@ function calculateRecipe() {
         return setError(i18n.t(result.error, result.params));
     }
     const recipe = result.recipe;
+    rememberInContext();
 
     appState.plausibilityWarnings = evaluatePlausibility(appState, recipe);
 
@@ -722,6 +725,7 @@ function displayRecipe(recipe) {
             useBV:     plasticizer === 'BV',
             useFM:     plasticizer === 'FM',
             useLP:     appState.useAirEntraining || false,
+            useWU:     appState.useWaterproofing || false,
         }));
     } catch (_) { /* sessionStorage blocked */ }
 
@@ -777,7 +781,7 @@ function initialize() {
     const recipeForm = document.getElementById('recipeForm');
     if (recipeForm) recipeForm.addEventListener('submit', (event) => event.preventDefault());
 
-    applyHandoff(readStandard(globalThis.location?.search ?? ''));
+    applyHandoff(readStandard(globalThis.location?.search ?? '') || contextAsHandoff(loadContext()));
     updateGoverningExposureInfo();
     calculateRecipe();
 
@@ -786,6 +790,37 @@ function initialize() {
         initialize();
         if (appState.strengthClass) calculateRecipe();
     });
+}
+
+/** The shared tab context (js/lib/context.js) in the shape applyHandoff() takes. */
+function contextAsHandoff(ctx) {
+    if (!ctx.strengthClass && !ctx.volume) return null;
+    return {
+        source: 'context', text: ctx.text || '', warn: ctx.warn || '',
+        volume: ctx.volume, strengthClass: ctx.strengthClass, exposureClasses: ctx.exposureClasses || [],
+        siebline: ctx.siebline, consistencyClass: ctx.consistencyClass, aggregateType: ctx.aggregateType,
+        cementType: ctx.cementType, vorhaltemas: ctx.vorhaltemas, admixtureType: ctx.admixtureType,
+        airEntrainingPercent: ctx.airEntrainingPercent, flyAshPercent: ctx.flyAshPercent,
+        silicaFumePercent: ctx.silicaFumePercent, waterproofPercent: ctx.waterproofPercent
+    };
+}
+
+/** Write the calculator's values to the tab context, with their fine-tune counterparts. */
+function rememberInContext() {
+    const fields = {
+        volume: appState.volume, strengthClass: appState.strengthClass,
+        exposureClasses: getSelectedExposureClasses(), siebline: appState.siebline,
+        consistencyClass: appState.consistencyClass, aggregateType: appState.aggregateType,
+        cementType: appState.cementType, vorhaltemas: appState.vorhaltemas,
+        admixtureType: appState.admixtureType || 'none',
+        airEntrainingPercent: appState.useAirEntraining ? appState.airEntrainingPercent : 0,
+        flyAshPercent: appState.useFlyAsh ? appState.flyAshPercent : 0,
+        silicaFumePercent: appState.useSilicaFume ? appState.silicaFumePercent : 0,
+        waterproofPercent: appState.useWaterproofing ? appState.waterproofPercent : 0
+    };
+    const ctx = loadContext();
+    saveContext({ ...fields, ftPreset: fineTunePresetFor(fields.strengthClass).value,
+        ftOpts: optsFromFields(fields, ctx.ftOpts || []) }, 'index');
 }
 
 /**
@@ -811,6 +846,7 @@ function applyHandoff(h) {
     setSelect(elements.admixtureType, h.admixtureType);
     if (h.vorhaltemas) elements.vorhaltemas.value = h.vorhaltemas;
     const toggle = (checkbox, input, value) => {
+        if (value === undefined || value === null) return;   // not known: keep the form's value
         checkbox.checked = value > 0;
         if (value > 0) input.value = value;
     };

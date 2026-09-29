@@ -14,9 +14,17 @@ import { fmt, fmtQty, parseDecimal } from './lib/format.js';
 import { i18n } from './lib/i18n.js';
 import { FINE_TUNE_PRESETS as PRESETS, BAG_KG, WATERPROOF_PCT, bagMixKg } from './lib/fine-tune-presets.js';
 import { readFineTune, standardUrl } from './lib/handoff.js';
+import { loadContext, saveContext, OPT_TO_FIELD } from './lib/context.js';
 
-// A hand-over from the search box (describe.html) picks the base mix and options itself.
-const handoff = readFineTune(globalThis.location?.search ?? '');
+// A hand-over picks the base mix and options itself: from a link with parameters, or from
+// the tab context (js/lib/context.js). When the calculator was edited last, its exact
+// recipe (sessionStorage 'creteLab_finetune', below) is the base instead.
+const context = loadContext();
+const handoff = readFineTune(globalThis.location?.search ?? '') ||
+    (context.lastEditor !== 'index' && context.ftPreset ? {
+        source: 'context', text: context.text || '', warn: context.warn || '', preset: context.ftPreset,
+        volume: context.volume, opts: context.ftOpts || [], exposureClasses: context.exposureClasses || []
+    } : null);
 
 // Try sessionStorage first (survives server-side URL rewriting),
 // fall back to URL params for direct links / bookmarks.
@@ -90,8 +98,8 @@ if (customRecipe) {
     ].filter(Boolean);
     infoBox.innerHTML = parts.join(' &nbsp;·&nbsp; ');
 
-    // Pre-fill volume
-    const vol = customRecipe.v || 0;
+    // Pre-fill volume (the tab context has the latest one)
+    const vol = context.volume || customRecipe.v || 0;
     if (vol > 0) document.getElementById('tuneVolume').value = fmt(vol, vol % 1 !== 0 ? 2 : 0);
 }
 
@@ -103,7 +111,7 @@ PRESETS.forEach(p => {
 });
 
 // IDs that can be pre-applied (from the main recipe).  Extra cement has no equivalent.
-const PRE_APPLIED_IDS = ['useFlyAsh', 'useSilica', 'useBV', 'useFM', 'useLP'];
+const PRE_APPLIED_IDS = ['useFlyAsh', 'useSilica', 'useBV', 'useFM', 'useLP', 'useWU'];
 
 // Returns true when this additive was already active in the main-form recipe AND
 // the user is currently viewing the custom preset (not a standard one).
@@ -268,10 +276,12 @@ function update() {
 
     // Dichtungsmittel (WU) – 2 % of cement, same default as the calculator (dry)
     const useWU = document.getElementById('useWU').checked;
-    setCard('cardWU', useWU, false);
+    const wuPre = isPreApplied('useWU');
+    setCard('cardWU', useWU, wuPre);
     const wuTotal = cementPerM3 * WATERPROOF_PCT / 100 * vol;
-    setResult('resWU', useWU, i18n.t('fine.tune.result.add.wu', { qty: fmtQty(wuTotal, 'kg') }));
-    if (useWU) items.push(i18n.t('fine.tune.steps.7.wu', { qty: fmtQty(wuTotal, 'kg') }));
+    setResult('resWU', useWU,
+        wuPre ? ALREADY_IN : i18n.t('fine.tune.result.add.wu', { qty: fmtQty(wuTotal, 'kg') }), wuPre);
+    if (useWU && !wuPre) items.push(i18n.t('fine.tune.steps.7.wu', { qty: fmtQty(wuTotal, 'kg') }));
 
     // Silikastaub – 8 % of cement (dry)
     const useSilica  = document.getElementById('useSilica').checked;
@@ -346,7 +356,7 @@ function update() {
     const baseKlasse      = getBaseKlasse();
     const anyUserChecked  =
         useExtraCement ||
-        useWU ||
+        (useWU && !wuPre) ||
         (useFlyAsh && !flyAshPre) ||
         (useSilica  && !silicaPre) ||
         (useBV      && !bvPre) ||
@@ -424,19 +434,44 @@ function enforceBvFmXor(justChanged) {
     }
 }
 
+// ── Tab context: write what the user changes here, with its calculator counterpart ──
+const ID_TO_OPT = { useExtraCement: 'extraCement', useFlyAsh: 'flyAsh', useSilica: 'silica', useBV: 'bv', useFM: 'fm', useLP: 'lp', useWU: 'wu' };
+function currentOpts() {
+    return Object.entries(ID_TO_OPT).filter(([id]) => document.getElementById(id).checked).map(([, opt]) => opt);
+}
+function rememberOption(id) {
+    const opt = ID_TO_OPT[id];
+    const patch = { ftOpts: currentOpts() };
+    if (OPT_TO_FIELD[opt]) {
+        const [field, value] = OPT_TO_FIELD[opt];
+        patch[field] = document.getElementById(id).checked ? value : 0;
+    }
+    if (opt === 'bv' || opt === 'fm') {
+        patch.admixtureType = document.getElementById('useBV').checked ? 'BV' : document.getElementById('useFM').checked ? 'FM' : 'none';
+    }
+    saveContext(patch, 'finetune');
+}
+sel.addEventListener('change', () => {
+    const preset = PRESETS.find(p => p.value === sel.value);
+    if (preset) saveContext({ ftPreset: preset.value, strengthClass: preset.klasse }, 'finetune');
+});
+
 // Wire events — both input (keystrokes) and change (Enter / tab / paste)
 ['useExtraCement', 'useFlyAsh', 'useBV', 'useFM', 'useSilica', 'useLP', 'useWU'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
         if (id === 'useBV' || id === 'useFM') enforceBvFmXor(id);
         update();
+        rememberOption(id);
     });
 });
 const volInput = document.getElementById('tuneVolume');
-volInput.addEventListener('input', update);
-volInput.addEventListener('change', update);
+const rememberVolume = () => saveContext({ volume: getVolume() }, 'finetune');
+volInput.addEventListener('input', () => { update(); rememberVolume(); });
+volInput.addEventListener('change', () => { update(); rememberVolume(); });
 
 // Re-render on language change
 function rebuildDropdowns() {
+    const current = sel.value;   // keep the user's choice across a language switch
     sel.innerHTML = '';
     if (customRecipe) {
         const customLabel = customRecipe.klasse
@@ -458,6 +493,7 @@ function rebuildDropdowns() {
         sel.appendChild(opt);
     });
     sel.value = customRecipe ? 'custom' : (handoff?.preset && PRESETS.some(p => p.value === handoff.preset) ? handoff.preset : PRESETS[1].value);
+    if (current && [...sel.options].some(o => o.value === current)) sel.value = current;
 }
 
 i18n.patchDom();

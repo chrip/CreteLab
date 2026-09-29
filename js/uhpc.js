@@ -13,6 +13,7 @@ import {
 } from './lib/uhpc-engine.js';
 import { fmt, fmtQty, parseDecimal } from './lib/format.js';
 import { readUhpc } from './lib/handoff.js';
+import { loadContext, saveContext } from './lib/context.js';
 import { i18n } from './lib/i18n.js';
 
 // ── DOM lookups ────────────────────────────────────────────────────────
@@ -238,6 +239,7 @@ function update() {
 // ── Wire-up ────────────────────────────────────────────────────────────
 
 function rebuildDropdown() {
+    const current = els.presetSelect.value;   // keep the selection across a language switch
     const sorted = [...UHPC_PRESETS].sort(
         (a, b) => effective28dStrength(a) - effective28dStrength(b)
     );
@@ -249,12 +251,15 @@ function rebuildDropdown() {
         option.textContent = `${strengthPrefix(p)} — ${label}`;
         els.presetSelect.appendChild(option);
     }
+    if (current && UHPC_PRESETS.some(p => p.key === current)) els.presetSelect.value = current;
 }
 
 populatePresetDropdown();
 els.presetSelect.value = UHPC_PRESETS[0].key;
 // A hand-over from the search box (describe.html) picks the preset and volume.
-const handoff = readUhpc(globalThis.location?.search ?? '');
+const context = loadContext();
+const handoff = readUhpc(globalThis.location?.search ?? '') ||
+    (context.uhpcPreset || context.volume ? { source: 'context', text: context.text || '', preset: context.uhpcPreset, volume: context.volume } : null);
 if (handoff) {
     if (UHPC_PRESETS.some(p => p.key === handoff.preset)) els.presetSelect.value = handoff.preset;
     if (handoff.volume > 0) els.volumeInput.value = i18n.formatNumber(handoff.volume, { maximumFractionDigits: 4, useGrouping: false });
@@ -264,9 +269,11 @@ if (handoff) {
         note.classList.remove('hidden');
     }
 }
-els.presetSelect.addEventListener('change', update);
-els.volumeInput.addEventListener('input', update);
-els.volumeInput.addEventListener('change', update);
+// Tab context (js/lib/context.js): remember what the user changes here.
+const rememberUhpc = () => saveContext({ uhpcPreset: els.presetSelect.value, volume: readVolumeM3() }, 'uhpc');
+els.presetSelect.addEventListener('change', () => { update(); rememberUhpc(); });
+els.volumeInput.addEventListener('input', () => { update(); rememberUhpc(); });
+els.volumeInput.addEventListener('change', () => { update(); rememberUhpc(); });
 update();
 
 i18n.patchDom();

@@ -4,6 +4,10 @@ import { fineTunePresetFor, bagMixKg, BAG_KG, WATERPROOF_PCT } from './lib/fine-
 import { getAdmixtureDosage, applyAdmixtureWaterReduction } from './lib/additives.js';
 import { standardUrl, fineTuneUrl, uhpcUrl } from './lib/handoff.js';
 import { resolveVolume, wallFromAnswers } from './lib/volume.js';
+import { loadContext, saveContext } from './lib/context.js';
+
+// Set while a new search result is shown; null for a result restored from the tab context.
+let rememberResult = null;
 
 // Measurements the server found in the current description (describe/measurements.py)
 let currentCandidates = [];
@@ -97,8 +101,8 @@ const STRINGS = {
     },
     en: {
         'tagline': 'Describe your project – we calculate the concrete',
-        'nav.describe': 'Describe project', 'nav.calculator': 'Concrete calculator',
-        'nav.finetune': 'Fine-tune recipe', 'nav.uhpc': 'High-performance concrete',
+        'nav.describe': 'Describe Project', 'nav.calculator': 'Concrete Calculator',
+        'nav.finetune': 'Fine-Tune Recipe', 'nav.uhpc': 'High-Performance Concrete',
         'input.label': 'Project description',
         'input.button': 'Calculate recipe', 'input.busy': 'Thinking …',
         'examples': 'Examples:',
@@ -179,9 +183,20 @@ const STRINGS = {
     }
 };
 
+// Same language setting as the other pages (js/lib/i18n-init.js): ?lang=, then the saved
+// choice, then the browser. A ?lang= choice is saved so the other pages follow it.
+const LANG_KEY = 'cretelab_locale';
 const lang = (() => {
-    const p = new URLSearchParams(location.search).get('lang');
-    if (p === 'de' || p === 'en') return p;
+    const inPath = location.pathname.split('/').find(seg => seg === 'de' || seg === 'en');
+    const p = new URLSearchParams(location.search).get('lang') || inPath;
+    if (p === 'de' || p === 'en') {
+        try { localStorage.setItem(LANG_KEY, p); } catch { /* storage blocked */ }
+        return p;
+    }
+    try {
+        const stored = localStorage.getItem(LANG_KEY);
+        if (stored === 'de' || stored === 'en') return stored;
+    } catch { /* storage blocked */ }
     return (navigator.language || 'de').toLowerCase().startsWith('de') ? 'de' : 'en';
 })();
 
@@ -356,6 +371,22 @@ function renderActions(approach, { text, vol, mapped, answers, presetKey }) {
         bagged: [['action.edit.finetune', fineTune, true, thin], ['action.alt.standard', standard, false, thin]],
         fine_mortar: [['action.edit.uhpc', uhpc, true], ['action.alt.finetune', fineTune, false, thin], ['action.alt.standard', standard, false, thin]]
     }[approach];
+    if (rememberResult) {
+        saveContext({
+            text, lastResult: rememberResult.data, warn: thin ? 'thin' : '', volume,
+            strengthClass: values.strengthClass, exposureClasses, siebline: values.siebline,
+            consistencyClass: values.consistencyClass, aggregateType: values.aggregateType,
+            cementType: values.cementType, vorhaltemas: values.vorhaltemas, admixtureType: values.admixtureType,
+            airEntrainingPercent: values.useAirEntraining ? values.airEntrainingPercent : 0,
+            flyAshPercent: 0, silicaFumePercent: 0,
+            waterproofPercent: values.useWaterproofing ? values.waterproofPercent : 0,
+            ftPreset: fineTunePresetFor(values.strengthClass).value, ftOpts: fineTuneOptions(answers, text),
+            uhpcPreset: presetKey || chooseDiyPreset(answers, vol).presetKey
+        }, 'describe');
+    } else {
+        // Restored result: the forms may have been edited since, so open them from the context.
+        buttons.forEach(b => { b[1] = b[1].split('?')[0]; });
+    }
     $('describeActions').innerHTML = buttons.map(([key, href, primary, warn]) =>
         `<a class="btn ${primary ? 'btn-primary' : 'btn-secondary'} describe-action" href="${esc(href)}">${esc(t(key))}</a>` +
         (warn ? `<p class="form-hint describe-action-warn">⚠️ ${esc(t('action.warn.thin'))}</p>` : '')).join('');
@@ -373,42 +404,7 @@ async function run(text) {
             body: JSON.stringify({ text })
         });
         if (!res.ok) throw new Error(t('error.server', { status: res.status }));
-        const { answers, model, ms, candidates = [] } = await res.json();
-        currentCandidates = candidates;
-        currentAnswers = answers;
-
-        $('diySteps').innerHTML = '';
-        document.querySelector('#describeResult thead th:nth-child(2)').textContent = t('recipe.perm3');
-        renderFacts(answers);
-        $('modelInfo').textContent = t('model', { model, ms: fmt(ms) });
-        const approach = detectApproach(answers, text, { wall: wallFromAnswers(answers, candidates) });
-        const mapped = factsToValues(answers);
-        if (approach === 'fine_mortar') {
-            const { vol, presetKey } = renderDiy(text, answers);
-            renderActions(approach, { text, vol, mapped, answers, presetKey });
-            $('describeResult').classList.remove('hidden');
-            return;
-        }
-        if (approach === 'bagged') {
-            const vol = renderBagged(text, answers, mapped);
-            renderActions(approach, { text, vol, mapped, answers });
-            $('describeResult').classList.remove('hidden');
-            return;
-        }
-
-        const vol = resolveVolume(text, answers, currentCandidates);
-        const { values, exposureClasses, reasons } = mapped;
-        const result = computeRecipe({ volume: vol.volume, ...values }, exposureClasses);
-        if (result.error) throw new Error(t('error.engine', { key: result.error }));
-
-        $('resultTitle').textContent = t('title', {
-            strength: values.strengthClass, classes: exposureClasses.join(' + '), vol: fmt(vol.volume, 2)
-        });
-        $('volumeNote').textContent = volumeNote(vol, 'volume.default');
-        $('reasonList').innerHTML = reasons.map(r => `<li>${esc(t(r.replace('describe.', '')))}</li>`).join('');
-        renderRecipe(result.recipe, values, vol.volume);
-        renderActions(approach, { text, vol, mapped, answers });
-        $('describeResult').classList.remove('hidden');
+        renderResult(text, await res.json(), { remember: true });
     } catch (e) {
         $('describeError').textContent = e.message;
         $('describeError').classList.remove('hidden');
@@ -419,13 +415,75 @@ async function run(text) {
     }
 }
 
+/**
+ * Show the recipe for one answer of the server. `remember` writes it to the tab context
+ * (a new search = a new project); a restored result is only shown, so edits made in the
+ * forms since then are kept.
+ */
+function renderResult(text, data, { remember }) {
+    const { answers, model, ms, candidates = [] } = data;
+    currentCandidates = candidates;
+    currentAnswers = answers;
+    rememberResult = remember ? { text, data } : null;
+
+    $('diySteps').innerHTML = '';
+    document.querySelector('#describeResult thead th:nth-child(2)').textContent = t('recipe.perm3');
+    renderFacts(answers);
+    $('modelInfo').textContent = t('model', { model, ms: fmt(ms) });
+    const approach = detectApproach(answers, text, { wall: wallFromAnswers(answers, candidates) });
+    const mapped = factsToValues(answers);
+    if (approach === 'fine_mortar') {
+        const { vol, presetKey } = renderDiy(text, answers);
+        renderActions(approach, { text, vol, mapped, answers, presetKey });
+    } else if (approach === 'bagged') {
+        const vol = renderBagged(text, answers, mapped);
+        renderActions(approach, { text, vol, mapped, answers });
+    } else {
+        const vol = resolveVolume(text, answers, currentCandidates);
+        const { values, exposureClasses, reasons } = mapped;
+        const result = computeRecipe({ volume: vol.volume, ...values }, exposureClasses);
+        if (result.error) throw new Error(t('error.engine', { key: result.error }));
+        $('resultTitle').textContent = t('title', {
+            strength: values.strengthClass, classes: exposureClasses.join(' + '), vol: fmt(vol.volume, 2)
+        });
+        $('volumeNote').textContent = volumeNote(vol, 'volume.default');
+        $('reasonList').innerHTML = reasons.map(r => `<li>${esc(t(r.replace('describe.', '')))}</li>`).join('');
+        renderRecipe(result.recipe, values, vol.volume);
+        renderActions(approach, { text, vol, mapped, answers });
+    }
+    $('describeResult').classList.remove('hidden');
+    document.querySelector('.describe-examples').classList.add('hidden');   // a result replaces the examples
+}
+
 applyStaticStrings();
-i18n.setLocale(lang).catch(() => {});  // preset labels and steps for the DIY route
+
+// Coming back from a form: show the last description and its result again, without a new
+// search (that would overwrite the changes made in the forms). ?q=… starts a new search.
+function restoreFromContext() {
+    const q = new URLSearchParams(location.search).get('q');
+    const ctx = loadContext();
+    if (q) {
+        $('describeInput').value = q;
+        run(q);
+    } else if (ctx.text) {
+        $('describeInput').value = ctx.text;
+        if (ctx.lastResult) {
+            try { renderResult(ctx.text, ctx.lastResult, { remember: false }); } catch { /* shown on the next search */ }
+        }
+    }
+}
+// Preset labels and steps for the DIY route come from the i18n catalogue; restore after it loaded.
+i18n.setLocale(lang).catch(() => {}).finally(restoreFromContext);
 $('describeForm').addEventListener('submit', e => {
     e.preventDefault();
     const text = $('describeInput').value.trim();
     if (text) run(text);
 });
+// Emptying the field brings the examples back.
+$('describeInput').addEventListener('input', () => {
+    if (!$('describeInput').value.trim()) document.querySelector('.describe-examples').classList.remove('hidden');
+});
+
 // Enter searches like a search box; Shift+Enter starts a new line.
 $('describeInput').addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {

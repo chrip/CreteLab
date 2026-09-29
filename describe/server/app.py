@@ -55,8 +55,11 @@ def health():
 
 
 # Serve only the site itself, never the repo root (.git, training data, node_modules).
-for folder in ("css", "js", "assets", "locales"):
-    app.mount(f"/{folder}", StaticFiles(directory=ROOT / folder), name=folder)
+# The language switcher (js/lib/i18n-init.js) uses /de/… and /en/… paths as in the static
+# build, so every page and asset is served under those prefixes too.
+for prefix in ("", "/de", "/en"):
+    for folder in ("css", "js", "assets", "locales"):
+        app.mount(f"{prefix}/{folder}", StaticFiles(directory=ROOT / folder), name=f"{prefix}{folder}")
 
 PAGES = {"describe.html", "index.html", "fine-tune.html", "uhpc.html"}
 
@@ -66,8 +69,24 @@ def home():
     return RedirectResponse("/describe.html")
 
 
+@app.get("/{lang}/")
+def lang_home(lang: str):
+    if lang not in ("de", "en"):
+        raise HTTPException(404)
+    return FileResponse(ROOT / "describe.html")
+
+
+@app.get("/{lang}/{page}")
+def lang_page(lang: str, page: str):
+    if lang not in ("de", "en") or page not in PAGES:
+        raise HTTPException(404)
+    return FileResponse(ROOT / page)
+
+
 @app.get("/{page}")
 def page(page: str):
+    if page in ("de", "en"):
+        return RedirectResponse(f"/{page}/")
     if page not in PAGES:
         raise HTTPException(404)
     return FileResponse(ROOT / page)
