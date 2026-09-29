@@ -328,7 +328,7 @@ export const UHPC_PRESETS = [
     {
         // Sprayed and laminated white mix for thin furniture (10–15 mm walls).
         key: 'diy-white-15kg-laminate',
-        label: 'DIY-Weißbeton zum Aufsprühen & Laminieren (10–15 mm, außen)',
+        label: 'DIY-Weißbeton für dünnwandige Möbel und Gefäße, außen',
         source: {
             // Quoted recipe (verbatim) from the article body:
             //   "Ich habe folgende Mischung bezogen auf 15 kg Beton verwendet:
@@ -364,8 +364,8 @@ export const UHPC_PRESETS = [
         mixingSteps: [
             '<strong>Weißzement, Sand und Quarzmehl trocken vormischen</strong> ({cementKg} Weißzement + {sandKg} Sand + {quartzPowderKg} Quarzmehl). Der Sand besteht im Verhältnis 3 : 5 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm.',
             '<strong>Wasser und Fließmittel zugeben</strong> ({waterL} Wasser, {superplasticizerL} plastifizierendes Fließmittel) und gründlich mischen.',
-            '<strong>Erste Schicht 1,5–2 mm auf die Schalung aufsprühen</strong>, bis die Schalung nicht mehr durchscheint.',
-            '<strong>Weitere Schichten von Hand auftragen</strong> — dafür muss der Beton knetfähig sein — und dabei drei Lagen Armierungsgewebe einlegen.',
+            '<strong>Erste Schicht 1,5–2 mm dünn auf die Form sprühen</strong>, bis die Form nicht mehr durchscheint – so wird die Sichtseite glatt.',
+            '<strong>Weitere Schichten von Hand auftragen</strong> – dafür muss der Beton knetfähig sein – und dazwischen drei Lagen Glasfasergewebe einlegen.',
             '<strong>24–48 Stunden aushärten lassen</strong> (je nach Raumtemperatur), ausschalen und für draußen mit Imprägnierung und Wachs versiegeln.',
         ],
         claimedFckMpa:    null,
