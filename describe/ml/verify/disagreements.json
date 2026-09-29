@@ -1,0 +1,1058 @@
+[
+ {
+  "id": "0",
+  "q": "element",
+  "qwen": {
+   "value": "slab",
+   "votes": 3,
+   "of": 5
+  },
+  "opus": "paving",
+  "text": "loading ramp 3x4 m, 25 cm thick, outdoor, frost protection",
+  "note": "loading ramp could be slab or paving"
+ },
+ {
+  "id": "2",
+  "q": "element",
+  "qwen": {
+   "value": "slab",
+   "votes": 5,
+   "of": 5
+  },
+  "opus": "wall",
+  "text": "Kellertreppe raus Terasse 2m², Grundwasser im Spiel, was für Beton?",
+  "note": "groundwater mentioned; whether stair must be watertight is unclear"
+ },
+ {
+  "id": "3",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": true,
+  "text": "loading ramp 4x3m 20cm thik outside",
+  "note": "loading ramp could be slab or paving"
+ },
+ {
+  "id": "3",
+  "q": "element",
+  "qwen": {
+   "value": "slab",
+   "votes": 4,
+   "of": 5
+  },
+  "opus": "paving",
+  "text": "loading ramp 4x3m 20cm thik outside",
+  "note": "loading ramp could be slab or paving"
+ },
+ {
+  "id": "7",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "Betondecke Flachdach außen, muss winterfest sein, 20 cm stark",
+  "note": ""
+ },
+ {
+  "id": "8",
+  "q": "traffic",
+  "qwen": {
+   "value": 0,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": 1,
+  "text": "I need a mix for a ceiling slab in my new apartment, about 2x3 m, 20 cm thick, standard residential loads",
+  "note": ""
+ },
+ {
+  "id": "9",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "Brauche eine Betonmischung für meinen kleinen Swimming Pool, ca. 2 m³, mit Bewehrung, soll wasserdicht sein",
+  "note": "pool is floor plus walls; element slab vs wall unclear"
+ },
+ {
+  "id": "9",
+  "q": "element",
+  "qwen": {
+   "value": "wall",
+   "votes": 4,
+   "of": 5
+  },
+  "opus": "slab",
+  "text": "Brauche eine Betonmischung für meinen kleinen Swimming Pool, ca. 2 m³, mit Bewehrung, soll wasserdicht sein",
+  "note": "pool is floor plus walls; element slab vs wall unclear"
+ },
+ {
+  "id": "11",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "betonfundament für die schweißbank, 30cm tief, soll auch mit streusalz in kontakt kommen",
+  "note": "welding bench may be in a workshop; assumed outdoor due to salt"
+ },
+ {
+  "id": "16",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Stütze für den Carport, 25x25 cm, 3,5 m, muss im Winter mit Streusalz und Frost zurechtkommen",
+  "note": ""
+ },
+ {
+  "id": "17",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "dachplatte gießen 6x3 m 14 cm was brauch ich an beton und staahl",
+  "note": "roof slab may be covered by waterproofing; assumed exposed"
+ },
+ {
+  "id": "18",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 2,
+  "text": "wie viel beton brauche ich für den hof 30 qm",
+  "note": "yard may be foot-only; assumed cars and salt"
+ },
+ {
+  "id": "20",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Beton für Stuetze 35x35, 2,5 m, Außen, frostbeständig, mit Bewehrung",
+  "note": ""
+ },
+ {
+  "id": "23",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "will mir bordsteine für den ränderbereich des parkplatzes gießen, 15m lang 20x10cm, muss belastbar sein",
+  "note": "curbs could be small casts or paving"
+ },
+ {
+  "id": "25",
+  "q": "frost",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "i need a concrete recipe for the ground floor slab of our new house, it sits below frost depth so it has to be frost resistant",
+  "note": "contradictory: below frost depth means it cannot freeze, yet user asks for frost resistance"
+ },
+ {
+  "id": "26",
+  "q": "traffic",
+  "qwen": {
+   "value": 3,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "grundlage für press in der werkstatt, muss haltbar sein",
+  "note": "machine load, not traffic; could be read as heavy industrial wear"
+ },
+ {
+  "id": "27",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 2,
+  "text": "konkret rezept halber kubik hofplatte",
+  "note": "Hof use unclear: foot vs cars, and whether salted"
+ },
+ {
+  "id": "30",
+  "q": "element",
+  "qwen": {
+   "value": "foundation",
+   "votes": 5,
+   "of": 5
+  },
+  "opus": "slab",
+  "text": "Betonplatte für Luftwärmepumpe 1,5 x 1,0 m, 15 cm dick, drinnen im Keller",
+  "note": "base plate vs machine foundation"
+ },
+ {
+  "id": "31",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Hofeinfahrt, taue im Winter aus, muss frostsicher sein",
+  "note": ""
+ },
+ {
+  "id": "33",
+  "q": "rain",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "fundament gartenhaus 4x3m mit bewehrung",
+  "note": ""
+ },
+ {
+  "id": "33",
+  "q": "traffic",
+  "qwen": {
+   "value": 0,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": 1,
+  "text": "fundament gartenhaus 4x3m mit bewehrung",
+  "note": ""
+ },
+ {
+  "id": "38",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "halber Kubik Beton, Gartenmauer, im Garten, eher trocken",
+  "note": ""
+ },
+ {
+  "id": "39",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Mach gerade den Anbau und bräuchte ein Rezept fürs Fundament, geht so ca. einen halben Kubi, steht drinnen",
+  "note": "'steht drinnen' for an extension foundation is unusual; taken as protected inside"
+ },
+ {
+  "id": "39",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Mach gerade den Anbau und bräuchte ein Rezept fürs Fundament, geht so ca. einen halben Kubi, steht drinnen",
+  "note": "'steht drinnen' for an extension foundation is unusual; taken as protected inside"
+ },
+ {
+  "id": "40",
+  "q": "frost",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "strip foundation extension 1.8 m³ no steel",
+  "note": ""
+ },
+ {
+  "id": "41",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Großer dekorativer Betonkübel ca. 1,2m lang, mit Bewehrung, Außeneinsatz",
+  "note": ""
+ },
+ {
+  "id": "41",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Großer dekorativer Betonkübel ca. 1,2m lang, mit Bewehrung, Außeneinsatz",
+  "note": ""
+ },
+ {
+  "id": "41",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Großer dekorativer Betonkübel ca. 1,2m lang, mit Bewehrung, Außeneinsatz",
+  "note": ""
+ },
+ {
+  "id": "45",
+  "q": "deicing_salt",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "I need concrete for a farm yard slab, about 8x12 m, 25 cm thick, it has to handle trucks and forklifts",
+  "note": "farm yard may or may not be salted; yard slab could be slab or paving"
+ },
+ {
+  "id": "48",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Gartenmauer 4x1,2 m 20 cm dick",
+  "note": ""
+ },
+ {
+  "id": "48",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Gartenmauer 4x1,2 m 20 cm dick",
+  "note": ""
+ },
+ {
+  "id": "51",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "beton für kellerdecke feuchter keller, frost spielt keine rolle",
+  "note": ""
+ },
+ {
+  "id": "51",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "beton für kellerdecke feuchter keller, frost spielt keine rolle",
+  "note": ""
+ },
+ {
+  "id": "52",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "0,3 m³ betongemisch für trampolinecken, drinnen im keller",
+  "note": "trampoline corner anchors/weights: post base vs small cast"
+ },
+ {
+  "id": "52",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "0,3 m³ betongemisch für trampolinecken, drinnen im keller",
+  "note": "trampoline corner anchors/weights: post base vs small cast"
+ },
+ {
+  "id": "52",
+  "q": "element",
+  "qwen": {
+   "value": "small",
+   "votes": 5,
+   "of": 5
+  },
+  "opus": "foundation",
+  "text": "0,3 m³ betongemisch für trampolinecken, drinnen im keller",
+  "note": "trampoline corner anchors/weights: post base vs small cast"
+ },
+ {
+  "id": "55",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "conrete manhole for the garden, small one, no car on top",
+  "note": "manhole fits no element option well; watertightness depends on whether it carries wastewater"
+ },
+ {
+  "id": "56",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "halber Kubik beton für die decke im dachgeschoss",
+  "note": ""
+ },
+ {
+  "id": "56",
+  "q": "traffic",
+  "qwen": {
+   "value": 0,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": 1,
+  "text": "halber Kubik beton für die decke im dachgeschoss",
+  "note": ""
+ },
+ {
+  "id": "58",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "I want to build a garden wall about 6 meters long and a meter high for my backyard",
+  "note": "reinforcement not stated for 1 m freestanding wall"
+ },
+ {
+  "id": "58",
+  "q": "reinforced",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "I want to build a garden wall about 6 meters long and a meter high for my backyard",
+  "note": "reinforcement not stated for 1 m freestanding wall"
+ },
+ {
+  "id": "59",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "garden wall 3x1.5m 15cm thik, needs to last through winter",
+  "note": ""
+ },
+ {
+  "id": "62",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "halber Kubik, Einfahrt, Grundwasser steht hoch, worauf achten?",
+  "note": ""
+ },
+ {
+  "id": "63",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "concrete base for air compressor",
+  "note": "location unstated; assumed compressor in workshop/garage indoors"
+ },
+ {
+  "id": "64",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "gartenbank beton gießen draußen soll das halten im winter",
+  "note": ""
+ },
+ {
+  "id": "64",
+  "q": "reinforced",
+  "qwen": {
+   "value": false,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": true,
+  "text": "gartenbank beton gießen draußen soll das halten im winter",
+  "note": ""
+ },
+ {
+  "id": "65",
+  "q": "rain",
+  "qwen": {
+   "value": false,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": true,
+  "text": "just a flat slab under the silo maybe 4m round 25 cm",
+  "note": "silo load is heavy static, not traffic; filling trucks may drive on surrounding area"
+ },
+ {
+  "id": "67",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Außenstufen in Hanglage bauen, Grundwasserspiegel ist ziemlich hoch, was passt da?",
+  "note": "de-icing salt on private outdoor steps is likely but not stated"
+ },
+ {
+  "id": "68",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Bordstein frostbeständig Tausalz",
+  "note": "curb: paving vs small cast"
+ },
+ {
+  "id": "68",
+  "q": "element",
+  "qwen": {
+   "value": "small",
+   "votes": 4,
+   "of": 5
+  },
+  "opus": "paving",
+  "text": "Bordstein frostbeständig Tausalz",
+  "note": "curb: paving vs small cast"
+ },
+ {
+  "id": "69",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Trampolin-Verankerung 3x2 m, Bodenplatte 15 cm dick",
+  "note": ""
+ },
+ {
+  "id": "70",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Stempelfundament 40x40x80 cm mit Bewehrung, Außenbereich, Frost bis -15°",
+  "note": ""
+ },
+ {
+  "id": "71",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Gartenmauer am Einfahrtsweg, 3 m lang 40 cm hoch, soll Tausalz aushalten",
+  "note": ""
+ },
+ {
+  "id": "71",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Gartenmauer am Einfahrtsweg, 3 m lang 40 cm hoch, soll Tausalz aushalten",
+  "note": ""
+ },
+ {
+  "id": "72",
+  "q": "reinforced",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Feldsteinpfosten frostbeständig C25/30",
+  "note": "'Feldsteinpfosten' unclear (posts with field stone facing?); reinforcement assumed"
+ },
+ {
+  "id": "73",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "how much concrete for a flagpole anchor that has to survive frost",
+  "note": ""
+ },
+ {
+  "id": "73",
+  "q": "element",
+  "qwen": {
+   "value": "small",
+   "votes": 5,
+   "of": 5
+  },
+  "opus": "foundation",
+  "text": "how much concrete for a flagpole anchor that has to survive frost",
+  "note": ""
+ },
+ {
+  "id": "74",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Betonrezept Terrasse 4x3 m, 20 cm, unter Boden, Grundwasser, frostsicher",
+  "note": "'unter Boden' + groundwater unclear; terrace need not hold back water"
+ },
+ {
+  "id": "78",
+  "q": "ground",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Treppenstufen außen, C25/30, wintertauglich, mit Bewehrung, 10 Stufen",
+  "note": ""
+ },
+ {
+  "id": "78",
+  "q": "deicing_salt",
+  "qwen": {
+   "value": false,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Treppenstufen außen, C25/30, wintertauglich, mit Bewehrung, 10 Stufen",
+  "note": ""
+ },
+ {
+  "id": "79",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Einfahrt 25cm dick, PKW und gelegentlich Kleinlaster, welche Mischung?",
+  "note": "reinforcement not stated; 25 cm with light trucks could also get mesh"
+ },
+ {
+  "id": "79",
+  "q": "traffic",
+  "qwen": {
+   "value": 3,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": 2,
+  "text": "Einfahrt 25cm dick, PKW und gelegentlich Kleinlaster, welche Mischung?",
+  "note": "reinforcement not stated; 25 cm with light trucks could also get mesh"
+ },
+ {
+  "id": "80",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "gartenmauer beton rezept frostsicher salzbeständig",
+  "note": ""
+ },
+ {
+  "id": "81",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "how much concrete for a small back garden wall? maybe around 1.5 m3?",
+  "note": ""
+ },
+ {
+  "id": "83",
+  "q": "frost",
+  "qwen": {
+   "value": false,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": true,
+  "text": "siloboden 6m Durchmesser 40cm stark Stahlgitter drin",
+  "note": "silo type unclear (roofed tower, slurry or open silo); rain, traffic and watertightness depend on it"
+ },
+ {
+  "id": "83",
+  "q": "watertight",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "siloboden 6m Durchmesser 40cm stark Stahlgitter drin",
+  "note": "silo type unclear (roofed tower, slurry or open silo); rain, traffic and watertightness depend on it"
+ },
+ {
+  "id": "83",
+  "q": "traffic",
+  "qwen": {
+   "value": 3,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "siloboden 6m Durchmesser 40cm stark Stahlgitter drin",
+  "note": "silo type unclear (roofed tower, slurry or open silo); rain, traffic and watertightness depend on it"
+ },
+ {
+  "id": "84",
+  "q": "ground",
+  "qwen": {
+   "value": false,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": true,
+  "text": "halber Kubik für die terrasse, muss mit streusalz klarkommen",
+  "note": ""
+ },
+ {
+  "id": "84",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "halber Kubik für die terrasse, muss mit streusalz klarkommen",
+  "note": ""
+ },
+ {
+  "id": "85",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "will nem pflanzkübel aus beton guessen fürn wintergarten",
+  "note": "conservatory is protected, but the planter itself stays wet from soil and watering"
+ },
+ {
+  "id": "85",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "will nem pflanzkübel aus beton guessen fürn wintergarten",
+  "note": "conservatory is protected, but the planter itself stays wet from soil and watering"
+ },
+ {
+  "id": "86",
+  "q": "deicing_salt",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Freiluft-Werkstatt, Gabelstapler 12t, Grundwasser hoch, ca. 8m²",
+  "note": "high groundwater mentioned, but an outdoor slab does not need to hold back water"
+ },
+ {
+  "id": "86",
+  "q": "watertight",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Freiluft-Werkstatt, Gabelstapler 12t, Grundwasser hoch, ca. 8m²",
+  "note": "high groundwater mentioned, but an outdoor slab does not need to hold back water"
+ },
+ {
+  "id": "87",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "regenwasser tank 2x2m, muss frostsicher sein, steht draußen",
+  "note": "tank fits no element option well; 'steht draussen' read as above ground"
+ },
+ {
+  "id": "89",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Betonpfeiler 30x30, 4 m hoch, Außenbereich, frostbeständig",
+  "note": ""
+ },
+ {
+  "id": "90",
+  "q": "rain",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Gartenhaus Fundament",
+  "note": ""
+ },
+ {
+  "id": "90",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Gartenhaus Fundament",
+  "note": ""
+ },
+ {
+  "id": "90",
+  "q": "traffic",
+  "qwen": {
+   "value": 0,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": 1,
+  "text": "Gartenhaus Fundament",
+  "note": ""
+ },
+ {
+  "id": "92",
+  "q": "reinforced",
+  "qwen": {
+   "value": true,
+   "votes": 3,
+   "of": 5
+  },
+  "opus": false,
+  "text": "decorative cast bench with integrated planter trough 2 m long 25 cm thick",
+  "note": ""
+ },
+ {
+  "id": "92",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "decorative cast bench with integrated planter trough 2 m long 25 cm thick",
+  "note": ""
+ },
+ {
+  "id": "93",
+  "q": "indoor_dry",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Betonrezept für einen Binder über der Garagentoröffnung, 2 m Spannweite, Dachlast, bewehrt mit BSt 500S, C30/37",
+  "note": "lintel/beam has no matching element option; outer face assumed weather-exposed"
+ },
+ {
+  "id": "93",
+  "q": "rain",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Betonrezept für einen Binder über der Garagentoröffnung, 2 m Spannweite, Dachlast, bewehrt mit BSt 500S, C30/37",
+  "note": "lintel/beam has no matching element option; outer face assumed weather-exposed"
+ },
+ {
+  "id": "93",
+  "q": "frost",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "Betonrezept für einen Binder über der Garagentoröffnung, 2 m Spannweite, Dachlast, bewehrt mit BSt 500S, C30/37",
+  "note": "lintel/beam has no matching element option; outer face assumed weather-exposed"
+ },
+ {
+  "id": "93",
+  "q": "horizontal",
+  "qwen": {
+   "value": true,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": false,
+  "text": "Betonrezept für einen Binder über der Garagentoröffnung, 2 m Spannweite, Dachlast, bewehrt mit BSt 500S, C30/37",
+  "note": "lintel/beam has no matching element option; outer face assumed weather-exposed"
+ },
+ {
+  "id": "96",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": true,
+  "text": "beton für stompfundament unter pergola säule, muss frostsicher sein",
+  "note": ""
+ },
+ {
+  "id": "97",
+  "q": "horizontal",
+  "qwen": {
+   "value": false,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": true,
+  "text": "how much concrete do i need for a small garden fence, maybe 6 or 7 posts i think",
+  "note": ""
+ },
+ {
+  "id": "99",
+  "q": "ground",
+  "qwen": {
+   "value": true,
+   "votes": 5,
+   "of": 5
+  },
+  "opus": false,
+  "text": "möchte eine beton bank für den garten bauen muss draußen überwinter",
+  "note": ""
+ },
+ {
+  "id": "99",
+  "q": "traffic",
+  "qwen": {
+   "value": 1,
+   "votes": 4,
+   "of": 5
+  },
+  "opus": 0,
+  "text": "möchte eine beton bank für den garten bauen muss draußen überwinter",
+  "note": ""
+ }
+]

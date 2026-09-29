@@ -1,0 +1,5451 @@
+{
+ "0": {
+  "text": "loading ramp 3x4 m, 25 cm thick, outdoor, frost protection",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "1": {
+  "text": "fundament für pergola säule, steht nah an der fahrspur mit enteissalz, wie hoch muss die betonfestigkeit sein?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "2": {
+  "text": "Kellertreppe raus Terasse 2m², Grundwasser im Spiel, was für Beton?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "3": {
+  "text": "loading ramp 4x3m 20cm thik outside",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "4": {
+  "text": "streifenfundament haus anbau 3x1,5 m 20 cm stark bewehrt",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "5": {
+  "text": "retaining wall frost salt resistant reinforced",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "6": {
+  "text": "wie viel beton braucht man für ne wärmepeumpe",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "7": {
+  "text": "Betondecke Flachdach außen, muss winterfest sein, 20 cm stark",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "8": {
+  "text": "I need a mix for a ceiling slab in my new apartment, about 2x3 m, 20 cm thick, standard residential loads",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "9": {
+  "text": "Brauche eine Betonmischung für meinen kleinen Swimming Pool, ca. 2 m³, mit Bewehrung, soll wasserdicht sein",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "10": {
+  "text": "wieviel zement für einen staplerboden in der halle? ca 2m³",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "11": {
+  "text": "betonfundament für die schweißbank, 30cm tief, soll auch mit streusalz in kontakt kommen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "12": {
+  "text": "Terrasse 3x4 m 18 cm Bewehrung Frost",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "13": {
+  "text": "hallo ich will nen zaun bauen und brauch bissl beton für die pfoosten 10 stück",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "14": {
+  "text": "I need a concrete mix for a load-bearing column in my basement, 30x30, about 3 m tall, no groundwater issue",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "15": {
+  "text": "need about 0.8 m³ for a low garden wall",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "16": {
+  "text": "Stütze für den Carport, 25x25 cm, 3,5 m, muss im Winter mit Streusalz und Frost zurechtkommen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "17": {
+  "text": "dachplatte gießen 6x3 m 14 cm was brauch ich an beton und staahl",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "18": {
+  "text": "wie viel beton brauche ich für den hof 30 qm",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "19": {
+  "text": "carportplatte 300x200 C30/37",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "20": {
+  "text": "Beton für Stuetze 35x35, 2,5 m, Außen, frostbeständig, mit Bewehrung",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "21": {
+  "text": "Ich will einen Industrieboden für unsere Lagerhalle legen, da fahren 2,5-t-Stapler rum, ca. 400 qm, 20 cm stark, innen",
+  "qwen": {}
+ },
+ "22": {
+  "text": "kleine Fensterbank im Wohnzimmer, C20/25 reicht da?",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "23": {
+  "text": "will mir bordsteine für den ränderbereich des parkplatzes gießen, 15m lang 20x10cm, muss belastbar sein",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "24": {
+  "text": "ac outdoor unit base light load 60x60",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "25": {
+  "text": "i need a concrete recipe for the ground floor slab of our new house, it sits below frost depth so it has to be frost resistant",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "26": {
+  "text": "grundlage für press in der werkstatt, muss haltbar sein",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "27": {
+  "text": "konkret rezept halber kubik hofplatte",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "28": {
+  "text": "fence post holes, 4 of them, frost protected",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "29": {
+  "text": "C25/30 window sill 3m total run 10cm thick indoor kitchen",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "30": {
+  "text": "Betonplatte für Luftwärmepumpe 1,5 x 1,0 m, 15 cm dick, drinnen im Keller",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "31": {
+  "text": "Hofeinfahrt, taue im Winter aus, muss frostsicher sein",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 3,
+    "of": 3
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "32": {
+  "text": "Kellerboden neu gießen innen, 4x3,5 m, 20 cm, etwas feucht drunter aber kein Grundwasser",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "33": {
+  "text": "fundament gartenhaus 4x3m mit bewehrung",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "34": {
+  "text": "Beton für Durchgangsbalken unter Kellerdecke, 2 m³, hohe Dauerlast, C30/37",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "35": {
+  "text": "I'm pouring a parking lot next to a road where we have high groundwater, need it to handle salt and frost, maybe some reinforcement",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "36": {
+  "text": "concrete for back garden path 3x3m 20cm thick, frost + de-icing salt",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 3
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "37": {
+  "text": "how much concrete do i need for a pat 5m long 50cm wide 12cm thick",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "38": {
+  "text": "halber Kubik Beton, Gartenmauer, im Garten, eher trocken",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "39": {
+  "text": "Mach gerade den Anbau und bräuchte ein Rezept fürs Fundament, geht so ca. einen halben Kubi, steht drinnen",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "40": {
+  "text": "strip foundation extension 1.8 m³ no steel",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "41": {
+  "text": "Großer dekorativer Betonkübel ca. 1,2m lang, mit Bewehrung, Außeneinsatz",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "42": {
+  "text": "swimmng pool 5x3m 22cm outdoor",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "43": {
+  "text": "I need a concrete slab under my garden pavilion that can handle frost heave — the water table is pretty high here",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "44": {
+  "text": "Hallenboden innen 18 cm, Gabelstapler bis 3 t, auf verdichtetem Untergrund, keine frostbelastung",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "45": {
+  "text": "I need concrete for a farm yard slab, about 8x12 m, 25 cm thick, it has to handle trucks and forklifts",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "46": {
+  "text": "parkplatzbeton 2m³ stahlmatten, frost+salz",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "47": {
+  "text": "Ich brauche Beton für eine Fensterbank außen, die muss frostbeständig sein, ca. 1,5 m lang und 20 cm tief",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "48": {
+  "text": "Gartenmauer 4x1,2 m 20 cm dick",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "49": {
+  "text": "Terrasse 8m² 15cm mit bewehrung, PKW soll drauf stehen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "50": {
+  "text": "Ich will eine Platte unter meinen Carport gießen, ca. 5 mal 3 Meter, ohne Bewehrung reicht das?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "51": {
+  "text": "beton für kellerdecke feuchter keller, frost spielt keine rolle",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "52": {
+  "text": "0,3 m³ betongemisch für trampolinecken, drinnen im keller",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "53": {
+  "text": "2 m³ concrete for garage support columns, outside, needs to handle de-icing salt and winter",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "54": {
+  "text": "Terasse 5x2m, 18cm, muss schweren Steinpflast tragen, außen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "55": {
+  "text": "conrete manhole for the garden, small one, no car on top",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "56": {
+  "text": "halber Kubik beton für die decke im dachgeschoss",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "57": {
+  "text": "Betonplatte Bank 200x80x10 cm Bewehrung",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "58": {
+  "text": "I want to build a garden wall about 6 meters long and a meter high for my backyard",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "59": {
+  "text": "garden wall 3x1.5m 15cm thik, needs to last through winter",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "60": {
+  "text": "Ich brauche eine Betonplatte unter meiner Luft-Wasser-Wärmepumpe, ca. 1,5 x 1 m und 20 cm dick",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "61": {
+  "text": "ich brauch beton für meine fahrzeugabstellfläche vor dem haus, ca 8qm",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "62": {
+  "text": "halber Kubik, Einfahrt, Grundwasser steht hoch, worauf achten?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "63": {
+  "text": "concrete base for air compressor",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "64": {
+  "text": "gartenbank beton gießen draußen soll das halten im winter",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "65": {
+  "text": "just a flat slab under the silo maybe 4m round 25 cm",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "66": {
+  "text": "beton für schacht unterm haus, grundwasser, armiert, ca 3 m³",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "67": {
+  "text": "Außenstufen in Hanglage bauen, Grundwasserspiegel ist ziemlich hoch, was passt da?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "68": {
+  "text": "Bordstein frostbeständig Tausalz",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 2,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "69": {
+  "text": "Trampolin-Verankerung 3x2 m, Bodenplatte 15 cm dick",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "70": {
+  "text": "Stempelfundament 40x40x80 cm mit Bewehrung, Außenbereich, Frost bis -15°",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "71": {
+  "text": "Gartenmauer am Einfahrtsweg, 3 m lang 40 cm hoch, soll Tausalz aushalten",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "72": {
+  "text": "Feldsteinpfosten frostbeständig C25/30",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "73": {
+  "text": "how much concrete for a flagpole anchor that has to survive frost",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "74": {
+  "text": "Betonrezept Terrasse 4x3 m, 20 cm, unter Boden, Grundwasser, frostsicher",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "75": {
+  "text": "decke über der garage soll neu sein so 25 qm was für beton brauch ich",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "76": {
+  "text": "garden hut slab 20cm thick reinforcement",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "77": {
+  "text": "kellerboden beton 3.5x2.8m 12cm bewehrugn matte",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 3,
+    "of": 3
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "78": {
+  "text": "Treppenstufen außen, C25/30, wintertauglich, mit Bewehrung, 10 Stufen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "79": {
+  "text": "Einfahrt 25cm dick, PKW und gelegentlich Kleinlaster, welche Mischung?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "80": {
+  "text": "gartenmauer beton rezept frostsicher salzbeständig",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "81": {
+  "text": "how much concrete for a small back garden wall? maybe around 1.5 m3?",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "82": {
+  "text": "flaggenmst fundament 40x40 mit bewehrung",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 3,
+    "of": 5
+   }
+  }
+ },
+ "83": {
+  "text": "siloboden 6m Durchmesser 40cm stark Stahlgitter drin",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "84": {
+  "text": "halber Kubik für die terrasse, muss mit streusalz klarkommen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "85": {
+  "text": "will nem pflanzkübel aus beton guessen fürn wintergarten",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "86": {
+  "text": "Freiluft-Werkstatt, Gabelstapler 12t, Grundwasser hoch, ca. 8m²",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 3,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "87": {
+  "text": "regenwasser tank 2x2m, muss frostsicher sein, steht draußen",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "88": {
+  "text": "brauch beton furs maschinenfundament in der werkstatt, geht unter den Boden",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "89": {
+  "text": "Betonpfeiler 30x30, 4 m hoch, Außenbereich, frostbeständig",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "90": {
+  "text": "Gartenhaus Fundament",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "91": {
+  "text": "Stützmauer Hang Garten 6 m, 1,20 m hoch, muss schwer beladen aushalten",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 3,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "92": {
+  "text": "decorative cast bench with integrated planter trough 2 m long 25 cm thick",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "93": {
+  "text": "Betonrezept für einen Binder über der Garagentoröffnung, 2 m Spannweite, Dachlast, bewehrt mit BSt 500S, C30/37",
+  "qwen": {
+   "indoor_dry": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "94": {
+  "text": "Kellerbodenplatte, wasserdicht, Grundwasser steht an, ca. 100 m²",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "slab",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "95": {
+  "text": "Looking for a concrete mix for a rain water tank, roughly 3x3x1.5 m, below ground, need to account for groundwater pressure",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "reinforced": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "wall",
+    "votes": 4,
+    "of": 5
+   }
+  }
+ },
+ "96": {
+  "text": "beton für stompfundament unter pergola säule, muss frostsicher sein",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 4,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 3,
+    "of": 3
+   },
+   "element": {
+    "value": "foundation",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "97": {
+  "text": "how much concrete do i need for a small garden fence, maybe 6 or 7 posts i think",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 0,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "98": {
+  "text": "concrete for the carport driveway apron, gets de-icing salt every winter so needs to be durable",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 3,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 2,
+    "votes": 5,
+    "of": 5
+   },
+   "element": {
+    "value": "paving",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ },
+ "99": {
+  "text": "möchte eine beton bank für den garten bauen muss draußen überwinter",
+  "qwen": {
+   "indoor_dry": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "rain": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "ground": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "frost": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "deicing_salt": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "horizontal": {
+    "value": true,
+    "votes": 5,
+    "of": 5
+   },
+   "reinforced": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "watertight": {
+    "value": false,
+    "votes": 5,
+    "of": 5
+   },
+   "traffic": {
+    "value": 1,
+    "votes": 4,
+    "of": 5
+   },
+   "element": {
+    "value": "small",
+    "votes": 5,
+    "of": 5
+   }
+  }
+ }
+}
