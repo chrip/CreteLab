@@ -253,8 +253,6 @@
     "lead": "Beim Werk bestellen Sie einen Beton nach Eigenschaften. Diese Angaben braucht es, der Rest ist Sache des Werks.",
     "small": "{volume} ist für ein Mischfahrzeug wenig: Werke berechnen einen Mindermengenzuschlag. Rechnen Sie mit Sackware oder Selbstmischen nach, oder fragen Sie nach einer Betontankstelle.",
     "textTitle": "Bestelltext",
-    "copy": "Text kopieren",
-    "copied": "Kopiert",
     "strength": "Druckfestigkeitsklasse",
     "exposure": "Expositionsklassen",
     "moisture": "Feuchtigkeitsklasse",

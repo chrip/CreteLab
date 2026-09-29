@@ -253,8 +253,6 @@
     "lead": "A plant sells concrete by its properties. It needs these details; the mix design is the plant's job.",
     "small": "{volume} is little for a truck mixer: plants charge a small-quantity surcharge. Compare with bags or mixing it yourself, or look for a self-service concrete station.",
     "textTitle": "Order text",
-    "copy": "Copy text",
-    "copied": "Copied",
     "strength": "Strength class",
     "exposure": "Exposure classes",
     "moisture": "Moisture class",

@@ -7,9 +7,6 @@
     <div>
       <h3>{{ $t('order.textTitle') }}</h3>
       <pre class="order" data-testid="order-text">{{ text }}</pre>
-      <button type="button" class="btn btn-secondary" @click="copy">
-        {{ copied ? $t('order.copied') : $t('order.copy') }}
-      </button>
     </div>
 
     <dl class="spec">
@@ -59,12 +56,6 @@ const text = computed(() => {
   return lines.join('\n');
 });
 
-const copied = ref(false);
-async function copy() {
-  await navigator.clipboard?.writeText(text.value);
-  copied.value = true;
-  setTimeout(() => (copied.value = false), 2000);
-}
 </script>
 
 <style scoped>
@@ -74,7 +65,7 @@ async function copy() {
   border-radius: var(--radius-sm);
   padding: 1rem;
   white-space: pre-wrap;
-  margin: 0 0 0.75rem;
+  margin: 0;
 }
 
 .spec {
