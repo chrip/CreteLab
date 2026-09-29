@@ -1,6 +1,8 @@
 // From a description and Laya's answers to a project: which tool, which way of making it,
 // what it needs and how much of it.
+import { planBag, type BagPlan } from '../bagged/feasibility';
 import { DECOR_PRESETS, type DecorPreset } from '../decor/presets';
+import { ORDER_SENSIBLE_FROM_M3 } from '../order/order';
 import { yes, type AnalysisResponse, type Answers } from './answers';
 import { factsFromAnswers, requirementsFromFacts, type Facts, type Requirements } from './requirements';
 import { parseVolume, resolveVolume, wallFromAnswers, type VolumeResult } from './volume';
@@ -30,18 +32,28 @@ export function isDiyPiece(answers: Answers): boolean {
 
 /**
  * Laya's `approach` answer; the physics overrides it where it is clear: walls under 3 cm
- * need fine mortar. Without an answer, the DIY question and clear keywords decide.
+ * need fine mortar. A text that names bagged concrete wins over an unsure "scratch".
+ * Without an answer, the DIY question and clear keywords decide.
  */
 export function detectApproach(answers: Answers, text = '', wall: number | null = null): Approach {
   const choice = answers.approach?.choice;
   if (choice === 'scratch' && wall !== null && wall < MIN_SITE_CONCRETE_WALL_M) return 'fine_mortar';
+  // "mit Fertigbeton aus dem Baumarkt" says it outright; an unsure model answer does not overrule it.
+  const unsure = (answers.approach?.confidence ?? 1) < 0.5;
+  if (choice === 'scratch' && unsure && BAGGED_WORDS.test(text.toLowerCase())) return 'bagged';
   if (choice === 'scratch' || choice === 'bagged' || choice === 'fine_mortar') return choice;
   if (BAGGED_WORDS.test(text.toLowerCase())) return 'bagged';
   return isDiyPiece(answers) ? 'fine_mortar' : 'scratch';
 }
 
-export function productionFor(approach: Approach): Production {
-  return approach === 'bagged' ? 'bag' : 'mix';
+/**
+ * The way to make it: bags only when the user wants them and a bag meets the requirements,
+ * otherwise mixing it yourself, or ready-mixed concrete from about 1 m³.
+ */
+export function productionFor(approach: Approach, bag: BagPlan, volume: number): Production {
+  if (approach === 'bagged' && bag.feasible) return 'bag';
+  if (approach === 'bagged' && volume >= ORDER_SENSIBLE_FROM_M3) return 'order';
+  return 'mix';
 }
 
 /** The user asks to add cement or a plasticiser to a bag: the bag tool, not the planner. */
@@ -69,6 +81,10 @@ export interface ProjectPlan {
   tool: 'planner' | 'decor';
   approach: Approach;
   production: Production;
+  /** Bagged concrete for these requirements: the product, or why none fits. */
+  bag: BagPlan;
+  /** The user asked for bags, but none meets the requirements. */
+  bagRejected: boolean;
   facts: Facts;
   requirements: Requirements;
   volume: VolumeResult;
@@ -91,13 +107,24 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
     defaultVolume: diy ? DIY_DEFAULT_VOLUME_M3 : SITE_DEFAULT_VOLUME_M3,
   });
   const thinWall = (volume.wall ?? wall ?? Infinity) < MIN_SITE_CONCRETE_WALL_M;
+  const requirements = requirementsFromFacts(facts);
+  const bag = planBag({
+    strengthClass: requirements.mix.strengthClass,
+    exposureClasses: requirements.exposureClasses,
+    structural: facts.reinforced,
+    watertight: requirements.watertight,
+    volume: volume.volume,
+    minThickness: volume.wall ?? wall,
+  });
   return {
     text,
     tool: approach === 'fine_mortar' ? 'decor' : 'planner',
     approach,
-    production: productionFor(approach),
+    production: productionFor(approach, bag, volume.volume),
+    bag,
+    bagRejected: approach === 'bagged' && !bag.feasible,
     facts,
-    requirements: requirementsFromFacts(facts),
+    requirements,
     volume,
     wall: volume.wall ?? wall,
     thinWall,

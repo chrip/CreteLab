@@ -13,6 +13,9 @@
 
     <section aria-labelledby="production-title">
       <h2 id="production-title">{{ $t('production.title') }}</h2>
+      <p v-if="plan?.bagRejected" class="note warn" data-testid="bag-rejected">
+        {{ $t('production.bagRejected', { production: $t(`production.${plan.production}.name`) }) }}
+      </p>
       <ProductionTabs v-model="state.tab" :recommended="plan?.production">
         <template #bag><BagPanel :mix="state.mix" :volume="state.volume" :wall="plan?.wall" :asks-for-additions="plan?.wantsBagTuning" /></template>
         <template #mix><MixPanel :mix="state.mix" :volume="state.volume" /></template>

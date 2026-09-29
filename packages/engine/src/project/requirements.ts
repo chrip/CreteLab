@@ -21,6 +21,7 @@ export interface Facts {
 
 export function factsFromAnswers(answers: Answers): Facts {
   const rain = yes(answers, 'rain');
+  const element = (answers.element?.choice as Element | undefined) ?? 'slab';
   return {
     indoor: yes(answers, 'indoor_dry') && !rain,
     rain,
@@ -29,9 +30,11 @@ export function factsFromAnswers(answers: Answers): Facts {
     salt: yes(answers, 'deicing_salt'),
     horizontal: yes(answers, 'horizontal'),
     reinforced: yes(answers, 'reinforced'),
-    watertight: yes(answers, 'watertight'),
+    // Watertight concrete (WU-Richtlinie) is about structures: basements, tanks, ponds.
+    // A planter "holds water" too, but a small piece is not a WU structure.
+    watertight: yes(answers, 'watertight') && element !== 'small',
     traffic: Math.round(answers.traffic?.score ?? 0),
-    element: (answers.element?.choice as Element | undefined) ?? 'slab',
+    element,
   };
 }
 

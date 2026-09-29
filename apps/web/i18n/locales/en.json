@@ -162,7 +162,8 @@
     "order": {
       "name": "Ready-mixed concrete",
       "sub": "from a plant, from about 1 m³"
-    }
+    },
+    "bagRejected": "You want to use a ready mix from bags, but no bag meets the requirements (reasons in the “Ready mix” tab). Recommended instead: {production}."
   },
   "bag": {
     "declared": "Declared on the datasheet",

@@ -70,6 +70,16 @@ test.describe('component planner', () => {
     await expect(page.getByText('Kein Sackbeton ist als WU-Beton deklariert')).toBeVisible();
   });
 
+  test('bags asked for but impossible: another way is recommended and the reason is given', async ({ page }) => {
+    await mockApi(page);
+    await page.goto('/de');
+    await page.getByRole('textbox', { name: 'Projektbeschreibung' }).fill(TEXT.basementBagged);
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('bag-rejected')).toContainText('Empfohlen ist deshalb: Transportbeton');
+    await expect(page.getByRole('tab', { name: /Transportbeton/ })).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: /Fertigmischung/ }).locator('.badge')).toHaveCount(0);
+  });
+
   test('details change the recipe at once and survive a reload', async ({ page }) => {
     await page.goto('/de/plan?v=2&s=C20%2F25&x=XC1');
     await page.getByText('Rezept anpassen').click();

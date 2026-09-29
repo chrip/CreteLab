@@ -1,6 +1,7 @@
 // From description + Laya's answers to a project plan (ported from the DIY-route tests of
 // tests/describe.test.js; detectApproach, wantsBagTuning and planProject are new).
 import { describe, expect, it } from 'vitest';
+import { planBag } from '../../src/bagged/feasibility';
 import type { Answers } from '../../src/project/answers';
 import {
   DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, SITE_DEFAULT_VOLUME_M3,
@@ -78,11 +79,62 @@ describe('detectApproach', () => {
   });
 });
 
+describe('detectApproach and explicit words', () => {
+  const text = 'Kellerwand, mit Fertigbeton aus dem Baumarkt';
+  it('a text naming bagged concrete wins over an unsure "scratch"', () => {
+    expect(detectApproach({ approach: { choice: 'scratch', confidence: 0.19 } }, text)).toBe('bagged');
+  });
+  it('a confident "scratch" stays', () => {
+    expect(detectApproach({ approach: { choice: 'scratch', confidence: 0.8 } }, text)).toBe('scratch');
+  });
+  it('thin walls still need fine mortar', () => {
+    expect(detectApproach({ approach: { choice: 'scratch', confidence: 0.19 } }, text, 0.02)).toBe('fine_mortar');
+  });
+});
+
 describe('productionFor', () => {
-  it('bags for "bagged", own mix otherwise', () => {
-    expect(productionFor('bagged')).toBe('bag');
-    expect(productionFor('scratch')).toBe('mix');
-    expect(productionFor('fine_mortar')).toBe('mix');
+  const feasible = planBag({ strengthClass: 'C20/25', exposureClasses: ['XC1'], structural: false, watertight: false, volume: 0.1 });
+  const impossible = planBag({ strengthClass: 'C25/30', exposureClasses: ['XC2'], structural: false, watertight: true, volume: 0.1 });
+
+  it('bags for "bagged" when a bag meets the requirements, own mix otherwise', () => {
+    expect(productionFor('bagged', feasible, 0.1)).toBe('bag');
+    expect(productionFor('scratch', feasible, 0.1)).toBe('mix');
+    expect(productionFor('fine_mortar', feasible, 0.1)).toBe('mix');
+  });
+
+  it('never recommends bags that do not work: own mix, ready-mixed concrete from 1 m³', () => {
+    expect(productionFor('bagged', impossible, 0.1)).toBe('mix');
+    expect(productionFor('bagged', impossible, 2)).toBe('order');
+  });
+});
+
+describe('the recommendation agrees with the bag check', () => {
+  // Recorded answers of laya-crete for "123 Liter Beton für einen Blumenkübel".
+  const answers: Answers = {
+    indoor_dry: { noul: 0.08 }, rain: { noul: 0.88 }, ground: { noul: 0.15 }, frost: { noul: 0.89 },
+    deicing_salt: { noul: 0.08 }, horizontal: { noul: 0.79 }, reinforced: { noul: 0.06 }, watertight: { noul: 0.87 },
+    traffic: { score: 0.36 }, element: { choice: 'small' }, fine_cast: { noul: 0.9 }, approach: { choice: 'bagged' },
+    shape: { choice: 'hollow' }, open_sides: { choice: 'one' }, 'role:123 liter': { choice: 'volume' },
+  };
+  const plan = planProject('123 Liter Beton für einen Blumenkübel', { answers, candidates: ['123 liter'] });
+
+  it('a planter is not a watertight structure', () => {
+    expect(plan.requirements.watertight).toBe(false);
+    expect(plan.requirements.mix.waterproofingPct).toBe(0);
+  });
+
+  it('bags are recommended only if the bag check passes', () => {
+    expect(plan.production === 'bag').toBe(plan.bag.feasible);
+    expect(plan.bagRejected).toBe(!plan.bag.feasible);
+  });
+
+  it('for every recorded case: a recommended bag is always feasible', () => {
+    for (const watertight of [0.1, 0.9]) {
+      for (const element of ['small', 'wall', 'foundation']) {
+        const p = planProject('Fundament 2 m³', { answers: { ...answers, watertight: { noul: watertight }, element: { choice: element }, 'role:2 m³': { choice: 'volume' } }, candidates: ['2 m³'] });
+        if (p.production === 'bag') expect(p.bag.feasible).toBe(true);
+      }
+    }
   });
 });
 

@@ -14,6 +14,7 @@ export const TEXT = {
   foundation: 'Fundament für ein Gartenhaus 3x2 m, 20 cm dick',
   basement: 'Kellerwand im Grundwasser, 8 m lang, 2,5 m hoch, 24 cm dick',
   postsEn: 'Setting 12 fence posts in concrete',
+  basementBagged: 'Kellerwand im Grundwasser, 8 m lang, 2,5 m hoch, 24 cm dick, mit Fertigbeton aus dem Baumarkt',
 };
 
 /** Serve the recorded answers; counts the requests so tests can check the cache. */

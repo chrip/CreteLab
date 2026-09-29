@@ -162,7 +162,8 @@
     "order": {
       "name": "Transportbeton",
       "sub": "vom Werk, ab ca. 1 m³"
-    }
+    },
+    "bagRejected": "Sie möchten Fertigmischung aus dem Sack verwenden, aber kein Sack erfüllt die Anforderungen (Gründe im Reiter „Fertigmischung“). Empfohlen ist deshalb: {production}."
   },
   "bag": {
     "declared": "Laut Datenblatt",
