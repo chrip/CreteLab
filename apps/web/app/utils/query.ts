@@ -113,6 +113,8 @@ export interface FineConcreteState {
   preset: string;
   /** Sizes filled in by assumption, until the user sets them. */
   assumed: FineConcreteField[];
+  /** The piece holds water (a sink): dense mix and a sealed surface. */
+  holdsWater: boolean;
 }
 
 export type FineConcreteField = 'length' | 'width' | 'height' | 'diameter' | 'wall';
@@ -136,6 +138,7 @@ export function decodeFineConcrete(q: Query): FineConcreteState {
     open: oneOf(one(q, 'open'), ['one', 'none', 'both'] as const, 'one'),
     count: Math.round(number(one(q, 'n'), 1, 1, 1000)),
     preset: oneOf(one(q, 'preset'), DECOR_PRESETS.map((p) => p.key), 'diy-pce-30l-batch'),
+    holdsWater: flag(one(q, 'hw')),
     assumed: (one(q, 'as') ?? '').split(',').filter((f): f is FineConcreteField => (FIELDS as readonly string[]).includes(f)),
   };
 }
@@ -154,6 +157,7 @@ export function encodeFineConcrete(s: FineConcreteState): Record<string, string>
     n: unlessDefault(s.count, 1),
     preset: unlessDefault(s.preset, 'diy-pce-30l-batch'),
     as: s.assumed.length ? s.assumed.join(',') : undefined,
+    hw: s.holdsWater ? '1' : undefined,
   });
 }
 

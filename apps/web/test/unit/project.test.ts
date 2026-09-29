@@ -69,3 +69,12 @@ describe('assumed sizes travel to the fine concrete page', () => {
     expect(state).toMatchObject({ shape: 'cylinder', diameter: 90, height: 90, wall: 2, assumed: ['height', 'wall'] });
   });
 });
+
+describe('a sink carries "holds water" to the fine concrete page', () => {
+  it('sets holdsWater and the dense preset', () => {
+    const answers: Answers = { watertight: { noul: 0.91 }, indoor_dry: { noul: 0.92 }, element: { choice: 'small' }, approach: { choice: 'fine_mortar' }, shape: { choice: 'bowl' } };
+    const state = fineConcreteStateFromPlan(planProject('Waschbecken aus Beton 60x40x15 cm', { answers, candidates: ['60x40x15 cm'] }));
+    expect(state).toMatchObject({ holdsWater: true, preset: 'diy-mortar-20kg-batch' });
+    expect(decodeFineConcrete(encodeFineConcrete(state))).toEqual(state);
+  });
+});

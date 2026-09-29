@@ -62,15 +62,20 @@ export function wantsBagTuning(answers: Answers, text = ''): boolean {
   return yes(answers, 'add_cement') || yes(answers, 'add_plasticizer') || EXTRA_CEMENT_WORDS.test(t) || PLASTICIZER_WORDS.test(t);
 }
 
-export type DecorReason = 'outdoor' | 'small' | 'furniture';
+export type DecorReason = 'outdoor' | 'small' | 'watertight' | 'furniture';
 
 /**
  * A fine-mortar recipe for a DIY piece: the only source that states outdoor use for rain
- * or frost, the hand-mixed one for small pieces up to 5 litres, else the furniture mix.
+ * or frost; for pieces that hold water indoors (a sink) the densest mix, with microsilica
+ * and w/b 0,30; the hand-mixed one for small pieces up to 5 litres; else the furniture mix.
  */
-export function chooseDecorPreset(facts: Pick<Facts, 'rain' | 'frost' | 'indoor'>, volume: VolumeResult): { preset: DecorPreset; reason: DecorReason } {
+export function chooseDecorPreset(
+  facts: Pick<Facts, 'rain' | 'frost' | 'indoor'> & Partial<Pick<Facts, 'holdsWater'>>,
+  volume: VolumeResult,
+): { preset: DecorPreset; reason: DecorReason } {
   const pick = (key: string) => DECOR_PRESETS.find((p) => p.key === key)!;
   if ((facts.rain || facts.frost) && !facts.indoor) return { preset: pick('diy-white-15kg-laminate'), reason: 'outdoor' };
+  if (facts.holdsWater) return { preset: pick('diy-mortar-20kg-batch'), reason: 'watertight' };
   if (volume.source !== 'default' && volume.volume <= 0.005) return { preset: pick('diy-white-bowl-4kg'), reason: 'small' };
   return { preset: pick('diy-pce-30l-batch'), reason: 'furniture' };
 }

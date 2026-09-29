@@ -761,6 +761,7 @@
         ]
       }
     },
-    "assumed": "Angenommen, weil in der Beschreibung nicht angegeben: {sizes}. Bitte prüfen und bei Bedarf ändern."
+    "assumed": "Angenommen, weil in der Beschreibung nicht angegeben: {sizes}. Bitte prüfen und bei Bedarf ändern.",
+    "holdsWater": "Das Stück hält Wasser. Wählen Sie eine dichte Mischung mit wenig Wasser, zum Beispiel den hochfesten Mörtel mit Mikrosilica, verdichten Sie gut und imprägnieren oder versiegeln Sie die Oberfläche nach dem Aushärten."
   }
 }

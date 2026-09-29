@@ -13,7 +13,10 @@ export interface Facts {
   salt: boolean;
   horizontal: boolean;
   reinforced: boolean;
+  /** Watertight structure after the WU-Richtlinie (basement, tank, pond). */
   watertight: boolean;
+  /** The piece holds water (a sink, a bird bath), whether or not it is a WU structure. */
+  holdsWater: boolean;
   /** 0 none, 1 foot traffic, 2 cars, 3 heavy vehicles / forklifts */
   traffic: number;
   element: Element;
@@ -31,8 +34,10 @@ export function factsFromAnswers(answers: Answers): Facts {
     horizontal: yes(answers, 'horizontal'),
     reinforced: yes(answers, 'reinforced'),
     // Watertight concrete (WU-Richtlinie) is about structures: basements, tanks, ponds.
-    // A planter "holds water" too, but a small piece is not a WU structure.
+    // A sink or a planter holds water too, but a small piece is not a WU structure: it needs
+    // a dense mix and a sealed surface instead.
     watertight: yes(answers, 'watertight') && element !== 'small',
+    holdsWater: yes(answers, 'watertight'),
     traffic: Math.round(answers.traffic?.score ?? 0),
     element,
   };

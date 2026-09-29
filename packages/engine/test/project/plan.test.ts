@@ -373,3 +373,27 @@ describe('a rectangular basin', () => {
     expect(p.volume.volume).toBeCloseTo(0.0205, 4);
   });
 });
+
+describe('pieces that hold water', () => {
+  // Recorded answers of laya-crete for "Waschbecken aus Beton 60x40 cm".
+  const sink: Answers = {
+    watertight: { noul: 0.91 }, indoor_dry: { noul: 0.92 }, rain: { noul: 0.07 }, element: { choice: 'small' },
+    approach: { choice: 'fine_mortar' }, shape: { choice: 'bowl' }, fine_cast: { noul: 0.94 },
+  };
+
+  it('a sink holds water but is no WU structure', () => {
+    const p = planProject('Waschbecken aus Beton 60x40 cm', { answers: sink, candidates: ['60x40 cm'] });
+    expect(p.facts.holdsWater).toBe(true);
+    expect(p.requirements.watertight).toBe(false);
+  });
+
+  it('indoors it gets the densest fine mortar (microsilica, w/b 0,30)', () => {
+    const p = planProject('Waschbecken aus Beton 60x40 cm', { answers: sink, candidates: ['60x40 cm'] });
+    expect(p.decor).toMatchObject({ reason: 'watertight', preset: { key: 'diy-mortar-20kg-batch' } });
+  });
+
+  it('outdoors (a bird bath) the frost-proof mix still wins', () => {
+    const p = planProject('Vogeltränke aus Beton', { answers: { ...sink, indoor_dry: { noul: 0.08 }, rain: { noul: 0.86 } }, candidates: [] });
+    expect(p.decor.reason).toBe('outdoor');
+  });
+});

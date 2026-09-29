@@ -43,7 +43,7 @@ describe('factsFromAnswers', () => {
     expect(factsFromAnswers({ traffic: { score: 2.6 } }).traffic).toBe(3);
     expect(factsFromAnswers({})).toEqual<Facts>({
       indoor: false, rain: false, ground: false, frost: false, salt: false, horizontal: false,
-      reinforced: false, watertight: false, traffic: 0, element: 'slab',
+      reinforced: false, watertight: false, holdsWater: false, traffic: 0, element: 'slab',
     });
   });
 });

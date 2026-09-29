@@ -761,6 +761,7 @@
         ]
       }
     },
-    "assumed": "Assumed because the description does not say: {sizes}. Check them and change them if needed."
+    "assumed": "Assumed because the description does not say: {sizes}. Check them and change them if needed.",
+    "holdsWater": "The piece holds water. Choose a dense mix with little water, for example the high-strength mortar with microsilica, compact it well and impregnate or seal the surface once it has cured."
   }
 }

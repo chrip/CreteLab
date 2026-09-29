@@ -264,3 +264,10 @@ describe('assumptions are visible', () => {
     expect(w.find('[data-testid="assumed-note"]').text()).not.toContain('Höhe');
   });
 });
+
+describe('fine concrete for pieces that hold water', () => {
+  it('shows the sealing advice when the piece holds water', async () => {
+    const w = await mountSuspended(FineConcreteApp, { route: '/de/fine-concrete?l=60&b=40&h=15&t=2&hw=1&preset=diy-mortar-20kg-batch' });
+    expect(w.find('[data-testid="holds-water"]').text()).toContain('versiegeln');
+  });
+});

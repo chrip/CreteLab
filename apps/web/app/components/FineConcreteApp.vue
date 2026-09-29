@@ -49,6 +49,7 @@
         </select>
         <span class="hint">{{ $t(`fineConcrete.presets.${preset.key}.use`) }}</span>
       </div>
+      <p v-if="state.holdsWater" class="note" data-testid="holds-water">{{ $t('fineConcrete.holdsWater') }}</p>
 
       <div class="table-wrap">
         <table>

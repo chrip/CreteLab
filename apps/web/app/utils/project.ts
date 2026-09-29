@@ -25,5 +25,6 @@ export function fineConcreteStateFromPlan(plan: ProjectPlan): FineConcreteState 
     count: d.count ?? 1,
     preset: plan.decor.preset.key,
     assumed: Object.keys(plan.volume.assumed ?? {}) as FineConcreteState['assumed'],
+    holdsWater: plan.facts.holdsWater,
   };
 }
