@@ -742,7 +742,6 @@
     },
     "airWithSilica": "Luftporen und Silikastaub vertragen sich schlecht: Die Mischung wird steif und die Luftporen bilden sich schlecht aus. Nehmen Sie nur eins von beiden.",
     "result": "Ergebnis",
-    "strength": "Aus {base} wird geschätzt {tuned} (ca. {fck} N/mm² Würfeldruckfestigkeit).",
     "step": {
       "mix": "{amount} Fertigbeton {strength} in den Mischer (≈ {bags} Säcke à {bag} kg).",
       "extraCement": "{amount} Zement zugeben.",
@@ -753,6 +752,11 @@
       "air": "{amount} Luftporenbildner ins Anmachwasser geben.",
       "water": "{amount} Wasser zugeben und gründlich mischen.",
       "waterWith": "{amount} Wasser mit den Zusatzmitteln zugeben und gründlich mischen."
-    }
+    },
+    "baseLabel": "Ausgangsmischung",
+    "resultLabel": "Geschätzt mit Zusätzen",
+    "noAdditions": "Noch ohne Zusätze",
+    "strengthValue": "ca. {fck} N/mm² Festigkeit",
+    "estimateNote": "Beide Werte sind Schätzungen auf der Walzkurve (CEM I 42,5), damit sich die Wirkung der Zusätze vergleichen lässt."
   }
 }

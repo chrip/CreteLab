@@ -118,12 +118,20 @@ describe('estimateFck', () => {
 });
 
 describe('tuneBag: amounts', () => {
-  it('no addition: the bag mix, then water; the class stays the declared one without an estimate', () => {
+  it('no addition: the bag mix, then water; the declared class and the base estimate stay', () => {
     const t = tuneBag(c25, 1, NO_OPTIONS);
     expect(t.steps.map((s) => s.kind)).toEqual(['mix', 'water']);
     expect(t.strengthClass).toBe('C25/30');
-    // The class value itself, not the Walz estimate (31).
-    expect(t.fckCube).toBe(30);
+    // Base and result use the same Walz estimate, so the difference shows only the additions.
+    expect(t.baseFckCube).toBe(31);
+    expect(t.fckCube).toBe(31);
+  });
+
+  it('the base estimate does not change with the additions', () => {
+    const plain = tuneBag(c25, 1, NO_OPTIONS);
+    const tuned = tuneBag(c25, 1, { ...NO_OPTIONS, extraCement: true });
+    expect(tuned.baseFckCube).toBe(plain.baseFckCube);
+    expect(tuned.fckCube).toBeGreaterThan(tuned.baseFckCube);
   });
 
   it('bag mix step: cement + aggregate in 40 kg bags', () => {

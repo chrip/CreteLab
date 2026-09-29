@@ -3,6 +3,7 @@ import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { useNuxtApp } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
+import BagToolApp from '~/components/BagToolApp.vue';
 import DescribeForm from '~/components/DescribeForm.vue';
 import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
@@ -227,5 +228,21 @@ describe('MixForm moisture', () => {
     expect(w.findAll('legend').map((l) => l.text())).toEqual([
       'Expositionsklassen', 'Eigenfeuchte der Gesteinskörnung', 'Zusatzmittel und Zusatzstoffe',
     ]);
+  });
+});
+
+describe('BagToolApp result', () => {
+  it('shows the starting mix next to the estimate with the difference', async () => {
+    const w = await mountSuspended(BagToolApp, { route: '/de/bag?zc=1' });
+    const compare = w.find('[data-testid="strength-compare"]');
+    expect(compare.text()).toContain('Ausgangsmischung');
+    expect(compare.text()).toContain('ca. 31 N/mm² Festigkeit');
+    expect(compare.text()).toContain('ca. 36 N/mm² Festigkeit');
+    expect(compare.find('.delta.up').text()).toBe('+5 N/mm²');
+  });
+
+  it('air entrainment lowers the estimate', async () => {
+    const w = await mountSuspended(BagToolApp, { route: '/de/bag?lp=1' });
+    expect(w.find('.delta.down').text()).toBe('−14 N/mm²');
   });
 });

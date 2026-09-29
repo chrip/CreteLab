@@ -79,7 +79,9 @@ export interface TunedBag {
   volume: number;
   /** In mixing order: bag mix, dry additions, admixtures into the water, water last. */
   steps: BagStep[];
-  /** Estimated characteristic cube strength after the additions, N/mm². */
+  /** Estimated characteristic cube strength of the bag mix without additions, N/mm². */
+  baseFckCube: number;
+  /** Estimated characteristic cube strength after the additions, N/mm² (same estimate, so comparable). */
   fckCube: number;
   strengthClass: StrengthClass;
   /** Air entrainment and silica fume work against each other (stiff mix, poor air voids). */
@@ -121,11 +123,13 @@ export function tuneBag(mix: BagMix, volume: number, o: BagOptions): TunedBag {
     withAdmixtures: o.plasticizer !== 'none' || o.air,
   });
   const anyAddition = o.extraCement || o.flyAsh || o.silicaFume || o.air || o.waterproofing || o.plasticizer !== 'none';
-  const fckCube = anyAddition ? estimateFck(mix, o) : STRENGTH_CLASSES[mix.strengthClass].fckCube;
+  const baseFckCube = estimateFck(mix, NO_OPTIONS);
+  const fckCube = anyAddition ? estimateFck(mix, o) : baseFckCube;
   return {
     mix,
     volume,
     steps,
+    baseFckCube,
     fckCube,
     strengthClass: anyAddition ? classForCubeStrength(fckCube) : mix.strengthClass,
     airWithSilicaFume: o.air && o.silicaFume,

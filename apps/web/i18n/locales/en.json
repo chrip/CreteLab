@@ -742,7 +742,6 @@
     },
     "airWithSilica": "Air entrainment and silica fume do not go well together: the mix gets stiff and the air voids form poorly. Choose one of them.",
     "result": "Result",
-    "strength": "{base} becomes an estimated {tuned} (about {fck} N/mm² cube strength).",
     "step": {
       "mix": "Put {amount} of ready mix {strength} into the mixer (≈ {bags} bags of {bag} kg).",
       "extraCement": "Add {amount} cement.",
@@ -753,6 +752,11 @@
       "air": "Add {amount} air-entraining agent to the mixing water.",
       "water": "Add {amount} water and mix thoroughly.",
       "waterWith": "Add {amount} water with the admixtures and mix thoroughly."
-    }
+    },
+    "baseLabel": "Starting mix",
+    "resultLabel": "Estimated with additions",
+    "noAdditions": "No additions yet",
+    "strengthValue": "approx. {fck} N/mm² strength",
+    "estimateNote": "Both values are estimates on the Walz curve (CEM I 42.5), so the effect of the additions can be compared."
   }
 }
