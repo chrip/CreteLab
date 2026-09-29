@@ -20,6 +20,7 @@
         <li v-if="plan.volume.shape" class="chip yes">{{ $t('facts.shape', { shape: $t(`volume.shape.${plan.volume.shape}`) }) }}</li>
         <li v-if="plan.volume.shape === 'hollow'" class="chip yes">{{ $t(`volume.open.${plan.volume.open ?? 'one'}`) }}</li>
       </template>
+      <li v-for="a in assumed" :key="a.key" class="chip assumed">{{ $t('facts.assumed', { size: a.label, value: a.value }) }}</li>
       <!-- Shown even without a volume: they explain why none could be calculated. -->
       <li v-for="m in measurements" :key="m.candidate" class="chip" :class="m.used ? 'yes' : 'no'">
         <strong>{{ m.label }}</strong> {{ m.role }}
@@ -35,7 +36,7 @@
 // What the model read from the description: the exposure facts with their certainty and
 // the measurements with the role each one plays in the volume, plus the calculation.
 import { FACT_IDS, certainty, parseCandidate, probability, type AnalysisResponse, type ProjectPlan } from '@cretelab/engine';
-import { formatBreakdown, formatVolume, type Locale } from '~/utils/format';
+import { formatBreakdown, formatCompact, formatVolume, type Locale } from '~/utils/format';
 
 const props = defineProps<{ analysis: AnalysisResponse; plan: ProjectPlan; volume: number }>();
 const { t, locale } = useI18n();
@@ -60,10 +61,21 @@ const measurements = computed(() =>
     if (parsed?.kind === 'dims') {
       return { candidate, label, used: true, role: t(parsed.size.length === 3 ? 'facts.dims3' : 'facts.dims2') };
     }
-    const role = props.analysis.answers[`role:${candidate}`]?.choice;
-    const used = Boolean(role && ROLES.includes(role));
+    const answered = props.analysis.answers[`role:${candidate}`]?.choice;
+    const used = Boolean(answered && ROLES.includes(answered));
+    // The one length of a cube is its edge.
+    const role = props.plan.volume.shape === 'cube' && answered === 'length' ? 'edge' : answered;
     return { candidate, label, used, role: used ? t(`facts.role.${role}`) : t('facts.unused') };
   }),
+);
+
+/** Sizes the text did not give; shown so they can be checked and corrected. */
+const assumed = computed(() =>
+  Object.entries(props.plan.volume.assumed ?? {}).map(([key, m]) => ({
+    key,
+    label: t(`facts.role.${key}`),
+    value: m < 1 ? `${formatCompact(locale.value as Locale, m * 100, 1)} cm` : `${formatCompact(locale.value as Locale, m, 2)} m`,
+  })),
 );
 
 const formula = computed(() => (props.plan.volume.breakdown ? formatBreakdown(locale.value as Locale, props.plan.volume.breakdown) : ''));
@@ -88,6 +100,7 @@ h3 {
   gap: 0.4rem;
 }
 
+.chip.assumed,
 .chip.missing {
   background: var(--warn-soft);
   border: 1px solid var(--warn);

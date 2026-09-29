@@ -61,3 +61,11 @@ describe('round pots', () => {
     expect(fineConcreteStateFromPlan(plan)).toMatchObject({ shape: 'cylinder', diameter: 40, height: 35, wall: 2.5 });
   });
 });
+
+describe('assumed sizes travel to the fine concrete page', () => {
+  it('"Blumenkübel 90 cm": height and wall are marked as assumed', () => {
+    const answers: Answers = { element: { choice: 'small' }, approach: { choice: 'fine_mortar' }, shape: { choice: 'hollow' }, 'role:90 cm': { choice: 'diameter' } };
+    const state = fineConcreteStateFromPlan(planProject('Blumenkübel 90 cm', { answers, candidates: ['90 cm'] }));
+    expect(state).toMatchObject({ shape: 'cylinder', diameter: 90, height: 90, wall: 2, assumed: ['height', 'wall'] });
+  });
+});

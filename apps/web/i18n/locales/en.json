@@ -66,8 +66,10 @@
       "thickness": "thickness",
       "area": "area",
       "volume": "amount",
-      "count": "pieces"
-    }
+      "count": "pieces",
+      "edge": "edge length"
+    },
+    "assumed": "assumed: {size} {value}"
   },
   "home": {
     "metaTitle": "Concrete for your project",
@@ -758,6 +760,7 @@
           }
         ]
       }
-    }
+    },
+    "assumed": "Assumed because the description does not say: {sizes}. Check them and change them if needed."
   }
 }

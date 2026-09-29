@@ -66,8 +66,10 @@
       "thickness": "Dicke",
       "area": "Fläche",
       "volume": "Menge",
-      "count": "Stück"
-    }
+      "count": "Stück",
+      "edge": "Kantenlänge"
+    },
+    "assumed": "angenommen: {size} {value}"
   },
   "home": {
     "metaTitle": "Beton für Ihr Projekt",
@@ -758,6 +760,7 @@
           }
         ]
       }
-    }
+    },
+    "assumed": "Angenommen, weil in der Beschreibung nicht angegeben: {sizes}. Bitte prüfen und bei Bedarf ändern."
   }
 }

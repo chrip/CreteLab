@@ -98,3 +98,11 @@ describe('bag tool URL state', () => {
     expect(encodeBagTool(decodeBagTool({}))).toEqual({});
   });
 });
+
+describe('fine concrete assumptions in the URL', () => {
+  it('round-trips the assumed sizes and drops unknown ones', () => {
+    const s = decodeFineConcrete({ shape: 'hollow', d: '90', h: '90', t: '2', as: 'height,wall,colour' });
+    expect(s.assumed).toEqual(['height', 'wall']);
+    expect(encodeFineConcrete(s).as).toBe('height,wall');
+  });
+});

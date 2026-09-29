@@ -24,15 +24,23 @@ export interface VolumeResult {
   dimensions?: Dimensions;
   /** The solids behind the volume, to show how it was calculated. */
   breakdown?: VolumeBreakdown;
+  /** Sizes the text did not give and were assumed (m), shown so the user can correct them. */
+  assumed?: Assumed;
 }
 
+export type Assumed = Partial<Record<'length' | 'width' | 'height' | 'wall', number>>;
+
+/** Wall thickness assumed for a vessel without one: fine mortar is cast thin, site concrete not. */
+export const ASSUMED_WALL_M = { fineMortar: 0.02, concrete: 0.05 } as const;
+
 /** A volume computed from a shape, with everything needed to explain it. */
-function fromShape(shape: Shape, d: Dimensions, source: VolumeSource, match: string): VolumeResult | null {
+function fromShape(shape: Shape, d: Dimensions, source: VolumeSource, match: string, assumed: Assumed = {}): VolumeResult | null {
   const breakdown = volumeBreakdown(shape, d);
   if (!breakdown) return null;
   return {
     volume: roundVolume(breakdown.volume), source, match, shape, dimensions: d, breakdown,
     wall: d.wall, open: shape === 'hollow' ? (d.open ?? 'one') : undefined, count: breakdown.count,
+    ...(Object.keys(assumed).length ? { assumed } : {}),
   };
 }
 
@@ -97,17 +105,35 @@ function rolesFromAnswers(answers: Answers, candidates: readonly string[]) {
   return { roles, dims };
 }
 
-/** Volume from Laya's shape and roles, or null when the answers are not enough. */
-export function volumeFromAnswers(answers: Answers, candidates: readonly string[]): VolumeResult | null {
+const SOLID = /massiv|vollmaterial|\bsolid\b/;
+
+export interface VolumeOptions {
+  /** The description, for words the model may miss ("Würfel", "massiv"). */
+  text?: string;
+  /** Wall thickness to assume for a vessel that gives none; none assumed when absent. */
+  assumedWall?: number;
+}
+
+/**
+ * Volume from Laya's shape and roles, or null when the answers are not enough.
+ * Missing sizes are filled the way a person would read the text: a block, cube or vessel
+ * with one edge has equal sides, a round vessel is as high as it is wide, and a vessel
+ * without a wall gets `assumedWall`. Every such guess is listed in `assumed`.
+ */
+export function volumeFromAnswers(answers: Answers, candidates: readonly string[], opts: VolumeOptions = {}): VolumeResult | null {
   const { roles: r, dims } = rolesFromAnswers(answers, candidates);
   if (r.volume) return { volume: roundVolume(r.volume), source: 'laya', match: candidates.join(' · ') };
 
+  const t = (opts.text ?? '').toLowerCase();
+  const open = answers.open_sides?.choice;
   let shape = answers.shape?.choice as Shape | 'unknown' | undefined;
   // A wall thickness means a hollow piece, whatever shape was answered.
   if (r.wall && !['hollow', 'ring', 'bowl'].includes(shape ?? '')) shape = 'hollow';
+  // "massiv" is not hollow, and "Würfel" says the shape outright.
+  if (!r.wall && (open === 'solid' || SOLID.test(t)) && shape === 'hollow') shape = 'block';
+  if (!r.wall && CUBE.test(t) && (shape === 'block' || shape === 'unknown' || shape === undefined)) shape = 'cube';
   if (!shape || shape === 'unknown') return null;
 
-  const open = answers.open_sides?.choice;
   // A wall gives length, height and thickness: the thickness is its width.
   const wallLike = !dims && r.height !== undefined && r.thickness !== undefined && r.width === undefined;
   const d: Dimensions = {
@@ -121,7 +147,20 @@ export function volumeFromAnswers(answers: Answers, candidates: readonly string[
     count: r.count,
   };
   if (shape === 'slab' && r.thickness && !dims?.[2] && !wallLike) d.height = r.thickness;
-  return fromShape(shape, d, 'laya', candidates.join(' · '));
+
+  const assumed: Assumed = {};
+  if (shape === 'block' || shape === 'hollow') {
+    const edges = [d.length, d.width, d.height].filter((v): v is number => v !== undefined);
+    if (d.diameter === undefined && edges.length === 1) {
+      for (const k of ['length', 'width', 'height'] as const) {
+        if (d[k] === undefined) d[k] = assumed[k] = edges[0];
+      }
+    } else if (d.diameter !== undefined && d.height === undefined && d.length === undefined) {
+      d.height = assumed.height = d.diameter;
+    }
+  }
+  if (shape === 'hollow' && !d.wall && opts.assumedWall) d.wall = assumed.wall = opts.assumedWall;
+  return fromShape(shape, d, 'laya', candidates.join(' · '), assumed);
 }
 
 // ── Plain-text fallback ─────────────────────────────────────────────────────────────────
@@ -198,6 +237,13 @@ export function parseVolume(text: string, { defaultVolume = 1 } = {}): VolumeRes
   const hollow = parseHollowBody(t);
   if (hollow) return hollow;
 
+  // "Würfel mit 90 cm Seitenlänge": a cube needs one edge only.
+  const lengths = [...t.matchAll(new RegExp(LEN, 'g'))];
+  if (CUBE.test(t) && lengths.length === 1) {
+    const a = num(lengths[0]![1]!) * UNIT_TO_M[lengths[0]![2]!]!;
+    return fromShape('cube', { length: a }, 'dimensions', lengths[0]![0])!;
+  }
+
   const thickness = t.match(new RegExp(
     `${NUM}\\s*(mm|cm|dm|m)\\s*(?:dick|stark|tief|hoch|höhe|dicke|thick|deep|high|thickness|depth)` +
     `|(?:dicke|stärke|tiefe|höhe|thickness|depth)\\s*(?:von\\s*|of\\s*)?${NUM}\\s*(mm|cm|dm|m)`,
@@ -227,7 +273,7 @@ export function resolveVolume(
   text: string,
   answers: Answers,
   candidates: readonly string[],
-  { defaultVolume = 1 } = {},
+  { defaultVolume = 1, assumedWall }: { defaultVolume?: number; assumedWall?: number } = {},
 ): VolumeResult {
-  return volumeFromAnswers(answers, candidates) ?? parseVolume(text, { defaultVolume });
+  return volumeFromAnswers(answers, candidates, { text, assumedWall }) ?? parseVolume(text, { defaultVolume });
 }

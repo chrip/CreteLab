@@ -306,3 +306,57 @@ describe('planProject', () => {
     expect(plan.wantsBagTuning).toBe(true);
   });
 });
+
+describe('one size given: the rest read the way a person would', () => {
+  // Recorded answers of laya-crete.
+  const plan = (text: string, answers: Answers, candidates: string[]) => planProject(text, { answers, candidates });
+
+  it('"Sitzwürfel massiv, 90 cm Seitenlänge": a solid cube, 0,73 m³', () => {
+    const p = plan('Ein Sitzwürfel massiv mit 90 cm Seitenlänge',
+      { element: { choice: 'small' }, approach: { choice: 'scratch' }, shape: { choice: 'hollow' }, open_sides: { choice: 'one' }, 'role:90 cm': { choice: 'length' } },
+      ['90 cm']);
+    expect(p.volume).toMatchObject({ shape: 'cube', volume: 0.73 });
+    expect(p.volume.assumed).toBeUndefined(); // a cube has equal edges by definition
+  });
+
+  it('"Blumenkübel 90 cm": a round pot as high as wide, with an assumed 2 cm fine-mortar wall', () => {
+    const p = plan('Blumenkübel 90 cm',
+      { element: { choice: 'small' }, approach: { choice: 'fine_mortar' }, shape: { choice: 'hollow' }, 'role:90 cm': { choice: 'diameter' } },
+      ['90 cm']);
+    expect(p.tool).toBe('decor');
+    expect(p.volume.shape).toBe('hollow');
+    expect(p.volume.assumed).toEqual({ height: 0.9, wall: 0.02 });
+    expect(p.volume.volume).toBeGreaterThan(0.05);
+    expect(p.volume.volume).toBeLessThan(0.08);
+    // An assumed wall does not count as "too thin".
+    expect(p.thinWall).toBe(false);
+    expect(p.wall).toBeNull();
+  });
+
+  it('"Pflanztopf 40 cm hoch" from bags: 40 × 40 × 40 cm with an assumed 5 cm wall', () => {
+    const p = plan('Pflanztopf 40 cm hoch',
+      { element: { choice: 'small' }, approach: { choice: 'bagged' }, shape: { choice: 'hollow' }, 'role:40 cm': { choice: 'height' } },
+      ['40 cm']);
+    expect(p.volume.assumed).toEqual({ length: 0.4, width: 0.4, wall: 0.05 });
+    expect(p.volume.dimensions).toMatchObject({ length: 0.4, width: 0.4, height: 0.4, wall: 0.05 });
+  });
+
+  it('"Betonklotz 50 cm": equal sides, 0,125 m³', () => {
+    const p = plan('Betonklotz 50 cm',
+      { element: { choice: 'small' }, approach: { choice: 'scratch' }, shape: { choice: 'block' }, open_sides: { choice: 'solid' }, 'role:50 cm': { choice: 'height' } },
+      ['50 cm']);
+    expect(p.volume).toMatchObject({ shape: 'block', volume: 0.13, assumed: { length: 0.5, width: 0.5 } });
+  });
+
+  it('a stated wall is not replaced and two sizes are not filled up', () => {
+    const p = plan('Kübel 60x40 cm, Wand 3 cm',
+      { approach: { choice: 'scratch' }, shape: { choice: 'hollow' }, 'role:3 cm': { choice: 'wall' } },
+      ['60x40 cm', '3 cm']);
+    expect(p.volume.assumed).toBeUndefined();
+  });
+
+  it('the text parser alone knows a cube from its word', () => {
+    const p = plan('Würfel mit 90 cm Kante', {}, []);
+    expect(p.volume).toMatchObject({ source: 'dimensions', shape: 'cube', volume: 0.73 });
+  });
+});

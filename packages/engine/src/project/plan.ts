@@ -5,7 +5,7 @@ import { DECOR_PRESETS, type DecorPreset } from '../decor/presets';
 import { ORDER_SENSIBLE_FROM_M3 } from '../order/order';
 import { yes, type AnalysisResponse, type Answers } from './answers';
 import { factsFromAnswers, requirementsFromFacts, type Facts, type Requirements } from './requirements';
-import { parseVolume, resolveVolume, wallFromAnswers, type VolumeResult } from './volume';
+import { ASSUMED_WALL_M, parseVolume, resolveVolume, wallFromAnswers, type VolumeResult } from './volume';
 
 /** How the user wants to make it, as Laya's `approach` question puts it. */
 export type Approach = 'scratch' | 'bagged' | 'fine_mortar';
@@ -105,8 +105,11 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
   const diy = approach === 'fine_mortar' || (approach === 'bagged' && facts.element === 'small');
   const volume = resolveVolume(text, answers, candidates, {
     defaultVolume: diy ? DIY_DEFAULT_VOLUME_M3 : SITE_DEFAULT_VOLUME_M3,
+    assumedWall: approach === 'fine_mortar' ? ASSUMED_WALL_M.fineMortar : ASSUMED_WALL_M.concrete,
   });
-  const thinWall = (volume.wall ?? wall ?? Infinity) < MIN_SITE_CONCRETE_WALL_M;
+  // Only a wall the text gives decides that a piece is too thin; an assumed one does not.
+  const statedWall = volume.assumed?.wall === undefined ? (volume.wall ?? wall) : wall;
+  const thinWall = (statedWall ?? Infinity) < MIN_SITE_CONCRETE_WALL_M;
   const requirements = requirementsFromFacts(facts);
   const bag = planBag({
     strengthClass: requirements.mix.strengthClass,
@@ -114,7 +117,7 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
     structural: facts.reinforced,
     watertight: requirements.watertight,
     volume: volume.volume,
-    minThickness: volume.wall ?? wall,
+    minThickness: statedWall,
   });
   return {
     text,
@@ -126,7 +129,7 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
     facts,
     requirements,
     volume,
-    wall: volume.wall ?? wall,
+    wall: statedWall,
     thinWall,
     decor: chooseDecorPreset(facts, volume),
     wantsBagTuning: wantsBagTuning(answers, text),

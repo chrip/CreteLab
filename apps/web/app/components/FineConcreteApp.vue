@@ -15,7 +15,7 @@
         <div v-for="f in fields" :key="f" class="field">
           <label :for="`${id}-${f}`">{{ $t(`fineConcrete.dim.${f}`) }}</label>
           <span v-if="f === 'wall' && state.shape === 'cylinder'" class="hint">{{ $t('fineConcrete.dim.wallOptional') }}</span>
-          <NumberInput :id="`${id}-${f}`" v-model="state[f]" optional :min="0.01" :max="10000" :digits="2" />
+          <NumberInput :id="`${id}-${f}`" v-model="state[f]" optional :min="0.01" :max="10000" :digits="2" @input="confirm(f)" />
         </div>
         <div class="field">
           <label :for="`${id}-count`">{{ $t('fineConcrete.dim.count') }}</label>
@@ -28,6 +28,9 @@
           </select>
         </div>
       </div>
+      <p v-if="shownAssumed.length" class="note warn small" data-testid="assumed-note">
+        {{ $t('fineConcrete.assumed', { sizes: shownAssumed.join(', ') }) }}
+      </p>
       <p class="volume" aria-live="polite">
         <template v-if="volume">{{ $t('fineConcrete.volume', { volume: vol(volume) }) }}</template>
         <template v-else>{{ $t('fineConcrete.volumeMissing', { volume: vol(DIY_DEFAULT_VOLUME_M3) }) }}</template>
@@ -104,9 +107,9 @@ import {
   DECOR_PRESETS, DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, checkDecorRecipe, decorPreset, expectedFck,
   planProject, scaleDecorRecipe, shapeVolume, type PlausibilityCheck, type Shape,
 } from '@cretelab/engine';
-import { formatAmount, formatNumber, formatVolume, type Locale } from '~/utils/format';
+import { formatAmount, formatCompact, formatNumber, formatVolume, type Locale } from '~/utils/format';
 import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
-import { decodeFineConcrete, encodeFineConcrete, encodePlanner, type FineConcreteState } from '~/utils/query';
+import { decodeFineConcrete, encodeFineConcrete, encodePlanner, type FineConcreteField, type FineConcreteState } from '~/utils/query';
 
 const DECOR_SHAPES: Shape[] = ['hollow', 'cylinder', 'ring', 'bowl', 'block', 'cube', 'slab'];
 const FIELDS: Record<Shape, (keyof FineConcreteState & ('length' | 'width' | 'height' | 'diameter' | 'wall'))[]> = {
@@ -147,6 +150,16 @@ const volume = computed(() => {
   const shape = state.value.shape === 'cylinder' && hollow.value ? 'hollow' : state.value.shape;
   return shapeVolume(shape, { ...dims, open: state.value.open, count: state.value.count });
 });
+// An assumed size stops being an assumption as soon as the user types into its field.
+function confirm(field: FineConcreteField) {
+  state.value.assumed = state.value.assumed.filter((f) => f !== field);
+}
+const shownAssumed = computed(() =>
+  state.value.assumed
+    .filter((f) => fields.value.includes(f) && state.value[f] !== null)
+    .map((f) => `${t(`facts.role.${f}`)} ${formatCompact(loc.value, state.value[f]!, 1)} cm`),
+);
+
 const batchVolume = computed(() => volume.value ?? DIY_DEFAULT_VOLUME_M3);
 const litres = computed(() => batchVolume.value * 1000);
 const thickWall = computed(() => (state.value.wall ?? 0) / 100 >= 2 * MIN_SITE_CONCRETE_WALL_M);

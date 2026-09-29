@@ -24,5 +24,6 @@ export function fineConcreteStateFromPlan(plan: ProjectPlan): FineConcreteState 
     open: d.open ?? 'one',
     count: d.count ?? 1,
     preset: plan.decor.preset.key,
+    assumed: Object.keys(plan.volume.assumed ?? {}) as FineConcreteState['assumed'],
   };
 }

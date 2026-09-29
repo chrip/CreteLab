@@ -5,6 +5,7 @@ import { useNuxtApp } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
 import BagToolApp from '~/components/BagToolApp.vue';
 import DescribeForm from '~/components/DescribeForm.vue';
+import FineConcreteApp from '~/components/FineConcreteApp.vue';
 import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
 import NumberInput from '~/components/NumberInput.vue';
@@ -244,5 +245,22 @@ describe('BagToolApp result', () => {
   it('air entrainment lowers the estimate', async () => {
     const w = await mountSuspended(BagToolApp, { route: '/de/bag?lp=1' });
     expect(w.find('.delta.down').text()).toBe('−14 N/mm²');
+  });
+});
+
+describe('assumptions are visible', () => {
+  it('the planner lists assumed sizes as tags', async () => {
+    const analysis = { answers: { element: { choice: 'small' }, approach: { choice: 'scratch' }, shape: { choice: 'block' }, 'role:50 cm': { choice: 'height' } }, candidates: ['50 cm'], model: 'x', ms: 1 };
+    const plan = planProject('Betonklotz 50 cm', analysis);
+    const w = await mountSuspended(UnderstoodPanel, { props: { analysis, plan, volume: plan.volume.volume } });
+    expect(w.findAll('.chip.assumed').map((c) => c.text())).toEqual(['angenommen: Länge 50 cm', 'angenommen: Breite 50 cm']);
+    expect(w.find('[data-testid="volume-formula"]').text()).toBe('50 cm × 50 cm × 50 cm = 0,13 m³');
+  });
+
+  it('the fine concrete page notes assumed sizes until they are edited', async () => {
+    const w = await mountSuspended(FineConcreteApp, { route: '/de/fine-concrete?shape=cylinder&d=90&h=90&t=2&as=height,wall' });
+    expect(w.find('[data-testid="assumed-note"]').text()).toContain('Höhe 90 cm, Wandstärke 2 cm');
+    await w.find('input[id$="-height"]').setValue('70');
+    expect(w.find('[data-testid="assumed-note"]').text()).not.toContain('Höhe');
   });
 });
