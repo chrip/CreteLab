@@ -2,24 +2,28 @@
 
 .describe-search {
     display: flex;
+    align-items: flex-end;
     gap: 0.5rem;
     margin: 2rem 0 0.75rem;
 }
 
-.describe-search input {
+.describe-search textarea {
     flex: 1 1 auto;
     width: 100%;
     min-width: 0;
     padding: 0.9rem 1.2rem;
+    font: inherit;
     font-size: 1.05rem;
+    line-height: 1.45;
+    resize: vertical;
     border: 1px solid var(--border-color);
-    border-radius: 999px;
+    border-radius: 16px;
     box-shadow: var(--shadow);
     background: var(--card-bg);
     color: var(--text-primary);
 }
 
-.describe-search input:focus {
+.describe-search textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: var(--shadow-lg);
@@ -108,6 +112,7 @@
 @media (max-width: 600px) {
     .describe-search {
         flex-direction: column;
+        align-items: stretch;
     }
 }
 

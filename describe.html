@@ -31,9 +31,7 @@
             <main>
                 <form id="describeForm" class="describe-search" role="search">
                     <label for="describeInput" class="visually-hidden" data-t="input.label">Projektbeschreibung</label>
-                    <input id="describeInput" type="search" autocomplete="off" required maxlength="2000"
-                           data-t-placeholder="input.placeholder"
-                           placeholder="z. B. Einfahrt zur Garage, 25 m², 15 cm stark, im Winter wird gestreut">
+                    <textarea id="describeInput" rows="3" autocomplete="off" required maxlength="2000"></textarea>
                     <button type="submit" class="btn btn-primary" id="describeBtn" data-t="input.button">Rezept berechnen</button>
                 </form>
                 <p class="describe-examples">

@@ -18,7 +18,6 @@ const STRINGS = {
         'nav.describe': 'Projekt beschreiben', 'nav.calculator': 'Betonrechner',
         'nav.finetune': 'Rezept feintunen', 'nav.uhpc': 'Hochleistungsbeton',
         'input.label': 'Projektbeschreibung',
-        'input.placeholder': 'z. B. Einfahrt zur Garage, 25 m², 15 cm stark, im Winter wird gestreut',
         'input.button': 'Rezept berechnen', 'input.busy': 'Denke nach …',
         'examples': 'Beispiele:',
         'ex.1': 'Fundament für ein Gartenhaus 3x2 m, 20 cm dick', 'ex.2': 'Zaunpfosten einbetonieren',
@@ -101,7 +100,6 @@ const STRINGS = {
         'nav.describe': 'Describe project', 'nav.calculator': 'Concrete calculator',
         'nav.finetune': 'Fine-tune recipe', 'nav.uhpc': 'High-performance concrete',
         'input.label': 'Project description',
-        'input.placeholder': 'e.g. garage driveway, 25 m², 15 cm thick, salted in winter',
         'input.button': 'Calculate recipe', 'input.busy': 'Thinking …',
         'examples': 'Examples:',
         'ex.1': 'Garden shed foundation 3x2 m, 20 cm thick', 'ex.2': 'Setting fence posts in concrete',
@@ -204,7 +202,6 @@ const $ = id => document.getElementById(id);
 function applyStaticStrings() {
     document.documentElement.lang = lang;
     document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
-    document.querySelectorAll('[data-t-placeholder]').forEach(el => { el.placeholder = t(el.dataset.tPlaceholder); });
 }
 
 function renderFacts(answers) {
@@ -428,6 +425,13 @@ $('describeForm').addEventListener('submit', e => {
     e.preventDefault();
     const text = $('describeInput').value.trim();
     if (text) run(text);
+});
+// Enter searches like a search box; Shift+Enter starts a new line.
+$('describeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+        e.preventDefault();
+        $('describeForm').requestSubmit();
+    }
 });
 document.querySelectorAll('.describe-example').forEach(b => b.addEventListener('click', () => {
     $('describeInput').value = b.textContent;
