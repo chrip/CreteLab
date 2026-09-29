@@ -194,3 +194,10 @@ describe('walls given as length, height and thickness', () => {
     expect(volumeFromAnswers(answers, ['6 m', '3 m', '15 cm'])?.volume).toBe(2.7);
   });
 });
+
+describe('candidates in cm from mixed units', () => {
+  it('"100x50x20 cm" (from "1m x 0.5m x 20 cm") is 1 × 0,5 × 0,2 m', () => {
+    expect(parseCandidate('100x50x20 cm')).toEqual({ kind: 'dims', size: [1, 0.5, 0.2] });
+    expect(volumeFromAnswers({ shape: { choice: 'block' } }, ['100x50x20 cm'])?.volume).toBe(0.1);
+  });
+});

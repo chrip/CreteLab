@@ -33,12 +33,29 @@ SINGLE = re.compile(NUM + r"\s*" + UNIT + r"(?![a-zäöüß])", re.I)
 COUNTS = re.compile(NUM + r"\s*" + COUNT + r"\b", re.I)
 
 
-def dims_unit(m: re.Match[str]) -> str:
-    unit = m.group(6) or m.group(4) or m.group(2)
-    if unit:
-        return unit.lower()
-    values = [float(g.replace(",", ".")) for g in m.group(1, 3, 5) if g]
-    return "cm" if min(values) >= 10 else "m"
+TO_CM = {"mm": 0.1, "cm": 1.0, "m": 100.0}
+
+
+def dims_label(m: re.Match[str]) -> str:
+    """ "3x2 m", or in cm when the units differ ("1m x 0.5m x 20 cm" → "100x50x20 cm").
+
+    A value without a unit takes the next unit given ("40 x 40 cm"), else the one before;
+    without any unit, values from 10 up are cm.
+    """
+    values = [g for g in m.group(1, 3, 5) if g]
+    units = [u.lower() if u else None for u in m.group(2, 4, 6)][: len(values)]
+    for i in range(len(units)):
+        if units[i] is None:
+            later = [u for u in units[i + 1 :] if u]
+            earlier = [u for u in units[:i] if u]
+            units[i] = later[0] if later else earlier[-1] if earlier else None
+    if all(u is None for u in units):
+        numbers = [float(v.replace(",", ".")) for v in values]
+        return f"{'x'.join(values)} {'cm' if min(numbers) >= 10 else 'm'}"
+    if len(set(units)) == 1:
+        return f"{'x'.join(values)} {units[0]}"
+    cm = [float(v.replace(",", ".")) * TO_CM[u or "cm"] for v, u in zip(values, units, strict=True)]
+    return "x".join(f"{c:g}" for c in cm) + " cm"
 
 
 HERE = Path(__file__).parent
@@ -65,8 +82,7 @@ def extract(text: str) -> list[str]:
         found.append((start, label))
 
     for m in DIMS.finditer(text):
-        sizes = "x".join(g for g in m.group(1, 3, 5) if g)
-        add(m.start(), m.end(), f"{sizes} {dims_unit(m)}")
+        add(m.start(), m.end(), dims_label(m))
     for m in COUNTS.finditer(text):
         add(m.start(), m.end(), f"{m.group(1)} {m.group(2).lower()}")
     for m in SINGLE.finditer(text):

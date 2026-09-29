@@ -101,3 +101,14 @@ describe('text volumes explain themselves', () => {
     expect(parseVolume('2 m³ Beton').breakdown).toBeUndefined();
   });
 });
+
+describe('mixed units', () => {
+  it.each([
+    ['Waschbecken 1m x 0.5m x 20 cm', 0.1],
+    ['Platte 1,2 m x 80 cm, 4 cm dick', 0.0384],
+    ['Kübel 40 x 40 cm x 0,5 m', 0.08],
+    ['40 x 40 cm x 40 cm', 0.064],
+  ])('%s → %s m³', (text, volume) => {
+    expect(parseVolume(text).volume).toBeCloseTo(volume, 6);
+  });
+});

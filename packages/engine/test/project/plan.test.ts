@@ -360,3 +360,16 @@ describe('one size given: the rest read the way a person would', () => {
     expect(p.volume).toMatchObject({ source: 'dimensions', shape: 'cube', volume: 0.73 });
   });
 });
+
+describe('a rectangular basin', () => {
+  it('"Waschbecken 1m x 0.5m x 20 cm" (the model says bowl): open basin with an assumed 2 cm wall', () => {
+    const p = planProject('Waschbecken 1m x 0.5m x 20 cm', {
+      answers: { approach: { choice: 'fine_mortar' }, shape: { choice: 'bowl' }, open_sides: { choice: 'one' }, fine_cast: { noul: 0.89 } },
+      candidates: ['100x50x20 cm'],
+    });
+    expect(p.volume.shape).toBe('hollow');
+    expect(p.volume.assumed).toEqual({ wall: 0.02 });
+    // 1 × 0,5 × 0,2 − 0,96 × 0,46 × 0,18 = 0,0205 m³
+    expect(p.volume.volume).toBeCloseTo(0.0205, 4);
+  });
+});

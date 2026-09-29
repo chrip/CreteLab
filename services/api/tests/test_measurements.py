@@ -26,6 +26,11 @@ from cretelab_api.measurements import (
         ("3 Kubik Beton", ["3 kubik"]),
         ("Blumenkübel 40x40x40", ["40x40x40 cm"]),  # no unit, values from 10 up are cm
         ("Platte 3x2, 15 cm", ["3x2 m", "15 cm"]),
+        # Mixed units: each value keeps its own, the candidate is written in cm.
+        ("Waschbecken 1m x 0.5m x 20 cm", ["100x50x20 cm"]),
+        ("Platte 1,2 m x 80 cm, 4 cm dick", ["120x80 cm", "4 cm"]),
+        ("Kübel 40 x 40 cm x 0,5 m", ["40x40x50 cm"]),
+        ("Rahmen 2 m x 500 mm", ["200x50 cm"]),
     ],
 )
 def test_extract_finds_measurements_in_reading_order(text, expected):

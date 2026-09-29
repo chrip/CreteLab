@@ -133,6 +133,8 @@ export function volumeFromAnswers(answers: Answers, candidates: readonly string[
   if (!r.wall && (open === 'solid' || SOLID.test(t)) && shape === 'hollow') shape = 'block';
   if (!r.wall && CUBE.test(t) && (shape === 'block' || shape === 'unknown' || shape === undefined)) shape = 'cube';
   if (!shape || shape === 'unknown') return null;
+  // A "bowl" with length, width and height instead of a diameter is a rectangular basin.
+  if (shape === 'bowl' && r.diameter === undefined && (dims || r.length || r.width)) shape = 'hollow';
 
   // A wall gives length, height and thickness: the thickness is its width.
   const wallLike = !dims && r.height !== undefined && r.thickness !== undefined && r.width === undefined;
@@ -171,13 +173,19 @@ const DIMS_RE = new RegExp(
   `${NUM}\\s*(mm|cm|m)?\\s*[x×*]\\s*${NUM}\\s*(mm|cm|m)?(?:\\s*[x×*]\\s*${NUM}\\s*(mm|cm|m)?)?(?![a-zäöüß\\d])`,
 );
 
-/** "3x2 m", "40x40x80 cm", "40 cm x 40 cm". Without a unit, values from 10 up are cm. */
+/**
+ * "3x2 m", "40x40x80 cm", "40 cm x 40 cm", "1m x 0.5m x 20 cm". Each value keeps its own
+ * unit; one without a unit takes the next unit given, else the one before. Without any
+ * unit, values from 10 up are cm.
+ */
 function parseDims(t: string) {
   const m = t.match(DIMS_RE);
   if (!m) return null;
   const values = [m[1], m[3], m[5]].filter((v): v is string => Boolean(v)).map(num);
-  const unit = m[6] || m[4] || m[2] || (Math.min(...values) >= 10 ? 'cm' : 'm');
-  return { size: values.map((v) => v * UNIT_TO_M[unit]!), match: m[0].trim() };
+  const given = [m[2], m[4], m[6]].slice(0, values.length);
+  const fallback = Math.min(...values) >= 10 ? 'cm' : 'm';
+  const units = given.map((u, i) => u ?? given.slice(i + 1).find(Boolean) ?? given.slice(0, i).reverse().find(Boolean) ?? fallback);
+  return { size: values.map((v, i) => v * UNIT_TO_M[units[i]!]!), match: m[0].trim() };
 }
 
 // Wall thickness in the orders people write it. The bare word "Wand" only with mm/cm, so
