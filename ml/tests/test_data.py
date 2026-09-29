@@ -69,9 +69,10 @@ def test_every_vote_belongs_to_a_description_and_gives_allowed_answers(file, tex
             assert allowed(qid, v), f"{file}: {qid} = {v!r} for {r['text'][:50]!r}"
 
 
-def test_eval_set_is_held_out_and_uses_allowed_labels(texts):
-    rows = jsonl(ML / "eval_handwritten.jsonl")
-    assert len(rows) >= 66
+@pytest.mark.parametrize(("file", "size"), [("eval_handwritten.jsonl", 66), ("eval_objects.jsonl", 30)])
+def test_eval_set_is_held_out_and_uses_allowed_labels(texts, file, size):
+    rows = jsonl(ML / file)
+    assert len(rows) >= size
     for r in rows:
         assert r["text"] not in texts, f"eval description also in the training data: {r['text']!r}"
         for qid, v in r["labels"].items():

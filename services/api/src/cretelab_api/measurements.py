@@ -14,7 +14,7 @@ from typing import Any
 Question = dict[str, Any]
 
 NUM = r"(\d+(?:[.,]\d+)?)"
-UNIT = r"(mm|cm|dm|m²|m2|qm|m³|m3|cbm|kubik|liter|litre|l|m)"
+UNIT = r"(mm|cm|dm|m²|m2|qm|m³|m3|cbm|kubik|liters|litres|liter|litre|l|m)"
 # counts, also in compounds and other cases: "12 Zaunpfosten", "4 Löcher", "2 Säcken", "6 Punktfundamente"
 COUNT = (
     r"([a-zäöüß]*(?:stück|stk|stck|pcs|pieces|posts?|pfosten|säcke?n?|bags?|löcher[n]?|holes?|"

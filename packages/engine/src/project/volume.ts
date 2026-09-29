@@ -64,7 +64,7 @@ export function parseCandidate(candidate: string): Candidate | null {
   if (factor) return { kind: 'length', value: n * factor };
   if (['m²', 'm2', 'qm'].includes(unit)) return { kind: 'area', value: n };
   if (['m³', 'm3', 'cbm', 'kubik'].includes(unit)) return { kind: 'volume', value: n };
-  if (['l', 'liter', 'litre'].includes(unit)) return { kind: 'volume', value: n / 1000 };
+  if (['l', 'liter', 'litre', 'liters', 'litres'].includes(unit)) return { kind: 'volume', value: n / 1000 };
   return { kind: 'count', value: n };
 }
 

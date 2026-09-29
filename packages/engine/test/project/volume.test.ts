@@ -201,3 +201,9 @@ describe('candidates in cm from mixed units', () => {
     expect(volumeFromAnswers({ shape: { choice: 'block' } }, ['100x50x20 cm'])?.volume).toBe(0.1);
   });
 });
+
+describe('litres in the plural', () => {
+  it('"5 litres" is 5 litres', () => {
+    expect(parseCandidate('5 litres')).toEqual({ kind: 'volume', value: 0.005 });
+  });
+});

@@ -34,11 +34,12 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--model", help="local checkpoint dir; default is the base multilingual checkpoint")
     p.add_argument("--show-errors", action="store_true")
+    p.add_argument("--file", default="eval_handwritten.jsonl", help="hand-labelled set in ml/")
     args = p.parse_args()
     warnings.filterwarnings("ignore")
 
     agent = laya.Agent(args.model) if args.model else laya.load("convaiinnovations/laya", subfolder="multilingual")
-    rows = [json.loads(l) for l in (HERE / "eval_handwritten.jsonl").open()]
+    rows = [json.loads(l) for l in (HERE / args.file).open()]
     hits, total = defaultdict(int), defaultdict(int)
     perfect = 0
     for row in rows:

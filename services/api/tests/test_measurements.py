@@ -24,6 +24,8 @@ from cretelab_api.measurements import (
         ("2 Säcke Fertigbeton à 40 kg", ["2 säcke"]),
         ("halber Kubik", []),
         ("3 Kubik Beton", ["3 kubik"]),
+        ("Concrete letters, about 5 litres", ["5 litres"]),
+        ("500 Liter Beton", ["500 liter"]),
         ("Blumenkübel 40x40x40", ["40x40x40 cm"]),  # no unit, values from 10 up are cm
         ("Platte 3x2, 15 cm", ["3x2 m", "15 cm"]),
         # Mixed units: each value keeps its own, the candidate is written in cm.

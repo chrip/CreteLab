@@ -84,9 +84,25 @@ SHAPE_SCENARIOS = [
     "sizes given with words like Seitenlänge, Kante, Durchmesser, Wandstärke, lang, breit, hoch",
 ]
 
+# More objects people cast from concrete, from a web survey (docs/research/concrete-objects.md),
+# without the topics above. Topic -> True for DIY pieces, False for site concrete.
+# --scenarios objects.
+OBJECT_SCENARIOS: dict[str, bool] = {}
+
+GROUPS = {
+    "site": SCENARIOS, "diy": DIY_SCENARIOS, "bagged": BAGGED_SCENARIOS,
+    "shapes": SHAPE_SCENARIOS, "objects": list(OBJECT_SCENARIOS),
+}
+
 
 def build_generate_prompt(scenario: str, lang: str, n: int) -> str:
-    diy = scenario in DIY_SCENARIOS or scenario in BAGGED_SCENARIOS or scenario in SHAPE_SCENARIOS
+    diy = (scenario in DIY_SCENARIOS or scenario in BAGGED_SCENARIOS or scenario in SHAPE_SCENARIOS
+           or OBJECT_SCENARIOS.get(scenario, False))
+    sizes = ""
+    if scenario in OBJECT_SCENARIOS:
+        sizes = """
+- Sometimes give only one size ("Blumenkübel 90 cm", "Würfel 40 cm"), sometimes mix units
+  ("1 m x 50 cm x 20 cm"), sometimes the wall or plate thickness."""
     language = "German" if lang == "de" else "English"
     return f"""Write {n} different short project descriptions that a person might type into a
 concrete recipe calculator's search box. Topic: {scenario}.
@@ -98,7 +114,7 @@ Rules:
 - Vary the details: sometimes mention dimensions (for example {'"60x40x3 cm", "wall 2 cm"' if diy else '"3x2 m, 20 cm thick"'}), sometimes
   a volume ({'"5 Liter", "20 kg"' if diy else '"2 m³", "halber Kubik"'}), often no size at all.
 - Vary indoor/outdoor, frost, de-icing salt, groundwater, loads, reinforcement where it fits.
-  Do not always state these explicitly; leave some to be inferred.
+  Do not always state these explicitly; leave some to be inferred.{sizes}
 
 Reply with only a JSON array of {n} strings."""
 
@@ -157,7 +173,7 @@ async def chat(client, args, prompt, temperature):
 async def generate(client, args, sem):
     out = DATA / "descriptions.jsonl"
     done = {json.loads(l)["job"] for l in out.open()} if out.exists() else set()
-    scenarios = {"diy": DIY_SCENARIOS, "bagged": BAGGED_SCENARIOS, "shapes": SHAPE_SCENARIOS}.get(args.scenarios, SCENARIOS)
+    scenarios = GROUPS[args.scenarios]
     jobs = [(s, lang, rep) for s in scenarios for lang in ("de", "de", "en") for rep in range(args.rounds)]
     jobs = [(s, lang, rep, f"{s}|{lang}|{i}") for i, (s, lang, rep) in enumerate(jobs)]
 
@@ -201,8 +217,7 @@ async def label(client, args, sem):
     qids = [q for q in qids if q != "roles"]
     rows = [json.loads(l) for l in (DATA / "descriptions.jsonl").open()]
     if args.label_scenarios:
-        groups = {"site": SCENARIOS, "diy": DIY_SCENARIOS, "bagged": BAGGED_SCENARIOS, "shapes": SHAPE_SCENARIOS}
-        keep = {s for g in args.label_scenarios.split(",") for s in groups[g]}
+        keep = {s for g in args.label_scenarios.split(",") for s in GROUPS[g]}
         rows = [r for r in rows if r["scenario"] in keep]
     texts = list(dict.fromkeys(r["text"] for r in rows))
     random.Random(7).shuffle(texts)
@@ -249,10 +264,10 @@ async def main():
     p.add_argument("--rounds", type=int, default=1, help="generation calls per scenario and language slot")
     p.add_argument("--votes", type=int, default=5)
     p.add_argument("--step", choices=["generate", "label", "all"], default="all")
-    p.add_argument("--scenarios", choices=["site", "diy", "bagged", "shapes"], default="site", help="which topic list to generate")
+    p.add_argument("--scenarios", choices=list(GROUPS), default="site", help="which topic list to generate")
     p.add_argument("--questions", help="comma-separated question ids to label (default: all)")
     p.add_argument("--votes-file", default="votes.jsonl", help="file in data/ to append votes to")
-    p.add_argument("--label-scenarios", help="only label descriptions of these groups: site,diy,bagged,shapes")
+    p.add_argument("--label-scenarios", help="only label descriptions of these groups: " + ",".join(GROUPS))
     p.add_argument("--batch-size", type=int, default=10, help="descriptions per labelling call")
     args = p.parse_args()
     DATA.mkdir(exist_ok=True)
