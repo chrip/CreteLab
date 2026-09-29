@@ -3,10 +3,10 @@
     "skip": "Zum Inhalt springen",
     "label": "Hauptnavigation",
     "planner": "Bauteil planen",
-    "decor": "Deko-Werkstatt",
     "bag": "Fertigmischung anpassen",
     "about": "Über",
-    "language": "Sprache wechseln: English"
+    "language": "Sprache wechseln: English",
+    "fineConcrete": "Feinbeton"
   },
   "common": {
     "loading": "Lädt …"
@@ -81,15 +81,15 @@
         "text": "Fundamente, Platten, Wände, Pfosten: Anforderungen, Menge und drei Wege zur Herstellung, mit allen Stellschrauben.",
         "cta": "Zum Planer"
       },
-      "decor": {
-        "title": "Deko-Werkstatt",
-        "text": "Pflanzkübel, Schalen, Tische mit dünnen Wänden: belegte Feinbeton-Rezepte, skaliert auf Form und Maße.",
-        "cta": "Zur Werkstatt"
-      },
       "bag": {
         "title": "Fertigmischung anpassen",
         "text": "Was ändert mehr Zement, Flugasche oder ein Verflüssiger an einem Sack Fertigbeton? Eine Schätzung mit ehrlichen Grenzen.",
         "cta": "Zum Werkzeug"
+      },
+      "fineConcrete": {
+        "title": "Feinbeton",
+        "text": "Pflanzkübel, Schalen, Tische mit dünnen Wänden: belegte Feinbeton-Rezepte, skaliert auf Form und Maße.",
+        "cta": "Zum Feinbeton"
       }
     }
   },
@@ -104,8 +104,8 @@
     "watertight": "Wasserundurchlässig: WU-Beton mit Dichtungsmittel, zusätzlich fachgerecht zu planen (Fugen, Bauteildicken).",
     "why": "Warum?",
     "thinWall": "Wände unter 3 cm lassen sich mit Normalbeton (Korn 8–32 mm) nicht gießen.",
-    "toDecor": "In der Deko-Werkstatt mit Feinbeton rechnen",
-    "disclaimer": "Automatische Einschätzung aus Ihrer Beschreibung. Prüfen Sie die Werte; tragende Bauteile gehören in die Hände einer Fachkraft."
+    "disclaimer": "Automatische Einschätzung aus Ihrer Beschreibung. Prüfen Sie die Werte; tragende Bauteile gehören in die Hände einer Fachkraft.",
+    "toFineConcrete": "Mit Feinbeton rechnen"
   },
   "volume": {
     "shape": {
@@ -473,8 +473,60 @@
       }
     }
   },
-  "decor": {
-    "title": "Deko-Werkstatt",
+  "bagTool": {
+    "title": "Fertigmischung anpassen",
+    "lead": "Was mehr Zement, Flugasche, Silikastaub oder ein Verflüssiger an einem Sack Fertigbeton ändern würden, als Schätzung auf der Walzkurve.",
+    "warningTitle": "Nur zum Ausprobieren.",
+    "warning": "Die Hersteller verbieten, Fertigbeton etwas anderes als Wasser beizumischen. Mit Zusätzen gelten Festigkeitsklasse und Expositionsklassen vom Sack nicht mehr. Für tragende oder genormte Bauteile deshalb nicht verwenden.",
+    "base": "Ausgangsmischung",
+    "mix": "Sackware",
+    "mixOption": "Fertigbeton {strength}",
+    "mixHint": "Angenommene Zusammensetzung; die Datenblätter nennen den Zementgehalt nicht.",
+    "volume": "Menge in m³",
+    "options": "Zusätze",
+    "option": {
+      "extraCement": {
+        "name": "10 % mehr Zement",
+        "effect": "fester, aber mehr Schwinden"
+      },
+      "flyAsh": {
+        "name": "Flugasche (15 % des Zements)",
+        "effect": "weniger Wärme, dichter auf lange Sicht"
+      },
+      "silicaFume": {
+        "name": "Silikastaub (8 % des Zements)",
+        "effect": "deutlich dichter und fester"
+      },
+      "air": {
+        "name": "Luftporenbildner",
+        "effect": "frostbeständiger, kostet etwa 14 N/mm²"
+      },
+      "waterproofing": {
+        "name": "Dichtungsmittel (2 % des Zements)",
+        "effect": "weniger Wasseraufnahme, macht keinen WU-Beton"
+      }
+    },
+    "airWithSilica": "Luftporen und Silikastaub vertragen sich schlecht: Die Mischung wird steif und die Luftporen bilden sich schlecht aus. Nehmen Sie nur eins von beiden.",
+    "result": "Ergebnis",
+    "step": {
+      "mix": "{amount} Fertigbeton {strength} in den Mischer (≈ {bags} Säcke à {bag} kg).",
+      "extraCement": "{amount} Zement zugeben.",
+      "flyAsh": "{amount} Flugasche untermischen.",
+      "silicaFume": "{amount} Silikastaub gleichmäßig einmischen.",
+      "waterproofing": "{amount} Dichtungsmittel untermischen.",
+      "plasticizer": "{amount} {name} ins Anmachwasser geben.",
+      "air": "{amount} Luftporenbildner ins Anmachwasser geben.",
+      "water": "{amount} Wasser zugeben und gründlich mischen.",
+      "waterWith": "{amount} Wasser mit den Zusatzmitteln zugeben und gründlich mischen."
+    },
+    "baseLabel": "Ausgangsmischung",
+    "resultLabel": "Geschätzt mit Zusätzen",
+    "noAdditions": "Noch ohne Zusätze",
+    "strengthValue": "ca. {fck} N/mm² Festigkeit",
+    "estimateNote": "Beide Werte sind Schätzungen auf der Walzkurve (CEM I 42,5), damit sich die Wirkung der Zusätze vergleichen lässt."
+  },
+  "fineConcrete": {
+    "title": "Feinbeton",
     "lead": "Pflanzkübel, Schalen, Tische: dünne Stücke aus Feinbeton. Form und Maße ergeben die Menge, ein veröffentlichtes Rezept wird darauf skaliert.",
     "routed": "Hier sind Sie richtig: Für so dünne Wände ist Feinbeton nötig, Normalbeton mit grobem Kies passt nicht hinein.",
     "piece": "Ihr Stück",
@@ -707,57 +759,5 @@
         ]
       }
     }
-  },
-  "bagTool": {
-    "title": "Fertigmischung anpassen",
-    "lead": "Was mehr Zement, Flugasche, Silikastaub oder ein Verflüssiger an einem Sack Fertigbeton ändern würden, als Schätzung auf der Walzkurve.",
-    "warningTitle": "Nur zum Ausprobieren.",
-    "warning": "Die Hersteller verbieten, Fertigbeton etwas anderes als Wasser beizumischen. Mit Zusätzen gelten Festigkeitsklasse und Expositionsklassen vom Sack nicht mehr. Für tragende oder genormte Bauteile deshalb nicht verwenden.",
-    "base": "Ausgangsmischung",
-    "mix": "Sackware",
-    "mixOption": "Fertigbeton {strength}",
-    "mixHint": "Angenommene Zusammensetzung; die Datenblätter nennen den Zementgehalt nicht.",
-    "volume": "Menge in m³",
-    "options": "Zusätze",
-    "option": {
-      "extraCement": {
-        "name": "10 % mehr Zement",
-        "effect": "fester, aber mehr Schwinden"
-      },
-      "flyAsh": {
-        "name": "Flugasche (15 % des Zements)",
-        "effect": "weniger Wärme, dichter auf lange Sicht"
-      },
-      "silicaFume": {
-        "name": "Silikastaub (8 % des Zements)",
-        "effect": "deutlich dichter und fester"
-      },
-      "air": {
-        "name": "Luftporenbildner",
-        "effect": "frostbeständiger, kostet etwa 14 N/mm²"
-      },
-      "waterproofing": {
-        "name": "Dichtungsmittel (2 % des Zements)",
-        "effect": "weniger Wasseraufnahme, macht keinen WU-Beton"
-      }
-    },
-    "airWithSilica": "Luftporen und Silikastaub vertragen sich schlecht: Die Mischung wird steif und die Luftporen bilden sich schlecht aus. Nehmen Sie nur eins von beiden.",
-    "result": "Ergebnis",
-    "step": {
-      "mix": "{amount} Fertigbeton {strength} in den Mischer (≈ {bags} Säcke à {bag} kg).",
-      "extraCement": "{amount} Zement zugeben.",
-      "flyAsh": "{amount} Flugasche untermischen.",
-      "silicaFume": "{amount} Silikastaub gleichmäßig einmischen.",
-      "waterproofing": "{amount} Dichtungsmittel untermischen.",
-      "plasticizer": "{amount} {name} ins Anmachwasser geben.",
-      "air": "{amount} Luftporenbildner ins Anmachwasser geben.",
-      "water": "{amount} Wasser zugeben und gründlich mischen.",
-      "waterWith": "{amount} Wasser mit den Zusatzmitteln zugeben und gründlich mischen."
-    },
-    "baseLabel": "Ausgangsmischung",
-    "resultLabel": "Geschätzt mit Zusätzen",
-    "noAdditions": "Noch ohne Zusätze",
-    "strengthValue": "ca. {fck} N/mm² Festigkeit",
-    "estimateNote": "Beide Werte sind Schätzungen auf der Walzkurve (CEM I 42,5), damit sich die Wirkung der Zusätze vergleichen lässt."
   }
 }

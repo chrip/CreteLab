@@ -97,9 +97,9 @@ export function encodePlanner(s: PlannerState): Record<string, string> {
   });
 }
 
-// ── Decor workshop ──────────────────────────────────────────────────────────────────────
+// ── Fine concrete page ──────────────────────────────────────────────────────────────────────
 
-export interface DecorState {
+export interface FineConcreteState {
   q: string;
   shape: Shape;
   /** Outer dimensions and wall thickness in cm, as DIY instructions give them. */
@@ -115,7 +115,7 @@ export interface DecorState {
 
 type DimensionKey = 'l' | 'b' | 'h' | 'd' | 't';
 
-export function decodeDecor(q: Query): DecorState {
+export function decodeFineConcrete(q: Query): FineConcreteState {
   const cm = (key: DimensionKey) => {
     const n = number(one(q, key), NaN, 0.01, 10000);
     return Number.isNaN(n) ? null : n;
@@ -134,7 +134,7 @@ export function decodeDecor(q: Query): DecorState {
   };
 }
 
-export function encodeDecor(s: DecorState): Record<string, string> {
+export function encodeFineConcrete(s: FineConcreteState): Record<string, string> {
   const cm = (v: number | null) => (v === null ? undefined : String(v));
   return compact({
     q: s.q || undefined,

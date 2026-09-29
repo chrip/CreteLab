@@ -14,11 +14,11 @@ test.describe('start page', () => {
     await expect(page.getByRole('tabpanel').getByRole('table')).toContainText('Zement CEM I 42.5 N');
   });
 
-  test('a thin piece goes to the decor workshop with its sizes', async ({ page }) => {
+  test('a thin piece goes to the fine concrete page with its sizes', async ({ page }) => {
     await mockApi(page);
     await page.goto('/de');
     await page.getByRole('button', { name: TEXT.planter }).click();
-    await expect(page).toHaveURL(/\/de\/decor\?/);
+    await expect(page).toHaveURL(/\/de\/fine-concrete\?/);
     await expect(page.getByText('Hier sind Sie richtig')).toBeVisible();
     await expect(page.getByLabel('Wandstärke in cm')).toHaveValue('2');
     await expect(page.getByText('Menge: 15 l')).toBeVisible();
@@ -128,9 +128,9 @@ test.describe('language', () => {
   });
 });
 
-test.describe('decor workshop and bag tool', () => {
+test.describe('fine concrete page and bag tool', () => {
   test('sizes give the volume and scale the recipe', async ({ page }) => {
-    await page.goto('/de/decor?shape=cylinder&d=40&h=35&t=2.5');
+    await page.goto('/de/fine-concrete?shape=cylinder&d=40&h=35&t=2.5');
     await expect(page.getByText(/Menge: \d/)).toBeVisible();
     await page.getByLabel('Durchmesser in cm').fill('60');
     await expect(page).toHaveURL(/d=60/);

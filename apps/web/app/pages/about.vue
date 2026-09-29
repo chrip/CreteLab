@@ -85,7 +85,7 @@
         water may be added to a bag, and no DIY-store bag is declared for de-icing salt or as watertight concrete.
       </li>
       <li>
-        Every fine-mortar recipe in the decor workshop cites its source (Grey Element, University of Kassel), and tests
+        Every recipe on the fine concrete page cites its source (Grey Element, University of Kassel), and tests
         compare it with the quoted amounts.
       </li>
     </ul>

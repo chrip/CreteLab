@@ -3,10 +3,10 @@
     "skip": "Skip to content",
     "label": "Main navigation",
     "planner": "Plan a component",
-    "decor": "Decor workshop",
     "bag": "Adjust a ready mix",
     "about": "About",
-    "language": "Switch language: Deutsch"
+    "language": "Switch language: Deutsch",
+    "fineConcrete": "Fine concrete"
   },
   "common": {
     "loading": "Loading …"
@@ -81,15 +81,15 @@
         "text": "Foundations, slabs, walls, posts: requirements, amount and three ways to make it, with every setting.",
         "cta": "Open the planner"
       },
-      "decor": {
-        "title": "Decor workshop",
-        "text": "Planters, bowls, tables with thin walls: published fine-mortar recipes scaled to shape and size.",
-        "cta": "Open the workshop"
-      },
       "bag": {
         "title": "Adjust a ready mix",
         "text": "What would more cement, fly ash or a plasticiser do to a bag of ready mix? An estimate with honest limits.",
         "cta": "Open the tool"
+      },
+      "fineConcrete": {
+        "title": "Fine concrete",
+        "text": "Planters, bowls, tables with thin walls: published fine-mortar recipes scaled to shape and size.",
+        "cta": "Open fine concrete"
       }
     }
   },
@@ -104,8 +104,8 @@
     "watertight": "Watertight: concrete with a waterproofing admixture; joints and thicknesses need proper design as well.",
     "why": "Why?",
     "thinWall": "Walls under 3 cm cannot be cast from ordinary concrete (8–32 mm aggregate).",
-    "toDecor": "Calculate it with fine mortar in the decor workshop",
-    "disclaimer": "An automatic estimate from your description. Check the values; have load-bearing parts designed by a professional."
+    "disclaimer": "An automatic estimate from your description. Check the values; have load-bearing parts designed by a professional.",
+    "toFineConcrete": "Calculate it with fine concrete"
   },
   "volume": {
     "shape": {
@@ -473,8 +473,60 @@
       }
     }
   },
-  "decor": {
-    "title": "Decor workshop",
+  "bagTool": {
+    "title": "Adjust a ready mix",
+    "lead": "What more cement, fly ash, silica fume or a plasticiser would do to a bag of ready mix, estimated on the Walz curve.",
+    "warningTitle": "For experiments only.",
+    "warning": "Manufacturers forbid adding anything but water to ready mix. With additions, the strength and exposure classes on the bag no longer apply. Do not use it for load-bearing or standardised parts.",
+    "base": "Starting mix",
+    "mix": "Bagged mix",
+    "mixOption": "Ready mix {strength}",
+    "mixHint": "Assumed composition; datasheets do not state the cement content.",
+    "volume": "Amount in m³",
+    "options": "Additions",
+    "option": {
+      "extraCement": {
+        "name": "10 % more cement",
+        "effect": "stronger, but more shrinkage"
+      },
+      "flyAsh": {
+        "name": "Fly ash (15 % of cement)",
+        "effect": "less heat, denser in the long run"
+      },
+      "silicaFume": {
+        "name": "Silica fume (8 % of cement)",
+        "effect": "much denser and stronger"
+      },
+      "air": {
+        "name": "Air-entraining agent",
+        "effect": "more frost resistant, costs about 14 N/mm²"
+      },
+      "waterproofing": {
+        "name": "Waterproofing admixture (2 % of cement)",
+        "effect": "absorbs less water, does not make it watertight concrete"
+      }
+    },
+    "airWithSilica": "Air entrainment and silica fume do not go well together: the mix gets stiff and the air voids form poorly. Choose one of them.",
+    "result": "Result",
+    "step": {
+      "mix": "Put {amount} of ready mix {strength} into the mixer (≈ {bags} bags of {bag} kg).",
+      "extraCement": "Add {amount} cement.",
+      "flyAsh": "Mix in {amount} fly ash.",
+      "silicaFume": "Mix in {amount} silica fume evenly.",
+      "waterproofing": "Mix in {amount} waterproofing admixture.",
+      "plasticizer": "Add {amount} {name} to the mixing water.",
+      "air": "Add {amount} air-entraining agent to the mixing water.",
+      "water": "Add {amount} water and mix thoroughly.",
+      "waterWith": "Add {amount} water with the admixtures and mix thoroughly."
+    },
+    "baseLabel": "Starting mix",
+    "resultLabel": "Estimated with additions",
+    "noAdditions": "No additions yet",
+    "strengthValue": "approx. {fck} N/mm² strength",
+    "estimateNote": "Both values are estimates on the Walz curve (CEM I 42.5), so the effect of the additions can be compared."
+  },
+  "fineConcrete": {
+    "title": "Fine concrete",
     "lead": "Planters, bowls, tables: thin pieces from fine mortar. Shape and size give the amount, and a published recipe is scaled to it.",
     "routed": "You are in the right place: walls this thin need fine mortar; ordinary concrete with coarse gravel does not fit in.",
     "piece": "Your piece",
@@ -707,57 +759,5 @@
         ]
       }
     }
-  },
-  "bagTool": {
-    "title": "Adjust a ready mix",
-    "lead": "What more cement, fly ash, silica fume or a plasticiser would do to a bag of ready mix, estimated on the Walz curve.",
-    "warningTitle": "For experiments only.",
-    "warning": "Manufacturers forbid adding anything but water to ready mix. With additions, the strength and exposure classes on the bag no longer apply. Do not use it for load-bearing or standardised parts.",
-    "base": "Starting mix",
-    "mix": "Bagged mix",
-    "mixOption": "Ready mix {strength}",
-    "mixHint": "Assumed composition; datasheets do not state the cement content.",
-    "volume": "Amount in m³",
-    "options": "Additions",
-    "option": {
-      "extraCement": {
-        "name": "10 % more cement",
-        "effect": "stronger, but more shrinkage"
-      },
-      "flyAsh": {
-        "name": "Fly ash (15 % of cement)",
-        "effect": "less heat, denser in the long run"
-      },
-      "silicaFume": {
-        "name": "Silica fume (8 % of cement)",
-        "effect": "much denser and stronger"
-      },
-      "air": {
-        "name": "Air-entraining agent",
-        "effect": "more frost resistant, costs about 14 N/mm²"
-      },
-      "waterproofing": {
-        "name": "Waterproofing admixture (2 % of cement)",
-        "effect": "absorbs less water, does not make it watertight concrete"
-      }
-    },
-    "airWithSilica": "Air entrainment and silica fume do not go well together: the mix gets stiff and the air voids form poorly. Choose one of them.",
-    "result": "Result",
-    "step": {
-      "mix": "Put {amount} of ready mix {strength} into the mixer (≈ {bags} bags of {bag} kg).",
-      "extraCement": "Add {amount} cement.",
-      "flyAsh": "Mix in {amount} fly ash.",
-      "silicaFume": "Mix in {amount} silica fume evenly.",
-      "waterproofing": "Mix in {amount} waterproofing admixture.",
-      "plasticizer": "Add {amount} {name} to the mixing water.",
-      "air": "Add {amount} air-entraining agent to the mixing water.",
-      "water": "Add {amount} water and mix thoroughly.",
-      "waterWith": "Add {amount} water with the admixtures and mix thoroughly."
-    },
-    "baseLabel": "Starting mix",
-    "resultLabel": "Estimated with additions",
-    "noAdditions": "No additions yet",
-    "strengthValue": "approx. {fck} N/mm² strength",
-    "estimateNote": "Both values are estimates on the Walz curve (CEM I 42.5), so the effect of the additions can be compared."
   }
 }

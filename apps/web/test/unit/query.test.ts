@@ -1,7 +1,7 @@
 import { DEFAULT_MIX } from '@cretelab/engine';
 import { describe, expect, it } from 'vitest';
 import {
-  decodeBagTool, decodeDecor, decodePlanner, encodeBagTool, encodeDecor, encodePlanner,
+  decodeBagTool, decodeFineConcrete, decodePlanner, encodeBagTool, encodeFineConcrete, encodePlanner,
   type PlannerState,
 } from '../../app/utils/query';
 
@@ -68,19 +68,19 @@ describe('planner URL state', () => {
   });
 });
 
-describe('decor URL state', () => {
+describe('fine concrete URL state', () => {
   it('defaults to a hollow body with one open side and the furniture mix', () => {
-    expect(decodeDecor({})).toMatchObject({ shape: 'hollow', open: 'one', count: 1, preset: 'diy-pce-30l-batch', length: null });
-    expect(encodeDecor(decodeDecor({}))).toEqual({});
+    expect(decodeFineConcrete({})).toMatchObject({ shape: 'hollow', open: 'one', count: 1, preset: 'diy-pce-30l-batch', length: null });
+    expect(encodeFineConcrete(decodeFineConcrete({}))).toEqual({});
   });
 
   it('round-trips sizes in cm', () => {
     const q = { shape: 'cylinder', d: '40', h: '35', t: '2.5', n: '3', preset: 'diy-white-bowl-4kg', open: 'both' };
-    expect(encodeDecor(decodeDecor(q))).toEqual(q);
+    expect(encodeFineConcrete(decodeFineConcrete(q))).toEqual(q);
   });
 
   it('ignores unknown shapes, presets and negative sizes', () => {
-    const s = decodeDecor({ shape: 'pyramid', preset: 'secret', l: '-4', n: '0' });
+    const s = decodeFineConcrete({ shape: 'pyramid', preset: 'secret', l: '-4', n: '0' });
     expect(s).toMatchObject({ shape: 'hollow', preset: 'diy-pce-30l-batch', length: null, count: 1 });
   });
 });

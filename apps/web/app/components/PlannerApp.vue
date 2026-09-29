@@ -35,8 +35,8 @@
 // The component planner: description, what it needs, three ways to make it and every detail.
 // State lives in the URL; Laya's answers for the description are cached per tab.
 import { planProject, type AnalysisResponse } from '@cretelab/engine';
-import { decorStateFromPlan, plannerStateFromPlan } from '~/utils/project';
-import { decodePlanner, encodeDecor, encodePlanner } from '~/utils/query';
+import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
+import { decodePlanner, encodeFineConcrete, encodePlanner } from '~/utils/query';
 
 const { state, reset } = useUrlState(decodePlanner, encodePlanner);
 const { analyse, busy, error } = useAnalysis();
@@ -59,7 +59,7 @@ async function onDescribe(text: string) {
   analysis.value = result;
   const next = planProject(text, result);
   if (next.tool === 'decor') {
-    await navigateTo({ path: localePath('/decor'), query: { ...encodeDecor(decorStateFromPlan(next)), from: 'planner' } });
+    await navigateTo({ path: localePath('/fine-concrete'), query: { ...encodeFineConcrete(fineConcreteStateFromPlan(next)), from: 'planner' } });
     return;
   }
   reset(plannerStateFromPlan(next));

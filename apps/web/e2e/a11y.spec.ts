@@ -2,7 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 // WCAG 2.1 AA checks on every page, in both languages.
-const PAGES = ['/de', '/en', '/de/plan?v=2&s=C25%2F30&x=XC4%2CXF1', '/de/decor', '/de/bag', '/en/about'];
+const PAGES = ['/de', '/en', '/de/plan?v=2&s=C25%2F30&x=XC4%2CXF1', '/de/fine-concrete', '/de/bag', '/en/about'];
 
 for (const path of PAGES) {
   test(`${path} has no WCAG A/AA violations`, async ({ page }) => {

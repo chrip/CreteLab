@@ -26,14 +26,14 @@
 </template>
 
 <script setup lang="ts">
-// Start page: one description, Laya decides between the planner and the decor workshop.
+// Start page: one description, Laya decides between the planner and the fine concrete page.
 import { planProject } from '@cretelab/engine';
-import { decorStateFromPlan, plannerStateFromPlan } from '~/utils/project';
-import { encodeDecor, encodePlanner } from '~/utils/query';
+import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
+import { encodeFineConcrete, encodePlanner } from '~/utils/query';
 
 const TOOLS = [
   { id: 'planner', path: '/plan' },
-  { id: 'decor', path: '/decor' },
+  { id: 'fineConcrete', path: '/fine-concrete' },
   { id: 'bag', path: '/bag' },
 ] as const;
 
@@ -48,7 +48,7 @@ async function onDescribe(text: string) {
   if (!result) return;
   const plan = planProject(text, result);
   if (plan.tool === 'decor') {
-    await navigateTo({ path: localePath('/decor'), query: { ...encodeDecor(decorStateFromPlan(plan)), from: 'home' } });
+    await navigateTo({ path: localePath('/fine-concrete'), query: { ...encodeFineConcrete(fineConcreteStateFromPlan(plan)), from: 'home' } });
   } else {
     await navigateTo({ path: localePath('/plan'), query: encodePlanner(plannerStateFromPlan(plan)) });
   }

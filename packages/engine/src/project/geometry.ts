@@ -1,4 +1,4 @@
-// Volume formulas for the shapes Laya recognises and the decor workshop offers.
+// Volume formulas for the shapes Laya recognises and the fine concrete page offers.
 
 export const SHAPES = ['slab', 'block', 'cube', 'cylinder', 'hollow', 'ring', 'bowl'] as const;
 export type Shape = (typeof SHAPES)[number];

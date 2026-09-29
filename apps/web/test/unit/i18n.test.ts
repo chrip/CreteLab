@@ -66,16 +66,16 @@ describe('locales', () => {
     ['option.exposure', EXPOSURE_CLASS_NAMES.flatMap((c) => [`${c}.name`, `${c}.description`])],
     ['reason', EXPOSURE_CLASS_NAMES.map((c) => c.toLowerCase()).concat(['lp', 'wu'])],
     ['bag.rule', [...BAG_RULES]],
-    ['decor.presets', DECOR_PRESETS.flatMap((p) => [`${p.key}.label`, `${p.key}.use`])],
+    ['fineConcrete.presets', DECOR_PRESETS.flatMap((p) => [`${p.key}.label`, `${p.key}.use`])],
   ])('%s has a text for every engine value', (prefix, values) => {
     for (const v of values) expect(flatDe, `${prefix}.${v}`).toHaveProperty([`${prefix}.${v}`]);
   });
 
-  it('every decor preset has as many mixing steps as the engine says', () => {
+  it('every fine concrete preset has as many mixing steps as the engine says', () => {
     for (const p of DECOR_PRESETS) {
       for (const lang of [flatDe, flatEn]) {
-        for (let i = 0; i < p.steps; i++) expect(lang, `${p.key} step ${i}`).toHaveProperty([`decor.presets.${p.key}.steps.${i}.title`]);
-        expect(lang).not.toHaveProperty([`decor.presets.${p.key}.steps.${p.steps}.title`]);
+        for (let i = 0; i < p.steps; i++) expect(lang, `${p.key} step ${i}`).toHaveProperty([`fineConcrete.presets.${p.key}.steps.${i}.title`]);
+        expect(lang).not.toHaveProperty([`fineConcrete.presets.${p.key}.steps.${p.steps}.title`]);
       }
     }
   });

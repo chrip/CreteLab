@@ -1,11 +1,11 @@
 <template>
   <div class="stack">
-    <p v-if="routedFrom" class="note">{{ $t('decor.routed') }}</p>
+    <p v-if="routedFrom" class="note">{{ $t('fineConcrete.routed') }}</p>
     <DescribeForm :initial="state.q" :busy="busy" :error="error" submit-label="describe.reanalyse" @submit="onDescribe" />
 
     <section class="card" aria-labelledby="piece-title">
-      <h2 id="piece-title">{{ $t('decor.piece') }}</h2>
-      <div class="shapes" role="radiogroup" :aria-label="$t('decor.shape')">
+      <h2 id="piece-title">{{ $t('fineConcrete.piece') }}</h2>
+      <div class="shapes" role="radiogroup" :aria-label="$t('fineConcrete.shape')">
         <label v-for="s in DECOR_SHAPES" :key="s" class="shape" :class="{ active: state.shape === s }">
           <input v-model="state.shape" type="radio" :value="s" class="visually-hidden" />
           {{ $t(`volume.shape.${s}`) }}
@@ -13,38 +13,38 @@
       </div>
       <div class="grid dims">
         <div v-for="f in fields" :key="f" class="field">
-          <label :for="`${id}-${f}`">{{ $t(`decor.dim.${f}`) }}</label>
-          <span v-if="f === 'wall' && state.shape === 'cylinder'" class="hint">{{ $t('decor.dim.wallOptional') }}</span>
+          <label :for="`${id}-${f}`">{{ $t(`fineConcrete.dim.${f}`) }}</label>
+          <span v-if="f === 'wall' && state.shape === 'cylinder'" class="hint">{{ $t('fineConcrete.dim.wallOptional') }}</span>
           <NumberInput :id="`${id}-${f}`" v-model="state[f]" optional :min="0.01" :max="10000" :digits="2" />
         </div>
         <div class="field">
-          <label :for="`${id}-count`">{{ $t('decor.dim.count') }}</label>
+          <label :for="`${id}-count`">{{ $t('fineConcrete.dim.count') }}</label>
           <NumberInput :id="`${id}-count`" v-model="countField" :min="1" :max="1000" :digits="0" />
         </div>
         <div v-if="hollow" class="field">
-          <label :for="`${id}-open`">{{ $t('decor.dim.open') }}</label>
+          <label :for="`${id}-open`">{{ $t('fineConcrete.dim.open') }}</label>
           <select :id="`${id}-open`" v-model="state.open">
             <option v-for="o in ['one', 'none', 'both']" :key="o" :value="o">{{ $t(`volume.open.${o}`) }}</option>
           </select>
         </div>
       </div>
       <p class="volume" aria-live="polite">
-        <template v-if="volume">{{ $t('decor.volume', { volume: vol(volume) }) }}</template>
-        <template v-else>{{ $t('decor.volumeMissing', { volume: vol(DIY_DEFAULT_VOLUME_M3) }) }}</template>
+        <template v-if="volume">{{ $t('fineConcrete.volume', { volume: vol(volume) }) }}</template>
+        <template v-else>{{ $t('fineConcrete.volumeMissing', { volume: vol(DIY_DEFAULT_VOLUME_M3) }) }}</template>
       </p>
-      <p v-if="thickWall" class="note">{{ $t('decor.thickWall') }} <NuxtLinkLocale to="/plan">{{ $t('nav.planner') }}</NuxtLinkLocale></p>
+      <p v-if="thickWall" class="note">{{ $t('fineConcrete.thickWall') }} <NuxtLinkLocale to="/plan">{{ $t('nav.planner') }}</NuxtLinkLocale></p>
     </section>
 
     <section class="card stack" aria-labelledby="recipe-title">
-      <h2 id="recipe-title">{{ $t('decor.recipe') }}</h2>
+      <h2 id="recipe-title">{{ $t('fineConcrete.recipe') }}</h2>
       <div class="field">
-        <label :for="`${id}-preset`">{{ $t('decor.preset') }}</label>
+        <label :for="`${id}-preset`">{{ $t('fineConcrete.preset') }}</label>
         <select :id="`${id}-preset`" v-model="state.preset">
           <option v-for="p in presets" :key="p.key" :value="p.key">
-            {{ $t('decor.presetOption', { fck: expectedFck(p), label: $t(`decor.presets.${p.key}.label`) }) }}
+            {{ $t('fineConcrete.presetOption', { fck: expectedFck(p), label: $t(`fineConcrete.presets.${p.key}.label`) }) }}
           </option>
         </select>
-        <span class="hint">{{ $t(`decor.presets.${preset.key}.use`) }}</span>
+        <span class="hint">{{ $t(`fineConcrete.presets.${preset.key}.use`) }}</span>
       </div>
 
       <div class="table-wrap">
@@ -52,13 +52,13 @@
           <thead>
             <tr>
               <th>{{ $t('mix.material') }}</th>
-              <th class="num">{{ $t('decor.perLitre') }}</th>
+              <th class="num">{{ $t('fineConcrete.perLitre') }}</th>
               <th class="num">{{ $t('mix.total', { volume: vol(batchVolume) }) }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="row in rows" :key="row.key">
-              <td>{{ $t(`decor.row.${row.key}`) }}<div class="small muted">{{ $t(`decor.row.${row.key}Note`) }}</div></td>
+              <td>{{ $t(`fineConcrete.row.${row.key}`) }}<div class="small muted">{{ $t(`fineConcrete.row.${row.key}Note`) }}</div></td>
               <td class="num">{{ amount(row.value / litres, row.unit) }}</td>
               <td class="num">{{ amount(row.value, row.unit) }}</td>
             </tr>
@@ -68,28 +68,28 @@
 
       <ul class="checks">
         <li v-for="c in checks" :key="c.id" class="note" :class="LEVEL_CLASS[c.level]">
-          <strong>{{ $t(`decor.check.${c.id}.label`) }}: {{ checkValue(c) }}</strong>
-          – {{ $t(`decor.check.${c.id}.${c.level}`) }}
+          <strong>{{ $t(`fineConcrete.check.${c.id}.label`) }}: {{ checkValue(c) }}</strong>
+          – {{ $t(`fineConcrete.check.${c.id}.${c.level}`) }}
         </li>
       </ul>
 
       <div>
-        <h3>{{ $t('decor.steps') }}</h3>
+        <h3>{{ $t('fineConcrete.steps') }}</h3>
         <ol class="steps">
           <li v-for="(step, i) in steps" :key="i"><strong>{{ step.title }}</strong>{{ step.text }}</li>
         </ol>
       </div>
 
       <details>
-        <summary>{{ $t('decor.source.title') }}</summary>
+        <summary>{{ $t('fineConcrete.source.title') }}</summary>
         <dl class="source small">
-          <dt>{{ $t('decor.source.work') }}</dt>
+          <dt>{{ $t('fineConcrete.source.work') }}</dt>
           <dd>{{ preset.source.title }} – {{ preset.source.author }}</dd>
-          <dt>{{ $t('decor.source.link') }}</dt>
+          <dt>{{ $t('fineConcrete.source.link') }}</dt>
           <dd><a :href="preset.source.url" target="_blank" rel="noopener noreferrer">{{ host(preset.source.url) }}</a></dd>
-          <dt>{{ $t('decor.source.checked') }}</dt>
+          <dt>{{ $t('fineConcrete.source.checked') }}</dt>
           <dd>{{ preset.source.retrieved }}</dd>
-          <dt>{{ $t('decor.source.strength') }}</dt>
+          <dt>{{ $t('fineConcrete.source.strength') }}</dt>
           <dd>{{ strengthText }}</dd>
         </dl>
       </details>
@@ -98,18 +98,18 @@
 </template>
 
 <script setup lang="ts">
-// Decor workshop: thin pieces from fine mortar. Shape and size give the volume, a published
+// Fine concrete page: thin pieces from fine mortar. Shape and size give the volume, a published
 // recipe is scaled to it. No exposure classes: these mixes are outside B 20.
 import {
   DECOR_PRESETS, DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, checkDecorRecipe, decorPreset, expectedFck,
   planProject, scaleDecorRecipe, shapeVolume, type PlausibilityCheck, type Shape,
 } from '@cretelab/engine';
 import { formatAmount, formatNumber, formatVolume, type Locale } from '~/utils/format';
-import { decorStateFromPlan, plannerStateFromPlan } from '~/utils/project';
-import { decodeDecor, encodeDecor, encodePlanner, type DecorState } from '~/utils/query';
+import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
+import { decodeFineConcrete, encodeFineConcrete, encodePlanner, type FineConcreteState } from '~/utils/query';
 
 const DECOR_SHAPES: Shape[] = ['hollow', 'cylinder', 'ring', 'bowl', 'block', 'cube', 'slab'];
-const FIELDS: Record<Shape, (keyof DecorState & ('length' | 'width' | 'height' | 'diameter' | 'wall'))[]> = {
+const FIELDS: Record<Shape, (keyof FineConcreteState & ('length' | 'width' | 'height' | 'diameter' | 'wall'))[]> = {
   hollow: ['length', 'width', 'height', 'wall'],
   block: ['length', 'width', 'height'],
   slab: ['length', 'width', 'height'],
@@ -120,7 +120,7 @@ const FIELDS: Record<Shape, (keyof DecorState & ('length' | 'width' | 'height' |
 };
 const LEVEL_CLASS = { ok: 'ok', warn: 'warn', error: 'blocker' } as const;
 
-const { state, reset } = useUrlState(decodeDecor, encodeDecor);
+const { state, reset } = useUrlState(decodeFineConcrete, encodeFineConcrete);
 const { analyse, busy, error } = useAnalysis();
 const route = useRoute();
 const localePath = useLocalePath();
@@ -188,8 +188,8 @@ const stepValues = computed(() => {
 // The text may continue the title with a comma or a colon, so the space is added only before words.
 const steps = computed(() =>
   Array.from({ length: preset.value.steps }, (_, i) => {
-    const text = t(`decor.presets.${preset.value.key}.steps.${i}.text`, stepValues.value);
-    return { title: t(`decor.presets.${preset.value.key}.steps.${i}.title`), text: /^[,.;:]/.test(text) ? text : ` ${text}` };
+    const text = t(`fineConcrete.presets.${preset.value.key}.steps.${i}.text`, stepValues.value);
+    return { title: t(`fineConcrete.presets.${preset.value.key}.steps.${i}.title`), text: /^[,.;:]/.test(text) ? text : ` ${text}` };
   }),
 );
 
@@ -201,9 +201,9 @@ function checkValue(c: PlausibilityCheck) {
 
 const strengthText = computed(() => {
   const p = preset.value;
-  if (p.measuredFck && p.airCuredFck) return t('decor.source.airCured', { air: p.airCuredFck, water: p.measuredFck });
-  if (p.measuredFck) return t('decor.source.measured', { fck: p.measuredFck });
-  return t('decor.source.estimated', { fck: p.estimatedFck ?? '–' });
+  if (p.measuredFck && p.airCuredFck) return t('fineConcrete.source.airCured', { air: p.airCuredFck, water: p.measuredFck });
+  if (p.measuredFck) return t('fineConcrete.source.measured', { fck: p.measuredFck });
+  return t('fineConcrete.source.estimated', { fck: p.estimatedFck ?? '–' });
 });
 
 async function onDescribe(text: string) {
@@ -214,7 +214,7 @@ async function onDescribe(text: string) {
     await navigateTo({ path: localePath('/plan'), query: encodePlanner(plannerStateFromPlan(plan)) });
     return;
   }
-  reset(decorStateFromPlan(plan));
+  reset(fineConcreteStateFromPlan(plan));
 }
 </script>
 

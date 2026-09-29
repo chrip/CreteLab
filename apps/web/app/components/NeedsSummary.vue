@@ -21,7 +21,7 @@
       </details>
     </template>
     <p v-if="plan?.thinWall" class="note warn">
-      {{ $t('needs.thinWall') }} <NuxtLinkLocale :to="{ path: '/decor', query: decorQuery }">{{ $t('needs.toDecor') }}</NuxtLinkLocale>
+      {{ $t('needs.thinWall') }} <NuxtLinkLocale :to="{ path: '/fine-concrete', query: fineConcreteQuery }">{{ $t('needs.toFineConcrete') }}</NuxtLinkLocale>
     </p>
     <p class="small muted">{{ $t('needs.disclaimer') }}</p>
   </section>
@@ -31,8 +31,8 @@
 // "What you need" in plain words: amount, strength class and what the concrete must resist.
 import type { MixInput, ProjectPlan } from '@cretelab/engine';
 import { formatNumber, formatVolume, type Locale } from '~/utils/format';
-import { decorStateFromPlan } from '~/utils/project';
-import { encodeDecor } from '~/utils/query';
+import { fineConcreteStateFromPlan } from '~/utils/project';
+import { encodeFineConcrete } from '~/utils/query';
 
 const props = defineProps<{ mix: MixInput; volume: number; plan?: ProjectPlan | null }>();
 const { locale } = useI18n();
@@ -41,7 +41,7 @@ const n = (v: number, d: number) => formatNumber(loc.value, v, d);
 const vol = (v: number) => formatVolume(loc.value, v);
 
 const shownClasses = computed(() => (props.mix.exposureClasses.length ? props.mix.exposureClasses : ['X0' as const]));
-const decorQuery = computed(() => (props.plan ? encodeDecor(decorStateFromPlan(props.plan)) : {}));
+const fineConcreteQuery = computed(() => (props.plan ? encodeFineConcrete(fineConcreteStateFromPlan(props.plan)) : {}));
 
 </script>
 

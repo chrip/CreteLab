@@ -290,7 +290,7 @@ describe('planProject', () => {
     expect(plan.thinWall).toBe(true);
   });
 
-  it('a wall thickness only in the text also routes a thin piece to the decor workshop', () => {
+  it('a wall thickness only in the text also routes a thin piece to the fine concrete page', () => {
     const plan = planProject('Blumenkübel 40x40x40 cm, Wandstärke 2 cm', { answers: { approach: { choice: 'scratch' } }, candidates: [] });
     // Laya gave no wall role, but the text parser found 2 cm: too thin for site concrete.
     expect(plan.approach).toBe('fine_mortar');

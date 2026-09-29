@@ -19,11 +19,11 @@ does the engineering.
 | Tool | For | Output |
 |---|---|---|
 | **Component planner** (`/plan`) | foundations, slabs, walls, posts | what it needs, how much, and three ways to make it: a bagged product that meets the requirements (or the sourced reason none does), a B 20 recipe to mix yourself, an order text after DIN EN 206 / DIN 1045-2. Every input of the mix design is adjustable. |
-| **Decor workshop** (`/decor`) | planters, bowls, thin furniture | shape and sizes → volume, a published fine-mortar recipe scaled to it, plausibility checks |
+| **Fine concrete** (`/fine-concrete`) | planters, bowls, thin furniture | shape and sizes → volume, a published fine-mortar recipe scaled to it, plausibility checks |
 | **Ready-mix tool** (`/bag`) | experiments with bags | what extra cement, fly ash, silica fume or admixtures would do (with the datasheets' warning) |
 
-The start page takes one description and routes it: walls under 3 cm go to the decor
-workshop, everything else to the planner. Every page keeps its state in the URL.
+The start page takes one description and routes it: walls under 3 cm go to the fine
+concrete page, everything else to the planner. Every page keeps its state in the URL.
 
 ## Architecture
 
@@ -85,7 +85,7 @@ LAYA_MODEL_DIR=../../models/laya-crete uv run uvicorn cretelab_api.app:app --por
 npm run dev                               # http://localhost:3000, proxies /api to :8000
 ```
 
-Without the API the planner, workshop and tool still work; only the description search needs it.
+Without the API the planner and both tools still work; only the description search needs it.
 
 ## The model
 
