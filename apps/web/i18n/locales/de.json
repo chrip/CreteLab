@@ -8,9 +8,6 @@
     "about": "Über",
     "language": "Sprache wechseln: English"
   },
-  "footer": {
-    "disclaimer": "CreteLab rechnet nach Zement-Merkblatt B 20 und DIN 1045-2 und nennt seine Quellen. Es ersetzt keine Fachplanung: Tragende Bauteile gehören in die Hände einer Fachkraft."
-  },
   "common": {
     "loading": "Lädt …"
   },
@@ -202,7 +199,7 @@
     "perM3": "je m³",
     "total": "für {volume}",
     "error": {
-      "fmRequired": "Konsistenz {consistency} erreicht man nur mit Fließmittel (FM). Wählen Sie unter „Details anpassen“ Fließmittel."
+      "fmRequired": "Konsistenz {consistency} erreicht man nur mit Fließmittel (FM). Wählen Sie unter „Rezept anpassen“ Fließmittel."
     },
     "largeVolume": "{volume} selbst zu mischen ist viel Arbeit. Ab etwa 1 m³ ist Transportbeton meist günstiger, siehe Reiter „Transportbeton“.",
     "warning": {
@@ -240,20 +237,6 @@
     "moisture": "Feuchte",
     "weighed": "abzuwiegen",
     "howTo": "So wird gemischt",
-    "calculation": "Rechenweg nach Zement-Merkblatt B 20",
-    "calc": {
-      "limits": "Grenzwerte der Expositionsklassen: w/z ≤ {wz}, Zement ≥ {cement} kg/m³.",
-      "water": "Wasseranspruch aus Sieblinie und Konsistenz: {water} l/m³.",
-      "target": "Zielfestigkeit: {fck} / 0,92 + {margin} (Vorhaltemaß) + {loss} (Luftporen) = {target} N/mm².",
-      "wzStrength": "w/z aus der Walzkurve {walz} ist strenger als die Exposition ({exposure}): w/z = {wz}.",
-      "wzExposure": "Die Exposition ist maßgebend: {exposure} − 0,02 = {wz} (Walzkurve: {walz}).",
-      "cement": "Zement: {water} / {wz} = {cement} kg/m³.",
-      "equivalent": " Mit Zusatzstoffen: (w/z)eq = {wz}.",
-      "volumes": "Stoffraum in dm³: Zement {cement} + Wasser {water} + Flugasche {flyAsh} + Silikastaub {silicaFume} + Dichtungsmittel {waterproofing} + Luft {air} + Gesteinskörnung {aggregate} = 1000.",
-      "added": "Wasser {water} l/m³, davon zuzugeben {added} l/m³.",
-      "fines": "Mehlkorngehalt: {fines} kg/m³.",
-      "source": "Verfahren und Tafeln: Zement-Merkblatt B 20 (2.2017), Walzkurven digitalisiert aus Bild 1. Die Rechnung ist mit den Beispielen I bis IV des Merkblatts getestet."
-    },
     "step": {
       "dry": "Trocken vormischen: {cement} {type} und {aggregate} Gesteinskörnung.",
       "flyAsh": "{amount} Flugasche untermischen.",
@@ -299,7 +282,7 @@
     }
   },
   "details": {
-    "title": "Details anpassen",
+    "title": "Rezept anpassen",
     "lead": "Jede Änderung rechnet sofort neu und steckt im Link, der sich teilen lässt.",
     "volume": "Menge in m³",
     "strength": "Druckfestigkeitsklasse",

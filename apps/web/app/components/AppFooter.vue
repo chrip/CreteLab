@@ -1,7 +1,6 @@
 <template>
   <footer class="footer">
     <div class="inner small muted">
-      <p>{{ $t('footer.disclaimer') }}</p>
       <p>
         <a :href="repository" rel="noopener">GitHub</a> · MIT ·
         <NuxtLinkLocale to="/about">{{ $t('nav.about') }}</NuxtLinkLocale>

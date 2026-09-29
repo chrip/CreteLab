@@ -72,7 +72,7 @@ test.describe('component planner', () => {
 
   test('details change the recipe at once and survive a reload', async ({ page }) => {
     await page.goto('/de/plan?v=2&s=C20%2F25&x=XC1');
-    await page.getByText('Details anpassen').click();
+    await page.getByText('Rezept anpassen').click();
     await page.getByLabel('Druckfestigkeitsklasse').selectOption('C30/37');
     await expect(page.getByText('2,00 m³ Beton C30/37')).toBeVisible();
     await expect(page).toHaveURL(/s=C30%2F37|s=C30\/37/);

@@ -8,9 +8,6 @@
     "about": "About",
     "language": "Switch language: Deutsch"
   },
-  "footer": {
-    "disclaimer": "CreteLab calculates after Zement-Merkblatt B 20 and DIN 1045-2 and cites its sources. It does not replace an engineer: have load-bearing parts designed by a professional."
-  },
   "common": {
     "loading": "Loading …"
   },
@@ -202,7 +199,7 @@
     "perM3": "per m³",
     "total": "for {volume}",
     "error": {
-      "fmRequired": "Consistency {consistency} needs a superplasticiser (FM). Choose one under “Adjust details”."
+      "fmRequired": "Consistency {consistency} needs a superplasticiser (FM). Choose one under “Adjust the recipe”."
     },
     "largeVolume": "Mixing {volume} yourself is a lot of work. From about 1 m³ ready-mixed concrete is usually cheaper, see the “Ready-mixed concrete” tab.",
     "warning": {
@@ -240,20 +237,6 @@
     "moisture": "moisture",
     "weighed": "to weigh",
     "howTo": "How to mix",
-    "calculation": "Calculation after Zement-Merkblatt B 20",
-    "calc": {
-      "limits": "Exposure limits: w/c ≤ {wz}, cement ≥ {cement} kg/m³.",
-      "water": "Water demand from grading and consistency: {water} l/m³.",
-      "target": "Target strength: {fck} / 0.92 + {margin} (margin) + {loss} (air voids) = {target} N/mm².",
-      "wzStrength": "The w/c from the Walz curve, {walz}, is stricter than the exposure limit ({exposure}): w/c = {wz}.",
-      "wzExposure": "The exposure limit governs: {exposure} − 0.02 = {wz} (Walz curve: {walz}).",
-      "cement": "Cement: {water} / {wz} = {cement} kg/m³.",
-      "equivalent": " With additions: (w/c)eq = {wz}.",
-      "volumes": "Absolute volumes in dm³: cement {cement} + water {water} + fly ash {flyAsh} + silica fume {silicaFume} + waterproofing {waterproofing} + air {air} + aggregate {aggregate} = 1000.",
-      "added": "Water {water} l/m³, of which {added} l/m³ to add.",
-      "fines": "Fines content: {fines} kg/m³.",
-      "source": "Method and tables: Zement-Merkblatt B 20 (2.2017), Walz curves digitised from its Bild 1. The calculation is tested against the leaflet's worked examples I to IV."
-    },
     "step": {
       "dry": "Dry mix {cement} {type} and {aggregate} aggregate.",
       "flyAsh": "Mix in {amount} fly ash.",
@@ -299,7 +282,7 @@
     }
   },
   "details": {
-    "title": "Adjust details",
+    "title": "Adjust the recipe",
     "lead": "Every change recalculates at once and is kept in the link, which you can share.",
     "volume": "Amount in m³",
     "strength": "Strength class",

@@ -65,33 +65,13 @@
         </ol>
       </div>
 
-      <details>
-        <summary>{{ $t('mix.calculation') }}</summary>
-        <ol class="steps small">
-          <li>{{ $t('mix.calc.limits', { wz: n(recipe.wzExposure, 2), cement: recipe.limits.minCement }) }}</li>
-          <li>{{ $t('mix.calc.water', { water: n(m.water, 1) }) }}</li>
-          <li>{{ $t('mix.calc.target', { fck, margin: recipe.margin, loss: n(recipe.airStrengthLoss, 1), target: n(recipe.targetStrength, 1) }) }}</li>
-          <li>
-            {{ $t(recipe.wzSource === 'strength' ? 'mix.calc.wzStrength' : 'mix.calc.wzExposure', {
-              walz: recipe.wzWalz === null ? '–' : n(recipe.wzWalz, 2), exposure: n(recipe.wzExposure, 2), wz: n(recipe.wz, 2) }) }}
-          </li>
-          <li>
-            {{ $t('mix.calc.cement', { water: n(m.water, 1), wz: n(recipe.wz, 2), cement: m.cement }) }}
-            <span v-if="recipe.equivalentWz !== null">{{ $t('mix.calc.equivalent', { wz: n(recipe.equivalentWz, 2) }) }}</span>
-          </li>
-          <li>{{ $t('mix.calc.volumes', { ...recipe.volumes }) }}</li>
-          <li>{{ $t('mix.calc.added', { water: n(m.water, 0), added: m.addedWater }) }}</li>
-          <li>{{ $t('mix.calc.fines', { fines: recipe.finesContent }) }}</li>
-        </ol>
-        <p class="small muted">{{ $t('mix.calc.source') }}</p>
-      </details>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
 // Mixing it yourself: the B 20 mix design, per m³ and for the whole volume.
-import { ORDER_SENSIBLE_FROM_M3, STRENGTH_CLASSES, computeRecipe, type MixInput } from '@cretelab/engine';
+import { ORDER_SENSIBLE_FROM_M3, computeRecipe, type MixInput } from '@cretelab/engine';
 import { formatAmount, formatNumber, formatVolume, type Locale } from '~/utils/format';
 
 const props = defineProps<{ mix: MixInput; volume: number }>();
@@ -107,7 +87,6 @@ const result = computed(() => computeRecipe(props.mix));
 const recipe = computed(() => (result.value.ok ? result.value.recipe : null)!);
 const m = computed(() => recipe.value.materials);
 const warnings = computed(() => recipe.value.warnings.map((w) => ({ ...w, severity: 'warning' as const })));
-const fck = computed(() => STRENGTH_CLASSES[props.mix.strengthClass].fckCube);
 
 interface Row { key: string; value: number; unit: 'kg' | 'l'; params?: Record<string, string> }
 const rows = computed<Row[]>(() => {
