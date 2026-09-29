@@ -1,2 +1,0 @@
-laya[serve]>=0.3.21
-httpx

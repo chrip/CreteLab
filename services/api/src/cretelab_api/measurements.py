@@ -1,37 +1,52 @@
-"""Find the measurements in a description: the candidates whose role Laya decides.
+"""The questions Laya answers and the measurements whose role it decides.
 
-Shared by the training data (ml/make_dataset.py, ml/train.py, ml/evaluate.py) and the
-server, so training and inference see exactly the same candidates. The browser reads
-a candidate's number and unit back from its text (js/lib/volume.js).
+Shared by the training scripts (ml/) and the API, so training and inference see exactly the
+same inputs. The web app reads a candidate's number and unit back from its text
+(packages/engine/src/project/volume.ts, parseCandidate).
 """
 
 import json
 import re
 from pathlib import Path
+from typing import Any
+
+#: A typed Laya question: {"type": "noul" | "choice" | "score", "instructions": ..., "criteria": ...}
+Question = dict[str, Any]
 
 NUM = r"(\d+(?:[.,]\d+)?)"
 UNIT = r"(mm|cm|dm|m²|m2|qm|m³|m3|cbm|kubik|liter|litre|l|m)"
 # counts, also in compounds and other cases: "12 Zaunpfosten", "4 Löcher", "2 Säcken", "6 Punktfundamente"
-COUNT = (r"([a-zäöüß]*(?:stück|stk|stck|pcs|pieces|posts?|pfosten|säcke?n?|bags?|löcher[n]?|holes?|"
-         r"fundamente?|platten?|steine?|stufen?|slabs?|steps?|blocks?|blöcke?))")
+COUNT = (
+    r"([a-zäöüß]*(?:stück|stk|stck|pcs|pieces|posts?|pfosten|säcke?n?|bags?|löcher[n]?|holes?|"
+    r"fundamente?|platten?|steine?|stufen?|slabs?|steps?|blocks?|blöcke?))"
+)
 
 # "3x2 m", "40x40x80 cm", "40 cm x 40 cm" describe themselves (length × width [× height]):
 # one candidate, no role question. Without a unit, values from 10 up are read as cm.
 LEN_U = r"(mm|cm|m)"
-DIMS = re.compile(NUM + r"\s*" + LEN_U + r"?\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?"
-                  r"(?:\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?)?(?![a-zäöüß\d])", re.I)
+DIMS = re.compile(
+    NUM + r"\s*" + LEN_U + r"?\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?"
+    r"(?:\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?)?(?![a-zäöüß\d])",
+    re.I,
+)
 SINGLE = re.compile(NUM + r"\s*" + UNIT + r"(?![a-zäöüß])", re.I)
 COUNTS = re.compile(NUM + r"\s*" + COUNT + r"\b", re.I)
 
 
-def dims_unit(m) -> str:
+def dims_unit(m: re.Match[str]) -> str:
     unit = m.group(6) or m.group(4) or m.group(2)
     if unit:
         return unit.lower()
     values = [float(g.replace(",", ".")) for g in m.group(1, 3, 5) if g]
     return "cm" if min(values) >= 10 else "m"
 
-ROLE_TEMPLATE = json.loads((Path(__file__).parent / "role_question.json").read_text())
+
+HERE = Path(__file__).parent
+#: The fixed questions (exposure facts, route, shape). Their wording is model input:
+#: change one and the training data has to be relabelled.
+QUESTIONS: dict[str, Question] = json.loads((HERE / "questions.json").read_text())
+#: One choice question per single-value measurement, "{candidate}" is replaced.
+ROLE_TEMPLATE: Question = json.loads((HERE / "role_question.json").read_text())
 MAX_CANDIDATES = 6
 
 
@@ -40,9 +55,10 @@ def extract(text: str) -> list[str]:
 
     A repeated single value gets a suffix ("40 cm", "40 cm #2") so each one has its own role.
     """
-    found, taken = [], []
+    found: list[tuple[int, str]] = []
+    taken: list[tuple[int, int]] = []
 
-    def add(start, end, label):
+    def add(start: int, end: int, label: str) -> None:
         if any(s < end and start < e for s, e in taken):
             return
         taken.append((start, end))
@@ -55,7 +71,8 @@ def extract(text: str) -> list[str]:
         add(m.start(), m.end(), f"{m.group(1)} {m.group(2).lower()}")
     for m in SINGLE.finditer(text):
         add(m.start(), m.end(), f"{m.group(1)} {m.group(2).lower()}")
-    labels, seen = [], {}
+    labels: list[str] = []
+    seen: dict[str, int] = {}
     for _, label in sorted(found):
         seen[label] = seen.get(label, 0) + 1
         labels.append(label if seen[label] == 1 else f"{label} #{seen[label]}")
@@ -66,11 +83,12 @@ def is_dims(candidate: str) -> bool:
     return "x" in candidate.split(" ")[0]
 
 
-def role_question(candidate: str) -> dict:
+def role_question(candidate: str) -> Question:
     """The typed question for one single-value candidate; its text names the candidate."""
     value, _, nth = candidate.partition(" #")
     q = dict(ROLE_TEMPLATE)
-    q["instructions"] = ROLE_TEMPLATE["instructions"].replace("{candidate}", value + (f" (occurrence {nth})" if nth else ""))
+    label = value + (f" (occurrence {nth})" if nth else "")
+    q["instructions"] = ROLE_TEMPLATE["instructions"].replace("{candidate}", label)
     return q
 
 
@@ -79,9 +97,6 @@ def role_candidates(text: str) -> list[str]:
     return [c for c in extract(text) if not is_dims(c)]
 
 
-if __name__ == "__main__":
-    for t in ["ein imperialer sitzwürfel cubisch, 90 cm Seitenlänge wandicke 2 cm, für den Garten",
-              "Fundament für ein Gartenhaus 3x2 m, 20 cm dick", "Einfahrt zur Garage, 25 m² und 15 cm stark",
-              "12 Zaunpfosten, Löcher 30x30x80 cm", "Tischplatte 1,20 x 0,8 m, 4 cm dick", "40 cm lang, 40 cm breit und 40 cm hoch", "Betonring 60x60x30 cm ohne Boden, Wand 4 cm",
-              "runder Pflanztopf Durchmesser 40 cm, 35 cm hoch, 2,5 cm Wand", "2 Säcke Fertigbeton à 40 kg", "halber Kubik"]:
-        print(extract(t), "<-", t)
+def questions_for(text: str) -> dict[str, Question]:
+    """All questions for one description: the fixed ones plus a role question per measurement."""
+    return {**QUESTIONS, **{f"role:{c}": role_question(c) for c in role_candidates(text)}}

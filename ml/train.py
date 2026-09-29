@@ -5,7 +5,7 @@ Single-GPU version of the upstream notebook
 RLCD policy gradient with proper-scoring-rule rewards plus soft cross-entropy, then one
 calibration temperature per question type, fitted on a held-out slice.
 
-    python train.py --out ../model/laya-crete
+    python train.py --out ../models/laya-crete
 """
 
 import argparse
@@ -22,14 +22,16 @@ from safetensors.torch import load_file, save_file
 from transformers import AutoTokenizer
 
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from measurements import role_question  # noqa: E402
+# Questions and measurement candidates are shared with the API, so training and
+# inference see exactly the same inputs.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "services" / "api" / "src"))
+from cretelab_api.measurements import role_question  # noqa: E402
 
 from laya.agent import _fix_tokenizer_config
 from laya.common import QTYPES, build_model, build_sequence, proper_reward, render_options
 
 HERE = Path(__file__).parent
-QUESTIONS = json.loads((HERE.parent / "questions.json").read_text())
+from cretelab_api.measurements import QUESTIONS  # noqa: E402
 SMOOTHING = 0.25  # pseudo-votes per option, so a 5/5 vote becomes ~0.9 rather than 1.0
 
 
@@ -130,7 +132,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--votes", nargs="+",
                    default=[str(f) for f in sorted((HERE / "data").glob("votes*.jsonl"))])
-    p.add_argument("--out", default=str(HERE.parent / "model" / "laya-crete"))
+    p.add_argument("--out", default=str(HERE.parent / "models" / "laya-crete"))
     p.add_argument("--epochs", type=int, default=4)
     p.add_argument("--micro-batch", type=int, default=16)
     p.add_argument("--grad-accum", type=int, default=4)

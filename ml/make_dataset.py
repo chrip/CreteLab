@@ -24,11 +24,13 @@ from pathlib import Path
 import httpx
 
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from measurements import ROLE_TEMPLATE, role_candidates  # noqa: E402
+# Questions and measurement candidates are shared with the API, so training and
+# inference see exactly the same inputs.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "services" / "api" / "src"))
+from cretelab_api.measurements import ROLE_TEMPLATE, role_candidates  # noqa: E402
 
 HERE = Path(__file__).parent
-QUESTIONS = json.loads((HERE.parent / "questions.json").read_text())
+from cretelab_api.measurements import QUESTIONS  # noqa: E402
 DATA = HERE / "data"
 
 SCENARIOS = [

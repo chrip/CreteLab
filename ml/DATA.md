@@ -1,15 +1,15 @@
 # Training data for the describe search
 
 This folder holds everything needed to rebuild the fine-tuned Laya model behind
-`describe.html`: 2 100 project descriptions, 19 800 teacher votes, a hand-labelled
+the description search: 2 100 project descriptions, 19 800 teacher votes, a hand-labelled
 evaluation set and a blind cross-check of the teacher. The model weights are not in the
 repository; `train.py` rebuilds them in about 30 minutes on a CUDA GPU (10–20 hours on a CPU).
 
 ## What Laya learns
 
 Laya answers typed questions about a description; it never writes text. The questions are
-fixed in `../questions.json` (16 questions) and `../role_question.json` (one role question
-per measurement found by `../measurements.py`). Their wording is part of the model input:
+fixed in `services/api/src/cretelab_api/questions.json` (16 questions) and `role_question.json` (one role question
+per measurement found by `measurements.py`). Their wording is part of the model input:
 change a question and the data has to be relabelled.
 
 | Group | Questions |
@@ -18,8 +18,8 @@ change a question and the data has to be relabelled.
 | Route | `fine_cast`, `approach` (scratch / bagged / fine_mortar), `add_cement`, `add_plasticizer` |
 | Volume | `shape`, `open_sides`, `role:<measurement>` (length, width, height, diameter, wall, thickness, area, volume, count, other) |
 
-DIN rules, volume formulas and the B 20 mix design stay in code (`js/lib/describe.js`,
-`js/lib/volume.js`, `js/lib/recipe.js`).
+DIN rules, volume formulas and the B 20 mix design stay in code (`packages/engine`:
+`project/requirements.ts`, `project/volume.ts`, `b20/recipe.ts`).
 
 ## Files
 
@@ -67,9 +67,9 @@ with a size.
 ## Rebuild and extend
 
 ```bash
-# from describe/ml, with a local OpenAI-compatible LLM on localhost:8000
+# from ml/, with a local OpenAI-compatible LLM on localhost:8000
 python train.py                                   # ~30 min on a CUDA GPU
-python evaluate.py --model ../model/laya-crete    # compare with the numbers above
+python evaluate.py --model ../models/laya-crete    # compare with the numbers above
 
 # more descriptions for a topic list, then labels for them
 python make_dataset.py --step generate --scenarios shapes
@@ -77,7 +77,7 @@ python make_dataset.py --step label --label-scenarios shapes --batch-size 5 \
     --questions <all question ids>,roles --votes 3
 ```
 
-`tests/describe-data.test.js` checks every row of these files against the questions.
+`ml/tests/test_data.py` checks every row of these files against the questions.
 Retraining uses random noise (RLCD) and is not bit-identical; evaluate every new model.
 
 ## License

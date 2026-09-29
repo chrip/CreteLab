@@ -1,7 +1,7 @@
 """Score a Laya checkpoint on the hand-labelled descriptions in eval_handwritten.jsonl.
 
     python evaluate.py                                  # base multilingual checkpoint
-    python evaluate.py --model ../model/laya-crete      # fine-tuned checkpoint
+    python evaluate.py --model ../models/laya-crete      # fine-tuned checkpoint
 """
 
 import argparse
@@ -12,11 +12,13 @@ from pathlib import Path
 
 import laya
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from measurements import role_candidates, role_question  # noqa: E402
+# Questions and measurement candidates are shared with the API, so training and
+# inference see exactly the same inputs.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "services" / "api" / "src"))
+from cretelab_api.measurements import role_candidates, role_question  # noqa: E402
 
 HERE = Path(__file__).parent
-QUESTIONS = json.loads((HERE.parent / "questions.json").read_text())
+from cretelab_api.measurements import QUESTIONS  # noqa: E402
 
 
 def predicted(qid, ans):

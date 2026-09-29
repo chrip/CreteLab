@@ -4,7 +4,7 @@ from collections import defaultdict
 from pathlib import Path
 
 HERE = Path(__file__).parent
-Q = json.loads((HERE.parent.parent / "questions.json").read_text())
+Q = json.loads((HERE.parents[1] / "services/api/src/cretelab_api/questions.json").read_text())
 qwen = json.loads((HERE / "qwen_majority.json").read_text())
 opus = {}
 for p in sorted(HERE.glob("opus_*.json")):
