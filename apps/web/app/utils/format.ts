@@ -1,4 +1,5 @@
 // Number formatting for both languages ("2,70 m³" / "2.70 m³"). Pure, so it is unit-tested.
+import type { Solid, VolumeBreakdown } from '@cretelab/engine';
 
 export type Locale = 'de' | 'en';
 
@@ -37,4 +38,42 @@ export function parseDecimal(raw: string | number | null | undefined): number {
   if (raw === null || raw === undefined) return NaN;
   const text = raw.trim().replace(',', '.');
   return /^-?\d*\.?\d+$/.test(text) ? Number(text) : NaN;
+}
+
+/**
+ * The calculation behind a volume, e.g. "6 m × 3 m × 0,15 m = 2,70 m³" or, for a planter,
+ * "40 × 40 × 40 cm − 36 × 36 × 38 cm = 15 l". Small pieces are written in cm.
+ */
+export function formatBreakdown(locale: Locale, b: VolumeBreakdown): string {
+  const lengths = [b.outer, b.inner].flatMap((s) => (s ? solidLengths(s) : []));
+  const inCm = Math.max(...lengths) < 1;
+  const len = (m: number) => `${formatCompact(locale, inCm ? m * 100 : m, inCm ? 1 : 3)} ${inCm ? 'cm' : 'm'}`;
+  const solid = (s: Solid): string => {
+    switch (s.kind) {
+      case 'box':
+        return `${len(s.length)} × ${len(s.width)} × ${len(s.height)}`;
+      case 'area':
+        return `${formatCompact(locale, s.area, 2)} m² × ${len(s.height)}`;
+      case 'cylinder':
+        return `π/4 × (${len(s.diameter)})² × ${len(s.height)}`;
+      case 'hemisphere':
+        return `π/12 × (${len(s.diameter)})³`;
+    }
+  };
+  let text = b.inner ? `(${solid(b.outer)}) − (${solid(b.inner)})` : solid(b.outer);
+  if (b.count > 1) text = `${b.inner ? `[${text}]` : text} × ${b.count}`;
+  return `${text} = ${formatVolume(locale, b.volume)}`;
+}
+
+function solidLengths(s: Solid): number[] {
+  switch (s.kind) {
+    case 'box':
+      return [s.length, s.width, s.height];
+    case 'area':
+      return [s.height, 1]; // an area is always a site slab: metres
+    case 'cylinder':
+      return [s.diameter, s.height];
+    case 'hemisphere':
+      return [s.diameter];
+  }
 }

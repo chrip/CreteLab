@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { roundVolume, shapeVolume, type Dimensions, type Shape } from '../../src/project/geometry';
+import { roundVolume, shapeVolume, solidVolume, volumeBreakdown, type Dimensions, type Shape } from '../../src/project/geometry';
 
 const circle = (d: number) => (Math.PI / 4) * d * d;
 
@@ -109,5 +109,47 @@ describe('roundVolume', () => {
     [0, 0.0001],
   ])('%s m³ → %s m³', (v, expected) => {
     expect(roundVolume(v)).toBe(expected);
+  });
+});
+
+describe('volumeBreakdown', () => {
+  it('a slab is one box', () => {
+    expect(volumeBreakdown('slab', { length: 6, width: 3, height: 0.15 })).toEqual({
+      outer: { kind: 'box', length: 6, width: 3, height: 0.15 }, inner: null, count: 1, volume: expect.closeTo(2.7, 10),
+    });
+  });
+
+  it('a slab given by area', () => {
+    expect(volumeBreakdown('slab', { area: 25, height: 0.15 })?.outer).toEqual({ kind: 'area', area: 25, height: 0.15 });
+  });
+
+  it('a planter open at the top: outer box minus the inner space above a 2 cm bottom', () => {
+    const b = volumeBreakdown('hollow', { length: 0.4, width: 0.4, height: 0.4, wall: 0.02, open: 'one' })!;
+    expect(b.outer).toEqual({ kind: 'box', length: 0.4, width: 0.4, height: 0.4 });
+    expect(b.inner).toMatchObject({ kind: 'box', length: expect.closeTo(0.36, 10), width: expect.closeTo(0.36, 10), height: expect.closeTo(0.38, 10) });
+    expect(b.volume).toBeCloseTo(0.064 - 0.36 * 0.36 * 0.38, 10);
+  });
+
+  it('a round pot: outer cylinder minus inner cylinder', () => {
+    const b = volumeBreakdown('hollow', { diameter: 0.4, height: 0.35, wall: 0.025 })!;
+    expect(b.outer).toEqual({ kind: 'cylinder', diameter: 0.4, height: 0.35 });
+    expect(b.inner).toMatchObject({ kind: 'cylinder', diameter: expect.closeTo(0.35, 10), height: expect.closeTo(0.325, 10) });
+  });
+
+  it('a bowl is half a hollow sphere', () => {
+    const b = volumeBreakdown('bowl', { diameter: 0.33, wall: 0.01 })!;
+    expect(b.outer.kind).toBe('hemisphere');
+    expect(solidVolume(b.outer)).toBeCloseTo((2 / 3) * Math.PI * 0.165 ** 3, 12);
+  });
+
+  it('pieces multiply', () => {
+    expect(volumeBreakdown('cylinder', { diameter: 0.3, height: 0.8, count: 12 })).toMatchObject({ count: 12 });
+  });
+
+  it('agrees with shapeVolume for every shape', () => {
+    const d = { length: 0.5, width: 0.4, height: 0.3, diameter: 0.3, wall: 0.03, count: 2 };
+    for (const shape of ['slab', 'block', 'cube', 'cylinder', 'hollow', 'ring', 'bowl'] as const) {
+      expect(volumeBreakdown(shape, d)?.volume).toBe(shapeVolume(shape, d));
+    }
   });
 });

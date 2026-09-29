@@ -24,11 +24,10 @@
     "example1": "Fundament für ein Gartenhaus 3x2 m, 20 cm dick",
     "example2": "12 Zaunpfosten einbetonieren",
     "example3": "Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut",
-    "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm",
-    "enterHint": "Enter wertet aus, Umschalt+Enter macht eine neue Zeile."
+    "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm"
   },
   "facts": {
-    "title": "Das hat die KI verstanden",
+    "title": "Das wurde automatisch verstanden",
     "unsure": "unsicher",
     "indoor_dry": "innen, trocken",
     "rain": "Regen oder Spritzwasser",
@@ -51,11 +50,31 @@
       "1": "begehbar",
       "2": "befahrbar (Pkw)",
       "3": "Schwerverkehr oder Stapler"
+    },
+    "properties": "Eigenschaften",
+    "amount": "Menge",
+    "noSize": "Keine Maße erkannt, gerechnet mit {volume}",
+    "shape": "Form: {shape}",
+    "given": "Menge direkt angegeben: {volume}",
+    "edited": "Die Menge wurde von Hand auf {volume} geändert.",
+    "dims2": "Länge × Breite",
+    "dims3": "Länge × Breite × Höhe",
+    "unused": "nicht verwendet",
+    "role": {
+      "length": "Länge",
+      "width": "Breite",
+      "height": "Höhe",
+      "diameter": "Durchmesser",
+      "wall": "Wandstärke",
+      "thickness": "Dicke",
+      "area": "Fläche",
+      "volume": "Menge",
+      "count": "Stück"
     }
   },
   "home": {
     "metaTitle": "Beton für Ihr Projekt",
-    "title": "Beschreiben Sie Ihr Projekt. Wir rechnen den Beton.",
+    "title": "Beschreiben Sie Ihr Projekt und erhalten Sie Ihr passendes Betonrezept.",
     "lead": "Ein Satz genügt: was Sie bauen, wo es steht, wie groß es ist. CreteLab erkennt die Anforderungen, berechnet das Rezept nach Zement-Merkblatt B 20 und sagt, ob Sackware, selbst mischen oder Transportbeton am besten passt.",
     "privacy": "Ihre Beschreibung wird nur ausgewertet, nicht gespeichert. Das Sprachmodell läuft auf unserem eigenen Server.",
     "tools": "Werkzeuge",
@@ -92,17 +111,6 @@
     "disclaimer": "Automatische Einschätzung aus Ihrer Beschreibung. Prüfen Sie die Werte; tragende Bauteile gehören in die Hände einer Fachkraft."
   },
   "volume": {
-    "default": "Keine Menge erkannt, gerechnet mit {volume}. Nennen Sie Maße oder eine Menge, oder ändern Sie sie unter „Details anpassen“.",
-    "volume": "Menge aus Ihrer Angabe „{match}“.",
-    "dimensions": "Menge berechnet aus „{match}“.",
-    "hollow": {
-      "one": "Menge aus „{match}“, als Hohlkörper mit einer offenen Seite zum Gießen und Ausschalen.",
-      "none": "Menge aus „{match}“, als allseitig geschlossener Hohlkörper.",
-      "both": "Menge aus „{match}“, als Hohlkörper oben und unten offen."
-    },
-    "laya": "Menge berechnet aus „{match}“: {detail}.",
-    "count": "{count} Stück",
-    "wall": "Wand {wall} cm",
     "shape": {
       "slab": "Platte",
       "block": "Quader",
@@ -310,8 +318,10 @@
     "flyAsh": "Flugasche in % des Zements",
     "silicaFume": "Silikastaub in % des Zements",
     "waterproofing": "Dichtungsmittel in % des Zements",
-    "moisture": "Eigenfeuchte der Gesteinskörnung berücksichtigen",
-    "moistureGroup": "Feuchte {group} in %"
+    "moisture": "Eigenfeuchte berücksichtigen",
+    "moistureGroup": "Feuchte {group} in %",
+    "moistureTitle": "Eigenfeuchte der Gesteinskörnung",
+    "moistureLead": "Sand und Kies, die draußen lagern, sind fast immer feucht. Dieses Wasser steckt schon in der Mischung und wird vom Zugabewasser abgezogen; die Gesteinskörnung wird entsprechend schwerer abgewogen."
   },
   "option": {
     "strength": {

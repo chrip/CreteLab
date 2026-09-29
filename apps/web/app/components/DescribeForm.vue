@@ -22,7 +22,6 @@
         {{ $t(`describe.example${n}`) }}
       </button>
     </div>
-    <p class="small muted hint">{{ $t('describe.enterHint') }}</p>
   </form>
 </template>
 
@@ -89,10 +88,6 @@ textarea {
   border-radius: 999px;
   padding: 0.2rem 0.75rem;
   cursor: pointer;
-}
-
-.hint {
-  margin-top: 0.4rem;
 }
 
 @media (max-width: 40rem) {

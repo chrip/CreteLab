@@ -61,6 +61,21 @@
     </fieldset>
 
     <fieldset>
+      <legend>{{ $t('details.moistureTitle') }}</legend>
+      <p class="small muted">{{ $t('details.moistureLead') }}</p>
+      <label class="check">
+        <input v-model="useMoisture" type="checkbox" />
+        <span>{{ $t('details.moisture') }}</span>
+      </label>
+      <div class="grid">
+        <div v-for="(label, i) in ['0/2', '2/8', '8+']" :key="label" class="field" :class="{ disabled: !mix.moisture }">
+          <label :for="`${id}-mo${i}`">{{ $t('details.moistureGroup', { group: label }) }}</label>
+          <NumberInput :id="`${id}-mo${i}`" v-model="moistureFields[i]!.value" :max="20" :digits="1" :disabled="!mix.moisture" />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
       <legend>{{ $t('details.additions') }}</legend>
       <div class="grid">
         <div class="field">
@@ -79,16 +94,6 @@
         <div class="field">
           <label :for="`${id}-wu`">{{ $t('details.waterproofing') }}</label>
           <NumberInput :id="`${id}-wu`" v-model="wuField" :max="5" :digits="1" />
-        </div>
-      </div>
-      <label class="check">
-        <input v-model="useMoisture" type="checkbox" />
-        <span>{{ $t('details.moisture') }}</span>
-      </label>
-      <div v-if="mix.moisture" class="grid">
-        <div v-for="(label, i) in ['0/2', '2/8', '8+']" :key="label" class="field">
-          <label :for="`${id}-mo${i}`">{{ $t('details.moistureGroup', { group: label }) }}</label>
-          <NumberInput :id="`${id}-mo${i}`" v-model="moistureFields[i]!.value" :max="20" :digits="1" />
         </div>
       </div>
     </fieldset>
@@ -133,15 +138,19 @@ const flyAshField = numberField(() => mix.value.flyAshPct, (v) => (mix.value.fly
 const silicaField = numberField(() => mix.value.silicaFumePct, (v) => (mix.value.silicaFumePct = v));
 const wuField = numberField(() => mix.value.waterproofingPct, (v) => (mix.value.waterproofingPct = v));
 
+// Switching moisture off and on again brings back the values entered before.
+const lastMoisture = ref<[number, number, number]>(mix.value.moisture ? [...mix.value.moisture] : [...DEFAULT_MOISTURE]);
 const useMoisture = computed({
   get: () => mix.value.moisture !== null,
-  set: (on) => (mix.value.moisture = on ? [...DEFAULT_MOISTURE] : null),
+  set: (on) => (mix.value.moisture = on ? [...lastMoisture.value] : null),
 });
 const moistureFields = [0, 1, 2].map((i) =>
   numberField(
-    () => mix.value.moisture?.[i] ?? 0,
+    () => mix.value.moisture?.[i] ?? lastMoisture.value[i]!,
     (v) => {
-      if (mix.value.moisture) mix.value.moisture[i] = v;
+      if (!mix.value.moisture) return;
+      mix.value.moisture[i] = v;
+      lastMoisture.value[i] = v;
     },
   ),
 );
@@ -185,6 +194,10 @@ legend {
 
 .exposure {
   font-size: 0.9rem;
+}
+
+.field.disabled label {
+  color: var(--text-muted);
 }
 
 .warn-text {

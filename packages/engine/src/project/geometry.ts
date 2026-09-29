@@ -21,63 +21,98 @@ export interface Dimensions {
   count?: number;
 }
 
-const circle = (d: number) => (Math.PI / 4) * d * d;
+/** A simple solid; every shape is one of these, minus an inner one for hollow pieces. */
+export type Solid =
+  | { kind: 'box'; length: number; width: number; height: number }
+  | { kind: 'area'; area: number; height: number }
+  | { kind: 'cylinder'; diameter: number; height: number }
+  | { kind: 'hemisphere'; diameter: number };
+
+/** How a volume is made up, so the UI can show the calculation next to the result. */
+export interface VolumeBreakdown {
+  outer: Solid;
+  /** The hollow space taken away, if any. */
+  inner: Solid | null;
+  count: number;
+  /** m³, all pieces */
+  volume: number;
+}
+
 const positive = (v: number) => Math.max(0, v);
 
-/**
- * Concrete volume in m³, or null when the dimensions are not enough for the shape.
- * Hollow bodies lose their inner volume; the open side is taken along the height.
- */
-export function shapeVolume(shape: Shape, d: Dimensions): number | null {
+export function solidVolume(s: Solid): number {
+  switch (s.kind) {
+    case 'box':
+      return s.length * s.width * s.height;
+    case 'area':
+      return s.area * s.height;
+    case 'cylinder':
+      return (Math.PI / 4) * s.diameter ** 2 * s.height;
+    case 'hemisphere':
+      return (Math.PI / 12) * s.diameter ** 3;
+  }
+}
+
+function solids(shape: Shape, d: Dimensions): [Solid, Solid | null] | null {
   const { length: L, width: W, height: H, diameter: D, wall: t, area } = d;
-  const count = d.count && d.count > 0 ? d.count : 1;
-  let v: number | null = null;
+  const box = (length: number, width: number, height: number): Solid => ({ kind: 'box', length, width, height });
+  const cylinder = (diameter: number, height: number): Solid => ({ kind: 'cylinder', diameter, height });
   switch (shape) {
     case 'slab':
-      if (area && H) v = area * H;
-      else if (L && W && H) v = L * W * H;
-      break;
+      if (area && H) return [{ kind: 'area', area, height: H }, null];
+      if (L && W && H) return [box(L, W, H), null];
+      return null;
     case 'block':
-      if (L && W && H) v = L * W * H;
-      else if (D && (H || L)) v = circle(D) * (H || L)!; // a block with a diameter is round
-      break;
+      if (L && W && H) return [box(L, W, H), null];
+      if (D && (H || L)) return [cylinder(D, (H || L)!), null]; // a block with a diameter is round
+      return null;
     case 'cube': {
       const a = L ?? W ?? H;
-      if (a) v = a ** 3;
-      break;
+      return a ? [box(a, a, a), null] : null;
     }
     case 'cylinder':
-      if (D && (H || L)) v = circle(D) * (H || L)!;
-      break;
+      return D && (H || L) ? [cylinder(D, (H || L)!), null] : null;
     case 'hollow': {
-      if (!t) break;
+      if (!t) return null;
+      // The open side is taken along the height.
       const closedFaces = d.open === 'none' ? 2 : d.open === 'both' ? 0 : 1;
       const innerHeight = (h: number) => positive(h - closedFaces * t);
       if (D && (H || L)) {
         const h = (H || L)!;
-        v = circle(D) * h - circle(positive(D - 2 * t)) * innerHeight(h);
-      } else {
-        // A hollow cube may give only its edge.
-        const given = [L, W, H].filter(Boolean);
-        const a = given.length === 1 ? given[0] : undefined;
-        const [l, w, h] = [L ?? a, W ?? a, H ?? a];
-        if (l && w && h) v = l * w * h - positive(l - 2 * t) * positive(w - 2 * t) * innerHeight(h);
+        return [cylinder(D, h), cylinder(positive(D - 2 * t), innerHeight(h))];
       }
-      break;
+      // A hollow cube may give only its edge.
+      const given = [L, W, H].filter(Boolean);
+      const a = given.length === 1 ? given[0] : undefined;
+      const [l, w, h] = [L ?? a, W ?? a, H ?? a];
+      return l && w && h ? [box(l, w, h), box(positive(l - 2 * t), positive(w - 2 * t), innerHeight(h))] : null;
     }
     case 'ring':
-      if (D && t && (H || L)) v = (circle(D) - circle(positive(D - 2 * t))) * (H || L)!;
-      else if (L && W && H && t) v = H * (L * W - positive(L - 2 * t) * positive(W - 2 * t));
-      break;
+      if (D && t && (H || L)) {
+        const h = (H || L)!;
+        return [cylinder(D, h), cylinder(positive(D - 2 * t), h)];
+      }
+      if (L && W && H && t) return [box(L, W, H), box(positive(L - 2 * t), positive(W - 2 * t), H)];
+      return null;
     case 'bowl':
       // Half a hollow sphere.
-      if (D && t) {
-        const R = D / 2;
-        v = (2 / 3) * Math.PI * (R ** 3 - positive(R - t) ** 3);
-      }
-      break;
+      return D && t ? [{ kind: 'hemisphere', diameter: D }, { kind: 'hemisphere', diameter: positive(D - 2 * t) }] : null;
   }
-  return v !== null && v > 0 ? v * count : null;
+}
+
+/** The solids behind a volume, or null when the dimensions are not enough for the shape. */
+export function volumeBreakdown(shape: Shape, d: Dimensions): VolumeBreakdown | null {
+  const parts = solids(shape, d);
+  if (!parts) return null;
+  const [outer, inner] = parts;
+  const count = d.count && d.count > 0 ? d.count : 1;
+  const volume = (solidVolume(outer) - (inner ? solidVolume(inner) : 0)) * count;
+  return volume > 0 ? { outer, inner, count, volume } : null;
+}
+
+/** Concrete volume in m³, or null when the dimensions are not enough for the shape. */
+export function shapeVolume(shape: Shape, d: Dimensions): number | null {
+  return volumeBreakdown(shape, d)?.volume ?? null;
 }
 
 /** Litre precision below 0,1 m³ (DIY pieces), two decimals above. */

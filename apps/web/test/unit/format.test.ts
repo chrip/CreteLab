@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { formatAmount, formatCompact, formatNumber, formatVolume, parseDecimal } from '../../app/utils/format';
+import { volumeBreakdown } from '@cretelab/engine';
+import { formatAmount, formatBreakdown, formatCompact, formatNumber, formatVolume, parseDecimal } from '../../app/utils/format';
 
 describe('formatNumber', () => {
   it('uses the decimal comma in German and the point in English', () => {
@@ -53,5 +54,32 @@ describe('parseDecimal', () => {
 
   it.each(['', 'abc', '2,5 m', '1.000,5', null, undefined])('rejects %j', (raw) => {
     expect(parseDecimal(raw)).toBeNaN();
+  });
+});
+
+describe('formatBreakdown', () => {
+  it('a driveway in metres', () => {
+    const b = volumeBreakdown('slab', { length: 6, width: 3, height: 0.15 })!;
+    expect(formatBreakdown('de', b)).toBe('6 m × 3 m × 0,15 m = 2,70 m³');
+    expect(formatBreakdown('en', b)).toBe('6 m × 3 m × 0.15 m = 2.70 m³');
+  });
+
+  it('a slab given by its area', () => {
+    expect(formatBreakdown('de', volumeBreakdown('slab', { area: 25, height: 0.15 })!)).toBe('25 m² × 0,15 m = 3,75 m³');
+  });
+
+  it('a planter in cm: outer minus inner', () => {
+    const b = volumeBreakdown('hollow', { length: 0.4, width: 0.4, height: 0.4, wall: 0.02 })!;
+    expect(formatBreakdown('de', b)).toBe('(40 cm × 40 cm × 40 cm) − (36 cm × 36 cm × 38 cm) = 15 l');
+  });
+
+  it('twelve post holes', () => {
+    const b = volumeBreakdown('cylinder', { diameter: 0.3, height: 0.8, count: 12 })!;
+    expect(formatBreakdown('de', b)).toBe('π/4 × (30 cm)² × 80 cm × 12 = 0,68 m³');
+  });
+
+  it('a round pot', () => {
+    const b = volumeBreakdown('hollow', { diameter: 0.4, height: 0.35, wall: 0.025 })!;
+    expect(formatBreakdown('de', b)).toBe('(π/4 × (40 cm)² × 35 cm) − (π/4 × (35 cm)² × 32,5 cm) = 13 l');
   });
 });

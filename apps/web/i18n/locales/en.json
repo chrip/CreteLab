@@ -24,11 +24,10 @@
     "example1": "Garden shed foundation 3x2 m, 20 cm thick",
     "example2": "Setting 12 fence posts in concrete",
     "example3": "Driveway 6 x 3 m, 15 cm thick, salted in winter",
-    "example4": "Outdoor planter 60x30x40 cm, 2 cm walls",
-    "enterHint": "Enter analyses, Shift+Enter starts a new line."
+    "example4": "Outdoor planter 60x30x40 cm, 2 cm walls"
   },
   "facts": {
-    "title": "What the AI understood",
+    "title": "What was understood automatically",
     "unsure": "unsure",
     "indoor_dry": "indoors, dry",
     "rain": "rain or splash water",
@@ -51,11 +50,31 @@
       "1": "foot traffic",
       "2": "cars",
       "3": "trucks or forklifts"
+    },
+    "properties": "Properties",
+    "amount": "Amount",
+    "noSize": "No sizes found, calculated for {volume}",
+    "shape": "Shape: {shape}",
+    "given": "Amount given directly: {volume}",
+    "edited": "The amount was changed by hand to {volume}.",
+    "dims2": "length × width",
+    "dims3": "length × width × height",
+    "unused": "not used",
+    "role": {
+      "length": "length",
+      "width": "width",
+      "height": "height",
+      "diameter": "diameter",
+      "wall": "wall thickness",
+      "thickness": "thickness",
+      "area": "area",
+      "volume": "amount",
+      "count": "pieces"
     }
   },
   "home": {
     "metaTitle": "Concrete for your project",
-    "title": "Describe your project. We work out the concrete.",
+    "title": "Describe your project and get the concrete recipe that fits it.",
     "lead": "One sentence is enough: what you build, where it stands, how big it is. CreteLab reads the requirements, calculates the recipe after Zement-Merkblatt B 20 and tells you whether bags, mixing it yourself or ready-mixed concrete fits best.",
     "privacy": "Your description is analysed, not stored. The language model runs on our own server.",
     "tools": "Tools",
@@ -92,17 +111,6 @@
     "disclaimer": "An automatic estimate from your description. Check the values; have load-bearing parts designed by a professional."
   },
   "volume": {
-    "default": "No amount found, calculated for {volume}. Give dimensions or an amount, or change it under “Adjust details”.",
-    "volume": "Amount from your input “{match}”.",
-    "dimensions": "Amount calculated from “{match}”.",
-    "hollow": {
-      "one": "Amount from “{match}”, as a hollow body with one open side for pouring and demoulding.",
-      "none": "Amount from “{match}”, as a hollow body closed on all sides.",
-      "both": "Amount from “{match}”, as a hollow body open at both ends."
-    },
-    "laya": "Amount calculated from “{match}”: {detail}.",
-    "count": "{count} pieces",
-    "wall": "{wall} cm wall",
     "shape": {
       "slab": "slab",
       "block": "block",
@@ -310,8 +318,10 @@
     "flyAsh": "Fly ash in % of cement",
     "silicaFume": "Silica fume in % of cement",
     "waterproofing": "Waterproofing admixture in % of cement",
-    "moisture": "Account for moisture in the aggregate",
-    "moistureGroup": "Moisture {group} in %"
+    "moisture": "Account for moisture",
+    "moistureGroup": "Moisture {group} in %",
+    "moistureTitle": "Moisture in the aggregate",
+    "moistureLead": "Sand and gravel stored outdoors are almost always damp. That water is already in the mix and is taken off the water you add; the aggregate is weighed correspondingly heavier."
   },
   "option": {
     "strength": {

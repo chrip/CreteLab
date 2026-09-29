@@ -1,13 +1,15 @@
-import { DEFAULT_MIX, type MixInput } from '@cretelab/engine';
+import { DEFAULT_MIX, planProject, type MixInput } from '@cretelab/engine';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { useNuxtApp } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
 import DescribeForm from '~/components/DescribeForm.vue';
+import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
 import NumberInput from '~/components/NumberInput.vue';
 import OrderPanel from '~/components/OrderPanel.vue';
 import ProductionTabs from '~/components/ProductionTabs.vue';
+import UnderstoodPanel from '~/components/UnderstoodPanel.vue';
 
 // The texts below are German; the test browser would otherwise pick its own language.
 beforeAll(async () => {
@@ -170,5 +172,60 @@ describe('BagPanel and additions', () => {
   it('warns when the description asks to add cement to a bag', async () => {
     const w = await mountSuspended(BagPanel, { props: { mix: mix({ exposureClasses: ['XC1'], strengthClass: 'C20/25' }), volume: 0.1, asksForAdditions: true } });
     expect(w.text()).toContain('Die Hersteller verbieten das');
+  });
+});
+
+describe('UnderstoodPanel', () => {
+  const driveway = {
+    answers: { rain: { noul: 0.93 }, frost: { noul: 0.93 }, shape: { choice: 'slab' }, 'role:15 cm': { choice: 'thickness' } },
+    candidates: ['6x3 m', '15 cm'], model: 'laya-crete', ms: 50,
+  };
+
+  it('shows each measurement with its role and the calculation', async () => {
+    const plan = planProject('Einfahrt 6 x 3 m, 15 cm stark', driveway);
+    const w = await mountSuspended(UnderstoodPanel, { props: { analysis: driveway, plan, volume: plan.volume.volume } });
+    expect(w.find('h2').text()).toBe('Das wurde automatisch verstanden');
+    const tags = w.find('[data-testid="understood-volume"]').text();
+    expect(tags).toContain('Form: Platte');
+    expect(tags).toContain('6x3 m Länge × Breite');
+    expect(tags).toContain('15 cm Dicke');
+    expect(w.find('[data-testid="volume-formula"]').text()).toBe('6 m × 3 m × 0,15 m = 2,70 m³');
+  });
+
+  it('marks a missing size in colour', async () => {
+    const analysis = { answers: {}, candidates: [], model: 'laya-crete', ms: 50 };
+    const plan = planProject('Kellerwand', analysis);
+    const w = await mountSuspended(UnderstoodPanel, { props: { analysis, plan, volume: 1 } });
+    expect(w.find('.chip.missing').text()).toBe('Keine Maße erkannt, gerechnet mit 1,00 m³');
+    expect(w.find('[data-testid="volume-formula"]').exists()).toBe(false);
+  });
+
+  it('greys out measurements that play no part and notes a hand-edited amount', async () => {
+    const analysis = { answers: { shape: { choice: 'slab' }, 'role:40 kg': { choice: 'other' } }, candidates: ['40 kg'], model: 'x', ms: 1 };
+    const plan = planProject('Sack 40 kg', analysis);
+    const w = await mountSuspended(UnderstoodPanel, { props: { analysis, plan, volume: 2 } });
+    expect(w.find('[data-testid="understood-volume"] .chip.no').text()).toContain('nicht verwendet');
+    expect(w.text()).toContain('von Hand auf 2,00 m³ geändert');
+  });
+});
+
+describe('MixForm moisture', () => {
+  it('the moisture fields are always there, disabled until moisture is switched on', async () => {
+    const w = await mountSuspended(MixForm, { props: { mix: mix(), volume: 1 } });
+    const fieldset = w.findAll('fieldset').find((f) => f.text().includes('Eigenfeuchte der Gesteinskörnung'))!;
+    const inputs = fieldset.findAll('input[type="text"]');
+    expect(inputs).toHaveLength(3);
+    expect(inputs.every((i) => i.attributes('disabled') !== undefined)).toBe(true);
+    expect(inputs.map((i) => (i.element as HTMLInputElement).value)).toEqual(['5', '3', '2']);
+    await fieldset.find('input[type="checkbox"]').setValue(true);
+    expect(w.emitted('update:mix')).toBeUndefined(); // the model object is changed in place
+    expect(fieldset.text()).toContain('vom Zugabewasser abgezogen');
+  });
+
+  it('sits between the exposure classes and the additions', async () => {
+    const w = await mountSuspended(MixForm, { props: { mix: mix(), volume: 1 } });
+    expect(w.findAll('legend').map((l) => l.text())).toEqual([
+      'Expositionsklassen', 'Eigenfeuchte der Gesteinskörnung', 'Zusatzmittel und Zusatzstoffe',
+    ]);
   });
 });

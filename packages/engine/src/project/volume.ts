@@ -1,7 +1,7 @@
 // How much concrete a description asks for. Laya decides the shape and what each
 // measurement means (a role per candidate from the API); fixed formulas turn that into m³.
 // A regex parser covers descriptions Laya's answers are not enough for.
-import { roundVolume, shapeVolume, type Dimensions, type OpenSides, type Shape } from './geometry';
+import { roundVolume, volumeBreakdown, type Dimensions, type OpenSides, type Shape, type VolumeBreakdown } from './geometry';
 import type { Answers } from './answers';
 
 const UNIT_TO_M: Record<string, number> = { mm: 0.001, cm: 0.01, dm: 0.1, m: 1 };
@@ -22,6 +22,18 @@ export interface VolumeResult {
   count?: number;
   /** The dimensions the volume was computed from (for pre-filling a form). */
   dimensions?: Dimensions;
+  /** The solids behind the volume, to show how it was calculated. */
+  breakdown?: VolumeBreakdown;
+}
+
+/** A volume computed from a shape, with everything needed to explain it. */
+function fromShape(shape: Shape, d: Dimensions, source: VolumeSource, match: string): VolumeResult | null {
+  const breakdown = volumeBreakdown(shape, d);
+  if (!breakdown) return null;
+  return {
+    volume: roundVolume(breakdown.volume), source, match, shape, dimensions: d, breakdown,
+    wall: d.wall, open: shape === 'hollow' ? (d.open ?? 'one') : undefined, count: breakdown.count,
+  };
 }
 
 // ── Candidates from the API ("90 cm", "3x2 m", "12 zaunpfosten") ────────────────────────
@@ -109,12 +121,7 @@ export function volumeFromAnswers(answers: Answers, candidates: readonly string[
     count: r.count,
   };
   if (shape === 'slab' && r.thickness && !dims?.[2] && !wallLike) d.height = r.thickness;
-  const volume = shapeVolume(shape, d);
-  if (volume === null) return null;
-  return {
-    volume: roundVolume(volume), source: 'laya', match: candidates.join(' · '),
-    shape, wall: d.wall, open: shape === 'hollow' ? d.open : undefined, count: d.count ?? 1, dimensions: d,
-  };
+  return fromShape(shape, d, 'laya', candidates.join(' · '));
 }
 
 // ── Plain-text fallback ─────────────────────────────────────────────────────────────────
@@ -171,12 +178,7 @@ function parseHollowBody(t: string): VolumeResult | null {
   if (!outer) return null;
   const open: OpenSides = CLOSED.test(t) ? 'none' : BOTH_OPEN.test(t) ? 'both' : 'one';
   const [length, width, height] = outer.size;
-  const volume = shapeVolume('hollow', { length, width, height, wall: wall.meters, open });
-  if (volume === null) return null;
-  return {
-    volume: roundVolume(volume), source: 'hollow', match: `${outer.match} · ${wall.text}`,
-    shape: 'hollow', wall: wall.meters, open, dimensions: { length, width, height, wall: wall.meters, open },
-  };
+  return fromShape('hollow', { length, width, height, wall: wall.meters, open }, 'hollow', `${outer.match} · ${wall.text}`);
 }
 
 /**
@@ -209,15 +211,13 @@ export function parseVolume(text: string, { defaultVolume = 1 } = {}): VolumeRes
   const dims = parseDims(t);
   if (dims) {
     const [a = 0, b = 0, c] = dims.size;
-    if (c !== undefined) {
-      return { volume: roundVolume(a * b * c), source: 'dimensions', match: dims.match, dimensions: { length: a, width: b, height: c } };
-    }
-    if (thicknessM) return { volume: roundVolume(a * b * thicknessM), source: 'dimensions', match: `${dims.match} · ${thickness![0]}` };
+    if (c !== undefined) return fromShape('block', { length: a, width: b, height: c }, 'dimensions', dims.match)!;
+    if (thicknessM) return fromShape('slab', { length: a, width: b, height: thicknessM }, 'dimensions', `${dims.match} · ${thickness![0]}`)!;
   }
 
   const area = t.match(new RegExp(`${NUM}\\s*(m²|m2|qm|quadratmeter|square met(?:er|re)s?|sqm)`));
   if (area && thicknessM) {
-    return { volume: roundVolume(num(area[1]!) * thicknessM), source: 'dimensions', match: `${area[0]} · ${thickness![0]}` };
+    return fromShape('slab', { area: num(area[1]!), height: thicknessM }, 'dimensions', `${area[0]} · ${thickness![0]}`)!;
   }
   return { volume: defaultVolume, source: 'default' };
 }

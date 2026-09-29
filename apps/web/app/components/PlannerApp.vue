@@ -7,7 +7,7 @@
       submit-label="describe.reanalyse"
       @submit="onDescribe"
     />
-    <FactList v-if="analysis" :answers="analysis.answers" :model="analysis.model" />
+    <UnderstoodPanel v-if="analysis && plan" :analysis="analysis" :plan="plan" :volume="state.volume" />
 
     <NeedsSummary :mix="state.mix" :volume="state.volume" :plan="plan" />
 

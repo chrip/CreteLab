@@ -87,3 +87,17 @@ describe('parseVolume: hollow cast pieces (one side open unless stated)', () => 
     expect(parseVolume('Schale mit Wandstärke 2 cm').source).toBe('default');
   });
 });
+
+describe('text volumes explain themselves', () => {
+  it('dimensions with a thickness become a slab breakdown', () => {
+    expect(parseVolume('Einfahrt 6 x 3 m, 15 cm stark').breakdown?.outer).toEqual({ kind: 'box', length: 6, width: 3, height: 0.15 });
+  });
+
+  it('an area with a thickness', () => {
+    expect(parseVolume('25 m² und 15 cm stark').breakdown?.outer).toEqual({ kind: 'area', area: 25, height: 0.15 });
+  });
+
+  it('a stated amount has no breakdown', () => {
+    expect(parseVolume('2 m³ Beton').breakdown).toBeUndefined();
+  });
+});

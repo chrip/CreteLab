@@ -49,6 +49,7 @@ test.describe('component planner', () => {
     await page.getByRole('textbox', { name: 'Projektbeschreibung' }).fill(TEXT.driveway);
     await page.keyboard.press('Enter');
     await expect(page.getByText('2,70 m³ Beton C35/45')).toBeVisible();
+    await expect(page.getByTestId('volume-formula')).toHaveText('6 m × 3 m × 0,15 m = 2,70 m³');
 
     await page.getByRole('tab', { name: /Fertigmischung/ }).click();
     await expect(page.getByText('Mit Sackbeton geht es hier nicht.')).toBeVisible();
@@ -92,7 +93,7 @@ test.describe('component planner', () => {
     const calls = await mockApi(page);
     const q = encodeURIComponent(TEXT.foundation);
     await page.goto(`/de/plan?q=${q}&v=5&s=C30%2F37`);
-    await expect(page.getByText('Das hat die KI verstanden')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Das wurde automatisch verstanden' })).toBeVisible();
     await expect(page.getByText('5,00 m³ Beton C30/37')).toBeVisible();
     expect(calls).toEqual([TEXT.foundation]);
   });
