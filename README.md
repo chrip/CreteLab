@@ -1,146 +1,113 @@
-# CreteLab - Concrete Recipe Calculator / Betonrezept Rechner
+# CreteLab
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Pages](https://img.shields.io/static/v1?label=Deployed+on&message=GitHub+Pages&color=brightgreen)](https://chrip.github.io/CreteLab/)
+[![CI](https://github.com/chrip/CreteLab/actions/workflows/ci.yml/badge.svg)](https://github.com/chrip/CreteLab/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Open-source concrete recipe calculator based on [Zement-Merkblatt B 20](https://www.beton.org/fileadmin/beton-org/media/Dokumente/PDF/Service/Zementmerkbl%C3%A4tter/B20.pdf). Runs entirely in the browser — no server, no app, no registration.
+Describe a concrete project in plain German or English and get a recipe. A fine-tuned
+[Laya](https://github.com/convai-innovations/laya) model reads the description; a tested
+mix design after [Zement-Merkblatt B 20](https://www.beton.org/fileadmin/beton-org/media/Dokumente/PDF/Service/Zementmerkbl%C3%A4tter/B20.pdf)
+does the engineering.
 
-👉 **[chrip.github.io/CreteLab](https://chrip.github.io/CreteLab/)**
+```
+"Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut"
+  → 2,70 m³ C35/45 · XC4 XD3 XF4 XM1 · air-entrained
+  → bagged concrete: not possible (no bag declares XM1), mix it yourself, or the order text for a plant
+```
 
-## Features
+## What it does
 
-- Concrete recipe calculation for volume, strength class, and exposure class
-- Grain size groups with moisture correction (batch water)
-- Fly ash, silica fume, plasticizers, and superplasticizers
-- Four presets from simple to high-strength
-- Fine-tune existing recipes with additives
-- UHPC (Ultra-High Performance Concrete) recipe scaler
-- Mobile-first, offline-capable
-- **Multi-language** (DE / EN) with URL-based locale routing
+| Tool | For | Output |
+|---|---|---|
+| **Component planner** (`/plan`) | foundations, slabs, walls, posts | what it needs, how much, and three ways to make it: a bagged product that meets the requirements (or the sourced reason none does), a B 20 recipe to mix yourself, an order text after DIN EN 206 / DIN 1045-2. Every input of the mix design is adjustable. |
+| **Decor workshop** (`/decor`) | planters, bowls, thin furniture | shape and sizes → volume, a published fine-mortar recipe scaled to it, plausibility checks |
+| **Ready-mix tool** (`/bag`) | experiments with bags | what extra cement, fly ash, silica fume or admixtures would do (with the datasheets' warning) |
+
+The start page takes one description and routes it: walls under 3 cm go to the decor
+workshop, everything else to the planner. Every page keeps its state in the URL.
 
 ## Architecture
 
-### Static Site Generation (SEO + AI Ready)
-
-The app uses a build step to pre-render every page for each supported language. This makes the content immediately visible to crawlers and AI tools:
+```
+apps/web          Nuxt 4 · Vue 3 · TypeScript · @nuxtjs/i18n (de/en), static pages
+  └─ uses
+packages/engine   the calculations: B 20 mix design, DIN 1045-2 rules, volumes, bags, orders,
+                  fine-mortar recipes. Pure TypeScript, no DOM, no strings (codes + numbers)
+services/api      FastAPI · Pydantic: POST /api/describe → Laya's answers + measurements
+ml                training data (2 100 descriptions, 19 800 teacher votes), train/evaluate scripts
+docs/research     sourced research behind the rules (bagged concrete datasheets)
+```
 
 ```
-scripts/render.js       →  Pre-renders HTML for each locale using JSDOM
-scripts/sitemap.js      →  Generates sitemap.xml with hreflang tags
-scripts/robots.txt      →  Generates robots.txt
-scripts/embed-locales.js →  Embeds locales/de.json into js/lib/i18n.js as _deCatalogue
+text ─► /api/describe ─► Laya: 16 typed questions + one role question per measurement
+            │
+            ▼
+   engine: planProject()
+     facts ───► requirementsFromFacts()   DIN 1045-2 → exposure classes, strength class, air, WU
+     roles ───► volumeFromAnswers()       shape + roles → m³ (regex parser as fallback)
+     approach ► tool + production          physics overrides the model: walls < 3 cm → fine mortar
+            │
+            ▼
+   computeRecipe() · planBag() · orderSpec() · scaleDecorRecipe()
 ```
 
-Each page is available at `/de/` and `/en/` with:
-- Correct `<html lang>` attribute
-- `hreflang` alternate links for all language pairs
-- `og:locale` for social sharing
-- JSON-LD structured data (Schema.org SoftwareApplication)
-- Canonical URLs
+The language model only answers questions it was trained on; it never writes the recipe.
+Rules and formulas stay in code where they are reviewed and tested.
 
-The root URL (`/`) serves the German page directly — no JavaScript redirect.
+## Quality
 
-### Runtime i18n
+| | |
+|---|---|
+| Engine | ~700 Vitest tests, including the four B 20 worked examples as regression tests and the Walz curves against a 300 dpi digitisation of B 20 Bild 1 |
+| Web | unit and component tests (Vitest, @nuxt/test-utils), Playwright end-to-end tests on desktop and mobile with recorded model answers, axe WCAG 2.1 AA checks on every page |
+| API | pytest with a fake model (no torch needed), Ruff, mypy strict |
+| Data | every training row is checked against the questions (`ml/tests`) |
 
-After the initial render, the client-side i18n module takes over:
-- Language switching updates the page without reload
-- Dropdown labels, hints, and result text all translate dynamically
-- Locale persists in `localStorage` and URL path
+## Run it
 
-## Local Development
+With Docker (needs the fine-tuned weights in `models/laya-crete`, see below):
 
 ```bash
-git clone https://github.com/chrip/CreteLab.git
-cd CreteLab
+docker compose up --build        # http://localhost:8080
+```
+
+For development:
+
+```bash
 npm install
+npm test                                  # engine + web
+npm run test:e2e -w apps/web              # Playwright
+
+cd services/api
+uv sync && uv run pytest                  # API tests, no model needed
+uv sync --extra model                     # adds laya + torch
+LAYA_MODEL_DIR=../../models/laya-crete uv run uvicorn cretelab_api.app:app --port 8000
+
+npm run dev                               # http://localhost:3000, proxies /api to :8000
 ```
 
-### Preview built site (production-like)
+Without the API the planner, workshop and tool still work; only the description search needs it.
+
+## The model
+
+The weights are not in the repository, the data is. `ml/DATA.md` describes how it was
+made: a local Qwen3.8-27B teacher on a DGX Spark wrote and labelled the descriptions
+(about 20 hours, 9.2 M generated tokens), and fine-tuning takes about 30 minutes on a GPU.
 
 ```bash
-# Build the localized pages
-node scripts/embed-locales.js   # Embed de.json into i18n.js (required before render)
-node scripts/render.js
-node scripts/sitemap.js
-
-# Serve from the build directory
-python3 -m http.server 8000 --directory build
-# Open http://localhost:8000/ (German default) or http://localhost:8000/en/
+cd ml && python train.py --out ../models/laya-crete    # needs laya + torch
+python evaluate.py --model ../models/laya-crete          # 93.5 % on 66 hand-labelled descriptions
 ```
 
-### Preview source files directly (development)
+## Sources
 
-```bash
-python3 -m http.server 8000
-# Open http://localhost:8000/ (no URL-based locale)
-```
+- Zement-Merkblatt B 20 (2.2017) and B 9, Verein Deutscher Zementwerke
+- DIN EN 206 / DIN 1045-2, DAfStb WU-Richtlinie
+- Heidelberg Materials, Betontechnische Daten 2022
+- Manufacturer datasheets of bagged concrete: [docs/research/bagged-concrete.md](docs/research/bagged-concrete.md)
+- Fine-mortar recipes: Grey Element; Fehling et al., Universität Kassel (UHPC, Heft 1)
 
-### Tests
-
-```bash
-npm test
-```
-
-### Full CI pipeline locally
-
-The GitHub Actions workflow runs tests, pre-renders pages, and generates the sitemap. To simulate locally:
-
-```bash
-npm test && node scripts/embed-locales.js && node scripts/render.js && node scripts/sitemap.js
-```
-
-## Deployment
-
-The site is deployed via GitHub Actions on every push to `main`:
-
-1. **Test** — Run the full test suite (300 tests)
-2. **Build** — Pre-render localized pages and generate sitemap
-3. **Deploy** — Upload `build/` to GitHub Pages
-
-## File Structure
-
-```
-CreteLab/
-├── .github/workflows/deploy.yml   # CI/CD pipeline
-├── build/                         # Pre-rendered output (gitignored)
-│   ├── index.html                 # German default (root URL)
-│   ├── de/                        # German locale
-│   │   ├── index.html
-│   │   ├── fine-tune.html
-│   │   └── uhpc.html
-│   ├── en/                        # English locale
-│   │   ├── index.html
-│   │   ├── fine-tune.html
-│   │   └── uhpc.html
-│   ├── css/                       # Styles
-│   ├── js/                        # Application logic
-│   ├── locales/                   # i18n catalogues
-│   ├── assets/                    # Images, favicons
-│   ├── sitemap.xml
-│   └── robots.txt
-├── css/                           # Source styles
-├── js/                            # Source application logic
-│   ├── app.js                     # Main calculator
-│   ├── fine-tune.js               # Recipe fine-tuner
-│   ├── uhpc.js                    # UHPC scaler
-│   ├── lib/                       # Shared libraries
-│   │   ├── i18n.js                # Translation module
-│   │   ├── i18n-node.js           # Node.js i18n (server-side)
-│   │   └── i18n-init.js           # Language detection + switcher
-│   └── ...
-├── locales/                       # i18n catalogues
-│   ├── de.json
-│   └── en.json
-├── scripts/                       # Build scripts
-│   ├── render.js                  # Pre-render localized HTML
-│   ├── sitemap.js                 # sitemap.xml + robots.txt
-│   └── embed-locales.js           # Embed de.json into js/lib/i18n.js
-├── tests/                         # 300 passing tests
-├── index.html                     # Main calculator (source)
-├── fine-tune.html                 # Recipe fine-tuner (source)
-└── uhpc.html                      # UHPC scaler (source)
-```
+CreteLab is not an engineering service. Have load-bearing parts designed by a professional.
 
 ## License
 
-[MIT](LICENSE) © 2026 Christoph Schaefer
+MIT. Laya (Convai Innovations) and Qwen are Apache 2.0.

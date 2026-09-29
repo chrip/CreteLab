@@ -1,0 +1,27 @@
+# docker compose up --build → http://localhost:8080
+# The fine-tuned model is expected in ./models/laya-crete (build it with ml/train.py);
+# the API runs as an unprivileged user, so the files must be readable for others (chmod -R a+rX models).
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      # Local only by default; set CRETELAB_BIND=0.0.0.0 on a server behind a firewall or proxy.
+      - "${CRETELAB_BIND:-127.0.0.1}:${CRETELAB_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  api:
+    build: services/api
+    volumes:
+      - ./models:/models:ro
+      - hf-cache:/home/app/.cache/huggingface
+    environment:
+      LAYA_MODEL_DIR: /models/laya-crete
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

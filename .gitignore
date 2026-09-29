@@ -25,7 +25,15 @@ npm-debug.log*
 # Environment files (sensitive data)
 .env
 .env.local
-# describe-search: fine-tuned model weights and teacher-run logs
-describe/model/
-describe/ml/data.log
 __pycache__/
+# Nuxt, Playwright, Python tooling
+.nuxt/
+.output/
+test-results/
+playwright-report/
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# fine-tuned weights (rebuild with ml/train.py)
+models/
