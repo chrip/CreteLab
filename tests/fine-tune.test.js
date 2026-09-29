@@ -101,8 +101,18 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
 
     // ── Initial state ─────────────────────────────────────────────────────────
 
-    it('no additive checked: step list is hidden', () => {
-        assert.strictEqual(isListVisible(), false);
+    it('no additive checked: steps are the ready mix, then water', () => {
+        assert.strictEqual(isListVisible(), true);
+        const steps = getSteps();
+        assert.strictEqual(steps.length, 2, `expected mix + water, got ${steps.join(' | ')}`);
+        assert.ok(steps[0].includes('Fertigmischung'), `first step should be the ready mix, got: ${steps[0]}`);
+        assert.ok(steps[1].includes('Wasser'));
+    });
+
+    it('ready mix step: cement + aggregate of the base mix, in 40 kg bags', () => {
+        const { z, g } = PRESETS.c25;
+        assert.ok(getSteps()[0].includes(`${(z + g).toLocaleString('de-DE')},00 kg`), getSteps()[0]);
+        assert.ok(getSteps()[0].includes('Sack à 40 kg'), getSteps()[0]);
     });
 
     it('no additive checked: strength panel shows base class, no estimate', () => {
@@ -113,26 +123,26 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
 
     // ── Extra cement ──────────────────────────────────────────────────────────
 
-    it('extra cement: step list appears with cement as first dry step', () => {
+    it('extra cement: comes right after the ready mix', () => {
         check('useExtraCement');
-        assert.ok(isListVisible());
         const steps = getSteps();
-        assert.ok(steps[0].includes('Zement'), `first step should be cement, got: ${steps[0]}`);
+        assert.ok(steps[0].includes('Fertigmischung'), `first step should be the ready mix, got: ${steps[0]}`);
+        assert.ok(steps[1].includes('Zement'), `second step should be cement, got: ${steps[1]}`);
     });
 
     it('extra cement: quantity = 10% of cement × volume', () => {
         const { z } = PRESETS.c25;
         check('useExtraCement');
         const expected = Math.round(z * 0.10); // 30 kg for c25 at 1 m³
-        assert.ok(getSteps()[0].includes(`${expected},00 kg`),
-            `expected ${expected},00 kg in step, got: ${getSteps()[0]}`);
+        assert.ok(getSteps()[1].includes(`${expected},00 kg`),
+            `expected ${expected},00 kg in step, got: ${getSteps()[1]}`);
     });
 
     it('extra cement: quantity scales with volume', () => {
         check('useExtraCement');
-        const qty1 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[0])[1].replace(',', '.'));
+        const qty1 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[1])[1].replace(',', '.'));
         setVolume(2);
-        const qty2 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[0])[1].replace(',', '.'));
+        const qty2 = parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(getSteps()[1])[1].replace(',', '.'));
         assert.strictEqual(qty2, qty1 * 2);
     });
 
@@ -330,9 +340,8 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
 
     // ── Water step ────────────────────────────────────────────────────────────
 
-    it('water step is always last, appears only when at least one additive is selected', () => {
-        // Nothing checked → no list at all
-        assert.strictEqual(isListVisible(), false);
+    it('water step is always last, with or without additives', () => {
+        assert.ok(getSteps().at(-1).includes('Wasser'), 'water must be the last step without additives');
 
         check('useExtraCement');
         const steps = getSteps();
@@ -356,8 +365,9 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         ALL_CHECKBOXES.forEach(id => check(id));
         const steps = getSteps();
 
-        assert.strictEqual(steps.length, 6,
-            `expected 6 steps (5 additives + water; BV cleared by FM), got ${steps.length}`);
+        assert.strictEqual(steps.length, 7,
+            `expected 7 steps (ready mix + 5 additives + water; BV cleared by FM), got ${steps.length}`);
+        assert.ok(steps[0].includes('Fertigmischung'), 'the ready mix comes first');
 
         const idx = (keyword) => steps.findIndex(s => s.includes(keyword));
         const cementIdx = idx('Zement');
@@ -375,7 +385,7 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
         assert.ok(silicaIdx < fmIdx,  'silica (dry) must precede FM (wet)');
         assert.ok(fmIdx     < lpIdx,  'FM must precede LP');
         assert.ok(lpIdx     < waterIdx, 'LP must precede water');
-        assert.strictEqual(waterIdx, 5, 'water must be the very last step');
+        assert.strictEqual(waterIdx, 6, 'water must be the very last step');
     });
 
     // ── Preset switching ──────────────────────────────────────────────────────
@@ -383,10 +393,10 @@ describe('Fine-tune page – E2E and B20 plausibility', () => {
     it('switching preset updates additive quantities', () => {
         check('useExtraCement');
         const parseKg = step => parseFloat(/(\d+(?:[.,]\d+)?)\s*kg/.exec(step)[1].replace(',', '.'));
-        const kg25 = parseKg(getSteps()[0]);
+        const kg25 = parseKg(getSteps()[1]);
 
         setPreset('c30'); // z=340, 10% = 34 kg
-        const kg30 = parseKg(getSteps()[0]);
+        const kg30 = parseKg(getSteps()[1]);
 
         assert.ok(kg30 > kg25, `c30 (z=340) should give larger extra cement than c25 (z=300)`);
         assert.strictEqual(kg30, Math.round(PRESETS.c30.z * 0.10));

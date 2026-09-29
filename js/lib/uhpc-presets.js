@@ -54,6 +54,7 @@
  *                                       binder with k_s = 1.0 (B 20 Tafel 9).
  * @property {number} waterL
  * @property {number} superplasticizerMl PCE-based, see ref [4] for window.
+ * @property {number} [fibresG]          Optional alkali-resistant glass fibres in g.
  */
 
 /**
@@ -323,6 +324,101 @@ export const UHPC_PRESETS = [
         // lagerungsfestigkeit; konservativer Mittelwert: ~95 N/mm².
         airCuredFckMpa:  95,
         estimatedFckMpa: null,
+    },
+    {
+        // Sprayed and laminated white mix for thin furniture (10–15 mm walls).
+        key: 'diy-white-15kg-laminate',
+        label: 'DIY-Weißbeton zum Aufsprühen & Laminieren (10–15 mm, außen)',
+        source: {
+            // Quoted recipe (verbatim) from the article body:
+            //   "Ich habe folgende Mischung bezogen auf 15 kg Beton verwendet:
+            //      - 3 kg Sand (Maximalkorngröße 2 mm)
+            //      - 5 kg Quarzsand (Korngröße 0,063 - 0,3 mm)
+            //      - 1,5 kg Quarzmehl
+            //      - 5,5 kg Weißzement
+            //      - 2,2 l Wasser
+            //      - ca. 200 ml Fließmittel mit einer plastifizierenden Wirkung"
+            // Outdoor use: "Aufgrund seiner Witterungsbeständigkeit kann er
+            // ganzjährig im Freien stehen." The same list is used for the
+            // DIY-Stuhl (10 mm walls).
+            type: 'datasheet',
+            title: 'DIY Firetable aus Beton',
+            url:   'https://www.grey-element.de/diy-betonm%C3%B6bel/diy-firetable-aus-beton/',
+            author: 'Grey Element',
+            retrieved: '2026-09-28',
+        },
+        batch: {
+            cementKg:           5.5,  // Weißzement
+            sandKg:             8,    // 3 kg Sand 0–2 mm + 5 kg Quarzsand 0,063–0,3 mm
+            quartzPowderKg:     1.5,  // Quarzmehl (inert)
+            finesKg:            0,
+            microsilicaKg:      0,
+            waterL:             2.2,
+            superplasticizerMl: 200,  // "ca. 200 ml"
+        },
+        densities: { ...DENSITIES_DEFAULT },
+        // Author's method (paraphrased from the article): the first coat is
+        // sprayed 1,5–2 mm onto the mould; further layers are applied by hand
+        // with a kneadable mix and three layers of reinforcing mesh; cure
+        // 24–48 h; sealed with impregnation and wax.
+        mixingSteps: [
+            '<strong>Weißzement, Sand und Quarzmehl trocken vormischen</strong> ({cementKg} Weißzement + {sandKg} Sand + {quartzPowderKg} Quarzmehl). Der Sand besteht im Verhältnis 3 : 5 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm.',
+            '<strong>Wasser und Fließmittel zugeben</strong> ({waterL} Wasser, {superplasticizerL} plastifizierendes Fließmittel) und gründlich mischen.',
+            '<strong>Erste Schicht 1,5–2 mm auf die Schalung aufsprühen</strong>, bis die Schalung nicht mehr durchscheint.',
+            '<strong>Weitere Schichten von Hand auftragen</strong> — dafür muss der Beton knetfähig sein — und dabei drei Lagen Armierungsgewebe einlegen.',
+            '<strong>24–48 Stunden aushärten lassen</strong> (je nach Raumtemperatur), ausschalen und für draußen mit Imprägnierung und Wachs versiegeln.',
+        ],
+        claimedFckMpa:    null,
+        airCuredFckMpa:   null,
+        // Walzkurven-Schätzung (CEM I 42,5, A=31, n=0,67) bei w/b = 0,42
+        //   (2,2 l Wasser + 60 % des Fließmittels auf 5,5 kg Zement):
+        //   fcm = 31 × (1/0,42)^0,67 ≈ 55 → fck ≈ 47 N/mm². Konservativ 45.
+        estimatedFckMpa: 45,
+    },
+    {
+        // Small hand-mixed white batch for thin decorative pieces.
+        key: 'diy-white-bowl-4kg',
+        label: 'DIY-Weißbeton für kleine Dekostücke (von Hand gemischt)',
+        source: {
+            // Quoted recipe (verbatim) from the article body:
+            //   "1,25 kg Weißzement
+            //    0,75 kg Sand (Maximalkorngröße 2 mm)
+            //    1,5 kg Quarzsand (Korngröße 0,063 - 0,3 mm)
+            //    5 g Armierungsfasern
+            //    500 ml Wasser
+            //    30 ml Hochleistungsfließmittel"
+            // Used for a fruit bowl, Ø 33 cm, with reinforcing mesh.
+            type: 'datasheet',
+            title: 'DIY Obstschale aus Beton',
+            url:   'https://www.grey-element.de/diy-betonm%C3%B6bel/diy-obstschale-aus-beton/',
+            author: 'Grey Element',
+            retrieved: '2026-09-28',
+        },
+        batch: {
+            cementKg:           1.25, // Weißzement
+            sandKg:             2.25, // 0,75 kg Sand 0–2 mm + 1,5 kg Quarzsand 0,063–0,3 mm
+            quartzPowderKg:     0,
+            finesKg:            0,
+            microsilicaKg:      0,
+            waterL:             0.5,
+            superplasticizerMl: 30,
+            fibresG:            5,    // Armierungsfasern
+        },
+        densities: { ...DENSITIES_DEFAULT },
+        // Author's method (paraphrased): mixed by hand, reinforcing mesh cut
+        // to shape, demoulded after 48 h, sealed with impregnation and wax.
+        mixingSteps: [
+            '<strong>Weißzement und Sand trocken vormischen</strong> ({cementKg} Weißzement + {sandKg} Sand). Der Sand besteht im Verhältnis 1 : 2 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm.',
+            '<strong>Wasser mit Fließmittel und die Fasern zugeben</strong> ({waterL} Wasser, {superplasticizerL} Hochleistungsfließmittel, {fibresG} Armierungsfasern) und von Hand gründlich mischen.',
+            '<strong>In die Form einbringen und Armierungsgewebe einlegen</strong> (zugeschnitten auf die Form).',
+            '<strong>Nach ca. 48 Stunden ausschalen</strong> und mit Imprägnierung und Wachs versiegeln.',
+        ],
+        claimedFckMpa:    null,
+        airCuredFckMpa:   null,
+        // Walzkurven-Schätzung (CEM I 42,5, A=31, n=0,67) bei w/b = 0,42
+        //   (0,5 l Wasser + 60 % des Fließmittels auf 1,25 kg Zement):
+        //   fcm = 31 × (1/0,42)^0,67 ≈ 55 → fck ≈ 47 N/mm². Konservativ 45.
+        estimatedFckMpa: 45,
     },
 ];
 

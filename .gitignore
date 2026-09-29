@@ -25,3 +25,7 @@ npm-debug.log*
 # Environment files (sensitive data)
 .env
 .env.local
+# describe-search: fine-tuned model weights and teacher-run logs
+describe/model/
+describe/ml/data.log
+__pycache__/

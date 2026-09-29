@@ -12,13 +12,11 @@ import {
 import { calculateStrengthFromWalzkurven, STRENGTH_CLASSES } from './lib/strength.js';
 import { fmt, fmtQty, parseDecimal } from './lib/format.js';
 import { i18n } from './lib/i18n.js';
+import { FINE_TUNE_PRESETS as PRESETS, BAG_KG, WATERPROOF_PCT, bagMixKg } from './lib/fine-tune-presets.js';
+import { readFineTune, standardUrl } from './lib/handoff.js';
 
-const PRESETS = [
-    { value: 'c20', labelKey: 'index.usecase.cheap',       z: 280, w: 195, g: 1820, klasse: 'C20/25' },
-    { value: 'c25', labelKey: 'index.usecase.standard',    z: 300, w: 190, g: 1800, klasse: 'C25/30' },
-    { value: 'c30', labelKey: 'index.usecase.strong',      z: 340, w: 185, g: 1740, klasse: 'C30/37' },
-    { value: 'c40', labelKey: 'index.usecase.ultrastrong', z: 400, w: 175, g: 1660, klasse: 'C40/50' },
-];
+// A hand-over from the search box (describe.html) picks the base mix and options itself.
+const handoff = readFineTune(globalThis.location?.search ?? '');
 
 // Try sessionStorage first (survives server-side URL rewriting),
 // fall back to URL params for direct links / bookmarks.
@@ -35,7 +33,7 @@ const _urlRecipe = _params.has('z') ? {
     zement: _params.get('zement') || '',
 } : null;
 
-const customRecipe = _stored || _urlRecipe;
+const customRecipe = handoff ? null : (_stored || _urlRecipe);
 
 let cementPerM3    = customRecipe ? customRecipe.z : PRESETS[1].z;
 let waterPerM3     = customRecipe ? customRecipe.w : PRESETS[1].w;
@@ -166,6 +164,24 @@ function applySelection() {
 
 // Initial selection
 sel.value = customRecipe ? 'custom' : PRESETS[1].value;
+if (handoff) {
+    if (PRESETS.some(p => p.value === handoff.preset)) sel.value = handoff.preset;
+    if (handoff.volume > 0) document.getElementById('tuneVolume').value = i18n.formatNumber(handoff.volume, { maximumFractionDigits: 4, useGrouping: false });
+    const OPT_IDS = { extraCement: 'useExtraCement', flyAsh: 'useFlyAsh', silica: 'useSilica', bv: 'useBV', fm: 'useFM', lp: 'useLP', wu: 'useWU' };
+    for (const o of handoff.opts) if (OPT_IDS[o]) document.getElementById(OPT_IDS[o]).checked = true;
+    showHandoffNote();
+}
+
+function showHandoffNote() {
+    const note = document.getElementById('handoffNote');
+    if (!note || !handoff) return;
+    const parts = [];
+    if (handoff.text) parts.push(i18n.t('handoff.prefilled', { text: handoff.text }));
+    if (handoff.warn === 'thin') parts.push(i18n.t('handoff.warn.thin.finetune'));
+    note.textContent = parts.join(' ');
+    note.classList.toggle('hidden', parts.length === 0);
+    note.classList.toggle('plausibility-warning', handoff.warn === 'thin');
+}
 sel.addEventListener('change', applySelection);
 applySelection();
 
@@ -250,6 +266,13 @@ function update() {
         i18n.t('fine.tune.steps.2.flyash', { qty: fmtQty(flyAshTotal, 'kg') })
     );
 
+    // Dichtungsmittel (WU) – 2 % of cement, same default as the calculator (dry)
+    const useWU = document.getElementById('useWU').checked;
+    setCard('cardWU', useWU, false);
+    const wuTotal = cementPerM3 * WATERPROOF_PCT / 100 * vol;
+    setResult('resWU', useWU, i18n.t('fine.tune.result.add.wu', { qty: fmtQty(wuTotal, 'kg') }));
+    if (useWU) items.push(i18n.t('fine.tune.steps.7.wu', { qty: fmtQty(wuTotal, 'kg') }));
+
     // Silikastaub – 8 % of cement (dry)
     const useSilica  = document.getElementById('useSilica').checked;
     const silicaPre  = isPreApplied('useSilica');
@@ -323,6 +346,7 @@ function update() {
     const baseKlasse      = getBaseKlasse();
     const anyUserChecked  =
         useExtraCement ||
+        useWU ||
         (useFlyAsh && !flyAshPre) ||
         (useSilica  && !silicaPre) ||
         (useBV      && !bvPre) ||
@@ -340,10 +364,21 @@ function update() {
         resultEl.innerHTML = `<strong>${i18n.t('fine.tune.result.base')}</strong> ${baseKlasse || '–'}`;
     }
 
-    // Step-by-step mixing instructions only
+    // Step-by-step mixing instructions: the base mix always comes first, water last.
     const shoppingList  = document.getElementById('shoppingList');
     const shoppingItems = document.getElementById('shoppingItems');
-    if (items.length > 0) {
+    const preset = PRESETS.find(p => p.value === sel.value);
+    if (preset) {
+        const mixKg = bagMixKg(preset, vol);
+        items.unshift(i18n.t('fine.tune.steps.0.mix', {
+            qty: fmtQty(mixKg, 'kg'), klasse: preset.klasse, bags: fmt(mixKg / BAG_KG, mixKg / BAG_KG < 10 ? 1 : 0), bag: BAG_KG
+        }));
+    } else {
+        items.unshift(i18n.t('fine.tune.steps.0.base', {
+            cement: fmtQty(cementPerM3 * vol, 'kg'), aggregate: fmtQty(aggregatePerM3 * vol, 'kg')
+        }));
+    }
+    {
         // Water is always the last step; note dissolved additives if present.
         // Apply BV/FM reduction at per-m³ scale (where rounding is safe) and
         // multiply by volume last — otherwise small batches (e.g. 0.001 m³)
@@ -359,9 +394,24 @@ function update() {
 
         shoppingList.classList.remove('hidden');
         shoppingItems.innerHTML = items.map(step => `<li>${step}</li>`).join('');
-    } else {
-        shoppingList.classList.add('hidden');
     }
+    updateScratchLink({ vol, useExtraCement, useFlyAsh, useSilica, useBV, useFM, useLP, useWU });
+}
+
+// "Mix it from scratch": the same selection as a full recipe in the calculator.
+function updateScratchLink(o) {
+    const link = document.getElementById('scratchLink');
+    if (!link) return;
+    const klasse = o.useExtraCement
+        ? fckToClass(computeTunedFck(true, false, false, false, false, false))
+        : (getBaseKlasse() || 'C25/30');
+    link.href = standardUrl({
+        source: 'finetune', text: handoff?.text, warn: handoff?.warn,
+        volume: o.vol, strengthClass: klasse, exposureClasses: handoff?.exposureClasses,
+        airEntrainingPercent: o.useLP ? 4.5 : 0, flyAshPercent: o.useFlyAsh ? 15 : 0,
+        silicaFumePercent: o.useSilica ? 8 : 0, admixtureType: o.useBV ? 'BV' : o.useFM ? 'FM' : 'none',
+        waterproofPercent: o.useWU ? WATERPROOF_PCT : 0
+    });
 }
 
 // BV and FM are mutually exclusive plasticizer types — selecting one auto-clears the other.
@@ -375,7 +425,7 @@ function enforceBvFmXor(justChanged) {
 }
 
 // Wire events — both input (keystrokes) and change (Enter / tab / paste)
-['useExtraCement', 'useFlyAsh', 'useBV', 'useFM', 'useSilica', 'useLP'].forEach(id => {
+['useExtraCement', 'useFlyAsh', 'useBV', 'useFM', 'useSilica', 'useLP', 'useWU'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => {
         if (id === 'useBV' || id === 'useFM') enforceBvFmXor(id);
         update();
@@ -407,7 +457,7 @@ function rebuildDropdowns() {
         opt.textContent = i18n.t(p.labelKey);
         sel.appendChild(opt);
     });
-    sel.value = customRecipe ? 'custom' : PRESETS[1].value;
+    sel.value = customRecipe ? 'custom' : (handoff?.preset && PRESETS.some(p => p.value === handoff.preset) ? handoff.preset : PRESETS[1].value);
 }
 
 i18n.patchDom();
@@ -415,5 +465,6 @@ document.addEventListener('languagechange', () => {
     i18n.patchDom();
     rebuildDropdowns();
     rebuildCustomRecipe();
+    showHandoffNote();
     update();
 });

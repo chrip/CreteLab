@@ -1,0 +1,16 @@
+{
+  "type": "choice",
+  "instructions": "In this description, what does the measurement \"{candidate}\" give?",
+  "criteria": {
+    "length": "length or edge length of the piece (the longest side, or the side of a cube)",
+    "width": "width of the piece",
+    "height": "height or depth of the piece, how deep a hole or foundation goes",
+    "diameter": "diameter of a round piece",
+    "wall": "wall thickness of a hollow piece such as a planter, pot, bowl or seat cube",
+    "thickness": "thickness of a slab, plate, table top or floor",
+    "area": "floor area to be covered",
+    "volume": "amount of concrete (m³, litres, Kubik)",
+    "count": "number of identical pieces, posts or holes",
+    "other": "anything else: bag weight, distance, grain size, strength, price"
+  }
+}

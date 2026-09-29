@@ -15,6 +15,7 @@ import { i18n } from './i18n.js';
  * @property {number} microsilicaKg
  * @property {number} waterL
  * @property {number} superplasticizerL    L (litres) for unit consistency.
+ * @property {number} fibresG              AR glass fibres in g (0 when the preset has none).
  * @property {number} totalSolidMassKg
  * @property {number} batchVolumeL         the *preset* batch's fresh volume.
  * @property {number} scaleFactor          target_volume_dm3 / batch_volume_dm3.
@@ -44,6 +45,10 @@ const PCE_WATER_FRACTION = 0.60;
 const K_MICROSILICA   = 1.0;
 const K_QUARTZ_POWDER = 0.0;
 
+// Alkali-resistant glass fibre, kg/dm³ (Owens Corning Cem-FIL datasheets: 2.68).
+// Used when a preset lists fibres but no own fibre density.
+const AR_GLASS_DENSITY = 2.68;
+
 /**
  * Compute the fresh volume of one batch from component masses and densities.
  * Returns the volume in dm³ (= litres of fresh mix).
@@ -63,7 +68,8 @@ export function calculateBatchVolumeL(batch, densities) {
         batch.finesKg        / densities.fines +
         batch.microsilicaKg  / densities.microsilica +
         batch.waterL         / densities.water +
-        pceKg                / densities.superplasticizer
+        pceKg                / densities.superplasticizer +
+        (batch.fibresG ?? 0) / 1000 / (densities.fibres ?? AR_GLASS_DENSITY)
     );
 }
 
@@ -92,7 +98,8 @@ export function computeUhpcRecipe(preset, volumeM3, overrides = {}) {
     const pceKgPerBatch = (batch.superplasticizerMl / 1000) * rho.superplasticizer;
     const totalMassBatchKg =
         batch.cementKg + batch.sandKg + batch.quartzPowderKg +
-        batch.finesKg  + batch.microsilicaKg + batch.waterL + pceKgPerBatch;
+        batch.finesKg  + batch.microsilicaKg + batch.waterL + pceKgPerBatch +
+        (batch.fibresG ?? 0) / 1000;
 
     // Equivalent binder + PCE water (see file header WB_RATIO_FORMULA).
     const effectiveBinderKg =
@@ -109,6 +116,7 @@ export function computeUhpcRecipe(preset, volumeM3, overrides = {}) {
         microsilicaKg:      batch.microsilicaKg  * scale,
         waterL:             batch.waterL         * scale,
         superplasticizerL:  (batch.superplasticizerMl / 1000) * scale,
+        fibresG:            (batch.fibresG ?? 0) * scale,
 
         totalSolidMassKg:   totalMassBatchKg * scale,
         batchVolumeL,

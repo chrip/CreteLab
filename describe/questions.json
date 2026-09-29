@@ -1,0 +1,100 @@
+{
+  "indoor_dry": {
+    "type": "noul",
+    "instructions": "Is the concrete inside a building, in a dry space protected from rain and frost?"
+  },
+  "rain": {
+    "type": "noul",
+    "instructions": "Is the concrete surface exposed to rain or splash water outdoors?"
+  },
+  "ground": {
+    "type": "noul",
+    "instructions": "Is the concrete buried in soil or permanently in contact with the ground?"
+  },
+  "frost": {
+    "type": "noul",
+    "instructions": "Can the concrete freeze while wet in winter?"
+  },
+  "deicing_salt": {
+    "type": "noul",
+    "instructions": "Will de-icing salt or salty meltwater reach the concrete, for example on a driveway, road, garage or parking area?"
+  },
+  "horizontal": {
+    "type": "noul",
+    "instructions": "Is the exposed surface horizontal, so that water or snow can lie on it?"
+  },
+  "reinforced": {
+    "type": "noul",
+    "instructions": "Will the concrete contain steel reinforcement such as rebar or mesh?"
+  },
+  "watertight": {
+    "type": "noul",
+    "instructions": "Must the concrete hold back water, as in a basement in groundwater, a pond, a pool or a tank?"
+  },
+  "traffic": {
+    "type": "score",
+    "instructions": "What traffic or wear will the surface carry?",
+    "criteria": [
+      "none: nobody walks or drives on it",
+      "foot: people walk on it",
+      "cars: cars or light vehicles drive or park on it",
+      "heavy: trucks, forklifts or industrial wear"
+    ]
+  },
+  "element": {
+    "type": "choice",
+    "instructions": "What kind of concrete element is described?",
+    "criteria": {
+      "foundation": "strip or pad footing, post base, foundation for a shed, wall or machine",
+      "slab": "floor slab, base plate, garage floor, terrace slab, ceiling",
+      "wall": "wall, column, retaining wall, stairs",
+      "paving": "driveway, path, yard, parking surface",
+      "small": "fence posts, small casts, planters, garden decoration"
+    }
+  },
+  "fine_cast": {
+    "type": "noul",
+    "instructions": "Is this a DIY decorative or furniture piece (table top, planter, bowl, sink, lamp, bench) cast from fine mortar, rather than structural or site concrete?"
+  },
+  "approach": {
+    "type": "choice",
+    "instructions": "How does the person want to make the concrete?",
+    "criteria": {
+      "scratch": "mix it from scratch: buy cement, sand and gravel separately, or order site or ready-mixed truck concrete",
+      "bagged": "start from a bag of ready-mixed dry concrete from the DIY store and add things like cement, a waterproofer or water",
+      "fine_mortar": "a thin-walled DIY or designer piece cast from a fine or high-strength mortar"
+    }
+  },
+  "add_cement": {
+    "type": "noul",
+    "instructions": "Does the person want to add extra cement to a mix to make it stronger?"
+  },
+  "add_plasticizer": {
+    "type": "noul",
+    "instructions": "Does the person want a more flowable mix or a plasticiser or superplasticiser?"
+  },
+  "shape": {
+    "type": "choice",
+    "instructions": "What shape is the concrete piece?",
+    "criteria": {
+      "slab": "flat slab, plate, floor, table top, path or driveway: area times thickness",
+      "block": "solid block or cuboid, a foundation or post hole",
+      "cube": "solid cube with equal sides",
+      "cylinder": "solid round post, column, round foundation or round hole",
+      "hollow": "hollow body with walls: planter, pot, box, trough, seat cube, sink",
+      "ring": "ring, pipe or frame open at both ends",
+      "bowl": "bowl, dish or half sphere",
+      "unknown": "no shape can be told"
+    }
+  },
+  "open_sides": {
+    "type": "choice",
+    "instructions": "If the piece is hollow, how many sides are open?",
+    "criteria": {
+      "one": "one side open, like a planter open at the top or a seat cube open at the bottom",
+      "none": "closed on all sides",
+      "both": "open at both ends, like a pipe or ring",
+      "solid": "not hollow"
+    }
+  }
+}

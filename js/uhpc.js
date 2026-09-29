@@ -12,6 +12,7 @@ import {
     evaluatePlausibility,
 } from './lib/uhpc-engine.js';
 import { fmt, fmtQty, parseDecimal } from './lib/format.js';
+import { readUhpc } from './lib/handoff.js';
 import { i18n } from './lib/i18n.js';
 
 // ── DOM lookups ────────────────────────────────────────────────────────
@@ -107,6 +108,7 @@ function renderSource(preset) {
         [batch.finesKg,            'kg', i18n.t('mixdesign.fines')],
         [batch.waterL,             'l',  i18n.t('mixdesign.water')],
         [batch.superplasticizerMl, 'ml', i18n.t('mixdesign.pce')],
+        [batch.fibresG ?? 0,       'g',  i18n.t('mixdesign.fibres')],
     ]
         .filter(([m]) => m > 0)
         .map(([m, unit, name]) => `${fmt(m, m < 10 ? 1 : 0)} ${unit} ${name}`)
@@ -143,6 +145,7 @@ function renderRecipeTable(preset, recipe) {
         ['🌫️ ' + i18n.t('uhpc.row.fines'),           recipe.finesKg,          'kg', recipe.finesKg,          recipe.finesKg,                                               i18n.t('uhpc.row.fines.note')],
         ['💧 ' + i18n.t('uhpc.row.water'),           recipe.waterL,           'l',  recipe.waterL,           recipe.waterL,                                                i18n.t('uhpc.row.water.note')],
         ['🌊 ' + i18n.t('uhpc.row.pce'),             recipe.superplasticizerL,'l',  recipe.superplasticizerL, recipe.superplasticizerL * preset.densities.superplasticizer, i18n.t('uhpc.row.pce.note')],
+        ['🧵 ' + i18n.t('uhpc.row.fibres'),          recipe.fibresG / 1000,   'kg', recipe.fibresG,          recipe.fibresG / 1000,                                        i18n.t('uhpc.row.fibres.note')],
     ];
 
     els.resultBody.innerHTML = rows
@@ -192,6 +195,7 @@ function renderSteps(preset, recipe) {
         microsilicaKg:     fmtQty(recipe.microsilicaKg,     'kg'),
         waterL:            fmtQty(recipe.waterL,            'l'),
         superplasticizerL: fmtQty(recipe.superplasticizerL, 'l'),
+        fibresG:           fmtQty(recipe.fibresG / 1000,    'kg'),
     };
     const substitute = (template) =>
         template.replace(/\{(\w+)\}/g, (_, key) => vars[key] ?? '');
@@ -249,6 +253,17 @@ function rebuildDropdown() {
 
 populatePresetDropdown();
 els.presetSelect.value = UHPC_PRESETS[0].key;
+// A hand-over from the search box (describe.html) picks the preset and volume.
+const handoff = readUhpc(globalThis.location?.search ?? '');
+if (handoff) {
+    if (UHPC_PRESETS.some(p => p.key === handoff.preset)) els.presetSelect.value = handoff.preset;
+    if (handoff.volume > 0) els.volumeInput.value = i18n.formatNumber(handoff.volume, { maximumFractionDigits: 4, useGrouping: false });
+    const note = document.getElementById('handoffNote');
+    if (note && handoff.text) {
+        note.textContent = i18n.t('handoff.prefilled', { text: handoff.text });
+        note.classList.remove('hidden');
+    }
+}
 els.presetSelect.addEventListener('change', update);
 els.volumeInput.addEventListener('input', update);
 els.volumeInput.addEventListener('change', update);

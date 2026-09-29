@@ -6,6 +6,7 @@ import { getAdmixtureDosage, getRecommendedWaterSaving } from './lib/additives.j
 import { calculateFinesContent, checkFinesLimits, calculatePasteVolume, checkPasteRequirements, checkCemIFlyAshSilicaFume } from './lib/fines-content.js';
 import { getFinesFraction, GRAIN_GROUPS_BY_SIEBLINE } from './lib/aggregate-gradation.js';
 import { computeRecipe } from './lib/recipe.js';
+import { readStandard } from './lib/handoff.js';
 import { i18n } from './lib/i18n.js';
 
 const AGGREGATE_KEYS = {
@@ -776,6 +777,7 @@ function initialize() {
     const recipeForm = document.getElementById('recipeForm');
     if (recipeForm) recipeForm.addEventListener('submit', (event) => event.preventDefault());
 
+    applyHandoff(readStandard(globalThis.location?.search ?? ''));
     updateGoverningExposureInfo();
     calculateRecipe();
 
@@ -784,6 +786,49 @@ function initialize() {
         initialize();
         if (appState.strengthClass) calculateRecipe();
     });
+}
+
+/**
+ * Pre-fill the form from a hand-over (search box or fine-tune page), see js/lib/handoff.js.
+ * Every value stays editable; the note says where they came from.
+ */
+function applyHandoff(h) {
+    const note = document.getElementById('handoffNote');
+    if (!h) { if (note) note.classList.add('hidden'); return; }
+    const setSelect = (el, value) => {
+        if (value && [...el.options].some(o => o.value === value)) el.value = value;
+    };
+    if (h.volume > 0) elements.volume.value = i18n.formatNumber(h.volume, { maximumFractionDigits: 4, useGrouping: false });
+    setSelect(elements.strengthClass, h.strengthClass);
+    if (h.exposureClasses.length) {
+        elements.exposureClassContainer.querySelectorAll('input[name="exposureClass"]')
+            .forEach(el => { el.checked = h.exposureClasses.includes(el.value); });
+    }
+    setSelect(elements.siebline, h.siebline);
+    setSelect(elements.consistencyClass, h.consistencyClass);
+    setSelect(elements.aggregateType, h.aggregateType);
+    setSelect(elements.cementType, h.cementType);
+    setSelect(elements.admixtureType, h.admixtureType);
+    if (h.vorhaltemas) elements.vorhaltemas.value = h.vorhaltemas;
+    const toggle = (checkbox, input, value) => {
+        checkbox.checked = value > 0;
+        if (value > 0) input.value = value;
+    };
+    toggle(elements.useAirEntraining, elements.airEntrainingPercent, h.airEntrainingPercent);
+    toggle(elements.useFlyAsh, elements.flyAshPercent, h.flyAshPercent);
+    toggle(elements.useSilicaFume, elements.silicaFumePercent, h.silicaFumePercent);
+    toggle(elements.useWaterproofing, elements.waterproofPercent, h.waterproofPercent);
+    updateOptionalSections();
+    updateHints();
+
+    if (note) {
+        const parts = [];
+        if (h.text) parts.push(i18n.t('handoff.prefilled', { text: h.text }));
+        if (h.warn === 'thin') parts.push(i18n.t('handoff.warn.thin.standard'));
+        note.textContent = parts.join(' ');
+        note.classList.toggle('hidden', parts.length === 0);
+        note.classList.toggle('plausibility-warning', h.warn === 'thin');
+    }
 }
 
 window.addEventListener('DOMContentLoaded', initialize);

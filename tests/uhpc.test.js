@@ -214,9 +214,10 @@ describe('UHPC page – DOM wiring', () => {
     it('preset without Quarzmehl/Feinzuschläge: table hides their rows', { skip: !noFillerPreset }, () => {
         selectPreset(noFillerPreset.key);
         const rows = getRecipeRows();
-        // The preset has cement, sand, water, PCE — exactly four ingredients.
-        assert.strictEqual(rows.length, 4,
-            `expected 4 rows for the no-microfiller preset, got ${rows.length}`);
+        // The preset has cement, sand, water, PCE — plus glass fibres if it lists any.
+        const expected = noFillerPreset.batch.fibresG > 0 ? 5 : 4;
+        assert.strictEqual(rows.length, expected,
+            `expected ${expected} rows for the no-microfiller preset, got ${rows.length}`);
         const names = rows.map(r => r.name).join(' | ');
         assert.ok(!/Quarzmehl/.test(names),  `Quarzmehl row must be hidden: ${names}`);
         assert.ok(!/Feinzuschläge/.test(names), `Feinzuschläge row must be hidden: ${names}`);
@@ -233,7 +234,7 @@ describe('UHPC page – DOM wiring', () => {
         const blob = steps.join(' | ');
         assert.ok(!/Quarzmehl/.test(blob),
             `mixing steps must not mention Quarzmehl for this preset: ${blob}`);
-        assert.ok(/Zement/.test(blob));
+        assert.ok(/zement/i.test(blob));  // also matches "Weißzement"
         assert.ok(/Sand/.test(blob));
     });
 

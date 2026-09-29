@@ -1,0 +1,131 @@
+/* describe.css - one-box project search (describe.html) */
+
+.describe-search {
+    display: flex;
+    gap: 0.5rem;
+    margin: 2rem 0 0.75rem;
+}
+
+.describe-search input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    padding: 0.9rem 1.2rem;
+    font-size: 1.05rem;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    background: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.describe-search input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.describe-search .btn {
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.result-section h3 {
+    margin-top: 1.25rem;
+}
+
+.describe-examples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.describe-example {
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    cursor: pointer;
+    font: inherit;
+}
+
+.describe-example:hover {
+    border-color: var(--primary-color);
+}
+
+.fact-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0;
+    list-style: none;
+}
+
+.fact-list li {
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.9rem;
+    border: 1px solid var(--border-color);
+}
+
+.fact-list li.yes {
+    border-color: var(--success-color);
+}
+
+.fact-list li.no {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+}
+
+.fact-list li.unsure {
+    border-color: var(--warning-color);
+    border-style: dashed;
+}
+
+.reason-list {
+    padding-left: 1.2rem;
+}
+
+.reason-list code {
+    font-weight: 600;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+@media (max-width: 600px) {
+    .describe-search {
+        flex-direction: column;
+    }
+}
+
+.describe-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.describe-action {
+    width: auto;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.describe-action-warn {
+    flex-basis: 100%;
+    margin: -0.3rem 0 0.2rem;
+}

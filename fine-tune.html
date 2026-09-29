@@ -66,6 +66,8 @@
         </nav>
 
         <main id="calculator">
+            <p id="handoffNote" class="form-hint hidden"></p>
+
             <section class="form-section">
                 <h2 data-i18n="fine.tune.h1.your.base">Ihr Basisrezept</h2>
 
@@ -142,6 +144,15 @@
                     <div class="option-result hidden" id="resLP"></div>
                 </div>
 
+                <div class="option-card" id="cardWU">
+                    <label id="labelWU">
+                        <input type="checkbox" id="useWU">
+                        <span data-i18n="fine.tune.card.wu"> 💧 Dichtungsmittel – wasserundurchlässiger</span>
+                    </label>
+                    <p class="form-hint" data-i18n="fine.tune.card.wu.desc">Macht den Beton dichter gegen eindringendes Wasser – für Pflanzkübel, Teiche und Bauteile mit Erdkontakt. Dosierung 2 % vom Zement.</p>
+                    <div class="option-result hidden" id="resWU"></div>
+                </div>
+
                 <div class="plausibility-warning hidden" id="combineWarning"></div>
 
                 <div class="zugabewasser-info" id="strengthResult" style="margin-top:16px;"></div>
@@ -150,6 +161,7 @@
             <div class="instructions hidden" id="shoppingList">
                 <h3 data-i18n="fine.tune.shopping">Schritt für Schritt:</h3>
                 <ol id="shoppingItems"></ol>
+                <p class="form-hint"><a id="scratchLink" href="index.html" data-i18n="fine.tune.scratch">Lieber alles einzeln kaufen und von Grund auf mischen? Im Betonrechner öffnen – alle Angaben sind übernommen.</a></p>
             </div>
         </main>
 
