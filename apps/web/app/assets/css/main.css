@@ -341,3 +341,21 @@ select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+/* Fields side by side share their rows (label, input, hint), so inputs line up even
+   when one label wraps onto two lines. */
+.grid:has(> .field) {
+  row-gap: 0;
+}
+
+.grid > .field {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  row-gap: 0.3rem;
+  padding-bottom: 0.9rem;
+}
+
+.grid > .field > label {
+  align-self: end;
+}
