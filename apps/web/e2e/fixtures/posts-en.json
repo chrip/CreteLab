@@ -1,0 +1,104 @@
+{
+ "answers": {
+  "indoor_dry": {
+   "noul": 0.0801,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9199
+  },
+  "rain": {
+   "noul": 0.8907,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8907
+  },
+  "ground": {
+   "noul": 0.9127,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9127
+  },
+  "frost": {
+   "noul": 0.9194,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9194
+  },
+  "deicing_salt": {
+   "noul": 0.0864,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9136
+  },
+  "horizontal": {
+   "noul": 0.1216,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8784
+  },
+  "reinforced": {
+   "noul": 0.0929,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9071
+  },
+  "watertight": {
+   "noul": 0.0729,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9271
+  },
+  "traffic": {
+   "noul": null,
+   "choice": null,
+   "score": 0.3297,
+   "confidence": 0.5416
+  },
+  "element": {
+   "noul": null,
+   "choice": "small",
+   "score": null,
+   "confidence": 0.477
+  },
+  "fine_cast": {
+   "noul": 0.0767,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9233
+  },
+  "approach": {
+   "noul": null,
+   "choice": "scratch",
+   "score": null,
+   "confidence": 0.1746
+  },
+  "add_cement": {
+   "noul": 0.1132,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8868
+  },
+  "add_plasticizer": {
+   "noul": 0.1052,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8948
+  },
+  "shape": {
+   "noul": null,
+   "choice": "cylinder",
+   "score": null,
+   "confidence": 0.2267
+  },
+  "open_sides": {
+   "noul": null,
+   "choice": "solid",
+   "score": null,
+   "confidence": 0.4004
+  }
+ },
+ "candidates": [],
+ "model": "laya-crete",
+ "ms": 45.3,
+ "text": "Setting 12 fence posts in concrete"
+}

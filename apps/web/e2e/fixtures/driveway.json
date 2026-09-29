@@ -1,0 +1,113 @@
+{
+ "answers": {
+  "indoor_dry": {
+   "noul": 0.0624,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9376
+  },
+  "rain": {
+   "noul": 0.9282,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9282
+  },
+  "ground": {
+   "noul": 0.9107,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9107
+  },
+  "frost": {
+   "noul": 0.9332,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9332
+  },
+  "deicing_salt": {
+   "noul": 0.9305,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9305
+  },
+  "horizontal": {
+   "noul": 0.9296,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9296
+  },
+  "reinforced": {
+   "noul": 0.8174,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8174
+  },
+  "watertight": {
+   "noul": 0.0655,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9345
+  },
+  "traffic": {
+   "noul": null,
+   "choice": null,
+   "score": 1.8932,
+   "confidence": 0.5623
+  },
+  "element": {
+   "noul": null,
+   "choice": "paving",
+   "score": null,
+   "confidence": 0.501
+  },
+  "fine_cast": {
+   "noul": 0.0734,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9266
+  },
+  "approach": {
+   "noul": null,
+   "choice": "scratch",
+   "score": null,
+   "confidence": 0.3757
+  },
+  "add_cement": {
+   "noul": 0.1188,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8812
+  },
+  "add_plasticizer": {
+   "noul": 0.1225,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8775
+  },
+  "shape": {
+   "noul": null,
+   "choice": "slab",
+   "score": null,
+   "confidence": 0.2512
+  },
+  "open_sides": {
+   "noul": null,
+   "choice": "solid",
+   "score": null,
+   "confidence": 0.369
+  },
+  "role:15 cm": {
+   "noul": null,
+   "choice": "thickness",
+   "score": null,
+   "confidence": 0.192
+  }
+ },
+ "candidates": [
+  "6x3 m",
+  "15 cm"
+ ],
+ "model": "laya-crete",
+ "ms": 58.7,
+ "text": "Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut"
+}

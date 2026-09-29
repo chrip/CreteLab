@@ -1,0 +1,767 @@
+{
+  "nav": {
+    "skip": "Skip to content",
+    "label": "Main navigation",
+    "planner": "Plan a component",
+    "decor": "Decor workshop",
+    "bag": "Adjust a ready mix",
+    "about": "About",
+    "language": "Switch language: Deutsch"
+  },
+  "footer": {
+    "disclaimer": "CreteLab calculates after Zement-Merkblatt B 20 and DIN 1045-2 and cites its sources. It does not replace an engineer: have load-bearing parts designed by a professional."
+  },
+  "common": {
+    "loading": "Loading …"
+  },
+  "describe": {
+    "label": "Project description",
+    "submit": "Calculate recipe",
+    "reanalyse": "Analyse again",
+    "busy": "Thinking …",
+    "error": "The description could not be analysed ({reason}). You can still enter every value by hand.",
+    "examples": "Examples:",
+    "example1": "Garden shed foundation 3x2 m, 20 cm thick",
+    "example2": "Setting 12 fence posts in concrete",
+    "example3": "Driveway 6 x 3 m, 15 cm thick, salted in winter",
+    "example4": "Outdoor planter 60x30x40 cm, 2 cm walls",
+    "enterHint": "Enter analyses, Shift+Enter starts a new line."
+  },
+  "facts": {
+    "title": "What the AI understood",
+    "unsure": "unsure",
+    "indoor_dry": "indoors, dry",
+    "rain": "rain or splash water",
+    "ground": "ground contact",
+    "frost": "frost",
+    "deicing_salt": "de-icing salt",
+    "horizontal": "horizontal surface",
+    "reinforced": "reinforced",
+    "watertight": "watertight",
+    "fine_cast": "thin-walled DIY piece",
+    "element": {
+      "foundation": "foundation",
+      "slab": "slab or floor",
+      "wall": "wall, column or stairs",
+      "paving": "paving",
+      "small": "small part or post"
+    },
+    "traffic": {
+      "0": "no traffic",
+      "1": "foot traffic",
+      "2": "cars",
+      "3": "trucks or forklifts"
+    }
+  },
+  "home": {
+    "metaTitle": "Concrete for your project",
+    "title": "Describe your project. We work out the concrete.",
+    "lead": "One sentence is enough: what you build, where it stands, how big it is. CreteLab reads the requirements, calculates the recipe after Zement-Merkblatt B 20 and tells you whether bags, mixing it yourself or ready-mixed concrete fits best.",
+    "privacy": "Your description is analysed, not stored. The language model runs on our own server.",
+    "tools": "Tools",
+    "tool": {
+      "planner": {
+        "title": "Plan a component",
+        "text": "Foundations, slabs, walls, posts: requirements, amount and three ways to make it, with every setting.",
+        "cta": "Open the planner"
+      },
+      "decor": {
+        "title": "Decor workshop",
+        "text": "Planters, bowls, tables with thin walls: published fine-mortar recipes scaled to shape and size.",
+        "cta": "Open the workshop"
+      },
+      "bag": {
+        "title": "Adjust a ready mix",
+        "text": "What would more cement, fly ash or a plasticiser do to a bag of ready mix? An estimate with honest limits.",
+        "cta": "Open the tool"
+      }
+    }
+  },
+  "planner": {
+    "title": "Plan a component",
+    "lead": "What your component needs, how much of it, and how to make it: from bags, mixed yourself or ordered."
+  },
+  "needs": {
+    "title": "What you need",
+    "headline": "{volume} of {strength} concrete",
+    "air": "With an air-entraining agent, target {pct} % air, so frost and de-icing salt do not damage the surface.",
+    "watertight": "Watertight: concrete with a waterproofing admixture; joints and thicknesses need proper design as well.",
+    "why": "Why?",
+    "thinWall": "Walls under 3 cm cannot be cast from ordinary concrete (8–32 mm aggregate).",
+    "toDecor": "Calculate it with fine mortar in the decor workshop",
+    "disclaimer": "An automatic estimate from your description. Check the values; have load-bearing parts designed by a professional."
+  },
+  "volume": {
+    "default": "No amount found, calculated for {volume}. Give dimensions or an amount, or change it under “Adjust details”.",
+    "volume": "Amount from your input “{match}”.",
+    "dimensions": "Amount calculated from “{match}”.",
+    "hollow": {
+      "one": "Amount from “{match}”, as a hollow body with one open side for pouring and demoulding.",
+      "none": "Amount from “{match}”, as a hollow body closed on all sides.",
+      "both": "Amount from “{match}”, as a hollow body open at both ends."
+    },
+    "laya": "Amount calculated from “{match}”: {detail}.",
+    "count": "{count} pieces",
+    "wall": "{wall} cm wall",
+    "shape": {
+      "slab": "slab",
+      "block": "block",
+      "cube": "cube",
+      "cylinder": "cylinder",
+      "hollow": "hollow body",
+      "ring": "ring or pipe",
+      "bowl": "bowl"
+    },
+    "open": {
+      "one": "one side open",
+      "none": "closed on all sides",
+      "both": "open at both ends"
+    }
+  },
+  "reason": {
+    "x0": "X0: unreinforced, no frost, no wear, so no attack.",
+    "xc1": "XC1: reinforced, dry indoors.",
+    "xc2": "XC2: reinforced, permanently wet or in contact with the ground.",
+    "xc3": "XC3: reinforced, moderately humid, sheltered from rain.",
+    "xc4": "XC4: reinforced, wet and dry in turn from rain.",
+    "xd1": "XD1: reinforced, spray containing de-icing salt.",
+    "xd2": "XD2: reinforced, permanently wet with chlorides.",
+    "xd3": "XD3: reinforced, de-icing salt on a horizontal surface.",
+    "xf1": "XF1: frost without de-icing agents, vertical surface.",
+    "xf2": "XF2: frost with de-icing agents, vertical surface.",
+    "xf3": "XF3: frost without de-icing agents, horizontal surface.",
+    "xf4": "XF4: frost with de-icing agents, horizontal surface.",
+    "xm1": "XM1: moderate wear from cars.",
+    "xm2": "XM2: heavy wear from trucks or forklifts.",
+    "xm3": "XM3: very heavy wear.",
+    "xs1": "XS1: salty air from the sea.",
+    "xs2": "XS2: permanently under seawater.",
+    "xs3": "XS3: tidal and splash zone.",
+    "xa1": "XA1: slightly aggressive chemicals.",
+    "xa2": "XA2: moderately aggressive chemicals.",
+    "xa3": "XA3: highly aggressive chemicals.",
+    "lp": "Air-entraining agent: tiny air bubbles give freezing water room to expand.",
+    "wu": "Waterproofing admixture and at least C25/30 for watertight concrete (WU-Richtlinie)."
+  },
+  "production": {
+    "title": "How to make it",
+    "recommended": "recommended",
+    "bag": {
+      "name": "Ready mix",
+      "sub": "bags from the DIY store"
+    },
+    "mix": {
+      "name": "Mix it yourself",
+      "sub": "cement, sand and gravel"
+    },
+    "order": {
+      "name": "Ready-mixed concrete",
+      "sub": "from a plant, from about 1 m³"
+    }
+  },
+  "bag": {
+    "declared": "Declared on the datasheet",
+    "grain": "Aggregate",
+    "bags": "Bags",
+    "yield": "about {litres} l of fresh concrete per bag",
+    "water": "Water",
+    "waterPerBag": "{litres} l per bag",
+    "waterTotal": "about {litres} l in total",
+    "datasheet": "Technical datasheet (PDF)",
+    "example": "An example. Any product with the same declared classes works just as well.",
+    "notPossible": "Bagged concrete does not work here.",
+    "issue": {
+      "watertight": "Watertight (WU): no bagged concrete is declared as watertight, and waterproofing admixtures are no substitute. Order watertight ready-mixed concrete for basements and tanks.",
+      "notDeclared": "No bagged concrete is declared for {classes}. Mix it yourself or order ready-mixed concrete.",
+      "tradeOnly": "Only a trade product from builders' merchants meets the requirements: {product}. DIY stores rarely stock it.",
+      "tooThin": "Too thin: {thicknessMm} mm walls. Bagged concrete with 8 mm aggregate needs at least {minMm} mm; the largest grain may be at most a third of the thickness.",
+      "manyBags": "About {bags} bags, a lot to carry and mix. A concrete mixer pays off.",
+      "orderInstead": "About {bags} bags: from about 1 m³, ready-mixed concrete or a self-service concrete station is usually easier and cheaper."
+    },
+    "howTo": "What matters",
+    "rule": {
+      "water-as-stated": "Add only as much water as the bag says. More water lowers the strength, and the declared classes no longer apply.",
+      "no-additions": "Add nothing but water: manufacturers explicitly rule out additions such as cement, waterproofing or air-entraining agents.",
+      "temperature": "Work only between +5 and +30 °C and keep the concrete moist for a few days."
+    },
+    "tuneHint": "Curious what additions would change in a ready mix?",
+    "tuneLink": "Adjust a ready mix",
+    "asksForAdditions": "You want to add something to the ready mix: manufacturers forbid it, and the classes on the bag then no longer apply. To see what it would change anyway, open"
+  },
+  "mix": {
+    "title": "Recipe",
+    "material": "Material",
+    "perM3": "per m³",
+    "total": "for {volume}",
+    "error": {
+      "fmRequired": "Consistency {consistency} needs a superplasticiser (FM). Choose one under “Adjust details”."
+    },
+    "largeVolume": "Mixing {volume} yourself is a lot of work. From about 1 m³ ready-mixed concrete is usually cheaper, see the “Ready-mixed concrete” tab.",
+    "warning": {
+      "strength-below-exposure": "{strengthClass} is too weak for the chosen exposure classes: at least {minFckCube} N/mm² cube strength is required.",
+      "wz-exceeded": "The w/c ratio {wz} is above the limit {maxWz} of the exposure classes.",
+      "fines-too-high": "Fines content {fines} kg/m³ is too high; {max} kg/m³ is allowed (DIN 1045-2).",
+      "fly-ash-with-silica-fume": "Too much fly ash next to silica fume for CEM I: f/c ≤ 3 · (0.22 − s/c).",
+      "high-air": "{airPct} % air is unusually high and costs a lot of strength."
+    },
+    "row": {
+      "cement": "Cement {type}",
+      "cementNote": "binder, sets strength and durability",
+      "flyAsh": "Fly ash",
+      "flyAshNote": "replaces part of the cement, less heat",
+      "silicaFume": "Silica fume",
+      "silicaFumeNote": "fills the finest pores, denser and stronger",
+      "waterproofing": "Waterproofing admixture",
+      "waterproofingNote": "for watertight concrete",
+      "aggregate": "Aggregate {sieve}, dry",
+      "aggregateNote": "sand and gravel, the skeleton of the concrete",
+      "water": "Total water",
+      "waterNote": "sets workability and strength",
+      "addedWater": "of which to add",
+      "addedWaterNote": "the rest is already in the damp aggregate",
+      "bv": "Plasticiser (BV)",
+      "bvNote": "saves about 7 % water",
+      "fm": "Superplasticiser (FM)",
+      "fmNote": "saves about 20 % water, makes it flowable",
+      "air": "Air-entraining agent (target {pct} % air)",
+      "airNote": "resistance to frost and de-icing salt"
+    },
+    "grainGroups": "Aggregate split by size",
+    "group": "Size group",
+    "dry": "dry",
+    "moisture": "moisture",
+    "weighed": "to weigh",
+    "howTo": "How to mix",
+    "calculation": "Calculation after Zement-Merkblatt B 20",
+    "calc": {
+      "limits": "Exposure limits: w/c ≤ {wz}, cement ≥ {cement} kg/m³.",
+      "water": "Water demand from grading and consistency: {water} l/m³.",
+      "target": "Target strength: {fck} / 0.92 + {margin} (margin) + {loss} (air voids) = {target} N/mm².",
+      "wzStrength": "The w/c from the Walz curve, {walz}, is stricter than the exposure limit ({exposure}): w/c = {wz}.",
+      "wzExposure": "The exposure limit governs: {exposure} − 0.02 = {wz} (Walz curve: {walz}).",
+      "cement": "Cement: {water} / {wz} = {cement} kg/m³.",
+      "equivalent": " With additions: (w/c)eq = {wz}.",
+      "volumes": "Absolute volumes in dm³: cement {cement} + water {water} + fly ash {flyAsh} + silica fume {silicaFume} + waterproofing {waterproofing} + air {air} + aggregate {aggregate} = 1000.",
+      "added": "Water {water} l/m³, of which {added} l/m³ to add.",
+      "fines": "Fines content: {fines} kg/m³.",
+      "source": "Method and tables: Zement-Merkblatt B 20 (2.2017), Walz curves digitised from its Bild 1. The calculation is tested against the leaflet's worked examples I to IV."
+    },
+    "step": {
+      "dry": "Dry mix {cement} {type} and {aggregate} aggregate.",
+      "flyAsh": "Mix in {amount} fly ash.",
+      "silicaFume": "Mix in {amount} silica fume evenly.",
+      "waterproofing": "Mix in {amount} waterproofing admixture.",
+      "water": "Slowly add {amount} water.",
+      "plasticizer": "Add {amount} {name} to the water.",
+      "air": "Add {amount} air-entraining agent (target {pct} % air).",
+      "mix": "Mix well until the consistency is {consistency}.",
+      "place": "Place it within about 30 minutes, compact it and keep it moist for a few days."
+    }
+  },
+  "order": {
+    "lead": "A plant sells concrete by its properties. It needs these details; the mix design is the plant's job.",
+    "small": "{volume} is little for a truck mixer: plants charge a small-quantity surcharge. Compare with bags or mixing it yourself, or look for a self-service concrete station.",
+    "textTitle": "Order text",
+    "copy": "Copy text",
+    "copied": "Copied",
+    "strength": "Strength class",
+    "exposure": "Exposure classes",
+    "moisture": "Moisture class",
+    "consistency": "Consistency",
+    "grain": "Largest aggregate",
+    "chloride": "Chloride content",
+    "moistureClass": {
+      "WO": "dry, usually indoors",
+      "WF": "often or long wet",
+      "WA": "wet with salt from outside (de-icing salt, sea)",
+      "WS": "like WA, plus heavy traffic loads"
+    },
+    "tip": {
+      "volume": "Order {volume}: rounded up to half a cubic metre, with a little allowance for loss.",
+      "surcharge": "Below 3–6 m³ per delivery many plants charge a small-quantity surcharge of about €23–35 per missing m³.",
+      "station": "For small amounts from about 0.15 m³ there are self-service concrete stations where you collect it with a trailer.",
+      "noWater": "Do not add water: the plant is no longer liable for the concrete if you do."
+    },
+    "text": {
+      "concrete": "Concrete to DIN EN 206 and DIN 1045-2: {line}",
+      "volume": "Amount: {volume} m³",
+      "air": "Air-entrained concrete, air content at least {pct} %",
+      "watertight": "Watertight concrete to the DAfStb WU guideline",
+      "delivery": "Delivery by truck mixer, date and site access by arrangement"
+    }
+  },
+  "details": {
+    "title": "Adjust details",
+    "lead": "Every change recalculates at once and is kept in the link, which you can share.",
+    "volume": "Amount in m³",
+    "strength": "Strength class",
+    "tooWeak": "Too weak for the exposure classes: at least {min} N/mm² needed.",
+    "sieveLine": "Grading curve",
+    "consistency": "Consistency",
+    "aggregate": "Aggregate",
+    "cement": "Cement",
+    "margin": "Margin in N/mm²",
+    "marginHint": "Safety allowance, 9 N/mm² when the standard deviation is unknown (B 20, 6.2).",
+    "plasticizer": "Plasticiser",
+    "exposure": "Exposure classes",
+    "additions": "Admixtures and additions",
+    "air": "Total air content in % (0 = no air-entraining agent)",
+    "airHint": "At least {min} % for air-entrained concrete with this aggregate size.",
+    "flyAsh": "Fly ash in % of cement",
+    "silicaFume": "Silica fume in % of cement",
+    "waterproofing": "Waterproofing admixture in % of cement",
+    "moisture": "Account for moisture in the aggregate",
+    "moistureGroup": "Moisture {group} in %"
+  },
+  "option": {
+    "strength": {
+      "C8_10": "lean concrete, blinding",
+      "C12_15": "unreinforced fill",
+      "C16_20": "simple foundations and floors",
+      "C20_25": "foundations and ground slabs",
+      "C25_30": "walls, floors, stairs, outdoors",
+      "C30_37": "outdoor parts, columns",
+      "C35_45": "car parks, industrial floors",
+      "C40_50": "heavily loaded parts",
+      "C45_55": "precast, prestressed",
+      "C50_60": "building and civil engineering",
+      "C55_67": "high strength, special works",
+      "C60_75": "high strength, special works",
+      "C70_85": "high-performance concrete",
+      "C80_95": "high-performance concrete",
+      "C90_105": "high-performance concrete",
+      "C100_115": "high-performance concrete"
+    },
+    "sieve": {
+      "A8": "A8: 8 mm max, coarse",
+      "B8": "B8: 8 mm max, balanced",
+      "C8": "C8: 8 mm max, sandy",
+      "A16": "A16: 16 mm max, coarse",
+      "A_B16": "A/B16: 16 mm max, between A and B",
+      "B16": "B16: 16 mm max, balanced",
+      "C16": "C16: 16 mm max, sandy",
+      "A32": "A32: 32 mm max, coarse",
+      "A_B32": "A/B32: 32 mm max, between A and B",
+      "B32": "B32: 32 mm max, balanced",
+      "C32": "C32: 32 mm max, sandy"
+    },
+    "consistency": {
+      "C0": "C0: very stiff, compacted by machine only",
+      "F1": "F1: stiff",
+      "F2": "F2: plastic, compacted by rodding",
+      "F3": "F3: soft, the standard",
+      "F4": "F4: very soft, superplasticiser only",
+      "F5": "F5: flowing, superplasticiser only",
+      "F6": "F6: very flowing, superplasticiser only"
+    },
+    "aggregate": {
+      "quartz-gravel": "Quartz gravel, rounded, the standard",
+      "granite": "Granite",
+      "limestone": "Crushed limestone",
+      "basalt": "Basalt, crushed",
+      "recycled-concrete": "Recycled concrete",
+      "recycled-masonry": "Recycled masonry",
+      "expanded-clay": "Expanded clay (lightweight)",
+      "pumice": "Pumice (lightweight)",
+      "slag-pumice": "Slag pumice (lightweight)",
+      "barite": "Barite (heavyweight)",
+      "magnetite": "Magnetite (heavyweight)",
+      "hematite": "Hematite (heavyweight)"
+    },
+    "cement": {
+      "CEM_I_32_5_N": "Portland cement, slow",
+      "CEM_I_42_5_N": "Portland cement, the standard",
+      "CEM_I_42_5_R": "Portland cement, rapid",
+      "CEM_I_52_5_N": "Portland cement, high strength",
+      "CEM_I_52_5_R": "Portland cement, high strength, rapid",
+      "CEM_II_A-S_42_5_N": "Portland slag cement",
+      "CEM_II_B-S_42_5_N": "Portland slag cement, high slag",
+      "CEM_II_A-LL_42_5_N": "Portland limestone cement",
+      "CEM_III_A_42_5_N": "Blast-furnace cement",
+      "CEM_III_B_42_5_N": "Blast-furnace cement, low heat"
+    },
+    "plasticizer": {
+      "none": "no plasticiser",
+      "BV": "Plasticiser (BV)",
+      "FM": "Superplasticiser (FM)"
+    },
+    "exposureGroup": {
+      "none": "No attack",
+      "carbonation": "Reinforcement: carbonation",
+      "chloride": "Reinforcement: chlorides (de-icing salt)",
+      "seawater": "Reinforcement: seawater",
+      "frost": "Frost",
+      "chemical": "Chemical attack",
+      "wear": "Wear"
+    },
+    "exposure": {
+      "X0": {
+        "name": "no attack",
+        "description": "unreinforced, no frost or wear"
+      },
+      "XC1": {
+        "name": "dry or permanently wet",
+        "description": "indoors, parts under water"
+      },
+      "XC2": {
+        "name": "wet, rarely dry",
+        "description": "foundations, parts in contact with the ground"
+      },
+      "XC3": {
+        "name": "moderate humidity",
+        "description": "outdoors, sheltered from rain"
+      },
+      "XC4": {
+        "name": "cyclic wet and dry",
+        "description": "outdoor parts exposed to rain"
+      },
+      "XD1": {
+        "name": "moderate humidity, chlorides",
+        "description": "spray containing de-icing salt"
+      },
+      "XD2": {
+        "name": "wet, chlorides",
+        "description": "brine pools, chloride-bearing water"
+      },
+      "XD3": {
+        "name": "cyclic wet and dry, chlorides",
+        "description": "parking decks, trafficked areas with de-icing salt"
+      },
+      "XS1": {
+        "name": "airborne sea salt",
+        "description": "outdoor parts near the coast"
+      },
+      "XS2": {
+        "name": "under seawater",
+        "description": "permanently submerged in seawater"
+      },
+      "XS3": {
+        "name": "tidal zone",
+        "description": "splash and spray from the sea"
+      },
+      "XF1": {
+        "name": "frost without de-icing agents, vertical",
+        "description": "outdoor walls in the rain"
+      },
+      "XF2": {
+        "name": "frost with de-icing agents, vertical",
+        "description": "parts in the splash zone of roads"
+      },
+      "XF3": {
+        "name": "frost without de-icing agents, horizontal",
+        "description": "open water tanks, terraces"
+      },
+      "XF4": {
+        "name": "frost with de-icing agents, horizontal",
+        "description": "driveways and paths with de-icing salt"
+      },
+      "XA1": {
+        "name": "slightly aggressive chemicals",
+        "description": "sewage plant tanks, slurry tanks"
+      },
+      "XA2": {
+        "name": "moderately aggressive chemicals",
+        "description": "aggressive soils, marine structures"
+      },
+      "XA3": {
+        "name": "highly aggressive chemicals",
+        "description": "industrial wastewater, silage silos"
+      },
+      "XM1": {
+        "name": "moderate wear",
+        "description": "cars on pneumatic tyres"
+      },
+      "XM2": {
+        "name": "heavy wear",
+        "description": "forklifts on pneumatic or solid rubber tyres"
+      },
+      "XM3": {
+        "name": "very heavy wear",
+        "description": "steel wheels, tracked vehicles"
+      }
+    }
+  },
+  "decor": {
+    "title": "Decor workshop",
+    "lead": "Planters, bowls, tables: thin pieces from fine mortar. Shape and size give the amount, and a published recipe is scaled to it.",
+    "routed": "You are in the right place: walls this thin need fine mortar; ordinary concrete with coarse gravel does not fit in.",
+    "piece": "Your piece",
+    "shape": "Shape",
+    "dim": {
+      "length": "Length in cm",
+      "width": "Width in cm",
+      "height": "Height in cm",
+      "diameter": "Diameter in cm",
+      "wall": "Wall thickness in cm",
+      "count": "Pieces",
+      "open": "Open sides",
+      "wallOptional": "leave empty for solid"
+    },
+    "volume": "Amount: {volume}",
+    "volumeMissing": "Sizes incomplete, calculated for {volume}.",
+    "thickWall": "From about 6 cm wall thickness ordinary concrete pays off:",
+    "recipe": "Recipe",
+    "preset": "Base recipe",
+    "presetOption": "approx. {fck} N/mm²: {label}",
+    "perLitre": "per litre",
+    "row": {
+      "cement": "Cement",
+      "cementNote": "binder",
+      "sand": "Sand",
+      "sandNote": "washed, up to 2 mm",
+      "quartz": "Quartz flour",
+      "quartzNote": "fills the gaps between the grains",
+      "fines": "Limestone flour",
+      "finesNote": "fine filler",
+      "microsilica": "Microsilica",
+      "microsilicaNote": "reactive ultrafine powder, dense and strong",
+      "water": "Water",
+      "waterNote": "as cold as possible",
+      "pce": "Superplasticiser (PCE)",
+      "pceNote": "dissolve it in the water first",
+      "fibres": "Glass fibres (AR)",
+      "fibresNote": "alkali-resistant, against cracks"
+    },
+    "check": {
+      "wb": {
+        "label": "Water/binder",
+        "ok": "in the typical UHPC range 0.20–0.32",
+        "warn": "outside the literature average, still fine for DIY (up to 0.45)",
+        "error": "outside 0.18–0.45, the strength will differ a lot"
+      },
+      "pce": {
+        "label": "Superplasticiser",
+        "ok": "in the datasheet range 0.8–3.0 % of cement",
+        "warn": "at the edge of the datasheet window 0.3–4.0 %, check the product datasheet",
+        "error": "outside 0.3–4.0 %, a different superplasticiser is needed"
+      },
+      "density": {
+        "label": "Fresh density",
+        "ok": "in the typical range 2300–2500 kg/m³",
+        "warn": "slightly outside (2200–2600 kg/m³)",
+        "error": "far outside, check the recipe"
+      }
+    },
+    "steps": "How to mix",
+    "source": {
+      "title": "Source and strength",
+      "work": "Source",
+      "link": "Link",
+      "checked": "checked on",
+      "strength": "Compressive strength after 28 days",
+      "airCured": "approx. {air} N/mm² cured in air (estimate), {water} N/mm² measured under water",
+      "measured": "{fck} N/mm², measured",
+      "estimated": "approx. {fck} N/mm², estimated from the w/b ratio (not measured)"
+    },
+    "presets": {
+      "diy-pce-30l-batch": {
+        "label": "Fine mortar for furniture (quartz sand and quartz flour)",
+        "use": "For tables, benches and pots with 1–2.5 cm walls; in a mixer.",
+        "steps": [
+          {
+            "title": "Pre-mix the dry ingredients for 1–2 minutes",
+            "text": "({cement} cement + {sand} sand + {quartz} quartz flour). The sand is sand 0–2 mm and quartz sand 0.063–0.3 mm in a 30 : 9 ratio."
+          },
+          {
+            "title": "Add about 80% of the water",
+            "text": "and keep mixing."
+          },
+          {
+            "title": "Dissolve the PCE superplasticizer in the remaining water",
+            "text": "({pce} PCE, {water} water in total) and add it — mix for at least 20 minutes in total (free-fall mixer). Some cements need a little more water."
+          },
+          {
+            "title": "Pour into oiled form and vibrate",
+            "text": "or tap gently until no more air bubbles rise. For walls of 1–2.5 cm with textile reinforcement."
+          },
+          {
+            "title": "Cover and keep moist for at least 24 h",
+            "text": ", carefully demold, let cure for several days."
+          }
+        ]
+      },
+      "diy-mortar-20kg-batch": {
+        "label": "High-strength mortar (limestone flour and microsilica)",
+        "use": "For fine, dense surfaces and small, strong parts.",
+        "steps": [
+          {
+            "title": "Mix cement, dry sand and fines with about one third of the mixing water",
+            "text": "({cement} cement + {sand} sand + {fines} limestone flour + {microsilica} microsilica + about one third of {water} water). Sand must be dry."
+          },
+          {
+            "title": "Dissolve PCE superplasticizer in the remaining water",
+            "text": "({pce} PCE in the remaining approx. two thirds of the water)."
+          },
+          {
+            "title": "Add the water-PCE mixture in stages and mix vigorously for at least 5 minutes",
+            "text": "— ideally in a forced-action mixer. The superplasticizer only reaches full effect after even distribution."
+          },
+          {
+            "title": "Pour into oiled form and vibrate",
+            "text": "or tap gently until no more air bubbles rise."
+          },
+          {
+            "title": "Cover and keep moist for at least 24 h",
+            "text": ", carefully demold, let cure for several days."
+          }
+        ]
+      },
+      "kassel-m1q-cem42-5r": {
+        "label": "Research UHPC, full superplasticiser dose",
+        "use": "Laboratory recipe from the University of Kassel: very strong, needs an industrial superplasticiser and a pan mixer.",
+        "steps": [
+          {
+            "title": "Thoroughly homogenize the dry mix",
+            "text": "{cement} cement + {sand} sand (0.125–0.5 mm) + {microsilica} microsilica + {quartz} quartz flour. For UHPC, mixing the fine powders evenly is critical — mix dry for at least 2 minutes."
+          },
+          {
+            "title": "Dissolve PCE superplasticizer in the mixing water",
+            "text": "({pce} PCE in {water} water)."
+          },
+          {
+            "title": "Add the water-PCE mixture in stages to the dry mix",
+            "text": "and mix vigorously for 5–10 minutes total — ideally in a forced-action mixer. Warning: Fresh concrete temperature can rise to 40 °C in large batches — the mix will stiffen faster."
+          },
+          {
+            "title": "Pour into oiled form and compact with a standard immersion vibrator",
+            "text": "until the concrete levels itself."
+          },
+          {
+            "title": "Demold after 24–48 hours",
+            "text": "(depending on superplasticizer retardation), then keep covered moist for at least one week (e.g. under wet cloth + plastic wrap). Compressive strength after 28 d: approx. 100 N/mm²."
+          },
+          {
+            "title": "Optional for maximum strength",
+            "text": "Store completely underwater at 20 °C for 28 days → ~123 N/mm² (+23%). With this very dense mix, the water bath effect is particularly strong against self-drying of the matrix."
+          }
+        ]
+      },
+      "kassel-m1q-cem42-5r-soft": {
+        "label": "Research UHPC, moderate superplasticiser dose (indoors)",
+        "use": "The same recipe with a usual retail amount of superplasticiser, for indoor use.",
+        "steps": [
+          {
+            "title": "Thoroughly homogenize the dry mix",
+            "text": "{cement} cement + {sand} sand (0.125–0.5 mm) + {microsilica} microsilica + {quartz} quartz flour. Mix dry for at least 2 minutes — fine powder distribution determines final strength."
+          },
+          {
+            "title": "Dissolve PCE superplasticizer in the mixing water",
+            "text": "({pce} PCE in {water} water). This variant works with a DIY-typical PCE dosage."
+          },
+          {
+            "title": "Add the water-PCE mixture in stages to the dry mix",
+            "text": "and mix for 5–10 minutes. Flow properties develop slowly — initially \"grainy\", then smooth after a few minutes."
+          },
+          {
+            "title": "Pour into oiled form and compact with a standard immersion vibrator",
+            "text": "until the surface shines."
+          },
+          {
+            "title": "Demold after 24–48 h",
+            "text": ", then keep covered moist for at least one week. Compressive strength after 28 d: approx. 95 N/mm²."
+          },
+          {
+            "title": "Optional for maximum strength",
+            "text": "Store completely underwater at 20 °C for 28 days → ~103 N/mm² (+8%). With this slightly less dense variant (w/c = 0.40), the water bath effect is smaller but noticeable."
+          }
+        ]
+      },
+      "diy-white-15kg-laminate": {
+        "label": "White concrete for thin-walled furniture and pots, outdoors",
+        "use": "Spray the first coat, then build it up by hand with glass-fibre mesh; weatherproof once sealed.",
+        "steps": [
+          {
+            "title": "Dry-mix white cement, sand and quartz flour",
+            "text": "({cement} White Cement + {sand} sand + {quartz} quartz flour). The sand is sand 0–2 mm and quartz sand 0.063–0.3 mm in a 3 : 5 ratio."
+          },
+          {
+            "title": "Add water and superplasticizer",
+            "text": "({water} water, {pce} plasticizing superplasticizer) and mix thoroughly."
+          },
+          {
+            "title": "Spray a first coat of 1.5–2 mm onto the mould",
+            "text": "until the mould no longer shows through – this makes the visible side smooth."
+          },
+          {
+            "title": "Apply further layers by hand",
+            "text": "– the concrete must be kneadable for this – and lay three layers of glass-fibre mesh in between."
+          },
+          {
+            "title": "Let it harden for 24–48 hours",
+            "text": "(depending on room temperature), demould, and seal with impregnation and wax for outdoor use."
+          }
+        ]
+      },
+      "diy-white-bowl-4kg": {
+        "label": "White concrete for small decorative pieces (hand-mixed)",
+        "use": "For small batches up to about 5 l, with fibres and mesh.",
+        "steps": [
+          {
+            "title": "Dry-mix white cement and sand",
+            "text": "({cement} White Cement + {sand} sand). The sand is sand 0–2 mm and quartz sand 0.063–0.3 mm in a 1 : 2 ratio."
+          },
+          {
+            "title": "Add the water with the superplasticizer and the fibres",
+            "text": "({water} water, {pce} high-performance superplasticizer, {fibres} reinforcing fibres) and mix thoroughly by hand."
+          },
+          {
+            "title": "Fill the mould and lay in reinforcing mesh",
+            "text": "(cut to the shape of the mould)."
+          },
+          {
+            "title": "Demould after about 48 hours",
+            "text": "and seal with impregnation and wax."
+          }
+        ]
+      }
+    }
+  },
+  "bagTool": {
+    "title": "Adjust a ready mix",
+    "lead": "What more cement, fly ash, silica fume or a plasticiser would do to a bag of ready mix, estimated on the Walz curve.",
+    "warningTitle": "For experiments only.",
+    "warning": "Manufacturers forbid adding anything but water to ready mix. With additions, the strength and exposure classes on the bag no longer apply. Do not use it for load-bearing or standardised parts.",
+    "base": "Starting mix",
+    "mix": "Bagged mix",
+    "mixOption": "Ready mix {strength}",
+    "mixHint": "Assumed composition; datasheets do not state the cement content.",
+    "volume": "Amount in m³",
+    "options": "Additions",
+    "option": {
+      "extraCement": {
+        "name": "10 % more cement",
+        "effect": "stronger, but more shrinkage"
+      },
+      "flyAsh": {
+        "name": "Fly ash (15 % of cement)",
+        "effect": "less heat, denser in the long run"
+      },
+      "silicaFume": {
+        "name": "Silica fume (8 % of cement)",
+        "effect": "much denser and stronger"
+      },
+      "air": {
+        "name": "Air-entraining agent",
+        "effect": "more frost resistant, costs about 14 N/mm²"
+      },
+      "waterproofing": {
+        "name": "Waterproofing admixture (2 % of cement)",
+        "effect": "absorbs less water, does not make it watertight concrete"
+      }
+    },
+    "airWithSilica": "Air entrainment and silica fume do not go well together: the mix gets stiff and the air voids form poorly. Choose one of them.",
+    "result": "Result",
+    "strength": "{base} becomes an estimated {tuned} (about {fck} N/mm² cube strength).",
+    "step": {
+      "mix": "Put {amount} of ready mix {strength} into the mixer (≈ {bags} bags of {bag} kg).",
+      "extraCement": "Add {amount} cement.",
+      "flyAsh": "Mix in {amount} fly ash.",
+      "silicaFume": "Mix in {amount} silica fume evenly.",
+      "waterproofing": "Mix in {amount} waterproofing admixture.",
+      "plasticizer": "Add {amount} {name} to the mixing water.",
+      "air": "Add {amount} air-entraining agent to the mixing water.",
+      "water": "Add {amount} water and mix thoroughly.",
+      "waterWith": "Add {amount} water with the admixtures and mix thoroughly."
+    }
+  }
+}

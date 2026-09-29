@@ -1,0 +1,767 @@
+{
+  "nav": {
+    "skip": "Zum Inhalt springen",
+    "label": "Hauptnavigation",
+    "planner": "Bauteil planen",
+    "decor": "Deko-Werkstatt",
+    "bag": "Fertigmischung anpassen",
+    "about": "Über",
+    "language": "Sprache wechseln: English"
+  },
+  "footer": {
+    "disclaimer": "CreteLab rechnet nach Zement-Merkblatt B 20 und DIN 1045-2 und nennt seine Quellen. Es ersetzt keine Fachplanung: Tragende Bauteile gehören in die Hände einer Fachkraft."
+  },
+  "common": {
+    "loading": "Lädt …"
+  },
+  "describe": {
+    "label": "Projektbeschreibung",
+    "submit": "Rezept berechnen",
+    "reanalyse": "Neu auswerten",
+    "busy": "Denke nach …",
+    "error": "Die Beschreibung konnte nicht ausgewertet werden ({reason}). Sie können alle Werte auch von Hand eingeben.",
+    "examples": "Beispiele:",
+    "example1": "Fundament für ein Gartenhaus 3x2 m, 20 cm dick",
+    "example2": "12 Zaunpfosten einbetonieren",
+    "example3": "Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut",
+    "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm",
+    "enterHint": "Enter wertet aus, Umschalt+Enter macht eine neue Zeile."
+  },
+  "facts": {
+    "title": "Das hat die KI verstanden",
+    "unsure": "unsicher",
+    "indoor_dry": "innen, trocken",
+    "rain": "Regen oder Spritzwasser",
+    "ground": "Erdkontakt",
+    "frost": "Frost",
+    "deicing_salt": "Tausalz",
+    "horizontal": "waagerechte Fläche",
+    "reinforced": "bewehrt",
+    "watertight": "wasserundurchlässig",
+    "fine_cast": "dünnwandiges DIY-Stück",
+    "element": {
+      "foundation": "Fundament",
+      "slab": "Platte oder Boden",
+      "wall": "Wand, Stütze oder Treppe",
+      "paving": "Verkehrsfläche",
+      "small": "Kleinteil oder Pfosten"
+    },
+    "traffic": {
+      "0": "kein Verkehr",
+      "1": "begehbar",
+      "2": "befahrbar (Pkw)",
+      "3": "Schwerverkehr oder Stapler"
+    }
+  },
+  "home": {
+    "metaTitle": "Beton für Ihr Projekt",
+    "title": "Beschreiben Sie Ihr Projekt. Wir rechnen den Beton.",
+    "lead": "Ein Satz genügt: was Sie bauen, wo es steht, wie groß es ist. CreteLab erkennt die Anforderungen, berechnet das Rezept nach Zement-Merkblatt B 20 und sagt, ob Sackware, selbst mischen oder Transportbeton am besten passt.",
+    "privacy": "Ihre Beschreibung wird nur ausgewertet, nicht gespeichert. Das Sprachmodell läuft auf unserem eigenen Server.",
+    "tools": "Werkzeuge",
+    "tool": {
+      "planner": {
+        "title": "Bauteil planen",
+        "text": "Fundamente, Platten, Wände, Pfosten: Anforderungen, Menge und drei Wege zur Herstellung, mit allen Stellschrauben.",
+        "cta": "Zum Planer"
+      },
+      "decor": {
+        "title": "Deko-Werkstatt",
+        "text": "Pflanzkübel, Schalen, Tische mit dünnen Wänden: belegte Feinbeton-Rezepte, skaliert auf Form und Maße.",
+        "cta": "Zur Werkstatt"
+      },
+      "bag": {
+        "title": "Fertigmischung anpassen",
+        "text": "Was ändert mehr Zement, Flugasche oder ein Verflüssiger an einem Sack Fertigbeton? Eine Schätzung mit ehrlichen Grenzen.",
+        "cta": "Zum Werkzeug"
+      }
+    }
+  },
+  "planner": {
+    "title": "Bauteil planen",
+    "lead": "Was Ihr Bauteil braucht, wie viel davon und wie Sie es herstellen: aus dem Sack, selbst gemischt oder bestellt."
+  },
+  "needs": {
+    "title": "Was Sie brauchen",
+    "headline": "{volume} Beton {strength}",
+    "air": "Mit Luftporenbildner, Ziel {pct} % Luft, damit Frost und Tausalz der Oberfläche nichts anhaben.",
+    "watertight": "Wasserundurchlässig: WU-Beton mit Dichtungsmittel, zusätzlich fachgerecht zu planen (Fugen, Bauteildicken).",
+    "why": "Warum?",
+    "thinWall": "Wände unter 3 cm lassen sich mit Normalbeton (Korn 8–32 mm) nicht gießen.",
+    "toDecor": "In der Deko-Werkstatt mit Feinbeton rechnen",
+    "disclaimer": "Automatische Einschätzung aus Ihrer Beschreibung. Prüfen Sie die Werte; tragende Bauteile gehören in die Hände einer Fachkraft."
+  },
+  "volume": {
+    "default": "Keine Menge erkannt, gerechnet mit {volume}. Nennen Sie Maße oder eine Menge, oder ändern Sie sie unter „Details anpassen“.",
+    "volume": "Menge aus Ihrer Angabe „{match}“.",
+    "dimensions": "Menge berechnet aus „{match}“.",
+    "hollow": {
+      "one": "Menge aus „{match}“, als Hohlkörper mit einer offenen Seite zum Gießen und Ausschalen.",
+      "none": "Menge aus „{match}“, als allseitig geschlossener Hohlkörper.",
+      "both": "Menge aus „{match}“, als Hohlkörper oben und unten offen."
+    },
+    "laya": "Menge berechnet aus „{match}“: {detail}.",
+    "count": "{count} Stück",
+    "wall": "Wand {wall} cm",
+    "shape": {
+      "slab": "Platte",
+      "block": "Quader",
+      "cube": "Würfel",
+      "cylinder": "Zylinder",
+      "hollow": "Hohlkörper",
+      "ring": "Ring oder Rohr",
+      "bowl": "Schale"
+    },
+    "open": {
+      "one": "eine Seite offen",
+      "none": "rundum geschlossen",
+      "both": "oben und unten offen"
+    }
+  },
+  "reason": {
+    "x0": "X0: unbewehrt, kein Frost, kein Verschleiß, also kein Angriff.",
+    "xc1": "XC1: bewehrt, trocken innen.",
+    "xc2": "XC2: bewehrt, ständig feucht oder mit Erdkontakt.",
+    "xc3": "XC3: bewehrt, mäßig feucht, vor Regen geschützt.",
+    "xc4": "XC4: bewehrt, abwechselnd nass und trocken durch Regen.",
+    "xd1": "XD1: bewehrt, Sprühnebel mit Tausalz.",
+    "xd2": "XD2: bewehrt, ständig nass mit Chlorid.",
+    "xd3": "XD3: bewehrt, Tausalz auf einer waagerechten Fläche.",
+    "xf1": "XF1: Frost ohne Taumittel, senkrechte Fläche.",
+    "xf2": "XF2: Frost mit Taumittel, senkrechte Fläche.",
+    "xf3": "XF3: Frost ohne Taumittel, waagerechte Fläche.",
+    "xf4": "XF4: Frost mit Taumittel, waagerechte Fläche.",
+    "xm1": "XM1: mäßiger Verschleiß durch Pkw.",
+    "xm2": "XM2: starker Verschleiß durch Lkw oder Stapler.",
+    "xm3": "XM3: sehr starker Verschleiß.",
+    "xs1": "XS1: salzhaltige Luft vom Meer.",
+    "xs2": "XS2: unter Meerwasser.",
+    "xs3": "XS3: Spritzwasser vom Meer.",
+    "xa1": "XA1: schwach chemisch angreifend.",
+    "xa2": "XA2: mäßig chemisch angreifend.",
+    "xa3": "XA3: stark chemisch angreifend.",
+    "lp": "Luftporenbildner: Winzige Luftbläschen geben dem gefrierenden Wasser Platz.",
+    "wu": "Dichtungsmittel und mindestens C25/30 für wasserundurchlässigen Beton (WU-Richtlinie)."
+  },
+  "production": {
+    "title": "So stellen Sie es her",
+    "recommended": "empfohlen",
+    "bag": {
+      "name": "Fertigmischung",
+      "sub": "Sackware aus dem Baumarkt"
+    },
+    "mix": {
+      "name": "Selbst mischen",
+      "sub": "Zement, Sand und Kies"
+    },
+    "order": {
+      "name": "Transportbeton",
+      "sub": "vom Werk, ab ca. 1 m³"
+    }
+  },
+  "bag": {
+    "declared": "Laut Datenblatt",
+    "grain": "Körnung",
+    "bags": "Säcke",
+    "yield": "je Sack ca. {litres} l Frischbeton",
+    "water": "Wasser",
+    "waterPerBag": "{litres} l je Sack",
+    "waterTotal": "zusammen ca. {litres} l",
+    "datasheet": "Technisches Merkblatt (PDF)",
+    "example": "Ein Beispiel. Jedes Produkt mit denselben deklarierten Klassen ist genauso geeignet.",
+    "notPossible": "Mit Sackbeton geht es hier nicht.",
+    "issue": {
+      "watertight": "Wasserundurchlässig (WU): Kein Sackbeton ist als WU-Beton deklariert, und Dichtungsmittel sind kein Ersatz. Für Keller und Becken WU-Transportbeton bestellen.",
+      "notDeclared": "Kein Sackbeton ist für {classes} deklariert. Mischen Sie selbst oder bestellen Sie Transportbeton.",
+      "tradeOnly": "Nur ein Profi-Produkt aus dem Baustoffhandel erfüllt die Anforderungen: {product}. Im Baumarkt-Regal steht es meist nicht.",
+      "tooThin": "Zu dünn: {thicknessMm} mm Wandstärke. Sackbeton mit 8 mm Korn braucht mindestens {minMm} mm, das Größtkorn darf höchstens ein Drittel der Dicke sein.",
+      "manyBags": "Rund {bags} Säcke, viel zu tragen und zu mischen. Ein Betonmischer lohnt sich.",
+      "orderInstead": "Rund {bags} Säcke: Ab etwa 1 m³ ist Transportbeton oder eine Betontankstelle meist einfacher und günstiger."
+    },
+    "howTo": "Worauf es ankommt",
+    "rule": {
+      "water-as-stated": "Nur so viel Wasser zugeben, wie auf dem Sack steht. Mehr Wasser senkt die Festigkeit, die angegebenen Klassen gelten dann nicht mehr.",
+      "no-additions": "Außer Wasser nichts untermischen: Die Hersteller schließen Zusätze wie Zement, Dichtungs- oder Luftporenmittel ausdrücklich aus.",
+      "temperature": "Nur zwischen +5 und +30 °C verarbeiten und den Beton einige Tage feucht halten."
+    },
+    "tuneHint": "Neugierig, was Zusätze an einer Fertigmischung ändern würden?",
+    "tuneLink": "Fertigmischung anpassen",
+    "asksForAdditions": "Sie möchten der Fertigmischung etwas zugeben: Die Hersteller verbieten das, die Klassen vom Sack gelten dann nicht mehr. Was es trotzdem ändern würde, sehen Sie unter"
+  },
+  "mix": {
+    "title": "Rezept",
+    "material": "Stoff",
+    "perM3": "je m³",
+    "total": "für {volume}",
+    "error": {
+      "fmRequired": "Konsistenz {consistency} erreicht man nur mit Fließmittel (FM). Wählen Sie unter „Details anpassen“ Fließmittel."
+    },
+    "largeVolume": "{volume} selbst zu mischen ist viel Arbeit. Ab etwa 1 m³ ist Transportbeton meist günstiger, siehe Reiter „Transportbeton“.",
+    "warning": {
+      "strength-below-exposure": "{strengthClass} ist für die gewählten Expositionsklassen zu schwach: Nötig sind mindestens {minFckCube} N/mm² Würfeldruckfestigkeit.",
+      "wz-exceeded": "Der w/z-Wert {wz} liegt über dem Grenzwert {maxWz} der Expositionsklassen.",
+      "fines-too-high": "Mehlkorngehalt {fines} kg/m³ ist zu hoch, erlaubt sind {max} kg/m³ (DIN 1045-2).",
+      "fly-ash-with-silica-fume": "Zu viel Flugasche neben Silikastaub für CEM I: f/z ≤ 3 · (0,22 − s/z).",
+      "high-air": "{airPct} % Luft ist ungewöhnlich viel und kostet viel Festigkeit."
+    },
+    "row": {
+      "cement": "Zement {type}",
+      "cementNote": "Bindemittel, bestimmt Festigkeit und Dauerhaftigkeit",
+      "flyAsh": "Flugasche",
+      "flyAshNote": "ersetzt einen Teil des Zements, weniger Wärme",
+      "silicaFume": "Silikastaub",
+      "silicaFumeNote": "füllt feinste Poren, dichter und fester",
+      "waterproofing": "Dichtungsmittel",
+      "waterproofingNote": "für wasserundurchlässigen Beton",
+      "aggregate": "Gesteinskörnung {sieve}, trocken",
+      "aggregateNote": "Sand und Kies, das Gerüst des Betons",
+      "water": "Wasser gesamt",
+      "waterNote": "bestimmt Verarbeitbarkeit und Festigkeit",
+      "addedWater": "davon zuzugeben",
+      "addedWaterNote": "der Rest steckt schon als Feuchte im Kies",
+      "bv": "Betonverflüssiger (BV)",
+      "bvNote": "spart ca. 7 % Wasser",
+      "fm": "Fließmittel (FM)",
+      "fmNote": "spart ca. 20 % Wasser, macht fließfähig",
+      "air": "Luftporenbildner (Ziel {pct} % Luft)",
+      "airNote": "Frost- und Tausalzwiderstand"
+    },
+    "grainGroups": "Aufteilung der Gesteinskörnung",
+    "group": "Korngruppe",
+    "dry": "trocken",
+    "moisture": "Feuchte",
+    "weighed": "abzuwiegen",
+    "howTo": "So wird gemischt",
+    "calculation": "Rechenweg nach Zement-Merkblatt B 20",
+    "calc": {
+      "limits": "Grenzwerte der Expositionsklassen: w/z ≤ {wz}, Zement ≥ {cement} kg/m³.",
+      "water": "Wasseranspruch aus Sieblinie und Konsistenz: {water} l/m³.",
+      "target": "Zielfestigkeit: {fck} / 0,92 + {margin} (Vorhaltemaß) + {loss} (Luftporen) = {target} N/mm².",
+      "wzStrength": "w/z aus der Walzkurve {walz} ist strenger als die Exposition ({exposure}): w/z = {wz}.",
+      "wzExposure": "Die Exposition ist maßgebend: {exposure} − 0,02 = {wz} (Walzkurve: {walz}).",
+      "cement": "Zement: {water} / {wz} = {cement} kg/m³.",
+      "equivalent": " Mit Zusatzstoffen: (w/z)eq = {wz}.",
+      "volumes": "Stoffraum in dm³: Zement {cement} + Wasser {water} + Flugasche {flyAsh} + Silikastaub {silicaFume} + Dichtungsmittel {waterproofing} + Luft {air} + Gesteinskörnung {aggregate} = 1000.",
+      "added": "Wasser {water} l/m³, davon zuzugeben {added} l/m³.",
+      "fines": "Mehlkorngehalt: {fines} kg/m³.",
+      "source": "Verfahren und Tafeln: Zement-Merkblatt B 20 (2.2017), Walzkurven digitalisiert aus Bild 1. Die Rechnung ist mit den Beispielen I bis IV des Merkblatts getestet."
+    },
+    "step": {
+      "dry": "Trocken vormischen: {cement} {type} und {aggregate} Gesteinskörnung.",
+      "flyAsh": "{amount} Flugasche untermischen.",
+      "silicaFume": "{amount} Silikastaub gleichmäßig einmischen.",
+      "waterproofing": "{amount} Dichtungsmittel einmischen.",
+      "water": "{amount} Wasser langsam zugeben.",
+      "plasticizer": "{amount} {name} ins Wasser geben.",
+      "air": "{amount} Luftporenbildner zugeben (Ziel {pct} % Luft).",
+      "mix": "Gut durchmischen, bis die Konsistenz {consistency} erreicht ist.",
+      "place": "Innerhalb von etwa 30 Minuten einbauen, verdichten und einige Tage feucht halten."
+    }
+  },
+  "order": {
+    "lead": "Beim Werk bestellen Sie einen Beton nach Eigenschaften. Diese Angaben braucht es, der Rest ist Sache des Werks.",
+    "small": "{volume} ist für ein Mischfahrzeug wenig: Werke berechnen einen Mindermengenzuschlag. Rechnen Sie mit Sackware oder Selbstmischen nach, oder fragen Sie nach einer Betontankstelle.",
+    "textTitle": "Bestelltext",
+    "copy": "Text kopieren",
+    "copied": "Kopiert",
+    "strength": "Druckfestigkeitsklasse",
+    "exposure": "Expositionsklassen",
+    "moisture": "Feuchtigkeitsklasse",
+    "consistency": "Konsistenz",
+    "grain": "Größtkorn",
+    "chloride": "Chloridgehalt",
+    "moistureClass": {
+      "WO": "trocken, meist innen",
+      "WF": "häufig oder lange feucht",
+      "WA": "feucht mit Salz von außen (Tausalz, Meer)",
+      "WS": "wie WA, dazu schwere Verkehrslast"
+    },
+    "tip": {
+      "volume": "Bestellt werden {volume}: aufgerundet auf halbe Kubikmeter, dazu etwas Reserve für Verlust.",
+      "surcharge": "Unter 3–6 m³ je Fahrt berechnen viele Werke einen Mindermengenzuschlag von etwa 23–35 € je fehlendem m³.",
+      "station": "Für kleine Mengen ab ca. 0,15 m³ gibt es Betontankstellen zum Selbstabholen mit Anhänger.",
+      "noWater": "Kein Wasser nachgeben: Das Werk haftet sonst nicht mehr für den Beton."
+    },
+    "text": {
+      "concrete": "Beton nach DIN EN 206 und DIN 1045-2: {line}",
+      "volume": "Menge: {volume} m³",
+      "air": "Luftporenbeton, Luftgehalt mindestens {pct} %",
+      "watertight": "WU-Beton nach DAfStb-Richtlinie (wasserundurchlässig)",
+      "delivery": "Lieferung per Fahrmischer, Termin und Zufahrt nach Absprache"
+    }
+  },
+  "details": {
+    "title": "Details anpassen",
+    "lead": "Jede Änderung rechnet sofort neu und steckt im Link, der sich teilen lässt.",
+    "volume": "Menge in m³",
+    "strength": "Druckfestigkeitsklasse",
+    "tooWeak": "Zu schwach für die Expositionsklassen: mindestens {min} N/mm² nötig.",
+    "sieveLine": "Sieblinie",
+    "consistency": "Konsistenz",
+    "aggregate": "Gesteinskörnung",
+    "cement": "Zement",
+    "margin": "Vorhaltemaß in N/mm²",
+    "marginHint": "Sicherheitszuschlag, 9 N/mm² wenn die Streuung unbekannt ist (B 20, 6.2).",
+    "plasticizer": "Verflüssiger",
+    "exposure": "Expositionsklassen",
+    "additions": "Zusatzmittel und Zusatzstoffe",
+    "air": "Luftgehalt gesamt in % (0 = ohne Luftporenbildner)",
+    "airHint": "Mindestens {min} % für luftporenbildenden Beton bei diesem Größtkorn.",
+    "flyAsh": "Flugasche in % des Zements",
+    "silicaFume": "Silikastaub in % des Zements",
+    "waterproofing": "Dichtungsmittel in % des Zements",
+    "moisture": "Eigenfeuchte der Gesteinskörnung berücksichtigen",
+    "moistureGroup": "Feuchte {group} in %"
+  },
+  "option": {
+    "strength": {
+      "C8_10": "Magerbeton, Sauberkeitsschicht",
+      "C12_15": "unbewehrte Füllungen",
+      "C16_20": "einfache Fundamente und Böden",
+      "C20_25": "Fundamente und Bodenplatten",
+      "C25_30": "Wände, Decken, Treppen, außen",
+      "C30_37": "Außenbauteile, Stützen",
+      "C35_45": "Tiefgaragen, Industrieböden",
+      "C40_50": "stark beanspruchte Bauteile",
+      "C45_55": "Fertigteile, Spannbeton",
+      "C50_60": "Hochbau und Ingenieurbau",
+      "C55_67": "hochfest, Spezialbau",
+      "C60_75": "hochfest, Spezialbau",
+      "C70_85": "Hochleistungsbeton",
+      "C80_95": "Hochleistungsbeton",
+      "C90_105": "Hochleistungsbeton",
+      "C100_115": "Hochleistungsbeton"
+    },
+    "sieve": {
+      "A8": "A8: Größtkorn 8 mm, grob",
+      "B8": "B8: Größtkorn 8 mm, ausgewogen",
+      "C8": "C8: Größtkorn 8 mm, sandreich",
+      "A16": "A16: Größtkorn 16 mm, grob",
+      "A_B16": "A/B16: Größtkorn 16 mm, zwischen A und B",
+      "B16": "B16: Größtkorn 16 mm, ausgewogen",
+      "C16": "C16: Größtkorn 16 mm, sandreich",
+      "A32": "A32: Größtkorn 32 mm, grob",
+      "A_B32": "A/B32: Größtkorn 32 mm, zwischen A und B",
+      "B32": "B32: Größtkorn 32 mm, ausgewogen",
+      "C32": "C32: Größtkorn 32 mm, sandreich"
+    },
+    "consistency": {
+      "C0": "C0: sehr steif, nur maschinell verdichtbar",
+      "F1": "F1: steif",
+      "F2": "F2: plastisch, mit Stochern verdichtbar",
+      "F3": "F3: weich, der Standard",
+      "F4": "F4: sehr weich, nur mit Fließmittel",
+      "F5": "F5: fließfähig, nur mit Fließmittel",
+      "F6": "F6: sehr fließfähig, nur mit Fließmittel"
+    },
+    "aggregate": {
+      "quartz-gravel": "Kiessand (Quarz), gerundet, der Standard",
+      "granite": "Granit",
+      "limestone": "Kalksteinsplitt, gebrochen",
+      "basalt": "Basalt, gebrochen",
+      "recycled-concrete": "Betonsplitt (Recycling)",
+      "recycled-masonry": "Bauwerksplitt (Recycling)",
+      "expanded-clay": "Blähton (Leichtbeton)",
+      "pumice": "Naturbims (Leichtbeton)",
+      "slag-pumice": "Hüttenbims (Leichtbeton)",
+      "barite": "Baryt (Schwerbeton)",
+      "magnetite": "Magnetit (Schwerbeton)",
+      "hematite": "Hämatit (Schwerbeton)"
+    },
+    "cement": {
+      "CEM_I_32_5_N": "Portlandzement, langsam",
+      "CEM_I_42_5_N": "Portlandzement, der Standard",
+      "CEM_I_42_5_R": "Portlandzement, schnell",
+      "CEM_I_52_5_N": "Portlandzement, hochfest",
+      "CEM_I_52_5_R": "Portlandzement, hochfest und schnell",
+      "CEM_II_A-S_42_5_N": "Portlandhüttenzement",
+      "CEM_II_B-S_42_5_N": "Portlandhüttenzement, viel Hüttensand",
+      "CEM_II_A-LL_42_5_N": "Portlandkalksteinzement",
+      "CEM_III_A_42_5_N": "Hochofenzement",
+      "CEM_III_B_42_5_N": "Hochofenzement, wenig Wärme"
+    },
+    "plasticizer": {
+      "none": "kein Verflüssiger",
+      "BV": "Betonverflüssiger (BV)",
+      "FM": "Fließmittel (FM)"
+    },
+    "exposureGroup": {
+      "none": "Kein Angriff",
+      "carbonation": "Bewehrung: Karbonatisierung",
+      "chloride": "Bewehrung: Chlorid (Tausalz)",
+      "seawater": "Bewehrung: Meerwasser",
+      "frost": "Frost",
+      "chemical": "Chemischer Angriff",
+      "wear": "Verschleiß"
+    },
+    "exposure": {
+      "X0": {
+        "name": "kein Angriff",
+        "description": "unbewehrt, ohne Frost und Verschleiß"
+      },
+      "XC1": {
+        "name": "trocken oder ständig nass",
+        "description": "Innenräume, Bauteile unter Wasser"
+      },
+      "XC2": {
+        "name": "nass, selten trocken",
+        "description": "Fundamente, Bauteile mit Erdkontakt"
+      },
+      "XC3": {
+        "name": "mäßig feucht",
+        "description": "außen, vor Regen geschützt"
+      },
+      "XC4": {
+        "name": "wechselnd nass und trocken",
+        "description": "Außenbauteile im Regen"
+      },
+      "XD1": {
+        "name": "mäßig feucht, Chlorid",
+        "description": "Sprühnebel mit Tausalz"
+      },
+      "XD2": {
+        "name": "nass, Chlorid",
+        "description": "Solebecken, chloridhaltiges Wasser"
+      },
+      "XD3": {
+        "name": "wechselnd nass und trocken, Chlorid",
+        "description": "Parkdecks, befahrene Flächen mit Tausalz"
+      },
+      "XS1": {
+        "name": "salzhaltige Luft",
+        "description": "Außenbauteile nahe der Küste"
+      },
+      "XS2": {
+        "name": "unter Meerwasser",
+        "description": "ständig im Meerwasser"
+      },
+      "XS3": {
+        "name": "Tidebereich",
+        "description": "Spritzwasser und Sprühnebel vom Meer"
+      },
+      "XF1": {
+        "name": "Frost ohne Taumittel, senkrecht",
+        "description": "Außenwände im Regen"
+      },
+      "XF2": {
+        "name": "Frost mit Taumittel, senkrecht",
+        "description": "Bauteile im Spritzbereich von Straßen"
+      },
+      "XF3": {
+        "name": "Frost ohne Taumittel, waagerecht",
+        "description": "offene Wasserbecken, Terrassen"
+      },
+      "XF4": {
+        "name": "Frost mit Taumittel, waagerecht",
+        "description": "Einfahrten und Wege mit Tausalz"
+      },
+      "XA1": {
+        "name": "schwach chemisch",
+        "description": "Behälter von Kläranlagen, Güllebehälter"
+      },
+      "XA2": {
+        "name": "mäßig chemisch",
+        "description": "angreifende Böden, Meerwasserbauten"
+      },
+      "XA3": {
+        "name": "stark chemisch",
+        "description": "Industrieabwasser, Gärfuttersilos"
+      },
+      "XM1": {
+        "name": "mäßiger Verschleiß",
+        "description": "Pkw auf Luftreifen"
+      },
+      "XM2": {
+        "name": "starker Verschleiß",
+        "description": "Stapler auf Luft- oder Vollgummireifen"
+      },
+      "XM3": {
+        "name": "sehr starker Verschleiß",
+        "description": "Stahlräder, Kettenfahrzeuge"
+      }
+    }
+  },
+  "decor": {
+    "title": "Deko-Werkstatt",
+    "lead": "Pflanzkübel, Schalen, Tische: dünne Stücke aus Feinbeton. Form und Maße ergeben die Menge, ein veröffentlichtes Rezept wird darauf skaliert.",
+    "routed": "Hier sind Sie richtig: Für so dünne Wände ist Feinbeton nötig, Normalbeton mit grobem Kies passt nicht hinein.",
+    "piece": "Ihr Stück",
+    "shape": "Form",
+    "dim": {
+      "length": "Länge in cm",
+      "width": "Breite in cm",
+      "height": "Höhe in cm",
+      "diameter": "Durchmesser in cm",
+      "wall": "Wandstärke in cm",
+      "count": "Stückzahl",
+      "open": "Offene Seiten",
+      "wallOptional": "leer lassen für massiv"
+    },
+    "volume": "Menge: {volume}",
+    "volumeMissing": "Maße unvollständig, gerechnet mit {volume}.",
+    "thickWall": "Ab etwa 6 cm Wandstärke lohnt sich Normalbeton:",
+    "recipe": "Rezept",
+    "preset": "Ausgangsrezept",
+    "presetOption": "ca. {fck} N/mm²: {label}",
+    "perLitre": "je Liter",
+    "row": {
+      "cement": "Zement",
+      "cementNote": "Bindemittel",
+      "sand": "Sand",
+      "sandNote": "gewaschen, bis 2 mm",
+      "quartz": "Quarzmehl",
+      "quartzNote": "füllt die Lücken zwischen den Körnern",
+      "fines": "Kalksteinmehl",
+      "finesNote": "feiner Füller",
+      "microsilica": "Mikrosilica",
+      "microsilicaNote": "reaktiver Feinststoff, macht dicht und fest",
+      "water": "Wasser",
+      "waterNote": "möglichst kalt",
+      "pce": "Fließmittel (PCE)",
+      "pceNote": "erst im Wasser auflösen",
+      "fibres": "Glasfasern (AR)",
+      "fibresNote": "alkaliresistent, gegen Risse"
+    },
+    "check": {
+      "wb": {
+        "label": "Wasser/Bindemittel",
+        "ok": "im UHPC-typischen Bereich 0,20–0,32",
+        "warn": "außerhalb des Literatur-Mittels, für DIY noch in Ordnung (bis 0,45)",
+        "error": "außerhalb 0,18–0,45, die Festigkeit weicht stark ab"
+      },
+      "pce": {
+        "label": "Fließmittel",
+        "ok": "im Datenblatt-Bereich 0,8–3,0 % vom Zement",
+        "warn": "am Rand des Datenblatt-Fensters 0,3–4,0 %, Produktdatenblatt prüfen",
+        "error": "außerhalb 0,3–4,0 %, anderes Fließmittel nötig"
+      },
+      "density": {
+        "label": "Frischbeton-Rohdichte",
+        "ok": "im typischen Bereich 2300–2500 kg/m³",
+        "warn": "etwas außerhalb (2200–2600 kg/m³)",
+        "error": "deutlich außerhalb, Rezept prüfen"
+      }
+    },
+    "steps": "So wird gemischt",
+    "source": {
+      "title": "Quelle und Festigkeit",
+      "work": "Quelle",
+      "link": "Link",
+      "checked": "geprüft am",
+      "strength": "Druckfestigkeit nach 28 Tagen",
+      "airCured": "ca. {air} N/mm² an der Luft gelagert (geschätzt), {water} N/mm² unter Wasser gemessen",
+      "measured": "{fck} N/mm², gemessen",
+      "estimated": "ca. {fck} N/mm², geschätzt aus dem w/b-Wert (nicht gemessen)"
+    },
+    "presets": {
+      "diy-pce-30l-batch": {
+        "label": "Feinbeton für Möbel (Quarzsand und Quarzmehl)",
+        "use": "Für Tische, Bänke und Gefäße mit 1–2,5 cm Wandstärke; im Mischer.",
+        "steps": [
+          {
+            "title": "Trockenmischung 1–2 Minuten vormischen",
+            "text": "({cement} Zement + {sand} Sand + {quartz} Quarzmehl). Der Sand besteht im Verhältnis 30 : 9 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm."
+          },
+          {
+            "title": "Ca. 80 % des Wassers zugeben",
+            "text": "und weitermischen."
+          },
+          {
+            "title": "PCE-Fließmittel im restlichen Wasser auflösen",
+            "text": "({pce} PCE, gesamt {water} Wasser) und zugeben — insgesamt mindestens 20 Minuten mischen (Freifallmischer). Je nach Zement etwas mehr Wasser nötig."
+          },
+          {
+            "title": "In geölte Form gießen und vibrieren",
+            "text": "oder leicht klopfen, bis keine Luftblasen mehr aufsteigen. Für Wandstärken von 1–2,5 cm mit Textilbewehrung."
+          },
+          {
+            "title": "Mindestens 24 h abdecken / feucht halten",
+            "text": ", vorsichtig ausschalen, mehrere Tage nachhärten lassen."
+          }
+        ]
+      },
+      "diy-mortar-20kg-batch": {
+        "label": "Hochfester Mörtel (Kalksteinmehl und Mikrosilica)",
+        "use": "Für feine, dichte Oberflächen und kleine, feste Teile.",
+        "steps": [
+          {
+            "title": "Zement, trockenen Sand und Feinstoffe mit ca. einem Drittel des Anmachwassers anmischen",
+            "text": "({cement} Zement + {sand} Sand + {fines} Kalksteinmehl + {microsilica} Mikrosilica + ca. ein Drittel von {water} Wasser). Sand muss trocken sein."
+          },
+          {
+            "title": "PCE-Fließmittel im restlichen Wasser auflösen",
+            "text": "({pce} PCE in den restlichen ca. zwei Dritteln des Wassers einrühren)."
+          },
+          {
+            "title": "Wasser-PCE-Mischung schrittweise zugeben und mindestens 5 Minuten kräftig mischen",
+            "text": "— idealerweise im Zwangsmischer. Das Fließmittel entwickelt seine volle Wirkung erst nach gleichmäßiger Verteilung."
+          },
+          {
+            "title": "In geölte Form gießen und vibrieren",
+            "text": "oder leicht klopfen, bis keine Luftblasen mehr aufsteigen."
+          },
+          {
+            "title": "Mindestens 24 h abdecken / feucht halten",
+            "text": ", vorsichtig ausschalen, mehrere Tage nachhärten lassen."
+          }
+        ]
+      },
+      "kassel-m1q-cem42-5r": {
+        "label": "Forschungs-UHPC, volle Fließmitteldosis",
+        "use": "Laborrezept der Uni Kassel: sehr fest, braucht Industrie-Fließmittel und Zwangsmischer.",
+        "steps": [
+          {
+            "title": "Trockenmischung gut homogenisieren",
+            "text": "{cement} Zement + {sand} Sand (0,125–0,5 mm) + {microsilica} Mikrosilica + {quartz} Quarzmehl. Bei UHPC ist die Vermischung der Feinststoffe entscheidend — mind. 2 Minuten trocken mischen."
+          },
+          {
+            "title": "PCE-Fließmittel im Anmachwasser auflösen",
+            "text": "({pce} PCE in {water} Wasser einrühren)."
+          },
+          {
+            "title": "Wasser-PCE-Mischung schrittweise zur Trockenmischung geben",
+            "text": "und insgesamt 5–10 Minuten kräftig mischen — idealerweise im Zwangsmischer. Achtung: Die Frischbetontemperatur kann bei größeren Mengen auf bis zu 40 °C steigen — der Beton steift dann schneller an."
+          },
+          {
+            "title": "In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten",
+            "text": ", bis der Beton selbstnivellierend wirkt."
+          },
+          {
+            "title": "Nach 24–48 Stunden ausschalen",
+            "text": "(je nach Verzögererwirkung des Fließmittels), dann mind. eine Woche feucht abgedeckt nachhärten lassen (z. B. unter feuchtem Tuch + Folie). Druckfestigkeit nach 28 d: ca. 100 N/mm²."
+          },
+          {
+            "title": "Optional für maximale Festigkeit",
+            "text": "28 Tage komplett unter Wasser bei 20 °C lagern → ~123 N/mm² (+23 %). Bei dieser sehr dichten Mischung wirkt das Wasserbad besonders stark gegen Selbst-Austrocknung der Matrix."
+          }
+        ]
+      },
+      "kassel-m1q-cem42-5r-soft": {
+        "label": "Forschungs-UHPC, moderate Fließmitteldosis (innen)",
+        "use": "Dieselbe Rezeptur mit handelsüblicher Fließmittelmenge, für innen.",
+        "steps": [
+          {
+            "title": "Trockenmischung gut homogenisieren",
+            "text": "{cement} Zement + {sand} Sand (0,125–0,5 mm) + {microsilica} Mikrosilica + {quartz} Quarzmehl. Mind. 2 Minuten trocken vormischen — die Feinststoff-Verteilung bestimmt die spätere Festigkeit."
+          },
+          {
+            "title": "PCE-Fließmittel im Anmachwasser auflösen",
+            "text": "({pce} PCE in {water} Wasser einrühren). Diese Variante kommt mit einer DIY-typischen PCE-Dosierung aus."
+          },
+          {
+            "title": "Wasser-PCE-Mischung schrittweise zur Trockenmischung geben",
+            "text": "und 5–10 Minuten kräftig mischen. Das Fließverhalten entwickelt sich verzögert — anfangs „grießig\", nach einigen Minuten geschmeidig."
+          },
+          {
+            "title": "In geölte Form gießen und mit handelsüblicher Rüttelflasche verdichten",
+            "text": ", bis Oberfläche glänzt."
+          },
+          {
+            "title": "Nach 24–48 h ausschalen",
+            "text": ", dann mind. eine Woche feucht abgedeckt nachhärten lassen. Druckfestigkeit nach 28 d: ca. 95 N/mm²."
+          },
+          {
+            "title": "Optional für maximale Festigkeit",
+            "text": "28 Tage komplett unter Wasser bei 20 °C lagern → ~103 N/mm² (+8 %). Bei dieser etwas weniger dichten Variante (w/z = 0,40) ist der Wasserbad-Effekt geringer, aber spürbar."
+          }
+        ]
+      },
+      "diy-white-15kg-laminate": {
+        "label": "Weißbeton für dünnwandige Möbel und Gefäße, außen",
+        "use": "Erste Schicht aufsprühen, dann von Hand mit Glasfasergewebe aufbauen; versiegelt wetterfest.",
+        "steps": [
+          {
+            "title": "Weißzement, Sand und Quarzmehl trocken vormischen",
+            "text": "({cement} Weißzement + {sand} Sand + {quartz} Quarzmehl). Der Sand besteht im Verhältnis 3 : 5 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm."
+          },
+          {
+            "title": "Wasser und Fließmittel zugeben",
+            "text": "({water} Wasser, {pce} plastifizierendes Fließmittel) und gründlich mischen."
+          },
+          {
+            "title": "Erste Schicht 1,5–2 mm dünn auf die Form sprühen",
+            "text": ", bis die Form nicht mehr durchscheint – so wird die Sichtseite glatt."
+          },
+          {
+            "title": "Weitere Schichten von Hand auftragen",
+            "text": "– dafür muss der Beton knetfähig sein – und dazwischen drei Lagen Glasfasergewebe einlegen."
+          },
+          {
+            "title": "24–48 Stunden aushärten lassen",
+            "text": "(je nach Raumtemperatur), ausschalen und für draußen mit Imprägnierung und Wachs versiegeln."
+          }
+        ]
+      },
+      "diy-white-bowl-4kg": {
+        "label": "Weißbeton für kleine Dekostücke (von Hand gemischt)",
+        "use": "Für kleine Mengen bis etwa 5 l, mit Fasern und Armierungsgewebe.",
+        "steps": [
+          {
+            "title": "Weißzement und Sand trocken vormischen",
+            "text": "({cement} Weißzement + {sand} Sand). Der Sand besteht im Verhältnis 1 : 2 aus Sand 0–2 mm und Quarzsand 0,063–0,3 mm."
+          },
+          {
+            "title": "Wasser mit Fließmittel und die Fasern zugeben",
+            "text": "({water} Wasser, {pce} Hochleistungsfließmittel, {fibres} Armierungsfasern) und von Hand gründlich mischen."
+          },
+          {
+            "title": "In die Form einbringen und Armierungsgewebe einlegen",
+            "text": "(zugeschnitten auf die Form)."
+          },
+          {
+            "title": "Nach ca. 48 Stunden ausschalen",
+            "text": "und mit Imprägnierung und Wachs versiegeln."
+          }
+        ]
+      }
+    }
+  },
+  "bagTool": {
+    "title": "Fertigmischung anpassen",
+    "lead": "Was mehr Zement, Flugasche, Silikastaub oder ein Verflüssiger an einem Sack Fertigbeton ändern würden, als Schätzung auf der Walzkurve.",
+    "warningTitle": "Nur zum Ausprobieren.",
+    "warning": "Die Hersteller verbieten, Fertigbeton etwas anderes als Wasser beizumischen. Mit Zusätzen gelten Festigkeitsklasse und Expositionsklassen vom Sack nicht mehr. Für tragende oder genormte Bauteile deshalb nicht verwenden.",
+    "base": "Ausgangsmischung",
+    "mix": "Sackware",
+    "mixOption": "Fertigbeton {strength}",
+    "mixHint": "Angenommene Zusammensetzung; die Datenblätter nennen den Zementgehalt nicht.",
+    "volume": "Menge in m³",
+    "options": "Zusätze",
+    "option": {
+      "extraCement": {
+        "name": "10 % mehr Zement",
+        "effect": "fester, aber mehr Schwinden"
+      },
+      "flyAsh": {
+        "name": "Flugasche (15 % des Zements)",
+        "effect": "weniger Wärme, dichter auf lange Sicht"
+      },
+      "silicaFume": {
+        "name": "Silikastaub (8 % des Zements)",
+        "effect": "deutlich dichter und fester"
+      },
+      "air": {
+        "name": "Luftporenbildner",
+        "effect": "frostbeständiger, kostet etwa 14 N/mm²"
+      },
+      "waterproofing": {
+        "name": "Dichtungsmittel (2 % des Zements)",
+        "effect": "weniger Wasseraufnahme, macht keinen WU-Beton"
+      }
+    },
+    "airWithSilica": "Luftporen und Silikastaub vertragen sich schlecht: Die Mischung wird steif und die Luftporen bilden sich schlecht aus. Nehmen Sie nur eins von beiden.",
+    "result": "Ergebnis",
+    "strength": "Aus {base} wird geschätzt {tuned} (ca. {fck} N/mm² Würfeldruckfestigkeit).",
+    "step": {
+      "mix": "{amount} Fertigbeton {strength} in den Mischer (≈ {bags} Säcke à {bag} kg).",
+      "extraCement": "{amount} Zement zugeben.",
+      "flyAsh": "{amount} Flugasche untermischen.",
+      "silicaFume": "{amount} Silikastaub gleichmäßig einmischen.",
+      "waterproofing": "{amount} Dichtungsmittel untermischen.",
+      "plasticizer": "{amount} {name} ins Anmachwasser geben.",
+      "air": "{amount} Luftporenbildner ins Anmachwasser geben.",
+      "water": "{amount} Wasser zugeben und gründlich mischen.",
+      "waterWith": "{amount} Wasser mit den Zusatzmitteln zugeben und gründlich mischen."
+    }
+  }
+}

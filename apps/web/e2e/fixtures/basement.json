@@ -1,0 +1,126 @@
+{
+ "answers": {
+  "indoor_dry": {
+   "noul": 0.0653,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9347
+  },
+  "rain": {
+   "noul": 0.0783,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9217
+  },
+  "ground": {
+   "noul": 0.9354,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9354
+  },
+  "frost": {
+   "noul": 0.2008,
+   "choice": null,
+   "score": null,
+   "confidence": 0.7992
+  },
+  "deicing_salt": {
+   "noul": 0.0644,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9356
+  },
+  "horizontal": {
+   "noul": 0.0741,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9259
+  },
+  "reinforced": {
+   "noul": 0.9127,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9127
+  },
+  "watertight": {
+   "noul": 0.9292,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9292
+  },
+  "traffic": {
+   "noul": null,
+   "choice": null,
+   "score": 0.3126,
+   "confidence": 0.5623
+  },
+  "element": {
+   "noul": null,
+   "choice": "wall",
+   "score": null,
+   "confidence": 0.5348
+  },
+  "fine_cast": {
+   "noul": 0.0664,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9336
+  },
+  "approach": {
+   "noul": null,
+   "choice": "scratch",
+   "score": null,
+   "confidence": 0.4219
+  },
+  "add_cement": {
+   "noul": 0.0971,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9029
+  },
+  "add_plasticizer": {
+   "noul": 0.0982,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9018
+  },
+  "shape": {
+   "noul": null,
+   "choice": "slab",
+   "score": null,
+   "confidence": 0.227
+  },
+  "open_sides": {
+   "noul": null,
+   "choice": "solid",
+   "score": null,
+   "confidence": 0.376
+  },
+  "role:8 m": {
+   "noul": null,
+   "choice": "length",
+   "score": null,
+   "confidence": 0.2202
+  },
+  "role:2,5 m": {
+   "noul": null,
+   "choice": "height",
+   "score": null,
+   "confidence": 0.2144
+  },
+  "role:24 cm": {
+   "noul": null,
+   "choice": "thickness",
+   "score": null,
+   "confidence": 0.1944
+  }
+ },
+ "candidates": [
+  "8 m",
+  "2,5 m",
+  "24 cm"
+ ],
+ "model": "laya-crete",
+ "ms": 64.9,
+ "text": "Kellerwand im Grundwasser, 8 m lang, 2,5 m hoch, 24 cm dick"
+}

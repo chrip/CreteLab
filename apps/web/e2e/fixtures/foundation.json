@@ -1,0 +1,113 @@
+{
+ "answers": {
+  "indoor_dry": {
+   "noul": 0.0781,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9219
+  },
+  "rain": {
+   "noul": 0.0838,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9162
+  },
+  "ground": {
+   "noul": 0.928,
+   "choice": null,
+   "score": null,
+   "confidence": 0.928
+  },
+  "frost": {
+   "noul": 0.2604,
+   "choice": null,
+   "score": null,
+   "confidence": 0.7396
+  },
+  "deicing_salt": {
+   "noul": 0.0594,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9406
+  },
+  "horizontal": {
+   "noul": 0.5179,
+   "choice": null,
+   "score": null,
+   "confidence": 0.5179
+  },
+  "reinforced": {
+   "noul": 0.8812,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8812
+  },
+  "watertight": {
+   "noul": 0.0727,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9273
+  },
+  "traffic": {
+   "noul": null,
+   "choice": null,
+   "score": 0.2672,
+   "confidence": 0.6116
+  },
+  "element": {
+   "noul": null,
+   "choice": "foundation",
+   "score": null,
+   "confidence": 0.4981
+  },
+  "fine_cast": {
+   "noul": 0.0607,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9393
+  },
+  "approach": {
+   "noul": null,
+   "choice": "scratch",
+   "score": null,
+   "confidence": 0.423
+  },
+  "add_cement": {
+   "noul": 0.1093,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8907
+  },
+  "add_plasticizer": {
+   "noul": 0.1062,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8938
+  },
+  "shape": {
+   "noul": null,
+   "choice": "slab",
+   "score": null,
+   "confidence": 0.1561
+  },
+  "open_sides": {
+   "noul": null,
+   "choice": "solid",
+   "score": null,
+   "confidence": 0.374
+  },
+  "role:20 cm": {
+   "noul": null,
+   "choice": "thickness",
+   "score": null,
+   "confidence": 0.195
+  }
+ },
+ "candidates": [
+  "3x2 m",
+  "20 cm"
+ ],
+ "model": "laya-crete",
+ "ms": 58.0,
+ "text": "Fundament für ein Gartenhaus 3x2 m, 20 cm dick"
+}

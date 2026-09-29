@@ -1,0 +1,113 @@
+{
+ "answers": {
+  "indoor_dry": {
+   "noul": 0.062,
+   "choice": null,
+   "score": null,
+   "confidence": 0.938
+  },
+  "rain": {
+   "noul": 0.9202,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9202
+  },
+  "ground": {
+   "noul": 0.0578,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9422
+  },
+  "frost": {
+   "noul": 0.9312,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9312
+  },
+  "deicing_salt": {
+   "noul": 0.0664,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9336
+  },
+  "horizontal": {
+   "noul": 0.8944,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8944
+  },
+  "reinforced": {
+   "noul": 0.0796,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9204
+  },
+  "watertight": {
+   "noul": 0.7967,
+   "choice": null,
+   "score": null,
+   "confidence": 0.7967
+  },
+  "traffic": {
+   "noul": null,
+   "choice": null,
+   "score": 0.3343,
+   "confidence": 0.533
+  },
+  "element": {
+   "noul": null,
+   "choice": "small",
+   "score": null,
+   "confidence": 0.4697
+  },
+  "fine_cast": {
+   "noul": 0.7953,
+   "choice": null,
+   "score": null,
+   "confidence": 0.7953
+  },
+  "approach": {
+   "noul": null,
+   "choice": "fine_mortar",
+   "score": null,
+   "confidence": 0.0134
+  },
+  "add_cement": {
+   "noul": 0.0998,
+   "choice": null,
+   "score": null,
+   "confidence": 0.9002
+  },
+  "add_plasticizer": {
+   "noul": 0.1062,
+   "choice": null,
+   "score": null,
+   "confidence": 0.8938
+  },
+  "shape": {
+   "noul": null,
+   "choice": "hollow",
+   "score": null,
+   "confidence": 0.2612
+  },
+  "open_sides": {
+   "noul": null,
+   "choice": "one",
+   "score": null,
+   "confidence": 0.3775
+  },
+  "role:2 cm": {
+   "noul": null,
+   "choice": "wall",
+   "score": null,
+   "confidence": 0.2754
+  }
+ },
+ "candidates": [
+  "40x40x40 cm",
+  "2 cm"
+ ],
+ "model": "laya-crete",
+ "ms": 58.8,
+ "text": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm"
+}

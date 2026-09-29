@@ -1,22 +1,29 @@
 {
-  "name": "crete-lab",
-  "version": "1.0.0",
-  "description": "Open-source concrete recipe calculator based on Zement-Merkblatt B 20",
+  "name": "cretelab",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Describe a concrete project in plain words and get a recipe: mix design after Zement-Merkblatt B 20, a fine-tuned Laya model, Nuxt and FastAPI.",
   "type": "module",
-  "scripts": {
-    "test": "bash tests/run-tests.sh",
-    "test:watch": "bash tests/run-tests.sh --watch"
-  },
-  "keywords": [
-    "concrete",
-    "calculator",
-    "beton",
-    "mix-design",
-    "B20"
-  ],
-  "author": "",
   "license": "MIT",
+  "author": "Christoph Schaefer",
+  "repository": "github:chrip/CreteLab",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w apps/web",
+    "build": "npm run build -w apps/web",
+    "test": "npm test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
   "devDependencies": {
-    "jsdom": "^29.0.0"
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
