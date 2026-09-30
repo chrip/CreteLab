@@ -758,5 +758,61 @@
     "title": "Something went wrong",
     "text": "The page could not be shown. Please try again.",
     "home": "Go to the start page"
+  },
+  "legal": {
+    "title": "Legal notice",
+    "lead": "Information according to § 5 of the German Digital Services Act (DDG).",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "responsible": "Responsible for the content according to § 18 (2) MStV",
+    "sameAsAbove": "Address as above.",
+    "project": "CreteLab is a private, non-commercial open-source project.",
+    "missing": "Not set up yet: name, address and email are read from the .env file when the site is built (template: .env.example).",
+    "bindingNote": "The German version of this page is legally binding."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "updated": "As of September 2026",
+    "s1": {
+      "title": "1. Controller",
+      "text": "The controller responsible for processing personal data on this website is:"
+    },
+    "s2": {
+      "title": "2. Overview",
+      "text": "CreteLab is a free tool without user accounts. There is no advertising, no tracking, no analytics and no embedded third-party services: fonts, scripts and images are loaded from our own server."
+    },
+    "s3": {
+      "title": "3. Visiting the website",
+      "text": "When you open a page, the server necessarily processes your IP address, the date and time, the address requested without its parameters, the status code, the amount of data sent and your browser identification. The IP address is shortened before it is stored: its last part is removed. To prevent abuse the server counts requests per IP address; this count is kept in memory only and is not stored. The logs are overwritten continuously (at most three files of 5 MB each). The connection is encrypted with TLS (HTTPS). The legal basis is Art. 6 (1) (f) GDPR; our legitimate interest is a secure and stable service."
+    },
+    "s4": {
+      "title": "4. Project descriptions",
+      "text": "When you have a description analysed, the text is sent to our server and analysed there by a language model in memory. The text is not stored, not logged, not passed on to third parties and not used for training. Please do not enter personal data such as names or addresses. The description is part of the address of the result page, so that you can save and share the result. The legal basis is Art. 6 (1) (f) GDPR; our legitimate interest is to deliver the analysis you asked for."
+    },
+    "s5": {
+      "title": "5. Storage in your browser",
+      "text": "The website stores two things on your device. Both are strictly necessary for the function you use (§ 25 (2) no. 2 TDDDG), so no consent is needed:",
+      "cookie": "the cookie “cretelab_locale” with the language you chose, valid for one year;",
+      "session": "in session storage, the descriptions analysed last with their results, so that switching pages does not need a new analysis. This data does not leave your device and is deleted when you close the tab."
+    },
+    "s6": {
+      "title": "6. Hosting",
+      "self": "The server is run by the controller.",
+      "provider": "The website runs on a server of {hosting}. The provider processes the data listed in section 3 on our behalf (Art. 28 GDPR)."
+    },
+    "s7": {
+      "title": "7. Links to other websites",
+      "text": "The site links to other websites such as GitHub or Hugging Face. Only when you follow a link does the privacy policy of that provider apply."
+    },
+    "s8": {
+      "title": "8. Your rights",
+      "text": "You have the right of access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and to object to processing based on Art. 6 (1) (f) (Art. 21). You can also lodge a complaint with a data protection supervisory authority (Art. 77), for example the one of the German state or the country you live in. To exercise these rights, contact the address above."
+    },
+    "bindingNote": "The German version of this page is legally binding."
+  },
+  "footer": {
+    "legal": "Legal notice",
+    "privacy": "Privacy"
   }
 }

@@ -758,5 +758,61 @@
     "title": "Etwas ist schiefgegangen",
     "text": "Die Seite konnte nicht angezeigt werden. Bitte versuchen Sie es noch einmal.",
     "home": "Zur Startseite"
+  },
+  "legal": {
+    "title": "Impressum",
+    "lead": "Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).",
+    "contact": "Kontakt",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "responsible": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+    "sameAsAbove": "Anschrift wie oben.",
+    "project": "CreteLab ist ein privates, nicht kommerzielles Open-Source-Projekt.",
+    "missing": "Noch nicht eingerichtet: Name, Anschrift und E-Mail werden beim Bauen der Seite aus der Datei .env gelesen (Vorlage: .env.example).",
+    "bindingNote": "Maßgeblich ist die deutsche Fassung dieser Seite."
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "updated": "Stand: September 2026",
+    "s1": {
+      "title": "1. Verantwortlicher",
+      "text": "Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website ist:"
+    },
+    "s2": {
+      "title": "2. Überblick",
+      "text": "CreteLab ist ein kostenloses Werkzeug ohne Nutzerkonto. Es gibt keine Werbung, kein Tracking, keine Analysewerkzeuge und keine eingebundenen Dienste Dritter: Schriften, Skripte und Bilder werden vom eigenen Server geladen."
+    },
+    "s3": {
+      "title": "3. Aufruf der Website",
+      "text": "Beim Aufruf einer Seite verarbeitet der Server technisch notwendig Ihre IP-Adresse, Datum und Uhrzeit, die aufgerufene Adresse ohne Parameter, den Statuscode, die übertragene Datenmenge und die Kennung Ihres Browsers. Die IP-Adresse wird vor dem Speichern gekürzt, der letzte Teil wird entfernt. Um Missbrauch abzuwehren, zählt der Server die Anfragen je IP-Adresse; diese Zählung liegt nur im Arbeitsspeicher und wird nicht gespeichert. Die Protokolle werden fortlaufend überschrieben (höchstens drei Dateien zu je 5 MB). Die Übertragung ist per TLS (HTTPS) verschlüsselt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist ein sicherer und stabiler Betrieb."
+    },
+    "s4": {
+      "title": "4. Projektbeschreibungen",
+      "text": "Wenn Sie eine Beschreibung auswerten lassen, wird der Text an unseren Server gesendet und dort von einem Sprachmodell im Arbeitsspeicher ausgewertet. Der Text wird nicht gespeichert, nicht protokolliert, nicht an Dritte weitergegeben und nicht zum Trainieren verwendet. Bitte geben Sie keine personenbezogenen Daten wie Namen oder Adressen ein. Die Beschreibung steht in der Adresse der Ergebnisseite, damit Sie das Ergebnis speichern und teilen können. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO; unser berechtigtes Interesse ist, die von Ihnen angefragte Auswertung zu liefern."
+    },
+    "s5": {
+      "title": "5. Speicherung in Ihrem Browser",
+      "text": "Die Website speichert zwei Dinge auf Ihrem Gerät, beide sind für die von Ihnen genutzte Funktion unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG), eine Einwilligung ist deshalb nicht nötig:",
+      "cookie": "das Cookie „cretelab_locale“ mit der gewählten Sprache, gültig für ein Jahr;",
+      "session": "im Sitzungsspeicher (sessionStorage) die zuletzt ausgewerteten Beschreibungen mit ihrem Ergebnis, damit ein Seitenwechsel nicht erneut ausgewertet werden muss. Diese Daten verlassen Ihr Gerät nicht und werden beim Schließen des Tabs gelöscht."
+    },
+    "s6": {
+      "title": "6. Hosting",
+      "self": "Der Server wird vom Verantwortlichen selbst betrieben.",
+      "provider": "Die Website läuft auf einem Server von {hosting}. Der Anbieter verarbeitet die unter Nummer 3 genannten Daten in unserem Auftrag (Art. 28 DSGVO)."
+    },
+    "s7": {
+      "title": "7. Links zu anderen Websites",
+      "text": "Die Seite verlinkt auf andere Websites, zum Beispiel GitHub oder Hugging Face. Erst wenn Sie einem Link folgen, gilt dort die Datenschutzerklärung des jeweiligen Anbieters."
+    },
+    "s8": {
+      "title": "8. Ihre Rechte",
+      "text": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch gegen Verarbeitungen auf Grundlage von Art. 6 Abs. 1 lit. f (Art. 21). Außerdem können Sie sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77), zum Beispiel bei der des Bundeslandes, in dem Sie wohnen. Wenden Sie sich dafür an die oben genannte Adresse."
+    },
+    "bindingNote": "Maßgeblich ist die deutsche Fassung dieser Seite."
+  },
+  "footer": {
+    "legal": "Impressum",
+    "privacy": "Datenschutz"
   }
 }

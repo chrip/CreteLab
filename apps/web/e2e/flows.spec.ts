@@ -162,3 +162,18 @@ test.describe('fine concrete page and bag tool', () => {
     await expect(page.getByRole('link', { name: 'GitHub' }).first()).toHaveAttribute('href', 'https://github.com/chrip/CreteLab');
   });
 });
+
+test.describe('legal pages', () => {
+  test('legal notice and privacy policy are linked from every page footer', async ({ page }) => {
+    for (const path of ['/de', '/de/plan', '/de/fine-concrete', '/en/about']) {
+      await page.goto(path);
+      await expect(page.locator('footer').getByRole('link', { name: /Impressum|Legal notice/ })).toBeVisible();
+      await expect(page.locator('footer').getByRole('link', { name: /Datenschutz|Privacy/ })).toBeVisible();
+    }
+    await page.goto('/de');
+    await page.locator('footer').getByRole('link', { name: 'Datenschutz' }).click();
+    await expect(page.getByRole('heading', { name: 'Datenschutzerklärung' })).toBeVisible();
+    await page.locator('footer').getByRole('link', { name: 'Impressum' }).click();
+    await expect(page.getByRole('heading', { name: 'Impressum' })).toBeVisible();
+  });
+});

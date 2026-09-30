@@ -92,8 +92,8 @@ Without the API the planner and both tools still work; only the description sear
 ```bash
 # on the server: the repository, the model weights in models/laya-crete, DNS pointing to it,
 # ports 80 and 443 open
-DOMAIN=cretelab.example SITE_URL=https://cretelab.example \
-  docker compose -f compose.yaml -f compose.tls.yaml up -d --build
+cp .env.example .env        # domain, public address, legal notice; .env is never committed
+docker compose -f compose.yaml -f compose.tls.yaml up -d --build
 ```
 
 - **HTTPS:** Caddy (`deploy/Caddyfile`) fetches and renews the Let's Encrypt certificate
@@ -105,8 +105,12 @@ DOMAIN=cretelab.example SITE_URL=https://cretelab.example \
   Nuxt's inline scripts are computed after each build, `apps/web/scripts/csp.mjs`), HSTS,
   `frame-ancestors 'none'`, `nosniff`, a restrictive Permissions-Policy.
 - **Privacy:** descriptions are not stored; nginx logs IP addresses without their last
-  part, Caddy logs nothing. The only cookie is the language choice.
-- **Before going public:** add a legal notice (Impressum) and a privacy policy (Datenschutzerklärung).
+  part and paths without query strings, Caddy logs nothing, logs rotate at 3 × 5 MB. The
+  only cookie is the language choice.
+- **Legal notice and privacy policy:** `/legal` and `/privacy`, linked in every footer.
+  Name, address and email come from `.env` at build time (`LEGAL_*`, see `.env.example`), so
+  no personal address is in the repository. The privacy policy describes exactly what the
+  site does; keep it in step when that changes.
 
 ## The model
 

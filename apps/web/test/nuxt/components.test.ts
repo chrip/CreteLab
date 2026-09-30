@@ -1,7 +1,7 @@
 import { DEFAULT_MIX, planProject, type MixInput } from '@cretelab/engine';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { useNuxtApp } from '#imports';
+import { useNuxtApp, useRuntimeConfig } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
 import BagToolApp from '~/components/BagToolApp.vue';
 import DescribeForm from '~/components/DescribeForm.vue';
@@ -12,6 +12,8 @@ import NumberInput from '~/components/NumberInput.vue';
 import OrderPanel from '~/components/OrderPanel.vue';
 import ProductionTabs from '~/components/ProductionTabs.vue';
 import UnderstoodPanel from '~/components/UnderstoodPanel.vue';
+import LegalPage from '~/pages/legal.vue';
+import PrivacyPage from '~/pages/privacy.vue';
 
 // The texts below are German; the test browser would otherwise pick its own language.
 beforeAll(async () => {
@@ -297,5 +299,40 @@ describe('DescribeForm errors', () => {
     const w = await mountSuspended(DescribeForm, { props: { error: 'busy' } });
     expect(w.find('[role="alert"]').text()).toContain('in ein paar Sekunden');
     expect(w.find('[role="alert"]').text()).not.toContain('HTTP');
+  });
+});
+
+describe('legal notice and privacy policy', () => {
+  const legal = () => useRuntimeConfig().public.legal as Record<string, string>;
+  const set = (v: Record<string, string>) => Object.assign(legal(), v);
+  const clear = () => set({ name: '', street: '', city: '', country: '', email: '', phone: '', hosting: '' });
+
+  it('without .env values the pages say what is missing instead of showing an address', async () => {
+    clear();
+    const w = await mountSuspended(LegalPage);
+    expect(w.find('[data-testid="operator-missing"]').text()).toContain('.env');
+    expect(w.find('address').exists()).toBe(false);
+  });
+
+  it('the legal notice shows the operator from the environment', async () => {
+    set({ name: 'Max Mustermann', street: 'Musterstraße 1', city: '12345 Musterstadt', country: 'Deutschland', email: 'kontakt@example.org' });
+    const w = await mountSuspended(LegalPage);
+    expect(w.find('address').text()).toContain('Musterstraße 1');
+    expect(w.find('a[href="mailto:kontakt@example.org"]').exists()).toBe(true);
+    expect(w.text()).toContain('§ 5');
+    clear();
+  });
+
+  it('the privacy policy names the controller, the browser storage and the hosting', async () => {
+    set({ name: 'Max Mustermann', street: 'Musterstraße 1', city: '12345 Musterstadt', email: 'kontakt@example.org' });
+    const w = await mountSuspended(PrivacyPage);
+    expect(w.find('address').text()).toContain('Max Mustermann');
+    expect(w.text()).toContain('cretelab_locale');
+    expect(w.text()).toContain('sessionStorage');
+    expect(w.find('[data-testid="hosting"]').text()).toContain('selbst betrieben');
+    set({ hosting: 'Hoster GmbH, Beispielweg 2, 10115 Berlin' });
+    const w2 = await mountSuspended(PrivacyPage);
+    expect(w2.find('[data-testid="hosting"]').text()).toContain('Hoster GmbH');
+    clear();
   });
 });

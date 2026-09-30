@@ -3,7 +3,9 @@
     <div class="inner small muted">
       <p>
         <a :href="repository" rel="noopener">GitHub</a> · MIT ·
-        <NuxtLinkLocale to="/about">{{ $t('nav.about') }}</NuxtLinkLocale>
+        <NuxtLinkLocale to="/about">{{ $t('nav.about') }}</NuxtLinkLocale> ·
+        <NuxtLinkLocale to="/legal">{{ $t('footer.legal') }}</NuxtLinkLocale> ·
+        <NuxtLinkLocale to="/privacy">{{ $t('footer.privacy') }}</NuxtLinkLocale>
       </p>
     </div>
   </footer>

@@ -2,6 +2,13 @@
 # With HTTPS on a public server: see compose.tls.yaml.
 # The fine-tuned model is expected in ./models/laya-crete (build it with ml/train.py);
 # the API runs as an unprivileged user, so the files must be readable for others (chmod -R a+rX models).
+# Logs are rotated: at most 3 files of 5 MB per service (the privacy policy relies on it).
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 5m
+    max-file: "3"
+
 services:
   web:
     build:
@@ -10,6 +17,14 @@ services:
       args:
         # The public address, for canonical and language links.
         NUXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:8080}
+        # Legal notice and privacy policy, from .env (see .env.example; .env is not committed).
+        NUXT_PUBLIC_LEGAL_NAME: ${LEGAL_NAME:-}
+        NUXT_PUBLIC_LEGAL_STREET: ${LEGAL_STREET:-}
+        NUXT_PUBLIC_LEGAL_CITY: ${LEGAL_CITY:-}
+        NUXT_PUBLIC_LEGAL_COUNTRY: ${LEGAL_COUNTRY:-}
+        NUXT_PUBLIC_LEGAL_EMAIL: ${LEGAL_EMAIL:-}
+        NUXT_PUBLIC_LEGAL_PHONE: ${LEGAL_PHONE:-}
+        NUXT_PUBLIC_LEGAL_HOSTING: ${LEGAL_HOSTING:-}
     ports:
       # Local only by default; on a server put compose.tls.yaml (Caddy) in front instead.
       - "${CRETELAB_BIND:-127.0.0.1}:${CRETELAB_PORT:-8080}:80"
@@ -19,6 +34,7 @@ services:
     restart: unless-stopped
     mem_limit: 128m
     security_opt: [no-new-privileges:true]
+    logging: *logging
 
   api:
     build: services/api
@@ -33,6 +49,7 @@ services:
     cpus: ${API_CPUS:-4}
     mem_limit: 4g
     security_opt: [no-new-privileges:true]
+    logging: *logging
 
 volumes:
   hf-cache:
