@@ -1,26 +1,29 @@
 <template>
-  <!-- A concrete mixer in a rounded badge: drum with its ring band and opening, two legs. -->
+  <!-- A reinforcement mesh, the lower-left half covered by poured concrete, and a spark of AI. -->
   <svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-    <rect class="badge" width="32" height="32" rx="8" />
-    <mask :id="mask">
-      <rect width="32" height="32" fill="#fff" />
-      <ellipse cx="21.7" cy="9.3" rx="4" ry="1.15" transform="rotate(45 21.7 9.3)" fill="#000" />
-      <path d="M22.83 25.14 L5.86 8.17" stroke="#000" stroke-width="1.2" />
-    </mask>
-    <g class="mixer" transform="translate(16 16) scale(.74) translate(-14.5 -18.5)">
-      <g :mask="`url(#${mask})`">
-        <circle cx="13.5" cy="17.5" r="8.6" />
-        <path d="M20.78 21.25 L25.36 13.56 L17.44 5.64 L9.75 10.22 Z" />
-        <ellipse cx="21.4" cy="9.6" rx="5.6" ry="2.2" transform="rotate(45 21.4 9.6)" />
-      </g>
-      <path class="legs" d="M9.5 24 L7 30 M18 24.5 L20.5 30" />
+    <defs>
+      <clipPath :id="`${id}-in`"><rect x="2.7" y="2.7" width="26.6" height="26.6" rx="5.3" /></clipPath>
+      <clipPath :id="`${id}-out`"><rect width="32" height="32" rx="8" /></clipPath>
+      <!-- A transparent gap between the concrete and the mesh, so the edge reads on any background. -->
+      <mask :id="`${id}-gap`">
+        <rect width="32" height="32" fill="#fff" />
+        <path :d="CONCRETE" fill="#000" stroke="#000" stroke-width="2.6" stroke-linejoin="round" />
+      </mask>
+    </defs>
+    <g class="mesh" :mask="`url(#${id}-gap)`">
+      <rect x="1.6" y="1.6" width="28.8" height="28.8" rx="6.4" />
+      <path :clip-path="`url(#${id}-in)`" d="M9.5 0 V32 M16 0 V32 M22.5 0 V32 M0 9.5 H32 M0 16 H32 M0 22.5 H32" />
     </g>
+    <path class="fill" :clip-path="`url(#${id}-out)`" :d="CONCRETE" />
+    <path class="fill" d="M26.2 3.1999999999999997 Q26.98 5.02 28.8 5.8 Q26.98 6.58 26.2 8.4 Q25.42 6.58 23.599999999999998 5.8 Q25.42 5.02 26.2 3.1999999999999997 Z" />
   </svg>
 </template>
 
 <script setup lang="ts">
-// Mask ids must be unique on the page.
-const mask = `logo-${useId()}`;
+// The concrete edge follows the diagonal with a gentle wave (a pour front, not a ruler line).
+const CONCRETE = 'M-2.85 -1.15 L-1.91 -0.59 L-0.97 -0.03 L-0.05 0.55 L0.85 1.15 L1.72 1.78 L2.57 2.43 L3.37 3.13 L4.14 3.86 L4.87 4.63 L5.57 5.43 L6.22 6.28 L6.85 7.15 L7.45 8.05 L8.03 8.97 L8.59 9.91 L9.15 10.85 L9.71 11.79 L10.27 12.73 L10.85 13.65 L11.45 14.55 L12.08 15.42 L12.74 16.26 L13.43 17.07 L14.16 17.84 L14.93 18.57 L15.74 19.26 L16.58 19.92 L17.45 20.55 L18.35 21.15 L19.27 21.73 L20.21 22.29 L21.15 22.85 L22.09 23.41 L23.03 23.97 L23.95 24.55 L24.85 25.15 L25.72 25.78 L26.57 26.43 L27.37 27.13 L28.14 27.86 L28.87 28.63 L29.57 29.43 L30.22 30.28 L30.85 31.15 L31.45 32.05 L32.03 32.97 L32.59 33.91 L33.15 34.85 L-2 34 Z';
+// Clip and mask ids must be unique on the page.
+const id = `logo-${useId()}`;
 </script>
 
 <style scoped>
@@ -30,18 +33,13 @@ const mask = `logo-${useId()}`;
   flex: none;
 }
 
-.badge {
-  fill: var(--accent);
-}
-
-.mixer {
-  fill: var(--bg);
-}
-
-.legs {
+.mesh {
   fill: none;
-  stroke: var(--bg);
-  stroke-width: 2.4;
-  stroke-linecap: round;
+  stroke: var(--accent);
+  stroke-width: 2.2;
+}
+
+.fill {
+  fill: var(--accent);
 }
 </style>
