@@ -10,7 +10,10 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'de' },
-      link: [{ rel: 'icon', type: 'image/png', href: '/icon.png' }],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', href: '/icon.png' },
+      ],
       meta: [{ name: 'theme-color', content: '#1f5f8b' }],
     },
   },

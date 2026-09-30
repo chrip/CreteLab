@@ -2,7 +2,7 @@
   <header class="header">
     <div class="inner">
       <NuxtLinkLocale to="/" class="brand">
-        <img src="/icon.png" alt="" width="32" height="32" />
+        <AppLogo />
         <span>CreteLab</span>
       </NuxtLinkLocale>
       <nav :aria-label="$t('nav.label')">
