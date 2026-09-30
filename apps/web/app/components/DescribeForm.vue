@@ -13,6 +13,7 @@
         {{ busy ? $t('describe.working') : $t(submitLabel) }}
       </button>
     </div>
+    <ThinkingStatus v-if="busy" />
     <p v-if="error" :id="`${id}-error`" class="note blocker" role="alert">
       {{ error === 'busy' ? $t('describe.busy') : $t('describe.error', { reason: error }) }}
     </p>

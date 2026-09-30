@@ -23,7 +23,15 @@
     "example3": "Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut",
     "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm",
     "working": "Wird ausgewertet …",
-    "unchanged": "Ändern Sie die Beschreibung, um sie neu auszuwerten."
+    "unchanged": "Ändern Sie die Beschreibung, um sie neu auszuwerten.",
+    "steps": {
+      "1": "Beschreibung lesen …",
+      "2": "Maße und Form erkennen …",
+      "3": "Frost, Regen und Tausalz prüfen …",
+      "4": "Bewehrung und Belastung einschätzen …",
+      "5": "Expositionsklassen ableiten …",
+      "6": "Rezept vorbereiten …"
+    }
   },
   "facts": {
     "title": "Das wurde automatisch verstanden",

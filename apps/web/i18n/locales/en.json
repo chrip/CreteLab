@@ -23,7 +23,15 @@
     "example3": "Driveway 6 x 3 m, 15 cm thick, salted in winter",
     "example4": "Outdoor planter 60x30x40 cm, 2 cm walls",
     "working": "Analysing …",
-    "unchanged": "Change the description to analyse it again."
+    "unchanged": "Change the description to analyse it again.",
+    "steps": {
+      "1": "Reading the description …",
+      "2": "Finding sizes and shape …",
+      "3": "Checking frost, rain and de-icing salt …",
+      "4": "Judging reinforcement and load …",
+      "5": "Deriving exposure classes …",
+      "6": "Preparing the recipe …"
+    }
   },
   "facts": {
     "title": "What was understood automatically",

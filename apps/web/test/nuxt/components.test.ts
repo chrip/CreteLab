@@ -1,6 +1,6 @@
 import { DEFAULT_MIX, planProject, type MixInput } from '@cretelab/engine';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { useNuxtApp, useRuntimeConfig } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
 import BagToolApp from '~/components/BagToolApp.vue';
@@ -8,6 +8,7 @@ import DescribeForm from '~/components/DescribeForm.vue';
 import FineConcreteApp from '~/components/FineConcreteApp.vue';
 import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
+import ThinkingStatus from '~/components/ThinkingStatus.vue';
 import NumberInput from '~/components/NumberInput.vue';
 import OrderPanel from '~/components/OrderPanel.vue';
 import ProductionTabs from '~/components/ProductionTabs.vue';
@@ -360,5 +361,30 @@ describe('legal notice and privacy policy', () => {
     const w2 = await mountSuspended(PrivacyPage);
     expect(w2.find('[data-testid="hosting"]').text()).toContain('Hoster GmbH');
     clear();
+  });
+});
+
+describe('ThinkingStatus', () => {
+  it('types a step, deletes it from the end and types the next one', async () => {
+    vi.useFakeTimers();
+    const w = await mountSuspended(ThinkingStatus);
+    const typed = () => w.find('.typed').text();
+    vi.advanceTimersByTime(32 * 5);
+    await nextTick();
+    expect('Beschreibung lesen …'.startsWith(typed())).toBe(true);
+    expect(typed().length).toBeGreaterThan(2);
+    vi.advanceTimersByTime(32 * 30 + 700 + 14 * 30 + 32 * 4);
+    await nextTick();
+    expect('Maße und Form erkennen …'.startsWith(typed())).toBe(true);
+    expect(w.find('[aria-live]').text()).toBe('Maße und Form erkennen …');
+    w.unmount();
+    vi.useRealTimers();
+  });
+
+  it('shows up below the text box while the model works', async () => {
+    const w = await mountSuspended(DescribeForm, { props: { initial: 'Kellerwand', busy: true } });
+    expect(w.find('[data-testid="thinking"]').exists()).toBe(true);
+    await w.setProps({ busy: false });
+    expect(w.find('[data-testid="thinking"]').exists()).toBe(false);
   });
 });
