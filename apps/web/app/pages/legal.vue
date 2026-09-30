@@ -3,21 +3,16 @@
     <h1>{{ $t('legal.title') }}</h1>
     <p class="muted">{{ $t('legal.lead') }}</p>
     <OperatorAddress />
-    <template v-if="configured">
-      <h2>{{ $t('legal.contact') }}</h2>
-      <p>
-        {{ $t('legal.email') }}: <a :href="`mailto:${legal.email}`">{{ legal.email }}</a>
-        <template v-if="legal.phone"><br />{{ $t('legal.phone') }}: {{ legal.phone }}</template>
-      </p>
-      <h2>{{ $t('legal.responsible') }}</h2>
-      <p>{{ legal.name }}, {{ $t('legal.sameAsAbove') }}</p>
-    </template>
-    <p>{{ $t('legal.project') }}</p>
+    <p v-if="configured && legal.email">
+      {{ $t('legal.email') }}: <a :href="`mailto:${legal.email}`">{{ legal.email }}</a>
+    </p>
     <p v-if="locale !== 'de'" class="small muted">{{ $t('legal.bindingNote') }}</p>
   </article>
 </template>
 
 <script setup lang="ts">
+// The minimum for a non-commercial site: name and address (§ 18 (1) MStV). An email address
+// is shown when LEGAL_EMAIL is set (§ 5 DDG asks for one from commercial services).
 const { legal, configured } = useLegal();
 const { t, locale } = useI18n();
 useSeoMeta({ title: () => t('legal.title'), robots: 'noindex' });
@@ -26,10 +21,5 @@ useSeoMeta({ title: () => t('legal.title'), robots: 'noindex' });
 <style scoped>
 .legal {
   max-width: 44rem;
-}
-
-.legal h2 {
-  font-size: 1.1rem;
-  margin-top: 1.5rem;
 }
 </style>

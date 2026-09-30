@@ -6,7 +6,7 @@
     <h2>{{ $t('privacy.s1.title') }}</h2>
     <p>{{ $t('privacy.s1.text') }}</p>
     <OperatorAddress />
-    <p v-if="configured">{{ $t('legal.email') }}: <a :href="`mailto:${legal.email}`">{{ legal.email }}</a></p>
+    <p v-if="configured && legal.email">{{ $t('legal.email') }}: <a :href="`mailto:${legal.email}`">{{ legal.email }}</a></p>
 
     <section v-for="n in [2, 3, 4]" :key="n">
       <h2>{{ $t(`privacy.s${n}.title`) }}</h2>

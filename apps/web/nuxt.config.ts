@@ -38,7 +38,6 @@ export default defineNuxtConfig({
         city: '',
         country: '',
         email: '',
-        phone: '',
         /** Who hosts the server, if not the operator themselves (name and address). */
         hosting: '',
       },

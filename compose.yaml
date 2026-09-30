@@ -23,7 +23,6 @@ services:
         NUXT_PUBLIC_LEGAL_CITY: ${LEGAL_CITY:-}
         NUXT_PUBLIC_LEGAL_COUNTRY: ${LEGAL_COUNTRY:-}
         NUXT_PUBLIC_LEGAL_EMAIL: ${LEGAL_EMAIL:-}
-        NUXT_PUBLIC_LEGAL_PHONE: ${LEGAL_PHONE:-}
         NUXT_PUBLIC_LEGAL_HOSTING: ${LEGAL_HOSTING:-}
     ports:
       # Local only by default; on a server put compose.tls.yaml (Caddy) in front instead.

@@ -305,7 +305,7 @@ describe('DescribeForm errors', () => {
 describe('legal notice and privacy policy', () => {
   const legal = () => useRuntimeConfig().public.legal as Record<string, string>;
   const set = (v: Record<string, string>) => Object.assign(legal(), v);
-  const clear = () => set({ name: '', street: '', city: '', country: '', email: '', phone: '', hosting: '' });
+  const clear = () => set({ name: '', street: '', city: '', country: '', email: '', hosting: '' });
 
   it('without .env values the pages say what is missing instead of showing an address', async () => {
     clear();
@@ -314,12 +314,19 @@ describe('legal notice and privacy policy', () => {
     expect(w.find('address').exists()).toBe(false);
   });
 
-  it('the legal notice shows the operator from the environment', async () => {
-    set({ name: 'Max Mustermann', street: 'Musterstraße 1', city: '12345 Musterstadt', country: 'Deutschland', email: 'kontakt@example.org' });
+  it('the legal notice is name and address only (§ 18 (1) MStV)', async () => {
+    set({ name: 'Max Mustermann', street: 'Musterstraße 1', city: '12345 Musterstadt' });
     const w = await mountSuspended(LegalPage);
     expect(w.find('address').text()).toContain('Musterstraße 1');
+    expect(w.text()).toContain('§ 18 Abs. 1');
+    expect(w.find('a[href^="mailto:"]').exists()).toBe(false);
+    clear();
+  });
+
+  it('an email address appears when LEGAL_EMAIL is set', async () => {
+    set({ name: 'Max Mustermann', street: 'Musterstraße 1', city: '12345 Musterstadt', email: 'kontakt@example.org' });
+    const w = await mountSuspended(LegalPage);
     expect(w.find('a[href="mailto:kontakt@example.org"]').exists()).toBe(true);
-    expect(w.text()).toContain('§ 5');
     clear();
   });
 

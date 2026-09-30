@@ -761,14 +761,9 @@
   },
   "legal": {
     "title": "Impressum",
-    "lead": "Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG).",
-    "contact": "Kontakt",
+    "lead": "Angaben gemäß § 18 Abs. 1 Medienstaatsvertrag (MStV).",
     "email": "E-Mail",
-    "phone": "Telefon",
-    "responsible": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
-    "sameAsAbove": "Anschrift wie oben.",
-    "project": "CreteLab ist ein privates, nicht kommerzielles Open-Source-Projekt.",
-    "missing": "Noch nicht eingerichtet: Name, Anschrift und E-Mail werden beim Bauen der Seite aus der Datei .env gelesen (Vorlage: .env.example).",
+    "missing": "Noch nicht eingerichtet: Name und Anschrift werden beim Bauen der Seite aus der Datei .env gelesen (Vorlage: .env.example).",
     "bindingNote": "Maßgeblich ist die deutsche Fassung dieser Seite."
   },
   "privacy": {

@@ -761,14 +761,9 @@
   },
   "legal": {
     "title": "Legal notice",
-    "lead": "Information according to § 5 of the German Digital Services Act (DDG).",
-    "contact": "Contact",
+    "lead": "Information according to § 18 (1) of the German Interstate Media Treaty (MStV).",
     "email": "Email",
-    "phone": "Phone",
-    "responsible": "Responsible for the content according to § 18 (2) MStV",
-    "sameAsAbove": "Address as above.",
-    "project": "CreteLab is a private, non-commercial open-source project.",
-    "missing": "Not set up yet: name, address and email are read from the .env file when the site is built (template: .env.example).",
+    "missing": "Not set up yet: name and address are read from the .env file when the site is built (template: .env.example).",
     "bindingNote": "The German version of this page is legally binding."
   },
   "privacy": {
