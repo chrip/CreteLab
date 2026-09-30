@@ -46,7 +46,7 @@ services:
       LAYA_MAX_PARALLEL: ${LAYA_MAX_PARALLEL:-2}
     restart: unless-stopped
     cpus: ${API_CPUS:-4}
-    mem_limit: 4g
+    mem_limit: ${API_MEM:-4g}
     security_opt: [no-new-privileges:true]
     logging: *logging
 
