@@ -59,7 +59,7 @@ def test_two_thirds_german(descriptions):
     assert german / len(descriptions) == pytest.approx(2 / 3, abs=0.02)
 
 
-@pytest.mark.parametrize("file", ["votes.jsonl", "votes_fine_cast.jsonl", "votes_v2.jsonl"])
+@pytest.mark.parametrize("file", ["votes.jsonl", "votes_fine_cast.jsonl", "votes_v2.jsonl", "votes_objects.jsonl"])
 def test_every_vote_belongs_to_a_description_and_gives_allowed_answers(file, texts):
     rows = jsonl(ML / "data" / file)
     assert rows

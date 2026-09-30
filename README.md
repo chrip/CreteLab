@@ -91,11 +91,11 @@ Without the API the planner and both tools still work; only the description sear
 
 The weights are not in the repository, the data is. `ml/DATA.md` describes how it was
 made: a local Qwen3.8-27B teacher on a DGX Spark wrote and labelled the descriptions
-(about 20 hours, 9.2 M generated tokens), and fine-tuning takes about 30 minutes on a GPU.
+(about 24 hours in several runs, 11.8 M generated tokens), and fine-tuning takes about an hour on a GPU.
 
 ```bash
 cd ml && python train.py --out ../models/laya-crete    # needs laya + torch
-python evaluate.py --model ../models/laya-crete          # 93.5 % on 66 hand-labelled descriptions
+python evaluate.py --model ../models/laya-crete          # 93.6 % on 66, 91.5 % on 30 more (--file eval_objects.jsonl)
 ```
 
 ## Sources

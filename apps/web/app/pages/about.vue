@@ -59,9 +59,10 @@
         together with a pipeline that resumes per description, recovered the run without losing work.
       </li>
       <li>
-        On 66 hand-labelled descriptions the teacher never saw, the model gets 93.5 % of the answers right, against
+        On 66 hand-labelled descriptions the teacher never saw, the model gets 93.6 % of the answers right, against
         49.7 % for the untrained base model. It reads 98 % of the measurement roles correctly and gets the volume right
-        for all 23 descriptions that give a size.
+        for all 23 descriptions that give a size. A second set of 30 objects from a web survey (sinks, shower trays,
+        light wells) went from 89.6 % to 91.5 % after 2,249 descriptions of 75 new object types were added.
       </li>
     </ul>
     <p>
@@ -127,11 +128,11 @@ const { repository } = useRuntimeConfig().public;
 const TRAINING: [string, string][] = [
   ['Teacher model', 'Qwen3.8-27B (NVFP4), served locally with vLLM'],
   ['Hardware', 'NVIDIA DGX Spark (ASUS Ascent GX10), 128 GB unified memory'],
-  ['Training data', '2,100 descriptions (1,400 German, 700 English, 70 topics), 19,800 teacher votes'],
-  ['Labelling run', 'about 20 hours, 8 requests in parallel, about 170 tokens/s'],
-  ['Tokens', 'about 2.4 M prompt and 9.2 M generated tokens'],
-  ['Same run in the cloud', 'about $84 to $194 with Claude Opus 5.5, $42 to $97 with the batch API'],
-  ['Fine-tuning', "31,466 training items, 29 minutes on the Spark's GPU (10 to 20 hours on a laptop CPU)"],
+  ['Training data', '4,349 descriptions (2,899 German, 1,450 English, 145 topics), 22,409 teacher votes'],
+  ['Labelling runs', 'about 24 hours in several runs, 8 requests in parallel, about 150 to 170 tokens/s'],
+  ['Tokens', 'about 3.5 M prompt and 11.8 M generated tokens'],
+  ['Same runs in the cloud', 'about $110 to $250 with Claude Opus 5.5, $55 to $125 with the batch API'],
+  ['Fine-tuning', "65,032 training items, 60 minutes on the Spark's GPU (a day or more on a laptop CPU)"],
   ['Inference', '20 to 60 ms per description on the GPU, about 2 s on the CPU of the Docker image'],
 ];
 

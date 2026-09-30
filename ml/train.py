@@ -33,6 +33,9 @@ from laya.common import QTYPES, build_model, build_sequence, proper_reward, rend
 HERE = Path(__file__).parent
 from cretelab_api.measurements import QUESTIONS  # noqa: E402
 SMOOTHING = 0.25  # pseudo-votes per option, so a 5/5 vote becomes ~0.9 rather than 1.0
+# Score questions are read as the expected level, so uniform smoothing pulls a single
+# "0" vote up to 0.75 (it rounds to 1). They get far less of it.
+SCORE_SMOOTHING = 0.02
 
 
 def question_for(qid):
@@ -66,9 +69,11 @@ def soft_targets(votes_paths):
     for text, per_q in counts.items():
         targets[text] = {}
         for qid, c in per_q.items():
-            opts = options(question_for(qid))
+            q = question_for(qid)
+            opts = options(q)
             n = sum(c.values())
-            targets[text][qid] = [(c.get(o, 0) + SMOOTHING) / (n + SMOOTHING * len(opts)) for o in opts]
+            k = SCORE_SMOOTHING if q["type"] == "score" else SMOOTHING
+            targets[text][qid] = [(c.get(o, 0) + k) / (n + k * len(opts)) for o in opts]
     return targets
 
 
