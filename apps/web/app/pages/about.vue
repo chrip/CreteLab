@@ -65,7 +65,7 @@
       <a :href="LAYA" rel="noopener">Laya</a> trains these probabilities with Reinforcement Learning for Calibrated Decisions (RLCD):
       reinforcement learning against strictly proper scoring rules. For every question the training draws several slightly perturbed versions of the model's answer,
       rewards each one with a proper scoring rule (log score and spherical score, plus the ranked probability score for
-      ordered levels such as traffic) and moves the model towards the versions that scored above the group average.
+      levels with a natural order, such as low, medium and high) and moves the model towards the versions that scored above the group average.
       A proper scoring rule is maximised only by reporting the true probabilities, so the model earns the most when its
       confidence matches the evidence. The fine-tuning for CreteLab adds a cross-entropy term on the teacher's
       vote shares and, at the end, fits one temperature per question type on a held-out tenth of the data to calibrate
