@@ -9,7 +9,6 @@
         <NuxtLinkLocale to="/plan">{{ $t('nav.planner') }}</NuxtLinkLocale>
         <NuxtLinkLocale to="/fine-concrete">{{ $t('nav.fineConcrete') }}</NuxtLinkLocale>
         <NuxtLinkLocale to="/bag">{{ $t('nav.bag') }}</NuxtLinkLocale>
-        <NuxtLinkLocale to="/about">{{ $t('nav.about') }}</NuxtLinkLocale>
       </nav>
       <NuxtLink
         class="lang"
