@@ -98,7 +98,8 @@
       <li><a href="https://nuxt.com" rel="noopener">Nuxt</a> and <a href="https://vuejs.org" rel="noopener">Vue</a> for the website.</li>
     </ul>
     <p>
-      Christoph Schaefer, a senior software developer, builds CreteLab as a side project. For load-bearing parts, ask a
+      <a href="https://github.com/chrip" rel="noopener">Christoph Schaefer</a>, a software developer, builds CreteLab as a
+      side project. For load-bearing parts, ask a
       structural engineer.
     </p>
   </article>
