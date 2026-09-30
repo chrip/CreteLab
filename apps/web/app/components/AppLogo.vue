@@ -1,21 +1,30 @@
 <template>
-  <!-- A reinforcement mesh, the lower-left half covered by poured concrete, and a spark of AI. -->
+  <!-- A reinforcement mesh, the upper-left half covered by poured concrete with a spark of AI in it. -->
   <svg class="logo" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
     <defs>
       <clipPath :id="`${id}-in`"><rect x="2.7" y="2.7" width="26.6" height="26.6" rx="5.3" /></clipPath>
       <clipPath :id="`${id}-out`"><rect width="32" height="32" rx="8" /></clipPath>
+      <!-- The spark is cut out of the concrete. -->
+      <mask :id="`${id}-spark`">
+        <rect width="32" height="32" fill="#fff" />
+        <path d="M8.6 20.1 Q9.59 22.41 11.9 23.4 Q9.59 24.39 8.6 26.7 Q7.61 24.39 5.3 23.4 Q7.61 22.41 8.6 20.1 Z" fill="#000" />
+      </mask>
       <!-- A transparent gap between the concrete and the mesh, so the edge reads on any background. -->
       <mask :id="`${id}-gap`">
         <rect width="32" height="32" fill="#fff" />
         <path :d="CONCRETE" fill="#000" stroke="#000" stroke-width="2.6" stroke-linejoin="round" />
       </mask>
     </defs>
-    <g class="mesh" :mask="`url(#${id}-gap)`">
-      <rect x="1.6" y="1.6" width="28.8" height="28.8" rx="6.4" />
-      <path :clip-path="`url(#${id}-in)`" d="M9.5 0 V32 M16 0 V32 M22.5 0 V32 M0 9.5 H32 M0 16 H32 M0 22.5 H32" />
+    <!-- Mirrored top to bottom, so the edge of the pour rises to the right. -->
+    <g transform="matrix(1 0 0 -1 0 32)">
+      <g class="mesh" :mask="`url(#${id}-gap)`">
+        <rect x="1.6" y="1.6" width="28.8" height="28.8" rx="6.4" />
+        <path :clip-path="`url(#${id}-in)`" d="M9.5 0 V32 M16 0 V32 M22.5 0 V32 M0 9.5 H32 M0 16 H32 M0 22.5 H32" />
+      </g>
+      <g :mask="`url(#${id}-spark)`">
+        <path class="fill" :clip-path="`url(#${id}-out)`" :d="CONCRETE" />
+      </g>
     </g>
-    <path class="fill" :clip-path="`url(#${id}-out)`" :d="CONCRETE" />
-    <path class="fill" d="M26.2 3.1999999999999997 Q26.98 5.02 28.8 5.8 Q26.98 6.58 26.2 8.4 Q25.42 6.58 23.599999999999998 5.8 Q25.42 5.02 26.2 3.1999999999999997 Z" />
   </svg>
 </template>
 
