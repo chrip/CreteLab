@@ -62,8 +62,8 @@
       certain.
     </p>
     <p>
-      <a :href="LAYA" rel="noopener">Laya</a> trains these probabilities with what its authors call RLCD: reinforcement learning against strictly proper
-      scoring rules. For every question the training draws several slightly perturbed versions of the model's answer,
+      <a :href="LAYA" rel="noopener">Laya</a> trains these probabilities with Reinforcement Learning for Calibrated Decisions (RLCD):
+      reinforcement learning against strictly proper scoring rules. For every question the training draws several slightly perturbed versions of the model's answer,
       rewards each one with a proper scoring rule (log score and spherical score, plus the ranked probability score for
       ordered levels such as traffic) and moves the model towards the versions that scored above the group average.
       A proper scoring rule is maximised only by reporting the true probabilities, so the model earns the most when its
