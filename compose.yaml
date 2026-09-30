@@ -43,6 +43,8 @@ services:
       LAYA_MODEL_DIR: /models/laya-crete
       # Descriptions the model works on at once; more only slows every one of them down.
       LAYA_MAX_PARALLEL: ${LAYA_MAX_PARALLEL:-2}
+      # Threads per description: the CPU limit below.
+      LAYA_THREADS: ${API_CPUS:-4}
     restart: unless-stopped
     cpus: ${API_CPUS:-4}
     mem_limit: ${API_MEM:-4g}

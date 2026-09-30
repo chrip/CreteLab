@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -29,7 +30,12 @@ class LayaPredictor:
                 f"No fine-tuned model at {model_dir}: build it with ml/train.py or copy models/laya-crete there"
             )
         import laya  # heavy (torch); imported only when the real model is used
+        import torch
 
+        # PyTorch counts physical cores and picks 1 thread on a 2-vCore VPS; compose passes the
+        # container's CPU limit instead (2 threads: 10 s → 7 s per description there).
+        if threads := int(os.environ.get("LAYA_THREADS", "0")):
+            torch.set_num_threads(threads)
         self._agent = laya.Agent(str(model_dir))
         self.name = model_dir.name
 
