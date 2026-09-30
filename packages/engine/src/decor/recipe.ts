@@ -67,33 +67,19 @@ export function scaleDecorRecipe(preset: DecorPreset, volumeM3: number): DecorRe
   };
 }
 
-export type Level = 'ok' | 'warn' | 'error';
-export interface PlausibilityCheck {
-  id: 'wb' | 'pce' | 'density';
-  value: number;
-  level: Level;
-}
+/** What someone mixing this recipe at home must know, from the ingredients it contains. */
+export type HandlingNote = 'cement' | 'microsilica' | 'quartz' | 'fibres' | 'superplasticizer';
 
 /**
- * Windows from the literature: w/b 0,20–0,32 typical for UHPC (DAfStb Heft 561, fib MC 2010);
- * the white DIY mixes of Grey Element sit at 0,42, so the tolerant band reaches 0,45.
- * PCE 0,8–3,0 % of cement (Sika/BASF datasheets, absolute 0,3–4,0 %), fresh density
- * 2300–2500 kg/m³ (fib MC 2010 §5.1). Outside the outer band is an error.
+ * Safety and handling notes for a recipe: cement is caustic when wet (GHS H315/H318 on every
+ * cement safety data sheet), microsilica and quartz flour are fine, respirable dusts,
+ * glass fibres irritate the skin, and superplasticiser must be measured exactly.
  */
-const WINDOWS = {
-  wb: { ok: [0.2, 0.32], warn: [0.18, 0.45], digits: 2 },
-  pce: { ok: [0.8, 3.0], warn: [0.3, 4.0], digits: 1 },
-  density: { ok: [2300, 2500], warn: [2200, 2600], digits: 0 },
-} as const;
-
-// Classify the value as shown (rounded), so "4,0 %" is never an error because of 4,01 %.
-function classify(id: PlausibilityCheck['id'], value: number): PlausibilityCheck {
-  const w = WINDOWS[id];
-  const shown = Math.round(value * 10 ** w.digits) / 10 ** w.digits;
-  const inside = ([lo, hi]: readonly [number, number]) => shown >= lo && shown <= hi;
-  return { id, value, level: inside(w.ok) ? 'ok' : inside(w.warn) ? 'warn' : 'error' };
-}
-
-export function checkDecorRecipe(r: DecorRecipe): PlausibilityCheck[] {
-  return [classify('wb', r.wb), classify('pce', r.pcePct), classify('density', r.freshDensity)];
+export function handlingNotes(r: DecorRecipe): HandlingNote[] {
+  const notes: HandlingNote[] = ['cement'];
+  if (r.microsilicaKg > 0) notes.push('microsilica');
+  if (r.quartzPowderKg > 0) notes.push('quartz');
+  if (r.fibresG > 0) notes.push('fibres');
+  if (r.superplasticizerL > 0) notes.push('superplasticizer');
+  return notes;
 }

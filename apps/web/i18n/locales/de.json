@@ -568,26 +568,6 @@
       "fibres": "Glasfasern (AR)",
       "fibresNote": "alkaliresistent, gegen Risse"
     },
-    "check": {
-      "wb": {
-        "label": "Wasser/Bindemittel",
-        "ok": "im UHPC-typischen Bereich 0,20–0,32",
-        "warn": "außerhalb des Literatur-Mittels, für DIY noch in Ordnung (bis 0,45)",
-        "error": "außerhalb 0,18–0,45, die Festigkeit weicht stark ab"
-      },
-      "pce": {
-        "label": "Fließmittel",
-        "ok": "im Datenblatt-Bereich 0,8–3,0 % vom Zement",
-        "warn": "am Rand des Datenblatt-Fensters 0,3–4,0 %, Produktdatenblatt prüfen",
-        "error": "außerhalb 0,3–4,0 %, anderes Fließmittel nötig"
-      },
-      "density": {
-        "label": "Frischbeton-Rohdichte",
-        "ok": "im typischen Bereich 2300–2500 kg/m³",
-        "warn": "etwas außerhalb (2200–2600 kg/m³)",
-        "error": "deutlich außerhalb, Rezept prüfen"
-      }
-    },
     "steps": "So wird gemischt",
     "source": {
       "title": "Quelle und Festigkeit",
@@ -762,6 +742,14 @@
       }
     },
     "assumed": "Angenommen, weil in der Beschreibung nicht angegeben: {sizes}. Bitte prüfen und bei Bedarf ändern.",
-    "holdsWater": "Das Stück hält Wasser. Wählen Sie eine dichte Mischung mit wenig Wasser, zum Beispiel den hochfesten Mörtel mit Mikrosilica, verdichten Sie gut und imprägnieren oder versiegeln Sie die Oberfläche nach dem Aushärten."
+    "holdsWater": "Das Stück hält Wasser. Wählen Sie eine dichte Mischung mit wenig Wasser, zum Beispiel den hochfesten Mörtel mit Mikrosilica, verdichten Sie gut und imprägnieren oder versiegeln Sie die Oberfläche nach dem Aushärten.",
+    "handling": {
+      "title": "Wichtig beim Mischen",
+      "cement": "Zement wird mit Wasser ätzend: Handschuhe (Nitril) und Schutzbrille tragen, Spritzer auf der Haut sofort mit Wasser abwaschen.",
+      "microsilica": "Mikrosilica ist ein sehr feiner Staub: beim Abwiegen und Einfüllen eine FFP2-Maske tragen und nicht offen schütten.",
+      "quartz": "Quarzmehl enthält lungengängigen Quarzstaub: eine FFP2-Maske tragen, langsam einfüllen und Staub feucht aufwischen statt zu fegen.",
+      "fibres": "Glasfasern reizen die Haut: mit Handschuhen zugeben.",
+      "superplasticizer": "Fließmittel genau abmessen, am besten mit einer Einwegspritze oder einem Messbecher: schon etwas zu viel lässt die Mischung entmischen."
+    }
   }
 }

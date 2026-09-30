@@ -70,12 +70,12 @@
         </table>
       </div>
 
-      <ul class="checks">
-        <li v-for="c in checks" :key="c.id" class="note" :class="LEVEL_CLASS[c.level]">
-          <strong>{{ $t(`fineConcrete.check.${c.id}.label`) }}: {{ checkValue(c) }}</strong>
-          – {{ $t(`fineConcrete.check.${c.id}.${c.level}`) }}
-        </li>
-      </ul>
+      <section class="handling" aria-labelledby="handling-title">
+        <h3 id="handling-title">{{ $t('fineConcrete.handling.title') }}</h3>
+        <ul>
+          <li v-for="n in notes" :key="n">{{ $t(`fineConcrete.handling.${n}`) }}</li>
+        </ul>
+      </section>
 
       <div>
         <h3>{{ $t('fineConcrete.steps') }}</h3>
@@ -105,8 +105,8 @@
 // Fine concrete page: thin pieces from fine mortar. Shape and size give the volume, a published
 // recipe is scaled to it. No exposure classes: these mixes are outside B 20.
 import {
-  DECOR_PRESETS, DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, checkDecorRecipe, decorPreset, expectedFck,
-  planProject, scaleDecorRecipe, shapeVolume, type PlausibilityCheck, type Shape,
+  DECOR_PRESETS, DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, decorPreset, handlingNotes, expectedFck,
+  planProject, scaleDecorRecipe, shapeVolume, type Shape,
 } from '@cretelab/engine';
 import { formatAmount, formatCompact, formatNumber, formatVolume, type Locale } from '~/utils/format';
 import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
@@ -122,7 +122,6 @@ const FIELDS: Record<Shape, (keyof FineConcreteState & ('length' | 'width' | 'he
   ring: ['diameter', 'height', 'wall'],
   bowl: ['diameter', 'wall'],
 };
-const LEVEL_CLASS = { ok: 'ok', warn: 'warn', error: 'blocker' } as const;
 
 const { state, reset } = useUrlState(decodeFineConcrete, encodeFineConcrete);
 const { analyse, busy, error } = useAnalysis();
@@ -168,7 +167,7 @@ const thickWall = computed(() => (state.value.wall ?? 0) / 100 >= 2 * MIN_SITE_C
 const presets = computed(() => [...DECOR_PRESETS].sort((a, b) => expectedFck(a) - expectedFck(b)));
 const preset = computed(() => decorPreset(state.value.preset) ?? DECOR_PRESETS[0]!);
 const recipe = computed(() => scaleDecorRecipe(preset.value, batchVolume.value));
-const checks = computed(() => checkDecorRecipe(recipe.value));
+const notes = computed(() => handlingNotes(recipe.value));
 
 const rows = computed(() => {
   const r = recipe.value;
@@ -206,12 +205,6 @@ const steps = computed(() =>
     return { title: t(`fineConcrete.presets.${preset.value.key}.steps.${i}.title`), text: /^[,.;:]/.test(text) ? text : ` ${text}` };
   }),
 );
-
-function checkValue(c: PlausibilityCheck) {
-  if (c.id === 'wb') return formatNumber(loc.value, c.value, 2);
-  if (c.id === 'pce') return `${formatNumber(loc.value, c.value, 1)} %`;
-  return `${formatNumber(loc.value, c.value, 0)} kg/m³`;
-}
 
 const strengthText = computed(() => {
   const p = preset.value;
@@ -263,11 +256,24 @@ async function onDescribe(text: string) {
   margin-top: 1rem;
 }
 
-.checks {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 0.5rem;
+.handling {
+  border-left: 4px solid var(--warn);
+  background: var(--warn-soft);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.handling h3 {
+  margin-bottom: 0.4rem;
+}
+
+.handling ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.handling li + li {
+  margin-top: 0.3rem;
 }
 
 .source {

@@ -568,26 +568,6 @@
       "fibres": "Glass fibres (AR)",
       "fibresNote": "alkali-resistant, against cracks"
     },
-    "check": {
-      "wb": {
-        "label": "Water/binder",
-        "ok": "in the typical UHPC range 0.20–0.32",
-        "warn": "outside the literature average, still fine for DIY (up to 0.45)",
-        "error": "outside 0.18–0.45, the strength will differ a lot"
-      },
-      "pce": {
-        "label": "Superplasticiser",
-        "ok": "in the datasheet range 0.8–3.0 % of cement",
-        "warn": "at the edge of the datasheet window 0.3–4.0 %, check the product datasheet",
-        "error": "outside 0.3–4.0 %, a different superplasticiser is needed"
-      },
-      "density": {
-        "label": "Fresh density",
-        "ok": "in the typical range 2300–2500 kg/m³",
-        "warn": "slightly outside (2200–2600 kg/m³)",
-        "error": "far outside, check the recipe"
-      }
-    },
     "steps": "How to mix",
     "source": {
       "title": "Source and strength",
@@ -762,6 +742,14 @@
       }
     },
     "assumed": "Assumed because the description does not say: {sizes}. Check them and change them if needed.",
-    "holdsWater": "The piece holds water. Choose a dense mix with little water, for example the high-strength mortar with microsilica, compact it well and impregnate or seal the surface once it has cured."
+    "holdsWater": "The piece holds water. Choose a dense mix with little water, for example the high-strength mortar with microsilica, compact it well and impregnate or seal the surface once it has cured.",
+    "handling": {
+      "title": "Important when mixing",
+      "cement": "Cement is caustic once it is wet: wear nitrile gloves and safety glasses, and wash splashes off your skin with water at once.",
+      "microsilica": "Microsilica is a very fine dust: wear an FFP2 mask when weighing and pouring it, and do not tip it out from a height.",
+      "quartz": "Quartz flour contains respirable quartz dust: wear an FFP2 mask, pour it slowly, and wipe up dust damp instead of sweeping it.",
+      "fibres": "Glass fibres irritate the skin: add them with gloves on.",
+      "superplasticizer": "Measure the superplasticiser exactly, ideally with a disposable syringe or a measuring cup: even a little too much makes the mix separate."
+    }
   }
 }

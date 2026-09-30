@@ -9,12 +9,11 @@ import { describe, expect, it } from 'vitest';
 import {
   DECOR_PRESETS, DEFAULT_DENSITIES, decorPreset, expectedFck, type DecorBatch, type DecorPreset,
 } from '../../src/decor/presets';
-import { batchVolumeL, checkDecorRecipe, scaleDecorRecipe, type DecorRecipe, type Level } from '../../src/decor/recipe';
+import { batchVolumeL, handlingNotes, scaleDecorRecipe, type DecorRecipe } from '../../src/decor/recipe';
 
 const PRESET = DECOR_PRESETS[0]!;
 const batchM3 = (p: DecorPreset) => batchVolumeL(p.batch, p.densities) / 1000;
 const withBatch = (p: DecorPreset, b: Partial<DecorBatch>): DecorPreset => ({ ...p, batch: { ...p.batch, ...b } });
-const level = (r: DecorRecipe, id: 'wb' | 'pce' | 'density') => checkDecorRecipe(r).find((c) => c.id === id)!.level;
 const COMPONENTS = ['cementKg', 'sandKg', 'quartzPowderKg', 'finesKg', 'microsilicaKg', 'waterL', 'superplasticizerL', 'fibresG'] as const;
 
 describe('batchVolumeL', () => {
@@ -142,83 +141,6 @@ describe('w/b formula', () => {
   });
 });
 
-describe('checkDecorRecipe', () => {
-  it('three checks, w/b, PCE, density, with the unrounded value', () => {
-    const r = scaleDecorRecipe(PRESET, 0.01);
-    const checks = checkDecorRecipe(r);
-    expect(checks.map((c) => c.id)).toEqual(['wb', 'pce', 'density']);
-    expect(checks.map((c) => c.value)).toEqual([r.wb, r.pcePct, r.freshDensity]);
-    for (const c of checks) expect(Object.keys(c).sort()).toEqual(['id', 'level', 'value']);
-  });
-
-  it.each<[string, Level, Level, Level]>([
-    // w/b 0,35 is wetter than the UHPC window 0,20–0,32: warn.
-    ['diy-pce-30l-batch', 'warn', 'ok', 'ok'],
-    ['diy-mortar-20kg-batch', 'ok', 'ok', 'ok'],
-    // w/b 0,1855 shows as 0,19 (warn below 0,20); PCE 4,011 % shows as 4,0 % (warn, not error).
-    ['kassel-m1q-cem42-5r', 'warn', 'warn', 'ok'],
-    // Fresh density 2255 kg/m³ is below 2300: warn.
-    ['kassel-m1q-cem42-5r-soft', 'ok', 'ok', 'warn'],
-    // The white DIY mixes are wet (w/b ≈ 0,42): inside the tolerant DIY band up to 0,45.
-    ['diy-white-15kg-laminate', 'warn', 'warn', 'warn'],
-    ['diy-white-bowl-4kg', 'warn', 'ok', 'warn'],
-  ])('%s: w/b %s, PCE %s, density %s', (key, wb, pce, density) => {
-    const r = scaleDecorRecipe(decorPreset(key)!, 0.01);
-    expect(checkDecorRecipe(r).map((c) => c.level)).toEqual([wb, pce, density]);
-  });
-
-  it('a third of the water drives w/b far below the envelope: error', () => {
-    const r = scaleDecorRecipe(withBatch(PRESET, { waterL: PRESET.batch.waterL / 3 }), batchM3(PRESET));
-    expect(level(r, 'wb')).toBe('error');
-  });
-
-  it('5 l PCE on 25 kg cement (22 %) is far above the datasheet window: error', () => {
-    const r = scaleDecorRecipe(withBatch(PRESET, { superplasticizerMl: 5000 }), batchM3(PRESET));
-    expect(level(r, 'pce')).toBe('error');
-  });
-
-  // Values are classified as displayed (w/b 2 decimals, PCE 1 decimal, density 0 decimals),
-  // so a value that shows as the edge of a window is inside it.
-  const recipe = (o: Partial<DecorRecipe>): DecorRecipe => ({ ...scaleDecorRecipe(PRESET, 0.01), wb: 0.25, pcePct: 1.5, freshDensity: 2400, ...o });
-
-  it.each<[number, Level]>([
-    [0.1951, 'ok'], // shows 0,20
-    [0.3249, 'ok'], // shows 0,32
-    [0.3251, 'warn'], // shows 0,33
-    [0.1849, 'warn'], // shows 0,18
-    [0.4049, 'warn'], // shows 0,40
-    [0.4249, 'warn'], // shows 0,42, the white DIY mixes
-    [0.4549, 'warn'], // shows 0,45
-    [0.4551, 'error'], // shows 0,46
-    [0.174, 'error'], // shows 0,17
-  ])('w/b %s → %s', (wb, expected) => {
-    expect(level(recipe({ wb }), 'wb')).toBe(expected);
-  });
-
-  it.each<[number, Level]>([
-    [0.76, 'ok'], // shows 0,8
-    [3.04, 'ok'], // shows 3,0
-    [3.06, 'warn'], // shows 3,1
-    [4.04, 'warn'], // shows 4,0
-    [4.06, 'error'], // shows 4,1
-    [0.26, 'warn'], // shows 0,3
-    [0.24, 'error'], // shows 0,2
-  ])('PCE %s %% → %s', (pcePct, expected) => {
-    expect(level(recipe({ pcePct }), 'pce')).toBe(expected);
-  });
-
-  it.each<[number, Level]>([
-    [2299.6, 'ok'], // shows 2300
-    [2500.4, 'ok'], // shows 2500
-    [2299.4, 'warn'],
-    [2600.4, 'warn'], // shows 2600
-    [2600.6, 'error'],
-    [2199.4, 'error'],
-  ])('density %s → %s', (freshDensity, expected) => {
-    expect(level(recipe({ freshDensity }), 'density')).toBe(expected);
-  });
-});
-
 describe('Kassel M1Q (CEM I 42,5 R, w/c 0,24): the engine reproduces the published figures', () => {
   const KASSEL = decorPreset('kassel-m1q-cem42-5r')!;
 
@@ -237,10 +159,9 @@ describe('Kassel M1Q (CEM I 42,5 R, w/c 0,24): the engine reproduces the publish
     expect(freshDensity).toBeLessThan(2500);
   });
 
-  it('PCE 29,4 / 733 = 4,011 % shows as 4,0 % and is warn, not error', () => {
+  it('PCE 29,4 / 733 = 4,011 % of the cement', () => {
     const r = scaleDecorRecipe(KASSEL, 1);
     expect(r.pcePct).toBeCloseTo((29.4 / 733) * 100, 2);
-    expect(level(r, 'pce')).toBe('warn');
   });
 
   it('Σ m/ρ is within 30 dm³ of 1 m³ (a per-m³ recipe; the gap is air)', () => {
@@ -263,14 +184,12 @@ describe('Kassel M1Q soft (w/c 0,40)', () => {
     expect(SOFT.measuredFck).toBe(103);
   });
 
-  it('PCE ≈ 1,1 % of cement: ok', () => {
-    expect(level(scaleDecorRecipe(SOFT, 1), 'pce')).toBe('ok');
+  it('PCE ≈ 1,1 % of cement', () => {
+    expect(scaleDecorRecipe(SOFT, 1).pcePct).toBeCloseTo((7.3 / 664) * 100, 2);
   });
 
-  it('w/b ≈ 0,31 in the ok window (the paper states 0,26; both are ok)', () => {
-    const r = scaleDecorRecipe(SOFT, 1);
-    expect(r.wb).toBeCloseTo(0.305, 2);
-    expect(level(r, 'wb')).toBe('ok');
+  it('w/b ≈ 0,31 (the paper states 0,26 without the water in the superplasticiser)', () => {
+    expect(scaleDecorRecipe(SOFT, 1).wb).toBeCloseTo(0.305, 2);
   });
 });
 
@@ -426,5 +345,20 @@ describe('presets match their sources (amounts quoted in presets.ts)', () => {
     ['diy-white-bowl-4kg', 0.42],
   ])('%s: w/b as in the estimate comment (%s)', (key, wb) => {
     expect(Math.abs(scaleDecorRecipe(decorPreset(key)!, 0.01).wb - wb)).toBeLessThan(0.006);
+  });
+});
+
+describe('handlingNotes', () => {
+  const notesFor = (key: string) => handlingNotes(scaleDecorRecipe(decorPreset(key)!, 0.01));
+
+  it('cement is always in it, and every recipe here uses superplasticiser', () => {
+    for (const p of DECOR_PRESETS) expect(notesFor(p.key)).toEqual(expect.arrayContaining(['cement', 'superplasticizer']));
+  });
+
+  it('microsilica, quartz flour and fibres only where the recipe has them', () => {
+    expect(notesFor('diy-mortar-20kg-batch')).toEqual(['cement', 'microsilica', 'superplasticizer']);
+    expect(notesFor('diy-pce-30l-batch')).toEqual(['cement', 'quartz', 'superplasticizer']);
+    expect(notesFor('diy-white-bowl-4kg')).toEqual(['cement', 'fibres', 'superplasticizer']);
+    expect(notesFor('kassel-m1q-cem42-5r')).toEqual(['cement', 'microsilica', 'quartz', 'superplasticizer']);
   });
 });

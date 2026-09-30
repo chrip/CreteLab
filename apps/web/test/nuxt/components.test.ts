@@ -271,3 +271,23 @@ describe('fine concrete for pieces that hold water', () => {
     expect(w.find('[data-testid="holds-water"]').text()).toContain('versiegeln');
   });
 });
+
+describe('fine concrete handling notes', () => {
+  it('shows practical notes instead of technical figures', async () => {
+    const w = await mountSuspended(FineConcreteApp, { route: '/de/fine-concrete?preset=diy-mortar-20kg-batch' });
+    const text = w.find('.handling').text();
+    expect(text).toContain('Wichtig beim Mischen');
+    expect(text).toContain('FFP2-Maske');
+    expect(text).toContain('Handschuhe');
+    expect(w.text()).not.toContain('Wasser/Bindemittel');
+    expect(w.text()).not.toContain('Rohdichte');
+  });
+
+  it('mentions only what is in the recipe', async () => {
+    const w = await mountSuspended(FineConcreteApp, { route: '/de/fine-concrete?preset=diy-white-bowl-4kg' });
+    const text = w.find('.handling').text();
+    expect(text).toContain('Glasfasern');
+    expect(text).not.toContain('Mikrosilica');
+    expect(text).not.toContain('Quarzmehl');
+  });
+});
