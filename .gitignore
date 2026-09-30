@@ -37,3 +37,4 @@ playwright-report/
 .ruff_cache/
 # fine-tuned weights (rebuild with ml/train.py)
 models/
+**/.vitest
