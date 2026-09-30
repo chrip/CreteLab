@@ -291,3 +291,11 @@ describe('fine concrete handling notes', () => {
     expect(text).not.toContain('Quarzmehl');
   });
 });
+
+describe('DescribeForm errors', () => {
+  it('a busy model gets a friendly message instead of a status code', async () => {
+    const w = await mountSuspended(DescribeForm, { props: { error: 'busy' } });
+    expect(w.find('[role="alert"]').text()).toContain('in ein paar Sekunden');
+    expect(w.find('[role="alert"]').text()).not.toContain('HTTP');
+  });
+});

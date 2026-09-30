@@ -1,4 +1,5 @@
 # docker compose up --build → http://localhost:8080
+# With HTTPS on a public server: see compose.tls.yaml.
 # The fine-tuned model is expected in ./models/laya-crete (build it with ml/train.py);
 # the API runs as an unprivileged user, so the files must be readable for others (chmod -R a+rX models).
 services:
@@ -6,13 +7,18 @@ services:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        # The public address, for canonical and language links.
+        NUXT_PUBLIC_SITE_URL: ${SITE_URL:-http://localhost:8080}
     ports:
-      # Local only by default; set CRETELAB_BIND=0.0.0.0 on a server behind a firewall or proxy.
+      # Local only by default; on a server put compose.tls.yaml (Caddy) in front instead.
       - "${CRETELAB_BIND:-127.0.0.1}:${CRETELAB_PORT:-8080}:80"
     depends_on:
       api:
         condition: service_healthy
     restart: unless-stopped
+    mem_limit: 128m
+    security_opt: [no-new-privileges:true]
 
   api:
     build: services/api
@@ -21,7 +27,12 @@ services:
       - hf-cache:/home/app/.cache/huggingface
     environment:
       LAYA_MODEL_DIR: /models/laya-crete
+      # Descriptions the model works on at once; more only slows every one of them down.
+      LAYA_MAX_PARALLEL: ${LAYA_MAX_PARALLEL:-2}
     restart: unless-stopped
+    cpus: ${API_CPUS:-4}
+    mem_limit: 4g
+    security_opt: [no-new-privileges:true]
 
 volumes:
   hf-cache:

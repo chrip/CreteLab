@@ -1,0 +1,13 @@
+# TLS in front of the site. Caddy fetches and renews the certificate automatically and
+# forwards the client address in X-Forwarded-For (nginx uses it for its rate limit).
+{$DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:80
+	log {
+		output discard
+	}
+}
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}

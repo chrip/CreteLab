@@ -60,3 +60,40 @@ def test_model_dir_comes_from_the_environment(monkeypatch, tmp_path):
     assert model_dir() == tmp_path
     monkeypatch.delenv("LAYA_MODEL_DIR")
     assert model_dir().parts[-2:] == ("models", "laya-crete")
+
+
+def test_busy_model_answers_503_with_retry_after():
+    import threading
+    import time
+
+    from fastapi.testclient import TestClient
+
+    from cretelab_api.app import create_app
+
+    release = threading.Event()
+
+    class SlowPredictor:
+        name = "slow"
+
+        def predict(self, text, questions):
+            release.wait(5)
+            return {}
+
+    with TestClient(create_app(SlowPredictor(), max_parallel=1, wait_s=0.2)) as c:
+        first = threading.Thread(target=lambda: c.post("/api/describe", json={"text": "eins"}))
+        first.start()
+        time.sleep(0.1)  # the first request holds the only slot
+        res = c.post("/api/describe", json={"text": "zwei"})
+        release.set()
+        first.join()
+    assert res.status_code == 503
+    assert res.headers["retry-after"] == "5"
+
+
+def test_env_int_falls_back_on_bad_values(monkeypatch):
+    from cretelab_api.app import env_int
+
+    monkeypatch.setenv("LAYA_MAX_PARALLEL", "zwei")
+    assert env_int("LAYA_MAX_PARALLEL", 2) == 2
+    monkeypatch.setenv("LAYA_MAX_PARALLEL", "0")
+    assert env_int("LAYA_MAX_PARALLEL", 2) == 1

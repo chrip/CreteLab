@@ -1,0 +1,31 @@
+# HTTPS for a public server: Caddy gets and renews a Let's Encrypt certificate for DOMAIN.
+#
+#   DOMAIN=cretelab.example SITE_URL=https://cretelab.example \
+#     docker compose -f compose.yaml -f compose.tls.yaml up -d --build
+#
+# Ports 80 and 443 must reach the server, and the DNS record must point to it.
+services:
+  web:
+    # Only Caddy talks to the site; nothing is published directly.
+    ports: !reset []
+
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN to the public host name}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [web]
+    restart: unless-stopped
+    mem_limit: 128m
+    security_opt: [no-new-privileges:true]
+
+volumes:
+  caddy-data:
+  caddy-config:

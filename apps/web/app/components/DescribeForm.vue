@@ -14,7 +14,7 @@
       </button>
     </div>
     <p v-if="error" :id="`${id}-error`" class="note blocker" role="alert">
-      {{ $t('describe.error', { reason: error }) }}
+      {{ error === 'busy' ? $t('describe.busy') : $t('describe.error', { reason: error }) }}
     </p>
     <div v-if="examples && !submitted" class="examples small muted">
       <span>{{ $t('describe.examples') }}</span>

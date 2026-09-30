@@ -67,7 +67,7 @@ Rules and formulas stay in code where they are reviewed and tested.
 With Docker (needs the fine-tuned weights in `models/laya-crete`, see below):
 
 ```bash
-docker compose up --build        # http://localhost:8080
+docker compose up --build        # http://localhost:8080 (local only)
 ```
 
 For development:
@@ -86,6 +86,27 @@ npm run dev                               # http://localhost:3000, proxies /api 
 ```
 
 Without the API the planner and both tools still work; only the description search needs it.
+
+## Deploy on a server
+
+```bash
+# on the server: the repository, the model weights in models/laya-crete, DNS pointing to it,
+# ports 80 and 443 open
+DOMAIN=cretelab.example SITE_URL=https://cretelab.example \
+  docker compose -f compose.yaml -f compose.tls.yaml up -d --build
+```
+
+- **HTTPS:** Caddy (`deploy/Caddyfile`) fetches and renews the Let's Encrypt certificate
+  and is the only published service.
+- **Load:** nginx allows 10 descriptions per minute per IP (short bursts of 10) and 4
+  connections per IP; the API runs at most `LAYA_MAX_PARALLEL` (default 2) descriptions
+  at once and answers 503 with `Retry-After` when busy. Containers have CPU and memory limits.
+- **Headers:** a Content-Security-Policy without `unsafe-inline` for scripts (the hashes of
+  Nuxt's inline scripts are computed after each build, `apps/web/scripts/csp.mjs`), HSTS,
+  `frame-ancestors 'none'`, `nosniff`, a restrictive Permissions-Policy.
+- **Privacy:** descriptions are not stored; nginx logs IP addresses without their last
+  part, Caddy logs nothing. The only cookie is the language choice.
+- **Before going public:** add a legal notice (Impressum) and a privacy policy (Datenschutzerklärung).
 
 ## The model
 

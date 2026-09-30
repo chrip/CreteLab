@@ -15,7 +15,7 @@
     "label": "Project description",
     "submit": "Calculate recipe",
     "reanalyse": "Analyse again",
-    "busy": "Thinking …",
+    "busy": "There are many requests right now. Please try again in a few seconds.",
     "error": "The description could not be analysed ({reason}). You can still enter every value by hand.",
     "examples": "Examples:",
     "example1": "Garden shed foundation 3x2 m, 20 cm thick",
@@ -751,5 +751,12 @@
       "fibres": "Glass fibres irritate the skin: add them with gloves on.",
       "superplasticizer": "Measure the superplasticiser exactly, ideally with a disposable syringe or a measuring cup: even a little too much makes the mix separate."
     }
+  },
+  "error": {
+    "notFoundTitle": "Page not found",
+    "notFound": "This address does not exist (any more). The start page may help.",
+    "title": "Something went wrong",
+    "text": "The page could not be shown. Please try again.",
+    "home": "Go to the start page"
   }
 }

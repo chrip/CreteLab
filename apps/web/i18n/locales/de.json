@@ -15,7 +15,7 @@
     "label": "Projektbeschreibung",
     "submit": "Rezept berechnen",
     "reanalyse": "Neu auswerten",
-    "busy": "Denke nach …",
+    "busy": "Gerade sind viele Anfragen unterwegs. Bitte in ein paar Sekunden noch einmal versuchen.",
     "error": "Die Beschreibung konnte nicht ausgewertet werden ({reason}). Sie können alle Werte auch von Hand eingeben.",
     "examples": "Beispiele:",
     "example1": "Fundament für ein Gartenhaus 3x2 m, 20 cm dick",
@@ -751,5 +751,12 @@
       "fibres": "Glasfasern reizen die Haut: mit Handschuhen zugeben.",
       "superplasticizer": "Fließmittel genau abmessen, am besten mit einer Einwegspritze oder einem Messbecher: schon etwas zu viel lässt die Mischung entmischen."
     }
+  },
+  "error": {
+    "notFoundTitle": "Seite nicht gefunden",
+    "notFound": "Diese Adresse gibt es nicht (mehr). Vielleicht hilft die Startseite weiter.",
+    "title": "Etwas ist schiefgegangen",
+    "text": "Die Seite konnte nicht angezeigt werden. Bitte versuchen Sie es noch einmal.",
+    "home": "Zur Startseite"
   }
 }

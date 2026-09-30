@@ -32,13 +32,21 @@ test.describe('start page', () => {
     await expect(page.getByText('Beispiele:')).toBeVisible();
   });
 
-  test('an unreachable model is reported, the tools still work', async ({ page }) => {
-    await mockApi(page, { status: 503 });
+  test('a failing model is reported, the tools still work', async ({ page }) => {
+    await mockApi(page, { status: 500 });
     await page.goto('/de');
     await page.getByRole('textbox', { name: 'Projektbeschreibung' }).fill(TEXT.foundation);
     await page.keyboard.press('Enter');
-    await expect(page.getByRole('alert')).toContainText('HTTP 503');
+    await expect(page.getByRole('alert')).toContainText('HTTP 500');
     await expect(page).toHaveURL(/\/de$/);
+  });
+
+  test('a busy model (rate limit or all slots taken) asks to try again', async ({ page }) => {
+    await mockApi(page, { status: 429 });
+    await page.goto('/de');
+    await page.getByRole('textbox', { name: 'Projektbeschreibung' }).fill(TEXT.foundation);
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('alert')).toContainText('in ein paar Sekunden');
   });
 });
 

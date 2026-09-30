@@ -108,7 +108,7 @@ import {
   DECOR_PRESETS, DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, decorPreset, handlingNotes, expectedFck,
   planProject, scaleDecorRecipe, shapeVolume, type Shape,
 } from '@cretelab/engine';
-import { formatAmount, formatCompact, formatNumber, formatVolume, type Locale } from '~/utils/format';
+import { formatAmount, formatCompact, formatVolume, type Locale } from '~/utils/format';
 import { fineConcreteStateFromPlan, plannerStateFromPlan } from '~/utils/project';
 import { decodeFineConcrete, encodeFineConcrete, encodePlanner, type FineConcreteField, type FineConcreteState } from '~/utils/query';
 

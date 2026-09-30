@@ -42,7 +42,8 @@ export function useAnalysis() {
       return result;
     } catch (e: unknown) {
       const status = (e as { statusCode?: number }).statusCode;
-      error.value = status ? `HTTP ${status}` : 'offline';
+      // Rate limit (nginx) or all model slots taken (API): ask to try again, no status code.
+      error.value = status === 429 || status === 503 ? 'busy' : status ? `HTTP ${status}` : 'offline';
       return null;
     } finally {
       busy.value = false;
