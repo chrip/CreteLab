@@ -12,9 +12,9 @@
 // replaced by the next one. The last step stays until the answer is there.
 const STEPS = 6;
 const STARS = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢'];
-const TYPE_MS = 32;
-const DELETE_MS = 14;
-const HOLD_MS = 700;
+const TYPE_MS = 60;
+const DELETE_MS = 30;
+const HOLD_MS = 1400;
 
 const { t } = useI18n();
 const index = ref(0);
@@ -59,7 +59,7 @@ onMounted(() => {
     };
     return later(1500, next);
   }
-  spinner = setInterval(() => frame.value++, 120);
+  spinner = setInterval(() => frame.value++, 180);
   type();
 });
 

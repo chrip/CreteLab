@@ -369,11 +369,11 @@ describe('ThinkingStatus', () => {
     vi.useFakeTimers();
     const w = await mountSuspended(ThinkingStatus);
     const typed = () => w.find('.typed').text();
-    vi.advanceTimersByTime(32 * 5);
+    vi.advanceTimersByTime(60 * 5);
     await nextTick();
     expect('Beschreibung lesen …'.startsWith(typed())).toBe(true);
     expect(typed().length).toBeGreaterThan(2);
-    vi.advanceTimersByTime(32 * 30 + 700 + 14 * 30 + 32 * 4);
+    vi.advanceTimersByTime(60 * 30 + 1400 + 30 * 30 + 60 * 4);
     await nextTick();
     expect('Maße und Form erkennen …'.startsWith(typed())).toBe(true);
     expect(w.find('[aria-live]').text()).toBe('Maße und Form erkennen …');
