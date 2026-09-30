@@ -9,8 +9,8 @@
         :aria-describedby="error ? `${id}-error` : undefined"
         @keydown.enter.exact.prevent="submit"
       ></textarea>
-      <button class="btn" type="submit" :disabled="busy || !text.trim()">
-        {{ busy ? $t('describe.busy') : $t(submitLabel) }}
+      <button class="btn" type="submit" :disabled="busy || !changed" :title="initial && !changed ? $t('describe.unchanged') : undefined">
+        {{ busy ? $t('describe.working') : $t(submitLabel) }}
       </button>
     </div>
     <p v-if="error" :id="`${id}-error`" class="note blocker" role="alert">
@@ -26,7 +26,9 @@
 </template>
 
 <script setup lang="ts">
-// The one text box: Enter analyses, Shift+Enter starts a new line.
+// The one text box: Enter analyses, Shift+Enter starts a new line. With a description already
+// analysed (`initial`), the button waits for a change, since the same text gives the same answer,
+// unless the last attempt failed.
 const props = withDefaults(
   defineProps<{ initial?: string; busy?: boolean; error?: string | null; examples?: boolean; submitLabel?: string }>(),
   { initial: '', busy: false, error: null, examples: false, submitLabel: 'describe.submit' },
@@ -35,6 +37,7 @@ const emit = defineEmits<{ submit: [text: string] }>();
 const id = useId();
 const text = ref(props.initial);
 const submitted = ref(Boolean(props.initial));
+const changed = computed(() => Boolean(text.value.trim()) && (text.value.trim() !== props.initial.trim() || Boolean(props.error)));
 
 watch(() => props.initial, (v) => (text.value = v));
 // Emptying the box brings the examples back.
@@ -44,7 +47,7 @@ watch(text, (v) => {
 
 function submit() {
   const value = text.value.trim();
-  if (!value || props.busy) return;
+  if (!changed.value || props.busy) return;
   submitted.value = true;
   emit('submit', value);
 }

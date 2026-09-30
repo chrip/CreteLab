@@ -21,7 +21,9 @@
     "example1": "Garden shed foundation 3x2 m, 20 cm thick",
     "example2": "Setting 12 fence posts in concrete",
     "example3": "Driveway 6 x 3 m, 15 cm thick, salted in winter",
-    "example4": "Outdoor planter 60x30x40 cm, 2 cm walls"
+    "example4": "Outdoor planter 60x30x40 cm, 2 cm walls",
+    "working": "Analysing …",
+    "unchanged": "Change the description to analyse it again."
   },
   "facts": {
     "title": "What was understood automatically",

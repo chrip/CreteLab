@@ -300,6 +300,25 @@ describe('DescribeForm errors', () => {
     expect(w.find('[role="alert"]').text()).toContain('in ein paar Sekunden');
     expect(w.find('[role="alert"]').text()).not.toContain('HTTP');
   });
+
+  it('while waiting the button says it is working, not that the model is busy', async () => {
+    const w = await mountSuspended(DescribeForm, { props: { initial: 'Kellerwand', busy: true } });
+    expect(w.find('button[type="submit"]').text()).toContain('Wird ausgewertet');
+  });
+
+  it('an analysed description can be sent again once it changes, or after an error', async () => {
+    const w = await mountSuspended(DescribeForm, { props: { initial: 'Kellerwand', submitLabel: 'describe.reanalyse' } });
+    const button = w.find('button[type="submit"]');
+    expect(button.attributes('disabled')).toBeDefined();
+    expect(button.attributes('title')).toContain('Ändern');
+    await w.find('textarea').setValue('Kellerwand, 30 cm');
+    expect(button.attributes('disabled')).toBeUndefined();
+    await w.find('textarea').setValue('Kellerwand');
+    await w.setProps({ error: 'busy' });
+    expect(button.attributes('disabled')).toBeUndefined();
+    await w.find('form').trigger('submit');
+    expect(w.emitted('submit')).toEqual([['Kellerwand']]);
+  });
 });
 
 describe('legal notice and privacy policy', () => {

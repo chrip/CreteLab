@@ -32,10 +32,10 @@ export function useAnalysis() {
   const error = ref<string | null>(null);
 
   async function analyse(text: string): Promise<AnalysisResponse | null> {
+    error.value = null;
     const cached = cachedAnalysis(text);
     if (cached) return cached;
     busy.value = true;
-    error.value = null;
     try {
       const result = await $fetch<AnalysisResponse>(`${apiBase}/describe`, { method: 'POST', body: { text } });
       writeCache(text, result);

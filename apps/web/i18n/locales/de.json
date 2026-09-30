@@ -21,7 +21,9 @@
     "example1": "Fundament für ein Gartenhaus 3x2 m, 20 cm dick",
     "example2": "12 Zaunpfosten einbetonieren",
     "example3": "Einfahrt 6 x 3 m, 15 cm stark, im Winter wird gestreut",
-    "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm"
+    "example4": "Blumenkübel für den Balkon 40x40x40 cm, Wandstärke 2 cm",
+    "working": "Wird ausgewertet …",
+    "unchanged": "Ändern Sie die Beschreibung, um sie neu auszuwerten."
   },
   "facts": {
     "title": "Das wurde automatisch verstanden",
