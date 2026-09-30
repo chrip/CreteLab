@@ -24,6 +24,8 @@ from . import __version__
 from .measurements import extract, questions_for
 from .predictor import LayaPredictor, Predictor
 
+MAX_TEXT = 300
+
 
 def model_dir() -> Path:
     """LAYA_MODEL_DIR, else models/laya-crete in the repository checkout."""
@@ -35,7 +37,10 @@ def model_dir() -> Path:
 
 
 class DescribeRequest(BaseModel):
-    text: str = Field(min_length=1, max_length=2000, description="Project description, German or English")
+    # The training descriptions are at most 173 characters. Every question reads the whole
+    # text again, so a long one costs time and memory for each of them (2,000 characters did
+    # not fit into 2.8 GB on the 2-vCore server).
+    text: str = Field(min_length=1, max_length=MAX_TEXT, description="Project description, German or English")
 
     @field_validator("text")
     @classmethod

@@ -36,7 +36,7 @@ def test_describe_drops_internal_answer_fields(client):
     assert answer["score"] == 1.0
 
 
-@pytest.mark.parametrize("text", ["", "   ", "x" * 2001])
+@pytest.mark.parametrize("text", ["", "   ", "x" * 301])
 def test_describe_rejects_empty_or_too_long_text(client, text):
     assert client.post("/api/describe", json={"text": text}).status_code == 422
 
@@ -105,3 +105,11 @@ def test_the_service_refuses_to_start_without_the_fine_tuned_model(tmp_path):
     (tmp_path / "laya-crete").mkdir()  # an interrupted upload: the folder, but no weights
     with pytest.raises(RuntimeError, match="No fine-tuned model"):
         LayaPredictor(tmp_path / "laya-crete")
+
+
+def test_a_column_of_numbers_adds_at_most_six_role_questions():
+    from cretelab_api.measurements import MAX_CANDIDATES, questions_for
+
+    roles = [q for q in questions_for(" ".join(f"{n} cm" for n in range(1, 21))) if q.startswith("role:")]
+    assert len(roles) == MAX_CANDIDATES == 6
+    assert roles[0] == "role:1 cm"

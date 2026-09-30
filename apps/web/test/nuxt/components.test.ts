@@ -302,6 +302,12 @@ describe('DescribeForm errors', () => {
     expect(w.find('[role="alert"]').text()).not.toContain('HTTP');
   });
 
+  it('a gateway timeout asks for a shorter description, and the box stops at 300 characters', async () => {
+    const w = await mountSuspended(DescribeForm, { props: { error: 'timeout' } });
+    expect(w.find('[role="alert"]').text()).toContain('zu lange');
+    expect(w.find('textarea').attributes('maxlength')).toBe('300');
+  });
+
   it('while waiting the button says it is working, not that the model is busy', async () => {
     const w = await mountSuspended(DescribeForm, { props: { initial: 'Kellerwand', busy: true } });
     expect(w.find('button[type="submit"]').text()).toContain('Wird ausgewertet');

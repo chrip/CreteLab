@@ -31,7 +31,8 @@
       "4": "Judging reinforcement and load …",
       "5": "Deriving exposure classes …",
       "6": "Preparing the recipe …"
-    }
+    },
+    "timeout": "The analysis took too long. Please describe the project more briefly or try again in a moment."
   },
   "facts": {
     "title": "What was understood automatically",

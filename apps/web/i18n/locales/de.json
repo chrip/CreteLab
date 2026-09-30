@@ -31,7 +31,8 @@
       "4": "Bewehrung und Belastung einschätzen …",
       "5": "Expositionsklassen ableiten …",
       "6": "Rezept vorbereiten …"
-    }
+    },
+    "timeout": "Die Auswertung hat zu lange gedauert. Bitte beschreiben Sie das Projekt kürzer oder versuchen Sie es gleich noch einmal."
   },
   "facts": {
     "title": "Das wurde automatisch verstanden",

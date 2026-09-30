@@ -43,7 +43,9 @@ export function useAnalysis() {
     } catch (e: unknown) {
       const status = (e as { statusCode?: number }).statusCode;
       // Rate limit (nginx) or all model slots taken (API): ask to try again, no status code.
-      error.value = status === 429 || status === 503 ? 'busy' : status ? `HTTP ${status}` : 'offline';
+      // A gateway timeout means the model took too long.
+      error.value =
+        status === 429 || status === 503 ? 'busy' : status === 504 ? 'timeout' : status ? `HTTP ${status}` : 'offline';
       return null;
     } finally {
       busy.value = false;

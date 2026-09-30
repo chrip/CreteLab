@@ -1,5 +1,5 @@
 <template>
-  <p class="thinking" data-testid="thinking">
+  <p class="thinking small muted" data-testid="thinking">
     <span class="star" aria-hidden="true">{{ STARS[frame % STARS.length] }}</span>
     <span class="typed" aria-hidden="true">{{ shown }}<span class="cursor"></span></span>
     <!-- Screen readers get each step once, not every letter. -->
@@ -75,7 +75,6 @@ onBeforeUnmount(() => {
   gap: 0.5rem;
   align-items: baseline;
   margin: 0.75rem 0 0;
-  color: var(--text-muted);
   min-height: 1.5em;
 }
 

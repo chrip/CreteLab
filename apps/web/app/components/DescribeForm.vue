@@ -6,6 +6,7 @@
         :id="id"
         v-model="text"
         rows="3"
+        :maxlength="MAX_TEXT"
         :aria-describedby="error ? `${id}-error` : undefined"
         @keydown.enter.exact.prevent="submit"
       ></textarea>
@@ -15,7 +16,7 @@
     </div>
     <ThinkingStatus v-if="busy" />
     <p v-if="error" :id="`${id}-error`" class="note blocker" role="alert">
-      {{ error === 'busy' ? $t('describe.busy') : $t('describe.error', { reason: error }) }}
+      {{ error === 'busy' || error === 'timeout' ? $t(`describe.${error}`) : $t('describe.error', { reason: error }) }}
     </p>
     <div v-if="examples && !submitted" class="examples small muted">
       <span>{{ $t('describe.examples') }}</span>
@@ -34,6 +35,8 @@ const props = withDefaults(
   defineProps<{ initial?: string; busy?: boolean; error?: string | null; examples?: boolean; submitLabel?: string }>(),
   { initial: '', busy: false, error: null, examples: false, submitLabel: 'describe.submit' },
 );
+// Same limit as the API (services/api: MAX_TEXT).
+const MAX_TEXT = 300;
 const emit = defineEmits<{ submit: [text: string] }>();
 const id = useId();
 const text = ref(props.initial);
