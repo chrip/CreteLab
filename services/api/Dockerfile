@@ -15,7 +15,6 @@ WORKDIR /app
 COPY --from=build --chown=app /app /app
 ENV PATH="/app/.venv/bin:$PATH" \
     LAYA_MODEL_DIR=/models/laya-crete \
-    HF_HOME=/home/app/.cache/huggingface \
     PYTHONUNBUFFERED=1
 USER app
 EXPOSE 8000

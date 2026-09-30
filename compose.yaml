@@ -39,7 +39,6 @@ services:
     build: services/api
     volumes:
       - ./models:/models:ro
-      - hf-cache:/home/app/.cache/huggingface
     environment:
       LAYA_MODEL_DIR: /models/laya-crete
       # Descriptions the model works on at once; more only slows every one of them down.
@@ -49,6 +48,3 @@ services:
     mem_limit: ${API_MEM:-4g}
     security_opt: [no-new-privileges:true]
     logging: *logging
-
-volumes:
-  hf-cache:

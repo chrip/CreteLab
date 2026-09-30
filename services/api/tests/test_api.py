@@ -97,3 +97,11 @@ def test_env_int_falls_back_on_bad_values(monkeypatch):
     assert env_int("LAYA_MAX_PARALLEL", 2) == 2
     monkeypatch.setenv("LAYA_MAX_PARALLEL", "0")
     assert env_int("LAYA_MAX_PARALLEL", 2) == 1
+
+
+def test_the_service_refuses_to_start_without_the_fine_tuned_model(tmp_path):
+    from cretelab_api.predictor import LayaPredictor
+
+    (tmp_path / "laya-crete").mkdir()  # an interrupted upload: the folder, but no weights
+    with pytest.raises(RuntimeError, match="No fine-tuned model"):
+        LayaPredictor(tmp_path / "laya-crete")
