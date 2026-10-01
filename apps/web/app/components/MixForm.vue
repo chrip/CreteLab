@@ -57,10 +57,10 @@
     <fieldset>
       <legend>{{ $t('details.moistureTitle') }}</legend>
       <p class="small muted">{{ $t('details.moistureLead') }}</p>
-      <label class="check">
-        <input v-model="useMoisture" type="checkbox" />
-        <span>{{ $t('details.moisture') }}</span>
-      </label>
+      <span class="check toggle">
+        <input v-model="useMoisture" type="checkbox" :aria-labelledby="`${id}-moisture`" />
+        <strong :id="`${id}-moisture`">{{ $t('details.moisture') }}</strong>
+      </span>
       <div class="grid">
         <div v-for="(label, i) in ['0/2', '2/8', '8+']" :key="label" class="field" :class="{ disabled: !mix.moisture }">
           <label :for="`${id}-mo${i}`">{{ $t('details.moistureGroup', { group: label }) }}</label>
@@ -267,12 +267,14 @@ legend {
   margin: 0;
 }
 
-.addition .check {
+.addition .check,
+.toggle {
   cursor: default;
   justify-self: start;
 }
 
-.addition .check input {
+.addition .check input,
+.toggle input {
   cursor: pointer;
 }
 

@@ -120,9 +120,11 @@ test.describe('component planner', () => {
 test.describe('language', () => {
   test('switching the language keeps the page and every value', async ({ page }) => {
     await page.goto('/de/plan?v=3&s=C30%2F37&x=XC4%2CXF1&tab=order');
-    await page.getByRole('link', { name: 'Sprache wechseln: English' }).click();
-    // Hydration and the language switch can take a while on a busy machine.
-    await expect(page).toHaveURL(/\/en\/plan\?/, { timeout: 15_000 });
+    const link = page.getByRole('link', { name: 'Sprache wechseln: English' });
+    // The prerendered link has no query; after hydration it carries the values.
+    await expect(link).toHaveAttribute('href', /\?/);
+    await link.click();
+    await expect(page).toHaveURL(/\/en\/plan\?/);
     await expect(page.getByText('3.00 m³ of C30/37 concrete')).toBeVisible();
     await expect(page.getByRole('tab', { name: /Ready-mixed concrete/ })).toHaveAttribute('aria-selected', 'true');
   });
