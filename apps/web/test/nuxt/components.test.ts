@@ -1,4 +1,4 @@
-import { DEFAULT_MIX, planProject, type MixInput } from '@cretelab/engine';
+import { DEFAULT_MIX, computeRecipe, planProject, type MixInput } from '@cretelab/engine';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { reactive } from 'vue';
@@ -10,6 +10,7 @@ import DescribeForm from '~/components/DescribeForm.vue';
 import FineConcreteApp from '~/components/FineConcreteApp.vue';
 import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
+import NeedsSummary from '~/components/NeedsSummary.vue';
 import ThinkingStatus from '~/components/ThinkingStatus.vue';
 import NumberInput from '~/components/NumberInput.vue';
 import OrderPanel from '~/components/OrderPanel.vue';
@@ -280,6 +281,23 @@ describe('MixForm moisture', () => {
     expect(w.findAll('legend').map((l) => l.text())).toEqual([
       'Expositionsklassen', 'Eigenfeuchte der Gesteinskörnung', 'Zusatzmittel', 'Zusatzstoffe',
     ]);
+  });
+});
+
+describe('NeedsSummary', () => {
+  it('the concrete is the heading, with one word for how strong the class is', async () => {
+    const w = await mountSuspended(NeedsSummary, { props: { mix: mix({ strengthClass: 'C25/30' }), volume: 0.32 } });
+    expect(w.find('h2').text()).toBe('0,32 m³ Beton C25/30 · solide');
+    await w.setProps({ mix: mix({ strengthClass: 'C8/10' }) });
+    expect(w.find('h2').text()).toBe('0,32 m³ Beton C8/10 · sehr schwach');
+  });
+
+  it('additions keep the class: the recipe needs less cement for it', async () => {
+    const plain = computeRecipe(mix({ strengthClass: 'C25/30' }));
+    const withAsh = computeRecipe(mix({ strengthClass: 'C25/30', flyAshPct: 10, silicaFumePct: 8 }));
+    expect(plain.ok && withAsh.ok).toBe(true);
+    if (!plain.ok || !withAsh.ok) return;
+    expect(withAsh.recipe.materials.cement).toBeLessThan(plain.recipe.materials.cement);
   });
 });
 

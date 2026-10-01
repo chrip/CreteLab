@@ -112,14 +112,31 @@
     "lead": "What your component needs, how much of it, and how to make it: from bags, mixed yourself or ordered."
   },
   "needs": {
-    "title": "What you need",
     "headline": "{volume} of {strength} concrete",
     "air": "With an air-entraining agent, target {pct} % air, so frost and de-icing salt do not damage the surface.",
     "watertight": "Watertight: concrete with a waterproofing admixture; joints and thicknesses need proper design as well.",
     "why": "Why?",
     "thinWall": "Walls under 3 cm cannot be cast from ordinary concrete (8–32 mm aggregate).",
     "disclaimer": "An automatic estimate from your description. Check the values; have load-bearing parts designed by a professional.",
-    "toFineConcrete": "Calculate it with fine concrete"
+    "toFineConcrete": "Calculate it with fine concrete",
+    "strengthWord": {
+      "C8_10": "very weak",
+      "C12_15": "weak",
+      "C16_20": "moderate",
+      "C20_25": "standard",
+      "C25_30": "solid",
+      "C30_37": "strong",
+      "C35_45": "very strong",
+      "C40_50": "very strong",
+      "C45_55": "high-strength",
+      "C50_60": "high-strength",
+      "C55_67": "high-strength",
+      "C60_75": "high-strength",
+      "C70_85": "ultra-high strength",
+      "C80_95": "ultra-high strength",
+      "C90_105": "ultra-high strength",
+      "C100_115": "ultra-high strength"
+    }
   },
   "volume": {
     "shape": {
@@ -342,7 +359,7 @@
     "admixtures": "Admixtures",
     "admixturesLead": "Liquids or powders in small amounts that change the fresh or the hardened concrete.",
     "additionsTitle": "Additions",
-    "additionsLead": "Fine mineral powders that replace or add to part of the cement.",
+    "additionsLead": "Fine mineral powders that replace or add to part of the cement. The strength class stays the same: the recipe is recalculated to reach it with less cement.",
     "add": {
       "plasticizer": "Plasticiser",
       "plasticizerNote": "Makes the concrete more workable without more water: a plasticiser saves about 7 % water, a superplasticiser about 20 % and is needed for the soft consistencies F4 to F6.",

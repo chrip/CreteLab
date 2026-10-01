@@ -1,9 +1,10 @@
 <template>
   <section class="card needs" aria-labelledby="needs-title">
-    <h2 id="needs-title">{{ $t('needs.title') }}</h2>
-    <p class="headline">
-      <strong>{{ $t('needs.headline', { volume: vol(volume), strength: mix.strengthClass }) }}</strong>
-    </p>
+    <!-- The concrete is the heading: amount, class and in one word how strong that is. -->
+    <h2 id="needs-title" class="headline">
+      {{ $t('needs.headline', { volume: vol(volume), strength: mix.strengthClass }) }}
+      <span class="word">· {{ $t(`needs.strengthWord.${mix.strengthClass.replace('/', '_')}`) }}</span>
+    </h2>
     <ul class="classes">
       <li v-for="c in shownClasses" :key="c">
         <span class="chip"><strong>{{ c }}</strong></span> {{ $t(`option.exposure.${c}.name`) }}
@@ -28,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-// "What you need" in plain words: amount, strength class and what the concrete must resist.
+// The concrete in plain words: amount, strength class and what it must resist.
 import type { MixInput, ProjectPlan } from '@cretelab/engine';
 import { formatNumber, formatVolume, type Locale } from '~/utils/format';
 import { fineConcreteStateFromPlan } from '~/utils/project';
@@ -47,8 +48,13 @@ const fineConcreteQuery = computed(() => (props.plan ? encodeFineConcrete(fineCo
 
 <style scoped>
 .headline {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.35rem;
+  margin: 0 0 0.6rem;
+}
+
+.headline .word {
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .classes {

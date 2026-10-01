@@ -112,14 +112,31 @@
     "lead": "Was Ihr Bauteil braucht, wie viel davon und wie Sie es herstellen: aus dem Sack, selbst gemischt oder bestellt."
   },
   "needs": {
-    "title": "Was Sie brauchen",
     "headline": "{volume} Beton {strength}",
     "air": "Mit Luftporenbildner, Ziel {pct} % Luft, damit Frost und Tausalz der Oberfläche nichts anhaben.",
     "watertight": "Wasserundurchlässig: WU-Beton mit Dichtungsmittel, zusätzlich fachgerecht zu planen (Fugen, Bauteildicken).",
     "why": "Warum?",
     "thinWall": "Wände unter 3 cm lassen sich mit Normalbeton (Korn 8–32 mm) nicht gießen.",
     "disclaimer": "Automatische Einschätzung aus Ihrer Beschreibung. Prüfen Sie die Werte; tragende Bauteile gehören in die Hände einer Fachkraft.",
-    "toFineConcrete": "Mit Feinbeton rechnen"
+    "toFineConcrete": "Mit Feinbeton rechnen",
+    "strengthWord": {
+      "C8_10": "sehr schwach",
+      "C12_15": "schwach",
+      "C16_20": "mäßig fest",
+      "C20_25": "normal",
+      "C25_30": "solide",
+      "C30_37": "fest",
+      "C35_45": "sehr fest",
+      "C40_50": "sehr fest",
+      "C45_55": "hochfest",
+      "C50_60": "hochfest",
+      "C55_67": "hochfest",
+      "C60_75": "hochfest",
+      "C70_85": "extrem fest",
+      "C80_95": "extrem fest",
+      "C90_105": "extrem fest",
+      "C100_115": "extrem fest"
+    }
   },
   "volume": {
     "shape": {
@@ -342,7 +359,7 @@
     "admixtures": "Zusatzmittel",
     "admixturesLead": "Flüssigkeiten oder Pulver in kleinen Mengen, die den frischen oder den festen Beton verändern.",
     "additionsTitle": "Zusatzstoffe",
-    "additionsLead": "Feine mineralische Pulver, die einen Teil des Zements ersetzen oder ergänzen.",
+    "additionsLead": "Feine mineralische Pulver, die einen Teil des Zements ersetzen oder ergänzen. Die Festigkeitsklasse bleibt gleich: Das Rezept wird so umgerechnet, dass es sie mit weniger Zement erreicht.",
     "add": {
       "plasticizer": "Verflüssiger",
       "plasticizerNote": "Macht den Beton geschmeidiger, ohne mehr Wasser: Betonverflüssiger spart etwa 7 % Wasser, Fließmittel etwa 20 % und ist für die weichen Konsistenzen F4 bis F6 nötig.",

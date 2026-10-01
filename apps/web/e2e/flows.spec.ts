@@ -8,7 +8,7 @@ test.describe('start page', () => {
     await page.getByRole('textbox', { name: 'Projektbeschreibung' }).fill(TEXT.foundation);
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/de\/plan\?.*v=1\.2/);
-    await expect(page.getByRole('heading', { name: 'Was Sie brauchen' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /^1,20 m³ Beton C\d+\/\d+ · [a-zäöü ]+$/ })).toBeVisible();
     await expect(page.getByText('1,20 m³ Beton')).toBeVisible();
     await expect(page.getByRole('tab', { name: /Selbst mischen/ })).toHaveAttribute('aria-selected', 'true');
     await expect(page.getByRole('tabpanel').getByRole('table', { name: 'Rezept' })).toContainText('Zement CEM I 42.5 N');
@@ -135,7 +135,7 @@ test.describe('language', () => {
     await page.getByRole('textbox', { name: 'Project description' }).fill(TEXT.postsEn);
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/en\/plan/);
-    await expect(page.getByRole('heading', { name: 'What you need' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /m³ of C\d+\/\d+ concrete · / })).toBeVisible();
   });
 });
 
