@@ -163,6 +163,16 @@ test.describe('fine concrete page and bag tool', () => {
   });
 });
 
+test.describe('link previews', () => {
+  test('the start page has Open Graph title and description in plain words', async ({ page }) => {
+    await page.goto('/de');
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', 'Beton für Ihr Projekt · CreteLab');
+    const description = page.locator('meta[property="og:description"]');
+    await expect(description).toHaveAttribute('content', /nach DIN-Norm/);
+    await expect(description).not.toHaveAttribute('content', /Merkblatt/);
+  });
+});
+
 test.describe('legal pages', () => {
   test('legal notice and privacy policy are linked from every page footer', async ({ page }) => {
     for (const path of ['/de', '/de/plan', '/de/fine-concrete', '/en/about']) {

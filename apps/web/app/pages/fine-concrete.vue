@@ -14,5 +14,5 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
-useSeoMeta({ title: () => t('fineConcrete.title'), description: () => t('fineConcrete.lead') });
+usePageMeta(() => t('fineConcrete.title'), () => t('fineConcrete.lead'));
 </script>

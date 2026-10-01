@@ -4,8 +4,8 @@
     <h1>About CreteLab</h1>
     <p class="lead">
       CreteLab turns a sentence like "driveway, 6 x 3 m, 15 cm thick, salted in winter" into a concrete recipe you can
-      mix, buy or order. It started as a browser calculator for the German mix-design leaflet Zement-Merkblatt B 20.
-      Today it is an open-source project with a custom-trained language model.
+      mix, buy or order. It started as a browser calculator for the German concrete mix-design method. Today it is
+      an open-source project with a custom-trained language model.
     </p>
 
     <h2>How a description becomes a recipe</h2>
@@ -120,10 +120,10 @@ const TRAINING: [string, string][] = [
   ['Inference', '20 to 60 ms per description on the GPU, about 2 s on the CPU of the Docker image'],
 ];
 
-useSeoMeta({
-  title: 'About',
-  description: 'How CreteLab works: a Laya model trained locally on a DGX Spark, a tested mix design, Nuxt and FastAPI.',
-});
+usePageMeta(
+  () => 'About',
+  () => 'How CreteLab works: a Laya model trained locally on a DGX Spark, a tested mix design, Nuxt and FastAPI.',
+);
 </script>
 
 <style scoped>

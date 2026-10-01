@@ -85,7 +85,7 @@
   "home": {
     "metaTitle": "Beton für Ihr Projekt",
     "title": "Beschreiben Sie Ihr Projekt und erhalten Sie Ihr passendes Betonrezept.",
-    "lead": "Ein Satz genügt: was Sie bauen, wo es steht, wie groß es ist. CreteLab erkennt die Anforderungen, berechnet das Rezept nach Zement-Merkblatt B 20 und sagt, ob Sackware, selbst mischen oder Transportbeton am besten passt.",
+    "lead": "Ein Satz genügt: was Sie bauen, wo es steht, wie groß es ist. CreteLab erkennt die Anforderungen, berechnet das Rezept nach DIN-Norm und sagt, ob Sackware, selbst mischen oder Transportbeton am besten passt.",
     "privacy": "Ihre Beschreibung wird nur ausgewertet, nicht gespeichert. Das Sprachmodell läuft auf unserem eigenen Server.",
     "tools": "Werkzeuge",
     "tool": {
@@ -304,7 +304,7 @@
     "aggregate": "Gesteinskörnung",
     "cement": "Zement",
     "margin": "Vorhaltemaß in N/mm²",
-    "marginHint": "Sicherheitszuschlag, 9 N/mm² wenn die Streuung unbekannt ist (B 20, 6.2).",
+    "marginHint": "Sicherheitszuschlag, 9 N/mm², wenn die Streuung unbekannt ist.",
     "plasticizer": "Verflüssiger",
     "exposure": "Expositionsklassen",
     "additions": "Zusatzmittel und Zusatzstoffe",

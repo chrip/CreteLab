@@ -12,4 +12,5 @@ useHead(() => ({
   meta: head.value.meta,
   titleTemplate: (title?: string) => (title ? `${title} · CreteLab` : 'CreteLab'),
 }));
+useSeoMeta({ ogSiteName: 'CreteLab', ogType: 'website', twitterCard: 'summary' });
 </script>

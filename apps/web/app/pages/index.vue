@@ -38,7 +38,7 @@ const TOOLS = [
 ] as const;
 
 const { t } = useI18n();
-useSeoMeta({ title: () => t('home.metaTitle'), description: () => t('home.lead') });
+usePageMeta(() => t('home.metaTitle'), () => t('home.lead'));
 
 const { analyse, busy, error } = useAnalysis();
 const localePath = useLocalePath();

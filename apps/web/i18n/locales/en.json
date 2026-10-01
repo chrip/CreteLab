@@ -85,7 +85,7 @@
   "home": {
     "metaTitle": "Concrete for your project",
     "title": "Describe your project and get the concrete recipe that fits it.",
-    "lead": "One sentence is enough: what you build, where it stands, how big it is. CreteLab reads the requirements, calculates the recipe after Zement-Merkblatt B 20 and tells you whether bags, mixing it yourself or ready-mixed concrete fits best.",
+    "lead": "One sentence is enough: what you build, where it stands, how big it is. CreteLab reads the requirements, calculates the recipe to DIN standards and tells you whether bags, mixing it yourself or ready-mixed concrete fits best.",
     "privacy": "Your description is analysed, not stored. The language model runs on our own server.",
     "tools": "Tools",
     "tool": {
@@ -304,7 +304,7 @@
     "aggregate": "Aggregate",
     "cement": "Cement",
     "margin": "Margin in N/mm²",
-    "marginHint": "Safety allowance, 9 N/mm² when the standard deviation is unknown (B 20, 6.2).",
+    "marginHint": "Safety allowance, 9 N/mm² when the standard deviation is unknown.",
     "plasticizer": "Plasticiser",
     "exposure": "Exposure classes",
     "additions": "Admixtures and additions",

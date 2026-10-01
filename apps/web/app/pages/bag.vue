@@ -14,5 +14,5 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
-useSeoMeta({ title: () => t('bagTool.title'), description: () => t('bagTool.lead') });
+usePageMeta(() => t('bagTool.title'), () => t('bagTool.lead'));
 </script>

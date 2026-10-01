@@ -14,5 +14,5 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
-useSeoMeta({ title: () => t('planner.title'), description: () => t('planner.lead') });
+usePageMeta(() => t('planner.title'), () => t('planner.lead'));
 </script>
