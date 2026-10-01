@@ -42,9 +42,20 @@ describe('MixPanel', () => {
     expect(plan.find('[data-testid="batch-summary"]').text()).toContain('je ½ Sack Zement');
   });
 
+  it('a bucket up to one is singular: "½ bucket", "1 shovel"', async () => {
+    await useNuxtApp().$i18n.setLocale('en');
+    const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 0.005 } });
+    const text = w.find('[data-testid="batch-plan"]').text();
+    expect(text).toMatch(/½ bucket\b(?!s)/);
+    expect(text).not.toContain('½ buckets');
+    await useNuxtApp().$i18n.setLocale('de');
+  });
+
   it('a few litres are one batch with the cement in kilograms', async () => {
     const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 0.02 } });
     expect(w.find('[data-testid="batch-summary"]').text()).toBe('Das passt in eine Mischung.');
+    // Nothing to choose: every mixer takes it in one go.
+    expect(w.find('[data-testid="batch-plan"] [role="radiogroup"]').exists()).toBe(false);
     expect(w.find('[data-testid="batch-plan"] tbody tr').text()).toMatch(/Zement CEM I 42.5 N\s*[\d,]+ kg/);
   });
 

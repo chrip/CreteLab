@@ -278,11 +278,15 @@
       "bag1": "1 Sack ({kg} kg)",
       "bagHalf": "½ Sack",
       "aggregate": "Sand und Kies {sieve}, feucht vom Haufen",
-      "buckets": "{buckets} Eimer, etwa {shovels} Schaufeln ({kg})",
+      "buckets": "{buckets}, etwa {shovels} ({kg})",
       "water": "Wasser",
-      "waterValue": "{litres}, etwa {buckets} Eimer",
+      "waterValue": "{litres}, etwa {buckets}",
       "air": "Luftporenbildner",
-      "hint": "Eimer heißt 10-l-Maurereimer, gestrichen voll. Gerechnet ist mit {kg} kg feuchtem Kies je Eimer und etwa {shovel} kg je Schaufel. Wiegen Sie einmal einen vollen Eimer Ihres Kieses: Wiegt er deutlich mehr, nehmen Sie entsprechend weniger Eimer, und umgekehrt. Das Wasser zuletzt und nach und nach zugeben, bis die Konsistenz stimmt; Kies vom Haufen ist unterschiedlich nass."
+      "hint": "Eimer heißt 10-l-Maurereimer, gestrichen voll. Gerechnet ist mit {kg} kg feuchtem Kies je Eimer und etwa {shovel} kg je Schaufel. Wiegen Sie einmal einen vollen Eimer Ihres Kieses: Wiegt er deutlich mehr, nehmen Sie entsprechend weniger Eimer, und umgekehrt. Das Wasser zuletzt und nach und nach zugeben, bis die Konsistenz stimmt; Kies vom Haufen ist unterschiedlich nass.",
+      "bucketOne": "{n} Eimer",
+      "bucketMany": "{n} Eimer",
+      "shovelOne": "{n} Schaufel",
+      "shovelMany": "{n} Schaufeln"
     }
   },
   "order": {

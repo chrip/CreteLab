@@ -3,7 +3,7 @@
     <h3 id="batch-title">{{ $t('mix.batch.title') }}</h3>
     <p class="muted">{{ $t('mix.batch.lead') }}</p>
 
-    <div class="mixers" role="radiogroup" :aria-label="$t('mix.batch.mixer')">
+    <div v-if="choosable" class="mixers" role="radiogroup" :aria-label="$t('mix.batch.mixer')">
       <label v-for="m in MIXER_KEYS" :key="m" class="mixer" :class="{ active: mixer === m }">
         <input v-model="mixer" type="radio" :value="m" class="visually-hidden" />
         {{ $t(`mix.batch.mixers.${m}`) }}
@@ -46,6 +46,11 @@ const amount = (v: number, unit: 'kg' | 'l') => formatAmount(loc.value, v, unit)
 const MIXER_KEYS = Object.keys(MIXERS) as Mixer[];
 const mixer = ref<Mixer>('drum140');
 const plan = computed(() => batchPlan(props.recipe, props.volume, mixer.value));
+// A job that fits into one batch in every mixer has nothing to choose.
+const choosable = computed(() => MIXER_KEYS.some((m) => batchPlan(props.recipe, props.volume, m).batches > 1));
+
+/** "½ Eimer", "1 bucket", "8½ buckets": singular up to one. */
+const count = (key: 'bucket' | 'shovel', v: number) => t(`mix.batch.${key}${v <= 1 ? 'One' : 'Many'}`, { n: formatHalves(loc.value, v) });
 
 const bagText = computed(() => {
   const b = plan.value.batch.bags;
@@ -59,12 +64,12 @@ const rows = computed(() => {
     {
       key: 'aggregate',
       label: t('mix.batch.aggregate', { sieve: props.mix.sieveLine }),
-      value: t('mix.batch.buckets', { buckets: formatHalves(loc.value, b.buckets), shovels: b.shovels, kg: amount(b.aggregateKg, 'kg') }),
+      value: t('mix.batch.buckets', { buckets: count('bucket', b.buckets), shovels: count('shovel', b.shovels), kg: amount(b.aggregateKg, 'kg') }),
     },
     {
       key: 'water',
       label: t('mix.batch.water'),
-      value: t('mix.batch.waterValue', { litres: amount(b.waterL, 'l'), buckets: formatHalves(loc.value, Math.max(0.5, Math.round((b.waterL / BUCKET_L) * 2) / 2)) }),
+      value: t('mix.batch.waterValue', { litres: amount(b.waterL, 'l'), buckets: count('bucket', Math.max(0.5, Math.round((b.waterL / BUCKET_L) * 2) / 2)) }),
     },
   ];
   const extra = (key: string, label: string, v: number, unit: 'kg' | 'l') => v > 0 && list.push({ key, label, value: amount(v, unit) });

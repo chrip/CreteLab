@@ -278,11 +278,15 @@
       "bag1": "1 bag ({kg} kg)",
       "bagHalf": "½ bag",
       "aggregate": "Sand and gravel {sieve}, moist from the heap",
-      "buckets": "{buckets} buckets, about {shovels} shovels ({kg})",
+      "buckets": "{buckets}, about {shovels} ({kg})",
       "water": "Water",
-      "waterValue": "{litres}, about {buckets} buckets",
+      "waterValue": "{litres}, about {buckets}",
       "air": "Air-entraining agent",
-      "hint": "A bucket is a 10 l builder's bucket, level full. The numbers assume {kg} kg of moist gravel per bucket and about {shovel} kg per shovel. Weigh one full bucket of your gravel once: if it is clearly heavier, use fewer buckets, and the other way round. Add the water last and bit by bit until the consistency is right; gravel from the heap is not equally wet."
+      "hint": "A bucket is a 10 l builder's bucket, level full. The numbers assume {kg} kg of moist gravel per bucket and about {shovel} kg per shovel. Weigh one full bucket of your gravel once: if it is clearly heavier, use fewer buckets, and the other way round. Add the water last and bit by bit until the consistency is right; gravel from the heap is not equally wet.",
+      "bucketOne": "{n} bucket",
+      "bucketMany": "{n} buckets",
+      "shovelOne": "{n} shovel",
+      "shovelMany": "{n} shovels"
     }
   },
   "order": {
