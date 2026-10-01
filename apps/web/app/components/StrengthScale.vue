@@ -154,12 +154,13 @@ figcaption {
   content: '';
   display: inline-block;
   margin-right: 0.3rem;
-  border-left: 0.45rem solid transparent;
-  border-right: 0.45rem solid transparent;
-  border-top: 0.55rem solid var(--text);
+  /* The scale's pointer turned to the right, towards its label: no disclosure arrow. */
+  border-top: 0.45rem solid transparent;
+  border-bottom: 0.45rem solid transparent;
+  border-left: 0.55rem solid var(--text);
 }
 
 .key.from::before {
-  border-top-color: var(--text-muted);
+  border-left-color: var(--text-muted);
 }
 </style>
