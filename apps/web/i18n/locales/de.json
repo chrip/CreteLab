@@ -262,6 +262,27 @@
       "air": "{amount} Luftporenbildner zugeben (Ziel {pct} % Luft).",
       "mix": "Gut durchmischen, bis die Konsistenz {consistency} erreicht ist.",
       "place": "Innerhalb von etwa 30 Minuten einbauen, verdichten und einige Tage feucht halten."
+    },
+    "batch": {
+      "title": "Auf der Baustelle: je Mischung",
+      "lead": "Auf der Baustelle wird nicht gewogen. Gemischt wird sackweise, Sand und Kies kommen mit Eimer oder Schaufel in den Mischer.",
+      "mixer": "Womit Sie mischen",
+      "mixers": {
+        "drum140": "Freifallmischer 140 l",
+        "drum180": "Freifallmischer 180 l",
+        "tub": "Mörtelwanne, von Hand"
+      },
+      "one": "Das passt in eine Mischung.",
+      "many": "{batches} Mischungen mit je {bag} Zement, zusammen {total} Sack.",
+      "per": "Je Mischung, etwa {litres} l Beton",
+      "bag1": "1 Sack ({kg} kg)",
+      "bagHalf": "½ Sack",
+      "aggregate": "Sand und Kies {sieve}, feucht vom Haufen",
+      "buckets": "{buckets} Eimer, etwa {shovels} Schaufeln ({kg})",
+      "water": "Wasser",
+      "waterValue": "{litres}, etwa {buckets} Eimer",
+      "air": "Luftporenbildner",
+      "hint": "Eimer heißt 10-l-Maurereimer, gestrichen voll. Gerechnet ist mit {kg} kg feuchtem Kies je Eimer und etwa {shovel} kg je Schaufel. Wiegen Sie einmal einen vollen Eimer Ihres Kieses: Wiegt er deutlich mehr, nehmen Sie entsprechend weniger Eimer, und umgekehrt. Das Wasser zuletzt und nach und nach zugeben, bis die Konsistenz stimmt; Kies vom Haufen ist unterschiedlich nass."
     }
   },
   "order": {

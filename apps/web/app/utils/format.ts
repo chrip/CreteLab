@@ -23,6 +23,13 @@ export function formatAmount(locale: Locale, value: number, unit: 'kg' | 'l'): s
   return `${formatNumber(locale, value, value < 10 ? 1 : 0)} ${unit}`;
 }
 
+/** Counts to the half, as on site: 8,5 → "8½", 0,5 → "½", 3 → "3". */
+export function formatHalves(locale: Locale, value: number): string {
+  const whole = Math.floor(value + 1e-9);
+  const half = value - whole >= 0.25 ? '½' : '';
+  return whole === 0 && half ? half : `${formatNumber(locale, whole)}${half}`;
+}
+
 /** A concrete volume: litres below 0,1 m³ ("12 l"), cubic metres above ("2,70 m³"). */
 export function formatVolume(locale: Locale, m3: number): string {
   if (m3 < 0.1) {

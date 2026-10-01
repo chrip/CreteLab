@@ -32,6 +32,8 @@
         </table>
       </div>
 
+      <BatchPlan :recipe="recipe" :volume="volume" :mix="mix" />
+
       <details>
         <summary>{{ $t('mix.grainGroups') }}</summary>
         <div class="table-wrap">
@@ -70,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-// Mixing it yourself: the B 20 mix design, per m³ and for the whole volume.
+// Mixing it yourself: the B 20 mix design, per m³, for the whole volume and per batch on site.
 import { ORDER_SENSIBLE_FROM_M3, computeRecipe, type MixInput } from '@cretelab/engine';
 import { formatAmount, formatNumber, formatVolume, type Locale } from '~/utils/format';
 

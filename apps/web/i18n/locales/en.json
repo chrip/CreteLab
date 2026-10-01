@@ -262,6 +262,27 @@
       "air": "Add {amount} air-entraining agent (target {pct} % air).",
       "mix": "Mix well until the consistency is {consistency}.",
       "place": "Place it within about 30 minutes, compact it and keep it moist for a few days."
+    },
+    "batch": {
+      "title": "On site: per batch",
+      "lead": "Nobody weighs on site. Concrete is mixed by the bag, and sand and gravel go into the mixer by the bucket or shovel.",
+      "mixer": "What you mix with",
+      "mixers": {
+        "drum140": "Drum mixer 140 l",
+        "drum180": "Drum mixer 180 l",
+        "tub": "Mortar tub, by hand"
+      },
+      "one": "This fits into one batch.",
+      "many": "{batches} batches with {bag} of cement each, {total} bags in total.",
+      "per": "Per batch, about {litres} l of concrete",
+      "bag1": "1 bag ({kg} kg)",
+      "bagHalf": "½ bag",
+      "aggregate": "Sand and gravel {sieve}, moist from the heap",
+      "buckets": "{buckets} buckets, about {shovels} shovels ({kg})",
+      "water": "Water",
+      "waterValue": "{litres}, about {buckets} buckets",
+      "air": "Air-entraining agent",
+      "hint": "A bucket is a 10 l builder's bucket, level full. The numbers assume {kg} kg of moist gravel per bucket and about {shovel} kg per shovel. Weigh one full bucket of your gravel once: if it is clearly heavier, use fewer buckets, and the other way round. Add the water last and bit by bit until the consistency is right; gravel from the heap is not equally wet."
     }
   },
   "order": {

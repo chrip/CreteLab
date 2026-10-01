@@ -33,6 +33,21 @@ describe('MixPanel', () => {
     expect(w.findAll('ol.steps li').length).toBeGreaterThanOrEqual(4);
   });
 
+  it('splits the job into batches by the bag, gravel in buckets and shovels', async () => {
+    const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 3 } });
+    const plan = w.find('[data-testid="batch-plan"]');
+    expect(plan.find('[data-testid="batch-summary"]').text()).toMatch(/^\d+ Mischungen mit je 1 Sack \(25 kg\) Zement, zusammen \d+ Sack\.$/);
+    expect(plan.text()).toMatch(/Sand und Kies B32, feucht vom Haufen\s*[\d½]+ Eimer, etwa \d+ Schaufeln/);
+    await plan.findAll('input[type="radio"]')[2]!.setValue(true);
+    expect(plan.find('[data-testid="batch-summary"]').text()).toContain('je ½ Sack Zement');
+  });
+
+  it('a few litres are one batch with the cement in kilograms', async () => {
+    const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 0.02 } });
+    expect(w.find('[data-testid="batch-summary"]').text()).toBe('Das passt in eine Mischung.');
+    expect(w.find('[data-testid="batch-plan"] tbody tr').text()).toMatch(/Zement CEM I 42.5 N\s*[\d,]+ kg/);
+  });
+
   it('explains why F4 needs a superplasticiser instead of showing a recipe', async () => {
     const w = await mountSuspended(MixPanel, { props: { mix: mix({ consistency: 'F4' }), volume: 1 } });
     expect(w.find('[role="alert"]').text()).toContain('F4');

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { volumeBreakdown } from '@cretelab/engine';
-import { formatAmount, formatBreakdown, formatCompact, formatNumber, formatVolume, parseDecimal } from '../../app/utils/format';
+import { formatAmount, formatBreakdown, formatCompact, formatHalves, formatNumber, formatVolume, parseDecimal } from '../../app/utils/format';
 
 describe('formatNumber', () => {
   it('uses the decimal comma in German and the point in English', () => {
@@ -81,5 +81,14 @@ describe('formatBreakdown', () => {
   it('a round pot', () => {
     const b = volumeBreakdown('hollow', { diameter: 0.4, height: 0.35, wall: 0.025 })!;
     expect(formatBreakdown('de', b)).toBe('(π/4 × (40 cm)² × 35 cm) − (π/4 × (35 cm)² × 32,5 cm) = 13 l');
+  });
+});
+
+describe('formatHalves', () => {
+  it('counts to the half like on site', () => {
+    expect(formatHalves('de', 8.5)).toBe('8½');
+    expect(formatHalves('de', 0.5)).toBe('½');
+    expect(formatHalves('de', 3)).toBe('3');
+    expect(formatHalves('en', 12)).toBe('12');
   });
 });

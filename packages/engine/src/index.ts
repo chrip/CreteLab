@@ -5,6 +5,7 @@ export * from './b20/exposure';
 export * from './b20/grading';
 export * from './b20/materials';
 export * from './b20/recipe';
+export * from './b20/batches';
 export * from './project/answers';
 export * from './project/geometry';
 export * from './project/volume';
