@@ -37,12 +37,16 @@ export function isDiyPiece(answers: Answers): boolean {
  */
 export function detectApproach(answers: Answers, text = '', wall: number | null = null): Approach {
   const choice = answers.approach?.choice;
-  if (choice === 'scratch' && wall !== null && wall < MIN_SITE_CONCRETE_WALL_M) return 'fine_mortar';
+  const saysBag = BAGGED_WORDS.test(text.toLowerCase());
+  // A wall under 3 cm is fine mortar: neither site concrete nor a bag with 8–16 mm grain
+  // fills it. Only a bag the text asks for stays a bag (plan.thinWall then explains it).
+  const thin = wall !== null && wall < MIN_SITE_CONCRETE_WALL_M;
+  if (thin && (choice === 'scratch' || (choice === 'bagged' && !saysBag))) return 'fine_mortar';
   // "mit Fertigbeton aus dem Baumarkt" says it outright; an unsure model answer does not overrule it.
   const unsure = (answers.approach?.confidence ?? 1) < 0.5;
-  if (choice === 'scratch' && unsure && BAGGED_WORDS.test(text.toLowerCase())) return 'bagged';
+  if (choice === 'scratch' && unsure && saysBag) return 'bagged';
   if (choice === 'scratch' || choice === 'bagged' || choice === 'fine_mortar') return choice;
-  if (BAGGED_WORDS.test(text.toLowerCase())) return 'bagged';
+  if (saysBag) return 'bagged';
   return isDiyPiece(answers) ? 'fine_mortar' : 'scratch';
 }
 

@@ -48,8 +48,12 @@ describe('detectApproach', () => {
     expect(detectApproach({ approach: { choice: 'scratch' } }, '', null)).toBe('scratch');
   });
 
-  it('the wall override only applies to "scratch": a bag stays a bag (plan.thinWall flags it)', () => {
-    expect(detectApproach({ approach: { choice: 'bagged' } }, '', 0.02)).toBe('bagged');
+  it('a bag the model only guesses gives way to fine mortar too: "Outdoor planter 60x30x40 cm, 2 cm walls"', () => {
+    expect(detectApproach({ approach: { choice: 'bagged' } }, 'Outdoor planter 60x30x40 cm, 2 cm walls', 0.02)).toBe('fine_mortar');
+  });
+
+  it('a bag the text asks for stays a bag (plan.thinWall flags it)', () => {
+    expect(detectApproach({ approach: { choice: 'bagged' } }, 'Pflanzkübel aus Fertigbeton vom Baumarkt, 2 cm Wand', 0.02)).toBe('bagged');
   });
 
   it.each([
@@ -230,6 +234,16 @@ describe('planProject', () => {
     expect(plan.decor.preset.key).toBe('diy-white-15kg-laminate');
     expect(plan.wantsBagTuning).toBe(false);
     expect(plan.requirements.exposureClasses).toEqual(['XF1']);
+  });
+
+  it('the start page example "Outdoor planter 60x30x40 cm, 2 cm walls" goes to fine concrete when the model guesses a bag', () => {
+    // The model's answers of 2026-10-01: approach "bagged" with nothing about bags in the text.
+    const plan = planProject('Outdoor planter 60x30x40 cm, 2 cm walls', {
+      answers: { ...planter, approach: { choice: 'bagged' }, fine_cast: noul(0.57) },
+      candidates: ['60x30x40 cm', '2 cm'],
+    });
+    expect(plan.tool).toBe('decor');
+    expect(plan.approach).toBe('fine_mortar');
   });
 
   it('the same planter indoors gets the furniture mix', () => {
