@@ -32,6 +32,22 @@ describe('parseVolume', () => {
   });
 });
 
+describe('parseVolume: written-out units and cross-sections', () => {
+  it('Ringanker 24x25cm ca. 50 Meter → 3 m³', () => {
+    const v = parseVolume('Ringanker 24x25cm ca. 50 Meter\n0-16 Sand/Kies vorhanden\nC25/30');
+    expect(v.volume).toBe(3);
+    expect(v.source).toBe('dimensions');
+  });
+
+  it('Streifenfundament 40 x 80 cm, 18 lfm → 5,76 m³', () => {
+    expect(parseVolume('Streifenfundament 40 x 80 cm, 18 lfm').volume).toBe(5.76);
+  });
+
+  it('Bodenplatte 3x2 Meter, 20 Zentimeter dick → 1,2 m³', () => {
+    expect(parseVolume('Bodenplatte 3x2 Meter, 20 Zentimeter dick').volume).toBe(1.2);
+  });
+});
+
 describe('parseVolume: DIY pieces', () => {
   it('keeps litre precision for small pieces: Tischplatte 120x60x3 cm → 21,6 l', () => {
     expect(parseVolume('Tischplatte 120x60x3 cm').volume).toBe(0.0216);

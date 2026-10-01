@@ -80,7 +80,8 @@
       "count": "pieces",
       "edge": "edge length"
     },
-    "assumed": "assumed: {size} {value}"
+    "assumed": "assumed: {size} {value}",
+    "section": "cross-section"
   },
   "home": {
     "metaTitle": "Concrete for your project",

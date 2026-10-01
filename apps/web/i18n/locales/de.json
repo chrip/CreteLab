@@ -80,7 +80,8 @@
       "count": "Stück",
       "edge": "Kantenlänge"
     },
-    "assumed": "angenommen: {size} {value}"
+    "assumed": "angenommen: {size} {value}",
+    "section": "Querschnitt"
   },
   "home": {
     "metaTitle": "Beton für Ihr Projekt",

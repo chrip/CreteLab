@@ -33,6 +33,13 @@ from cretelab_api.measurements import (
         ("Platte 1,2 m x 80 cm, 4 cm dick", ["120x80 cm", "4 cm"]),
         ("Kübel 40 x 40 cm x 0,5 m", ["40x40x50 cm"]),
         ("Rahmen 2 m x 500 mm", ["200x50 cm"]),
+        # Written-out units become the short form.
+        ("Ringanker 24x25cm ca. 50 Meter\n0-16 Sand/Kies vorhanden\nC25/30", ["24x25 cm", "50 m"]),
+        ("Mauer 12 Metern lang, 30 Zentimeter breit", ["12 m", "30 cm"]),
+        ("Streifenfundament 18 lfm, 40 x 80 Zentimeter", ["18 m", "40x80 cm"]),
+        ("Bodenplatte 20 Quadratmeter, 2 Kubikmeter Beton", ["20 m²", "2 m³"]),
+        ("a wall 3 metres long, 200 millimetres thick", ["3 m", "200 mm"]),
+        ("Platte 3 x 2 Meter", ["3x2 m"]),
     ],
 )
 def test_extract_finds_measurements_in_reading_order(text, expected):

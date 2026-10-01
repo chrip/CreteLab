@@ -14,7 +14,31 @@ from typing import Any
 Question = dict[str, Any]
 
 NUM = r"(\d+(?:[.,]\d+)?)"
-UNIT = r"(mm|cm|dm|m²|m2|qm|m³|m3|cbm|kubik|liters|litres|liter|litre|l|m)"
+# Written-out units become the short form in the candidate ("50 Meter" → "50 m"), which is
+# what the web app and the role questions use. lfm: laufende Meter, the trade's length unit.
+LENGTH_WORDS = {
+    **dict.fromkeys(["millimeter", "millimetern", "millimeters", "millimetre", "millimetres"], "mm"),
+    **dict.fromkeys(["zentimeter", "zentimetern", "centimeter", "centimeters", "centimetre", "centimetres"], "cm"),
+    **dict.fromkeys(["meter", "metern", "meters", "metre", "metres", "lfm", "lfdm"], "m"),
+}
+UNIT_WORDS = {
+    **LENGTH_WORDS,
+    **dict.fromkeys(["quadratmeter", "quadratmetern"], "m²"),
+    **dict.fromkeys(["kubikmeter", "kubikmetern"], "m³"),
+}
+
+
+def alternatives(words: dict[str, str], short: str) -> str:
+    """A regex group of the written-out words (longest first, so "metern" wins over "meter")
+    and the short units."""
+    return "(" + "|".join(sorted(words, key=len, reverse=True)) + "|" + short + ")"
+
+
+def short_unit(unit: str) -> str:
+    return UNIT_WORDS.get(unit.lower(), unit.lower())
+
+
+UNIT = alternatives(UNIT_WORDS, "mm|cm|dm|m²|m2|qm|m³|m3|cbm|kubik|liters|litres|liter|litre|l|m")
 # counts, also in compounds and other cases: "12 Zaunpfosten", "4 Löcher", "2 Säcken", "6 Punktfundamente"
 COUNT = (
     r"([a-zäöüß]*(?:stück|stk|stck|pcs|pieces|posts?|pfosten|säcke?n?|bags?|löcher[n]?|holes?|"
@@ -23,7 +47,7 @@ COUNT = (
 
 # "3x2 m", "40x40x80 cm", "40 cm x 40 cm" describe themselves (length × width [× height]):
 # one candidate, no role question. Without a unit, values from 10 up are read as cm.
-LEN_U = r"(mm|cm|m)"
+LEN_U = alternatives(LENGTH_WORDS, "mm|cm|m")
 DIMS = re.compile(
     NUM + r"\s*" + LEN_U + r"?\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?"
     r"(?:\s*[x×*]\s*" + NUM + r"\s*" + LEN_U + r"?)?(?![a-zäöüß\d])",
@@ -43,7 +67,7 @@ def dims_label(m: re.Match[str]) -> str:
     without any unit, values from 10 up are cm.
     """
     values = [g for g in m.group(1, 3, 5) if g]
-    units = [u.lower() if u else None for u in m.group(2, 4, 6)][: len(values)]
+    units = [short_unit(u) if u else None for u in m.group(2, 4, 6)][: len(values)]
     for i in range(len(units)):
         if units[i] is None:
             later = [u for u in units[i + 1 :] if u]
@@ -86,7 +110,7 @@ def extract(text: str) -> list[str]:
     for m in COUNTS.finditer(text):
         add(m.start(), m.end(), f"{m.group(1)} {m.group(2).lower()}")
     for m in SINGLE.finditer(text):
-        add(m.start(), m.end(), f"{m.group(1)} {m.group(2).lower()}")
+        add(m.start(), m.end(), f"{m.group(1)} {short_unit(m.group(2))}")
     labels: list[str] = []
     seen: dict[str, int] = {}
     for _, label in sorted(found):

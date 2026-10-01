@@ -59,7 +59,11 @@ const measurements = computed(() =>
     const label = candidate.replace(/ #\d+$/, '');
     const parsed = parseCandidate(candidate);
     if (parsed?.kind === 'dims') {
-      return { candidate, label, used: true, role: t(parsed.size.length === 3 ? 'facts.dims3' : 'facts.dims2') };
+      // Two sizes that became width and height: the cross-section of a beam ("24x25 cm, 50 m").
+      const d = props.plan.volume.dimensions;
+      const section = parsed.size.length === 2 && d?.width === parsed.size[0] && d?.height === parsed.size[1];
+      const role = section ? 'facts.section' : parsed.size.length === 3 ? 'facts.dims3' : 'facts.dims2';
+      return { candidate, label, used: true, role: t(role) };
     }
     const answered = props.analysis.answers[`role:${candidate}`]?.choice;
     const used = Boolean(answered && ROLES.includes(answered));

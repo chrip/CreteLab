@@ -107,6 +107,11 @@ function rolesFromAnswers(answers: Answers, candidates: readonly string[]) {
 
 const SOLID = /massiv|vollmaterial|\bsolid\b/;
 
+/** Two sizes small enough for a cross-section (up to 1,5 m) and a longer run length. */
+function isCrossSection(dims: readonly number[], run: number | undefined): run is number {
+  return dims.length === 2 && run !== undefined && Math.max(...dims) <= 1.5 && run > Math.max(...dims);
+}
+
 export interface VolumeOptions {
   /** The description, for words the model may miss ("Würfel", "massiv"). */
   text?: string;
@@ -138,10 +143,12 @@ export function volumeFromAnswers(answers: Answers, candidates: readonly string[
 
   // A wall gives length, height and thickness: the thickness is its width.
   const wallLike = !dims && r.height !== undefined && r.thickness !== undefined && r.width === undefined;
+  // A cross-section and how long it runs: "Ringanker 24x25 cm, 50 m", "Streifenfundament 40x80 cm, 18 lfm".
+  const section = dims && isCrossSection(dims, r.length) && r.height === undefined && r.thickness === undefined ? dims : null;
   const d: Dimensions = {
-    length: dims?.[0] ?? r.length,
-    width: dims?.[1] ?? r.width ?? (wallLike ? r.thickness : undefined),
-    height: dims?.[2] ?? r.height ?? r.thickness,
+    length: section ? r.length : (dims?.[0] ?? r.length),
+    width: section ? section[0] : (dims?.[1] ?? r.width ?? (wallLike ? r.thickness : undefined)),
+    height: section ? section[1] : (dims?.[2] ?? r.height ?? r.thickness),
     diameter: r.diameter,
     wall: r.wall,
     area: r.area,
@@ -199,6 +206,8 @@ const CUBE = /würfel|wuerfel|kubus|kubisch|cubisch|\bcube\b|\bcubic\b/;
 const CLOSED = /geschlossen|\bclosed\b|rundum zu/;
 const BOTH_OPEN = /\brohr|röhre|\bring\b|ohne boden|bottomless|\btube\b|\bpipe\b/;
 
+const len = (m: RegExpMatchArray) => num(m[1]!) * UNIT_TO_M[m[2]!]!;
+
 function findWall(t: string) {
   for (const re of WALL_PATTERNS) {
     const m = t.match(re);
@@ -228,13 +237,21 @@ function parseHollowBody(t: string): VolumeResult | null {
   return fromShape('hollow', { length, width, height, wall: wall.meters, open }, 'hollow', `${outer.match} · ${wall.text}`);
 }
 
+/** Written-out length units as the short form ("50 Meter" → "50 m"), like services/api does. */
+function shortUnits(t: string) {
+  return t
+    .replace(/(\d)\s*(?:millimetern?|millimet(?:er|re)s)(?![a-zäöüß])/g, '$1 mm')
+    .replace(/(\d)\s*(?:zentimetern?|centimet(?:er|re)s?)(?![a-zäöüß])/g, '$1 cm')
+    .replace(/(\d)\s*(?:metern?|met(?:er|re)s?|lfdm|lfm)(?![a-zäöüß])/g, '$1 m');
+}
+
 /**
  * Find the volume in plain text: volumes ("2 m³", "halber Kubik", "500 Liter"), hollow
  * bodies with a wall thickness, dimensions ("40x40x80 cm", "3x2 m, 20 cm dick") and areas
  * with a thickness ("25 m², 15 cm stark"). Falls back to `defaultVolume`.
  */
 export function parseVolume(text: string, { defaultVolume = 1 } = {}): VolumeResult {
-  const t = text.toLowerCase();
+  const t = shortUnits(text.toLowerCase());
 
   const vol = t.match(new RegExp(`${NUM}\\s*(m³|m3|cbm|kubikmeter|kubik|cubic met(?:er|re)s?)`));
   if (vol) return { volume: roundVolume(num(vol[1]!)), source: 'volume', match: vol[0] };
@@ -267,6 +284,12 @@ export function parseVolume(text: string, { defaultVolume = 1 } = {}): VolumeRes
     const [a = 0, b = 0, c] = dims.size;
     if (c !== undefined) return fromShape('block', { length: a, width: b, height: c }, 'dimensions', dims.match)!;
     if (thicknessM) return fromShape('slab', { length: a, width: b, height: thicknessM }, 'dimensions', `${dims.match} · ${thickness![0]}`)!;
+    // A cross-section and the longest other length as its run.
+    const runs = [...t.replace(dims.match, ' ').matchAll(new RegExp(LEN, 'g'))];
+    const run = runs.reduce<RegExpMatchArray | null>((x, y) => (!x || len(y) > len(x) ? y : x), null);
+    if (run && isCrossSection(dims.size, len(run))) {
+      return fromShape('block', { length: len(run), width: a, height: b }, 'dimensions', `${dims.match} · ${run[0]}`)!;
+    }
   }
 
   const area = t.match(new RegExp(`${NUM}\\s*(m²|m2|qm|quadratmeter|square met(?:er|re)s?|sqm)`));

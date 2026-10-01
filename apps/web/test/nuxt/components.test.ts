@@ -197,6 +197,17 @@ describe('UnderstoodPanel', () => {
     expect(w.find('[data-testid="volume-formula"]').text()).toBe('6 m × 3 m × 0,15 m = 2,70 m³');
   });
 
+  it('calls two sizes with a run length a cross-section: Ringanker 24x25 cm, 50 m', async () => {
+    const analysis = {
+      answers: { shape: { choice: 'block' }, open_sides: { choice: 'solid' }, 'role:50 m': { choice: 'length' } },
+      candidates: ['24x25 cm', '50 m'], model: 'laya-crete', ms: 50,
+    };
+    const plan = planProject('Ringanker 24x25cm ca. 50 Meter', analysis);
+    const w = await mountSuspended(UnderstoodPanel, { props: { analysis, plan, volume: plan.volume.volume } });
+    expect(w.find('[data-testid="understood-volume"]').text()).toContain('24x25 cm Querschnitt');
+    expect(w.find('[data-testid="volume-formula"]').text()).toBe('50 m × 0,24 m × 0,25 m = 3,00 m³');
+  });
+
   it('marks a missing size in colour', async () => {
     const analysis = { answers: {}, candidates: [], model: 'laya-crete', ms: 50 };
     const plan = planProject('Kellerwand', analysis);

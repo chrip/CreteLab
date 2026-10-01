@@ -166,6 +166,20 @@ describe('volume from shape and roles', () => {
   });
 });
 
+describe('a cross-section and its length', () => {
+  it('Ringanker 24x25 cm, 50 m: 0,24 × 0,25 × 50 = 3 m³', () => {
+    const v = volumeFromAnswers(ans('block', 'solid', { '50 m': 'length' }), ['24x25 cm', '50 m']);
+    expect(v?.volume).toBe(3);
+    expect(v?.dimensions).toMatchObject({ length: 50, width: 0.24, height: 0.25 });
+  });
+
+  it('a slab with a length beside it stays a slab question, not a beam', () => {
+    // 3x2 m is no cross-section: the 20 cm is the thickness.
+    near(volumeFromAnswers(ans('slab', 'solid', { '20 cm': 'thickness' }), ['3x2 m', '20 cm'])?.volume, 1.2);
+    expect(volumeFromAnswers(ans('block', 'solid', { '5 m': 'length' }), ['3x2 m', '5 m'])).toBeNull();
+  });
+});
+
 describe('wallFromAnswers', () => {
   it('returns the length Laya calls the wall, in metres', () => {
     expect(wallFromAnswers({ 'role:2 cm': { choice: 'wall' } }, ['40x40x40 cm', '2 cm'])).toBe(0.02);
