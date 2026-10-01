@@ -302,7 +302,10 @@ describe('NeedsSummary', () => {
       props: { marks: [{ cls: 'C25/30', kind: 'from', label: 'Ausgangsmischung' }, { cls: 'C30/37', kind: 'main', label: 'Geschätzt mit Zusätzen' }] },
     });
     expect(w.findAll('.pointer')).toHaveLength(2);
-    expect(w.find('figcaption').text()).toBe('Ausgangsmischung: C25/30 solide → Geschätzt mit Zusätzen: C30/37 fest · Außenbauteile, Stützen');
+    expect(w.findAll('figcaption .entry').map((e) => e.text())).toEqual([
+      'Ausgangsmischung: C25/30 solide',
+      'Geschätzt mit Zusätzen: C30/37 fest · Außenbauteile, Stützen',
+    ]);
     await w.setProps({ marks: [{ cls: 'C25/30', kind: 'from', label: 'Ausgangsmischung' }, { cls: 'C25/30', kind: 'main', label: 'Noch ohne Zusätze' }] });
     expect(w.findAll('.pointer')).toHaveLength(1);
   });

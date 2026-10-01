@@ -25,11 +25,10 @@
       <span>{{ $t('needs.strengthWord.C70_85') }}</span>
     </div>
     <figcaption>
-      <template v-for="(m, i) in captions" :key="m.kind">
-        <span v-if="i > 0" class="muted"> → </span>
+      <span v-for="m in captions" :key="m.kind" class="entry">
         <span v-if="m.label" :class="['key', m.kind]">{{ m.label }}: </span>
         <strong>{{ m.cls }}</strong> {{ word(m.cls) }}<span v-if="m.kind === 'main'" class="muted"> · {{ use(m.cls) }}</span>
-      </template>
+      </span>
     </figcaption>
   </figure>
 </template>
@@ -82,8 +81,8 @@ const ariaLabel = computed(() =>
 
 <style scoped>
 .scale {
-  margin: 0 0 0.75rem;
-  padding-top: 0.6rem; /* room for the pointer, inside the figure */
+  margin: 1.25rem 0 1.25rem;
+  padding-top: 1rem; /* room for the pointer, inside the figure */
 }
 
 .track {
@@ -97,7 +96,7 @@ const ariaLabel = computed(() =>
   text-align: center;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.3rem 0;
+  padding: 0.45rem 0;
   color: var(--text);
 }
 
@@ -124,13 +123,13 @@ const ariaLabel = computed(() =>
 
 .pointer {
   position: absolute;
-  top: -0.5rem;
+  top: -0.9rem;
   width: 0;
   height: 0;
   transform: translateX(-50%);
-  border-left: 0.45rem solid transparent;
-  border-right: 0.45rem solid transparent;
-  border-top: 0.5rem solid var(--text);
+  border-left: 0.7rem solid transparent;
+  border-right: 0.7rem solid transparent;
+  border-top: 0.8rem solid var(--text);
 }
 
 .pointer.from {
@@ -141,11 +140,13 @@ const ariaLabel = computed(() =>
 .ends {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.2rem;
+  margin-top: 0.4rem;
 }
 
 figcaption {
-  margin-top: 0.35rem;
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.3rem;
 }
 
 /* The caption names the pointers: grey for the starting point, dark for the result. */
@@ -153,9 +154,9 @@ figcaption {
   content: '';
   display: inline-block;
   margin-right: 0.3rem;
-  border-left: 0.35rem solid transparent;
-  border-right: 0.35rem solid transparent;
-  border-top: 0.4rem solid var(--text);
+  border-left: 0.45rem solid transparent;
+  border-right: 0.45rem solid transparent;
+  border-top: 0.55rem solid var(--text);
 }
 
 .key.from::before {
