@@ -275,7 +275,6 @@
       "one": "Das passt in eine Mischung.",
       "many": "{batches} Mischungen mit je {bag} Zement, zusammen {total} Sack.",
       "per": "Je Mischung, etwa {litres} l Beton",
-      "bag1": "1 Sack ({kg} kg)",
       "bagHalf": "½ Sack",
       "aggregate": "Sand und Kies {sieve}, feucht vom Haufen",
       "buckets": "{buckets}, etwa {shovels} ({kg})",
@@ -286,7 +285,9 @@
       "bucketOne": "{n} Eimer",
       "bucketMany": "{n} Eimer",
       "shovelOne": "{n} Schaufel",
-      "shovelMany": "{n} Schaufeln"
+      "shovelMany": "{n} Schaufeln",
+      "bagsOne": "{n} Sack ({kg} kg)",
+      "bagsMany": "{n} Sack ({kg} kg)"
     }
   },
   "order": {

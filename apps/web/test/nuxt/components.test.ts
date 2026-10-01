@@ -42,6 +42,15 @@ describe('MixPanel', () => {
     expect(plan.find('[data-testid="batch-summary"]').text()).toContain('je ½ Sack Zement');
   });
 
+  it('a 180 l drum takes 1½ bags per batch: Ringanker C25/30, 3 m³', async () => {
+    const ring = mix({ strengthClass: 'C25/30', exposureClasses: ['XC4', 'XF1'], sieveLine: 'B16' });
+    const w = await mountSuspended(MixPanel, { props: { mix: ring, volume: 3 } });
+    const summary = () => w.find('[data-testid="batch-summary"]').text();
+    expect(summary()).toBe('41 Mischungen mit je 1 Sack (25 kg) Zement, zusammen 41 Sack.');
+    await w.find('[data-testid="batch-plan"]').findAll('input[type="radio"]')[1]!.setValue(true);
+    expect(summary()).toBe('27 Mischungen mit je 1½ Sack (37,5 kg) Zement, zusammen 41 Sack.');
+  });
+
   it('a bucket up to one is singular: "½ bucket", "1 shovel"', async () => {
     await useNuxtApp().$i18n.setLocale('en');
     const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 0.005 } });

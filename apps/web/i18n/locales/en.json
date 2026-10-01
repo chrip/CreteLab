@@ -275,7 +275,6 @@
       "one": "This fits into one batch.",
       "many": "{batches} batches with {bag} of cement each, {total} bags in total.",
       "per": "Per batch, about {litres} l of concrete",
-      "bag1": "1 bag ({kg} kg)",
       "bagHalf": "½ bag",
       "aggregate": "Sand and gravel {sieve}, moist from the heap",
       "buckets": "{buckets}, about {shovels} ({kg})",
@@ -286,7 +285,9 @@
       "bucketOne": "{n} bucket",
       "bucketMany": "{n} buckets",
       "shovelOne": "{n} shovel",
-      "shovelMany": "{n} shovels"
+      "shovelMany": "{n} shovels",
+      "bagsOne": "{n} bag ({kg} kg)",
+      "bagsMany": "{n} bags ({kg} kg)"
     }
   },
   "order": {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { CEMENT_BAG_KG, BUCKET_KG, MIXERS, SHOVEL_KG, batchPlan, type Mixer } from '../../src/b20/batches';
+import { BAGS_PER_BATCH, CEMENT_BAG_KG, BUCKET_KG, MIXERS, SHOVEL_KG, batchPlan, type Mixer } from '../../src/b20/batches';
 import { recipeFor } from './helpers';
 
 describe('batches on site', () => {
@@ -25,6 +25,25 @@ describe('batches on site', () => {
         expect(made - volume).toBeLessThan(perBatch + 1e-9);
       }
     }
+  });
+
+  it('a batch takes as many half bags as the mixer holds, so a bigger drum needs fewer batches', () => {
+    for (const mixer of Object.keys(MIXERS) as Mixer[]) {
+      const { batch } = batchPlan(recipe, 3, mixer);
+      const most = BAGS_PER_BATCH.find((b) => (b * CEMENT_BAG_KG) / c <= MIXERS[mixer] / 1000);
+      expect(batch.bags).toBe(most);
+    }
+  });
+
+  it('Ringanker C25/30, 3 m³: 41 batches of 1 bag in a 140 l drum, 27 of 1½ bags in a 180 l drum', () => {
+    const ring = recipeFor({ strengthClass: 'C25/30', exposureClasses: ['XC4', 'XF1'], sieveLine: 'B16' });
+    const small = batchPlan(ring, 3, 'drum140');
+    const big = batchPlan(ring, 3, 'drum180');
+    expect(ring.materials.cement).toBeGreaterThan(CEMENT_BAG_KG * 1.5 / 0.12); // 1½ bags fit 120 l
+    expect(small.batch.bags).toBe(1);
+    expect(big.batch.bags).toBe(1.5);
+    expect(big.batches).toBeLessThan(small.batches);
+    expect(big.totalBags).toBe(small.totalBags);
   });
 
   it('by hand in a mortar tub a batch takes half a bag', () => {

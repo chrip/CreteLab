@@ -36,7 +36,7 @@
 <script setup lang="ts">
 // The recipe the way it is mixed on site: per batch, in bags, buckets and shovels.
 import { BUCKET_KG, BUCKET_L, CEMENT_BAG_KG, MIXERS, SHOVEL_KG, batchPlan, type Mixer, type MixInput, type Recipe } from '@cretelab/engine';
-import { formatAmount, formatHalves, type Locale } from '~/utils/format';
+import { formatAmount, formatCompact, formatHalves, type Locale } from '~/utils/format';
 
 const props = defineProps<{ recipe: Recipe; volume: number; mix: MixInput }>();
 const { t, locale } = useI18n();
@@ -54,7 +54,9 @@ const count = (key: 'bucket' | 'shovel', v: number) => t(`mix.batch.${key}${v <=
 
 const bagText = computed(() => {
   const b = plan.value.batch.bags;
-  return b === null ? '' : t(b === 1 ? 'mix.batch.bag1' : 'mix.batch.bagHalf', { kg: CEMENT_BAG_KG });
+  if (b === null) return '';
+  if (b === 0.5) return t('mix.batch.bagHalf');
+  return t(`mix.batch.bags${b === 1 ? 'One' : 'Many'}`, { n: formatHalves(loc.value, b), kg: formatCompact(loc.value, b * CEMENT_BAG_KG, 1) });
 });
 
 const rows = computed(() => {
