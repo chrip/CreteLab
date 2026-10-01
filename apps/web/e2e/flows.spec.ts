@@ -11,7 +11,7 @@ test.describe('start page', () => {
     await expect(page.getByRole('heading', { name: 'Was Sie brauchen' })).toBeVisible();
     await expect(page.getByText('1,20 m³ Beton')).toBeVisible();
     await expect(page.getByRole('tab', { name: /Selbst mischen/ })).toHaveAttribute('aria-selected', 'true');
-    await expect(page.getByRole('tabpanel').getByRole('table')).toContainText('Zement CEM I 42.5 N');
+    await expect(page.getByRole('tabpanel').getByRole('table', { name: 'Rezept' })).toContainText('Zement CEM I 42.5 N');
   });
 
   test('a thin piece goes to the fine concrete page with its sizes', async ({ page }) => {
