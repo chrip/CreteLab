@@ -47,7 +47,7 @@
     "criteria": {
       "foundation": "strip or pad footing, post base, foundation for a shed, wall or machine",
       "slab": "floor slab, base plate, garage floor, terrace slab, ceiling",
-      "wall": "wall, column, retaining wall, stairs",
+      "wall": "wall, column, beam, lintel, ring beam, retaining wall, stairs",
       "paving": "driveway, path, yard, parking surface",
       "small": "fence posts, small casts, planters, garden decoration"
     }

@@ -165,13 +165,66 @@ OBJECT_SCENARIOS: dict[str, bool] = {
     "pet food bowl": True,
 }
 
+# Structural and site elements as builders, foremen and serious self-builders write about
+# them (2026-10-01): the set leaned towards DIY pieces, and trade words like Ringanker,
+# Türsturz or Rasengitterstein never appeared. --scenarios pro.
+PRO_SCENARIOS = [
+    "ring beam on masonry walls under the roof (Ringanker, Ringbalken)",
+    "window lintel or door lintel, cast in place or precast (Fenstersturz, Türsturz)",
+    "downstand beam under a ceiling (Unterzug)",
+    "reinforced concrete column in a house, garage or carport (Stahlbetonstütze)",
+    "floor slab between storeys, cast in place or precast slab with topping (Geschossdecke, Filigrandecke mit Aufbeton)",
+    "staircase flight and landing inside a house (Treppenlauf, Podest)",
+    "setting block steps or precast steps outside (Blockstufen, Treppenstufen)",
+    "basement exterior wall in watertight concrete (Kelleraußenwand, WU-Beton, weiße Wanne)",
+    "ground slab of a single-family house with frost apron (Bodenplatte mit Frostschürze)",
+    "socket foundation for a precast column or post (Köcherfundament)",
+    "parapet or balustrade wall on a roof or balcony (Attika, Brüstung)",
+    "blinding layer of lean concrete under a foundation (Sauberkeitsschicht, Magerbeton)",
+    "laying sidewalk or patio slabs in a mortar bed (Gehwegplatten verlegen)",
+    "setting curbs or lawn edging stones in a concrete haunch (Bordsteine, Rasenkantensteine, Rückenstütze)",
+    "grass pavers for a parking area or fire lane (Rasengittersteine)",
+    "L-shaped retaining elements set in concrete (L-Steine, Winkelstützen)",
+    "capping a masonry wall on site (Mauerkrone, Mauerabdeckung)",
+    "plinth or pad for a heat pump outdoor unit (Wärmepumpen-Podest, Sockel)",
+    "elevator pit or pump sump in a basement (Aufzugsunterfahrt, Pumpensumpf)",
+    "filling hollow formwork blocks with concrete (Schalsteine verfüllen)",
+]
+
 GROUPS = {
     "site": SCENARIOS, "diy": DIY_SCENARIOS, "bagged": BAGGED_SCENARIOS,
-    "shapes": SHAPE_SCENARIOS, "objects": list(OBJECT_SCENARIOS),
+    "shapes": SHAPE_SCENARIOS, "objects": list(OBJECT_SCENARIOS), "pro": PRO_SCENARIOS,
 }
 
 
+def build_pro_prompt(scenario: str, lang: str, n: int) -> str:
+    language = "German" if lang == "de" else "English"
+    return f"""Write {n} different short project descriptions that a person might type into a
+concrete recipe calculator's search box. Topic: {scenario}.
+
+The writers are builders, site foremen, masons, landscapers and homeowners building their own
+house with a contractor's help. They use trade words.
+
+Rules:
+- Write in {language}. In German use the words a German site uses (Ringanker, Sturz, Unterzug,
+  Schalung, Bewehrung, Matte Q188, Bügel, lfm, Kubik, Transportbeton, Fahrmischer, Pumpe).
+- Vary the style: keyword lists, short sentences, several lines, colloquial, a few typos.
+- Vary the sizes, and pick your own numbers instead of repeating these examples: a cross-section
+  with a length (for example "30 x 20 cm, 12 m" or "36,5 x 24, ca. 18 lfm"),
+  three dimensions, an area with a thickness, a volume ("3 m³", "2,5 Kubik"), or none at all.
+- Sometimes name a strength or exposure class ("C25/30", "XC4 XF1", "WU"), sometimes what
+  the structural engineer asked for ("laut Statik"), often nothing.
+- In about a third, add home-builder details that sound like DIY ("mische selbst", "Kies 0-16
+  habe ich da", "mit dem Freifallmischer", "Sackware?") even though the element is structural.
+- Vary indoor/outdoor, frost, de-icing salt, groundwater, loads and reinforcement where it
+  fits. Do not always state these; leave some to be inferred.
+
+Reply with only a JSON array of {n} strings."""
+
+
 def build_generate_prompt(scenario: str, lang: str, n: int) -> str:
+    if scenario in PRO_SCENARIOS:
+        return build_pro_prompt(scenario, lang, n)
     diy = (scenario in DIY_SCENARIOS or scenario in BAGGED_SCENARIOS or scenario in SHAPE_SCENARIOS
            or OBJECT_SCENARIOS.get(scenario, False))
     sizes = ""
