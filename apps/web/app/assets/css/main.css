@@ -232,11 +232,16 @@ input[type='radio'] {
   font-weight: 400;
 }
 
+/* A checkbox label is as wide as box and text: a click on the empty space beside it (where
+   a dose field may sit) must not toggle it. */
 .check {
   display: flex;
   gap: 0.5rem;
   align-items: flex-start;
   font-weight: 400;
+  width: fit-content;
+  max-width: 100%;
+  cursor: pointer;
 }
 
 /* ── Tables ─────────────────────────────────────────────────────────────────────── */

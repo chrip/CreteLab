@@ -314,15 +314,14 @@ describe('MixForm admixtures and additions', () => {
     expect(m.flyAshPct).toBe(20);
   });
 
-  it('a click on the name or beside the dose does not toggle; the box keeps its name for screen readers', async () => {
+  it('box and name are one label; a click on the dose field does not toggle', async () => {
     const m = reactive(mix({ flyAshPct: 20 }));
     const w = await mountSuspended(MixForm, { props: { mix: m, volume: 1 } });
     const fly = row(w, 'Flugasche');
-    await fly.find('strong').trigger('click');
-    await fly.find('.check').trigger('click');
+    expect(fly.find('label.check').text()).toBe('Flugasche');
+    expect(fly.find('label.check input[type="text"]').exists()).toBe(false);
+    await fly.find('input[type="text"]').trigger('click');
     expect(m.flyAshPct).toBe(20);
-    const box = fly.find('input[type="checkbox"]');
-    expect(w.find(`#${box.attributes('aria-labelledby')}`).text()).toBe('Flugasche');
   });
 
   it('the plasticiser row switches between none, BV and FM', async () => {

@@ -57,10 +57,10 @@
     <fieldset>
       <legend>{{ $t('details.moistureTitle') }}</legend>
       <p class="small muted">{{ $t('details.moistureLead') }}</p>
-      <span class="check toggle">
-        <input v-model="useMoisture" type="checkbox" :aria-labelledby="`${id}-moisture`" />
-        <strong :id="`${id}-moisture`">{{ $t('details.moisture') }}</strong>
-      </span>
+      <label class="check">
+        <input v-model="useMoisture" type="checkbox" />
+        <strong>{{ $t('details.moisture') }}</strong>
+      </label>
       <div class="grid">
         <div v-for="(label, i) in ['0/2', '2/8', '8+']" :key="label" class="field" :class="{ disabled: !mix.moisture }">
           <label :for="`${id}-mo${i}`">{{ $t('details.moistureGroup', { group: label }) }}</label>
@@ -73,21 +73,20 @@
       <legend>{{ $t('details.admixtures') }}</legend>
       <p class="small muted">{{ $t('details.admixturesLead') }}</p>
       <div class="addition" :class="{ off: !plasticizerOn }">
-        <span class="check">
-          <input v-model="plasticizerOn" type="checkbox" :aria-labelledby="`${id}-add-plasticizer`" />
-          <strong :id="`${id}-add-plasticizer`">{{ $t('details.add.plasticizer') }}</strong>
-        </span>
+        <label class="check">
+          <input v-model="plasticizerOn" type="checkbox" />
+          <strong>{{ $t('details.add.plasticizer') }}</strong>
+        </label>
         <select v-model="plasticizerKind" :aria-label="$t('details.add.plasticizer')" :disabled="!plasticizerOn">
           <option v-for="p in PLASTICIZERS.filter((p) => p !== 'none')" :key="p" :value="p">{{ $t(`option.plasticizer.${p}`) }}</option>
         </select>
         <p class="small muted">{{ $t('details.add.plasticizerNote') }}</p>
       </div>
       <div v-for="a in ADMIXTURES" :key="a.key" class="addition" :class="{ off: !a.field.on.value }">
-        <!-- Only the box itself toggles: a click beside the dose must not switch it off. -->
-        <span class="check">
-          <input v-model="a.field.on.value" type="checkbox" :aria-labelledby="`${id}-add-${a.key}`" />
-          <strong :id="`${id}-add-${a.key}`">{{ $t(`details.add.${a.key}`) }}</strong>
-        </span>
+        <label class="check">
+          <input v-model="a.field.on.value" type="checkbox" />
+          <strong>{{ $t(`details.add.${a.key}`) }}</strong>
+        </label>
         <span class="amount">
           <NumberInput v-model="a.field.value.value" :max="a.max()" :digits="1" :disabled="!a.field.on.value" :aria-label="$t(`details.add.${a.key}Unit`)" />
           <span class="small">{{ $t(`details.add.${a.key}Unit`) }}</span>
@@ -100,11 +99,10 @@
       <legend>{{ $t('details.additionsTitle') }}</legend>
       <p class="small muted">{{ $t('details.additionsLead') }}</p>
       <div v-for="a in ADDITIONS" :key="a.key" class="addition" :class="{ off: !a.field.on.value }">
-        <!-- Only the box itself toggles: a click beside the dose must not switch it off. -->
-        <span class="check">
-          <input v-model="a.field.on.value" type="checkbox" :aria-labelledby="`${id}-add-${a.key}`" />
-          <strong :id="`${id}-add-${a.key}`">{{ $t(`details.add.${a.key}`) }}</strong>
-        </span>
+        <label class="check">
+          <input v-model="a.field.on.value" type="checkbox" />
+          <strong>{{ $t(`details.add.${a.key}`) }}</strong>
+        </label>
         <span class="amount">
           <NumberInput v-model="a.field.value.value" :max="a.max()" :digits="1" :disabled="!a.field.on.value" :aria-label="$t(`details.add.${a.key}Unit`)" />
           <span class="small">{{ $t(`details.add.${a.key}Unit`) }}</span>
@@ -265,17 +263,6 @@ legend {
 .addition > p {
   grid-column: 1 / -1;
   margin: 0;
-}
-
-.addition .check,
-.toggle {
-  cursor: default;
-  justify-self: start;
-}
-
-.addition .check input,
-.toggle input {
-  cursor: pointer;
 }
 
 .addition .amount {
