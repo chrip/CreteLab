@@ -116,11 +116,11 @@ docker compose -f compose.yaml -f compose.tls.yaml up -d --build
 
 The weights are not in the repository, the data is. `ml/DATA.md` describes how it was
 made: a local Qwen3.8-27B teacher on a DGX Spark wrote and labelled the descriptions
-(about 24 hours in several runs, 11.8 M generated tokens), and fine-tuning takes about an hour on a GPU.
+(about 29 hours in several runs, about 14.5 M generated tokens), and fine-tuning takes about 70 minutes on a GPU.
 
 ```bash
 cd ml && python train.py --out ../models/laya-crete    # needs laya + torch
-python evaluate.py --model ../models/laya-crete          # 93.6 % on 66, 91.5 % on 30 more (--file eval_objects.jsonl)
+python evaluate.py --model ../models/laya-crete          # 95.1 % on 66; --file eval_objects.jsonl 92.0 %, eval_pro.jsonl 94.9 %
 ```
 
 ## Sources

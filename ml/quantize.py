@@ -1,7 +1,7 @@
 """Compare a checkpoint on the CPU in float32 and with int8 dynamic quantization (Q8).
 
-Every Linear layer of the encoder and the decision head gets int8 weights; activations are
-quantized on the fly. Reports accuracy on the hand-labelled sets and time per description.
+Every Linear layer of the encoder gets int8 weights; activations are quantized on the fly.
+The small decision head stays float32. Reports accuracy on the hand-labelled sets and time per description.
 
     python quantize.py --model ../models/laya-crete-v4 --threads 2
 """
@@ -59,7 +59,11 @@ def main():
     for name in ("float32", "int8"):
         agent = laya.Agent(args.model, device="cpu")
         if name == "int8":
-            agent.model = torch.ao.quantization.quantize_dynamic(agent.model, {torch.nn.Linear}, dtype=torch.qint8)
+            # The encoder only: that is where the time goes. The small decision head is built
+            # from nn.TransformerEncoderLayer, whose fused fast path rejects quantized Linears.
+            agent.model.encoder = torch.ao.quantization.quantize_dynamic(
+                agent.model.encoder, {torch.nn.Linear}, dtype=torch.qint8
+            )
         agent.predict({"description": "Kellerwand 20 cm"}, QUESTIONS)  # warm-up
         results[name] = {f: score(agent, rows) for f, rows in sets.items()}
 

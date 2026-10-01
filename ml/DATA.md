@@ -1,7 +1,7 @@
 # Training data for the describe search
 
 This folder holds everything needed to rebuild the fine-tuned Laya model behind
-the description search: 4 349 project descriptions, 22 409 teacher votes, two hand-labelled
+the description search: 4 949 project descriptions, 24 204 teacher votes, three hand-labelled
 evaluation sets and a blind cross-check of the teacher. The model weights are not in the
 repository; `train.py` rebuilds them in about an hour on a CUDA GPU.
 
@@ -25,25 +25,31 @@ DIN rules, volume formulas and the B 20 mix design stay in code (`packages/engin
 
 | File | Rows | Content |
 |---|---|---|
-| `data/descriptions.jsonl` | 4 349 | `{job, scenario, lang, text}` – descriptions as people type them into a search box, 2 899 German, 1 450 English, with typos and missing details on purpose |
+| `data/descriptions.jsonl` | 4 949 | `{job, scenario, lang, text}` – descriptions as people type them into a search box, 3 299 German, 1 650 English, with typos and missing details on purpose |
 | `data/votes.jsonl` | 9 300 | `{vote, text, answers}` – site and DIY descriptions: 5 votes on the 10 exposure questions; ready-mix and shape descriptions: 3 votes on all 16 questions plus roles |
 | `data/votes_fine_cast.jsonl` | 7 500 | 5 votes on `fine_cast` for the site and DIY descriptions |
 | `data/votes_v2.jsonl` | 3 000 | 2 votes on `approach`, `add_cement`, `add_plasticizer`, `shape`, `open_sides` and roles for the site and DIY descriptions |
 | `data/votes_objects.jsonl` | 2 609 | 1–2 votes on all 16 questions plus roles for the 2 249 descriptions of the 75 object topics |
+| `data/votes_pro.jsonl` | 1 795 | 3 votes on all 16 questions plus roles for the 600 descriptions of the 20 structural topics (5 got fewer) |
 | `eval_handwritten.jsonl` | 66 | Hand-labelled test set (`null` = genuinely ambiguous, skipped). Never shown to the teacher |
 | `eval_objects.jsonl` | 30 | Hand-labelled test set of objects from the web survey (sink, shower tray, bird bath, light well …) |
+| `eval_pro.jsonl` | 48 | Structural and site elements in trade language (ring beams, lintels, WU basements, grass pavers …), labelled by Opus 5.5; `make_eval_pro.py` writes it and checks every role against the API's candidates |
 | `verify/` | 100 | Opus 5.5 labelled 100 random descriptions blind; `compare.py`, `disagreements.json` |
 
 A vote row holds the teacher's answer per question; roles are stored as `role:<measurement>`
 (e.g. `"role:90 cm": "length"`). `train.py` turns the vote shares into soft targets
 (3 of 5 → about 0.58), so the model learns how sure to be.
 
-The descriptions cover 145 topics (`make_dataset.py`): 35 site-concrete topics (driveways,
+The descriptions cover 165 topics (`make_dataset.py`): 35 site-concrete topics (driveways,
 foundations, basements …), 15 DIY pieces (tables, planters, bowls …), 10 ready-mix-bag
 projects, 10 topics that give sizes in many ways (diameter, edge length, wall thickness,
 counts) and 75 more objects from a web survey of what people cast from concrete
 (`docs/research/concrete-objects.md`: 146 objects, the 75 not covered before, from septic
-pits and ramps to shower trays, cement tiles and Christmas decorations).
+pits and ramps to shower trays, cement tiles and Christmas decorations), plus 20 structural
+and site elements written in trade language (2026-10-01: Ringanker, Türsturz, Unterzug,
+Filigrandecke, WU-Kellerwand, Frostschürze, Köcherfundament, Rasengittersteine, L-Steine …),
+a third of them with DIY wording mixed in. Before that round the set leaned towards DIY:
+38 % decor, 12 % structural, and words like Ringanker or Rasengitterstein never appeared.
 
 ## How it was made
 
@@ -70,6 +76,22 @@ Trained model on `eval_handwritten.jsonl` (2026-09-29): 93,5 % of answers right
 (untrained base model: 49,7 %), number roles 98 %, open sides 100 %, approach 83 %,
 shape 81 %; the Laya-based volume matches the hand labels for 23 of 23 descriptions
 with a size.
+
+v4 with the structural round (2026-10-01), share of answers right and descriptions with
+every answer right:
+
+| Set | v3 | v4 |
+|---|---|---|
+| `eval_handwritten.jsonl` (66) | 93,5 %, 27 | **95,1 %, 37** |
+| `eval_objects.jsonl` (30) | 91,3 %, 11 | **92,0 %, 12** |
+| `eval_pro.jsonl` (48) | 89,4 %, 9 | **94,9 %, 19** |
+
+On `eval_pro.jsonl` the element type went from 72 to 92 %, shape from 72 to 86 %, roles
+from 83 to 93 %, reinforced from 85 to 95 %. The element question now lists beams,
+lintels and ring beams under `wall`; before, it had no option for them.
+
+int8 dynamic quantization of the encoder (`quantize.py`, 2 CPU threads) is about 1,5×
+faster and costs 3,5 to 5,5 points (roles 96 → 80 %, traffic 93 → 80 %). Not used.
 
 ## Rebuild and extend
 

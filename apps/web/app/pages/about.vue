@@ -112,12 +112,12 @@ const LAYA = 'https://github.com/NandhaKishorM/laya';
 const TRAINING: [string, string][] = [
   ['Teacher model', 'Qwen3.8-27B (NVFP4), served locally with vLLM'],
   ['Hardware', 'NVIDIA DGX Spark, 128 GB unified memory'],
-  ['Training data', '4,349 descriptions (2,899 German, 1,450 English, 145 topics), 22,409 teacher votes'],
-  ['Labelling runs', 'about 24 hours in several runs, 8 requests in parallel, about 150 to 170 tokens/s'],
-  ['Tokens', 'about 3.5 M prompt and 11.8 M generated tokens'],
-  ['Same runs in the cloud', 'about $110 to $250 with Claude Opus 5.5, $55 to $125 with the batch API'],
-  ['Fine-tuning', "65,032 training items, 60 minutes on the Spark's GPU (a day or more on a laptop CPU)"],
-  ['Inference', '20 to 60 ms per description on the GPU, about 2 s on the CPU of the Docker image'],
+  ['Training data', '4,949 descriptions (3,299 German, 1,650 English, 165 topics), 24,204 teacher votes'],
+  ['Labelling runs', 'about 29 hours in several runs, 8 requests in parallel, about 150 to 170 tokens/s'],
+  ['Tokens', 'about 4.6 M prompt and 14.5 M generated tokens'],
+  ['Same runs in the cloud', 'about $135 to $310 with Claude Opus 5.5, $70 to $155 with the batch API'],
+  ['Fine-tuning', "74,408 training items, 72 minutes on the Spark's GPU (a day or more on a laptop CPU)"],
+  ['Inference', '20 to 60 ms per description on the GPU, 4 to 7 s on the 2-vCore server that runs this site'],
 ];
 
 usePageMeta(
