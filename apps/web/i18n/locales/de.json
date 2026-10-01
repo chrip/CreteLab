@@ -136,7 +136,8 @@
       "C80_95": "extrem fest",
       "C90_105": "extrem fest",
       "C100_115": "extrem fest"
-    }
+    },
+    "scaleRange": "Skala von {from} bis {to}"
   },
   "volume": {
     "shape": {

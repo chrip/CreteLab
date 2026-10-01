@@ -60,6 +60,12 @@
           <span>{{ $t('bagTool.strengthValue', { fck: tuned.fckCube }) }}</span>
         </div>
       </div>
+      <StrengthScale
+        :marks="[
+          { cls: mix.strengthClass, kind: 'from', label: $t('bagTool.baseLabel') },
+          { cls: tuned.strengthClass, kind: 'main', label: $t(delta === 0 && !hasAdditions ? 'bagTool.noAdditions' : 'bagTool.resultLabel') },
+        ]"
+      />
       <p class="small muted">{{ $t('bagTool.estimateNote') }}</p>
       <ol class="steps">
         <li v-for="(step, i) in tuned.steps" :key="i">{{ stepText(step) }}</li>

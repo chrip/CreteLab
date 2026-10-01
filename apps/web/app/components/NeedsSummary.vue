@@ -1,10 +1,8 @@
 <template>
   <section class="card needs" aria-labelledby="needs-title">
-    <!-- The concrete is the heading: amount, class and in one word how strong that is. -->
-    <h2 id="needs-title" class="headline">
-      {{ $t('needs.headline', { volume: vol(volume), strength: mix.strengthClass }) }}
-      <span class="word">· {{ $t(`needs.strengthWord.${mix.strengthClass.replace('/', '_')}`) }}</span>
-    </h2>
+    <!-- The concrete is the heading; the scale says how strong the class is. -->
+    <h2 id="needs-title" class="headline">{{ $t('needs.headline', { volume: vol(volume), strength: mix.strengthClass }) }}</h2>
+    <StrengthScale :marks="[{ cls: mix.strengthClass, kind: 'main' }]" />
     <ul class="classes">
       <li v-for="c in shownClasses" :key="c">
         <span class="chip"><strong>{{ c }}</strong></span> {{ $t(`option.exposure.${c}.name`) }}
@@ -52,10 +50,6 @@ const fineConcreteQuery = computed(() => (props.plan ? encodeFineConcrete(fineCo
   margin: 0 0 0.6rem;
 }
 
-.headline .word {
-  font-weight: 500;
-  color: var(--text-muted);
-}
 
 .classes {
   list-style: none;

@@ -11,6 +11,7 @@ import FineConcreteApp from '~/components/FineConcreteApp.vue';
 import MixForm from '~/components/MixForm.vue';
 import MixPanel from '~/components/MixPanel.vue';
 import NeedsSummary from '~/components/NeedsSummary.vue';
+import StrengthScale from '~/components/StrengthScale.vue';
 import ThinkingStatus from '~/components/ThinkingStatus.vue';
 import NumberInput from '~/components/NumberInput.vue';
 import OrderPanel from '~/components/OrderPanel.vue';
@@ -285,11 +286,25 @@ describe('MixForm moisture', () => {
 });
 
 describe('NeedsSummary', () => {
-  it('the concrete is the heading, with one word for how strong the class is', async () => {
+  it('the concrete is the heading; a scale says how strong the class is and what it is for', async () => {
     const w = await mountSuspended(NeedsSummary, { props: { mix: mix({ strengthClass: 'C25/30' }), volume: 0.32 } });
-    expect(w.find('h2').text()).toBe('0,32 m³ Beton C25/30 · solide');
-    await w.setProps({ mix: mix({ strengthClass: 'C8/10' }) });
-    expect(w.find('h2').text()).toBe('0,32 m³ Beton C8/10 · sehr schwach');
+    expect(w.find('h2').text()).toBe('0,32 m³ Beton C25/30');
+    const scale = w.find('[data-testid="strength-scale"]');
+    expect(scale.find('figcaption').text()).toBe('C25/30 solide · Wände, Decken, Treppen, außen');
+    expect(scale.findAll('.step.marked').map((s) => s.text())).toEqual(['25']);
+    expect(scale.find('[role="img"]').attributes('aria-label')).toBe('C25/30, solide (Skala von sehr schwach bis extrem fest)');
+    await w.setProps({ mix: mix({ strengthClass: 'C70/85' }) });
+    expect(scale.findAll('.step.marked').map((s) => s.text())).toEqual(['55+']);
+  });
+
+  it('the bag tool shows where the bag starts and where the additions take it', async () => {
+    const w = await mountSuspended(StrengthScale, {
+      props: { marks: [{ cls: 'C25/30', kind: 'from', label: 'Ausgangsmischung' }, { cls: 'C30/37', kind: 'main', label: 'Geschätzt mit Zusätzen' }] },
+    });
+    expect(w.findAll('.pointer')).toHaveLength(2);
+    expect(w.find('figcaption').text()).toBe('Ausgangsmischung: C25/30 solide → Geschätzt mit Zusätzen: C30/37 fest · Außenbauteile, Stützen');
+    await w.setProps({ marks: [{ cls: 'C25/30', kind: 'from', label: 'Ausgangsmischung' }, { cls: 'C25/30', kind: 'main', label: 'Noch ohne Zusätze' }] });
+    expect(w.findAll('.pointer')).toHaveLength(1);
   });
 
   it('additions keep the class: the recipe needs less cement for it', async () => {

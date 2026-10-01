@@ -136,7 +136,8 @@
       "C80_95": "ultra-high strength",
       "C90_105": "ultra-high strength",
       "C100_115": "ultra-high strength"
-    }
+    },
+    "scaleRange": "scale from {from} to {to}"
   },
   "volume": {
     "shape": {
