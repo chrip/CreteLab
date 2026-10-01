@@ -166,7 +166,7 @@
     "title": "So stellen Sie es her",
     "recommended": "empfohlen",
     "bag": {
-      "name": "Fertigmischung",
+      "name": "Fertig­mischung",
       "sub": "Sackware aus dem Baumarkt"
     },
     "mix": {
@@ -174,7 +174,7 @@
       "sub": "Zement, Sand und Kies"
     },
     "order": {
-      "name": "Transportbeton",
+      "name": "Transport­beton",
       "sub": "vom Werk, ab ca. 1 m³"
     },
     "bagRejected": "Sie möchten Fertigmischung aus dem Sack verwenden, aber kein Sack erfüllt die Anforderungen (Gründe im Reiter „Fertigmischung“). Empfohlen ist deshalb: {production}."
@@ -332,18 +332,34 @@
     "cement": "Zement",
     "margin": "Vorhaltemaß in N/mm²",
     "marginHint": "Sicherheitszuschlag, 9 N/mm², wenn die Streuung unbekannt ist.",
-    "plasticizer": "Verflüssiger",
     "exposure": "Expositionsklassen",
-    "additions": "Zusatzmittel und Zusatzstoffe",
-    "air": "Luftgehalt gesamt in %",
-    "airHint": "0 = ohne Luftporenbildner. Mindestens {min} % für luftporenbildenden Beton bei diesem Größtkorn.",
-    "flyAsh": "Flugasche in % des Zements",
-    "silicaFume": "Silikastaub in % des Zements",
-    "waterproofing": "Dichtungsmittel in % des Zements",
     "moisture": "Eigenfeuchte berücksichtigen",
     "moistureGroup": "Feuchte {group} in %",
     "moistureTitle": "Eigenfeuchte der Gesteinskörnung",
-    "moistureLead": "Sand und Kies, die draußen lagern, sind fast immer feucht. Dieses Wasser steckt schon in der Mischung und wird vom Zugabewasser abgezogen; die Gesteinskörnung wird entsprechend schwerer abgewogen."
+    "moistureLead": "Sand und Kies, die draußen lagern, sind fast immer feucht. Dieses Wasser steckt schon in der Mischung und wird vom Zugabewasser abgezogen; die Gesteinskörnung wird entsprechend schwerer abgewogen.",
+    "updated": "Neu berechnet: {volume} {strength}",
+    "toResults": "Zum Ergebnis ↑",
+    "admixtures": "Zusatzmittel",
+    "admixturesLead": "Flüssigkeiten oder Pulver in kleinen Mengen, die den frischen oder den festen Beton verändern.",
+    "additionsTitle": "Zusatzstoffe",
+    "additionsLead": "Feine mineralische Pulver, die einen Teil des Zements ersetzen oder ergänzen.",
+    "add": {
+      "plasticizer": "Verflüssiger",
+      "plasticizerNote": "Macht den Beton geschmeidiger, ohne mehr Wasser: Betonverflüssiger spart etwa 7 % Wasser, Fließmittel etwa 20 % und ist für die weichen Konsistenzen F4 bis F6 nötig.",
+      "air": "Luftporenbildner",
+      "airUnit": "% Luft im Beton",
+      "airNote": "Winzige Luftbläschen geben gefrierendem Wasser Platz. Nötig bei Frost mit Tausalz (XF2 bis XF4), kostet etwas Festigkeit. Bei diesem Größtkorn mindestens {min} %.",
+      "waterproofing": "Dichtungsmittel",
+      "waterproofingUnit": "% des Zements",
+      "waterproofingNote": "Macht den Beton wasserabweisender, etwa für Behälter oder Bauteile im feuchten Erdreich. Ersetzt keinen geplanten WU-Beton.",
+      "flyAsh": "Flugasche",
+      "flyAshUnit": "% des Zements",
+      "flyAshNote": "Ersetzt einen Teil des Zements: weniger Wärme beim Abbinden, dichteres Gefüge, wird aber langsamer fest. Bei diesem Zement höchstens {max} %.",
+      "silicaFume": "Silikastaub",
+      "silicaFumeUnit": "% des Zements",
+      "silicaFumeNote": "Sehr feiner Staub, der die Lücken zwischen den Zementkörnern füllt: dichter und fester, etwa für hochfeste oder besonders dichte Betone. Höchstens {max} %."
+    },
+    "plasticizer": "Verflüssiger"
   },
   "option": {
     "strength": {

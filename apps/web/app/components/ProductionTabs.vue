@@ -45,7 +45,8 @@ function onKey(e: KeyboardEvent) {
 <style scoped>
 .tablist {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, …): a long word like "Transportbeton" must not push the page wider than a phone. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.5rem;
 }
 
@@ -100,6 +101,17 @@ function onKey(e: KeyboardEvent) {
 @media (max-width: 40rem) {
   .sub {
     display: none;
+  }
+
+  [role='tab'] {
+    padding: 0.65rem 0.5rem;
+  }
+
+  .name {
+    font-size: 0.9rem;
+    /* The German names carry soft hyphens at the compound joint (Fertig-mischung). */
+    hyphens: manual;
+    overflow-wrap: anywhere;
   }
 }
 </style>

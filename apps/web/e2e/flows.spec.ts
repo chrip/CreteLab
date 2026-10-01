@@ -164,6 +164,29 @@ test.describe('fine concrete page and bag tool', () => {
   });
 });
 
+test.describe('recalculation', () => {
+  test('a change far below the results says so and leads back up', async ({ page }) => {
+    await page.goto('/de/plan?v=3&s=C25%2F30&x=XC4%2CXF1');
+    await page.getByText('Rezept anpassen').click();
+    const volume = page.getByLabel('Menge in m³');
+    await volume.scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollBy(0, 400));
+    await volume.fill('4,5');
+    const notice = page.getByTestId('recalc-notice');
+    await expect(notice).toContainText('Neu berechnet: 4,50 m³ C25/30');
+    await notice.getByRole('button', { name: /Zum Ergebnis/ }).click();
+    await expect(notice).toBeHidden();
+    await expect(page.getByText('4,50 m³ Beton C25/30')).toBeInViewport();
+  });
+
+  test('the open form does not widen the page (fieldsets and long options)', async ({ page }) => {
+    await page.goto('/de/plan?v=3&s=C25%2F30&x=XC4%2CXF1');
+    await page.getByText('Rezept anpassen').click();
+    const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
+    expect(scroll).toBeLessThanOrEqual(client);
+  });
+});
+
 test.describe('link previews', () => {
   test('the start page has Open Graph title and description in plain words', async ({ page }) => {
     await page.goto('/de');

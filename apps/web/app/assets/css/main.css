@@ -205,6 +205,15 @@ textarea {
   width: 100%;
 }
 
+/* Long option texts and fieldsets (min-content by default) must not widen the page on phones. */
+select {
+  max-width: 100%;
+}
+
+fieldset {
+  min-width: 0;
+}
+
 input[type='checkbox'],
 input[type='radio'] {
   width: auto;

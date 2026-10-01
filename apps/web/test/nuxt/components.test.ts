@@ -1,6 +1,8 @@
 import { DEFAULT_MIX, planProject, type MixInput } from '@cretelab/engine';
 import { mountSuspended } from '@nuxt/test-utils/runtime';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { reactive } from 'vue';
+import type { DOMWrapper } from '@vue/test-utils';
 import { useNuxtApp, useRuntimeConfig } from '#imports';
 import BagPanel from '~/components/BagPanel.vue';
 import BagToolApp from '~/components/BagToolApp.vue';
@@ -273,11 +275,73 @@ describe('MixForm moisture', () => {
     expect(fieldset.text()).toContain('vom Zugabewasser abgezogen');
   });
 
-  it('sits between the exposure classes and the additions', async () => {
+  it('sits between the exposure classes and the admixtures', async () => {
     const w = await mountSuspended(MixForm, { props: { mix: mix(), volume: 1 } });
     expect(w.findAll('legend').map((l) => l.text())).toEqual([
-      'Expositionsklassen', 'Eigenfeuchte der Gesteinskörnung', 'Zusatzmittel und Zusatzstoffe',
+      'Expositionsklassen', 'Eigenfeuchte der Gesteinskörnung', 'Zusatzmittel', 'Zusatzstoffe',
     ]);
+  });
+});
+
+describe('MixForm admixtures and additions', () => {
+  const row = (w: { findAll: (s: string) => DOMWrapper<Element>[] }, name: string) =>
+    w.findAll('.addition').find((r) => r.find('strong').text() === name)!;
+
+  it('one row per substance: off, the box shows a typical dose, a sentence explains it', async () => {
+    const w = await mountSuspended(MixForm, { props: { mix: mix(), volume: 1 } });
+    expect(w.findAll('.addition').map((r) => r.find('strong').text())).toEqual([
+      'Verflüssiger', 'Luftporenbildner', 'Dichtungsmittel', 'Flugasche', 'Silikastaub',
+    ]);
+    const fly = row(w, 'Flugasche');
+    expect((fly.find('input[type="checkbox"]').element as HTMLInputElement).checked).toBe(false);
+    expect(fly.find('input[type="text"]').attributes('disabled')).toBeDefined();
+    expect((fly.find('input[type="text"]').element as HTMLInputElement).value).toBe('10');
+    expect(fly.text()).toContain('Ersetzt einen Teil des Zements');
+  });
+
+  // As in the app, the mix is reactive state that the form changes in place.
+  it('the checkbox switches the dose on and off and remembers what was typed', async () => {
+    const m = reactive(mix());
+    const w = await mountSuspended(MixForm, { props: { mix: m, volume: 1 } });
+    const fly = row(w, 'Flugasche');
+    await fly.find('input[type="checkbox"]').setValue(true);
+    expect(m.flyAshPct).toBe(10);
+    await fly.find('input[type="text"]').setValue('20');
+    expect(m.flyAshPct).toBe(20);
+    await fly.find('input[type="checkbox"]').setValue(false);
+    expect(m.flyAshPct).toBe(0);
+    await fly.find('input[type="checkbox"]').setValue(true);
+    expect(m.flyAshPct).toBe(20);
+  });
+
+  it('a click on the name or beside the dose does not toggle; the box keeps its name for screen readers', async () => {
+    const m = reactive(mix({ flyAshPct: 20 }));
+    const w = await mountSuspended(MixForm, { props: { mix: m, volume: 1 } });
+    const fly = row(w, 'Flugasche');
+    await fly.find('strong').trigger('click');
+    await fly.find('.check').trigger('click');
+    expect(m.flyAshPct).toBe(20);
+    const box = fly.find('input[type="checkbox"]');
+    expect(w.find(`#${box.attributes('aria-labelledby')}`).text()).toBe('Flugasche');
+  });
+
+  it('the plasticiser row switches between none, BV and FM', async () => {
+    const m = reactive(mix());
+    const w = await mountSuspended(MixForm, { props: { mix: m, volume: 1 } });
+    const p = row(w, 'Verflüssiger');
+    await p.find('input[type="checkbox"]').setValue(true);
+    expect(m.plasticizer).toBe('BV');
+    await p.find('select').setValue('FM');
+    expect(m.plasticizer).toBe('FM');
+    await p.find('input[type="checkbox"]').setValue(false);
+    expect(m.plasticizer).toBe('none');
+  });
+
+  it('switching air on starts at the minimum for the grain', async () => {
+    const m = reactive(mix());
+    const w = await mountSuspended(MixForm, { props: { mix: m, volume: 1 } });
+    await row(w, 'Luftporenbildner').find('input[type="checkbox"]').setValue(true);
+    expect(m.airPct).toBeGreaterThanOrEqual(3.5);
   });
 });
 

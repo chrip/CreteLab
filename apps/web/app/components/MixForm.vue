@@ -41,12 +41,6 @@
         <NumberInput :id="`${id}-margin`" v-model="marginField" :min="3" :max="12" :digits="1" />
         <span class="hint">{{ $t('details.marginHint') }}</span>
       </div>
-      <div class="field">
-        <label :for="`${id}-plast`">{{ $t('details.plasticizer') }}</label>
-        <select :id="`${id}-plast`" v-model="mix.plasticizer">
-          <option v-for="p in PLASTICIZERS" :key="p" :value="p">{{ $t(`option.plasticizer.${p}`) }}</option>
-        </select>
-      </div>
     </div>
 
     <fieldset>
@@ -76,25 +70,46 @@
     </fieldset>
 
     <fieldset>
-      <legend>{{ $t('details.additions') }}</legend>
-      <div class="grid">
-        <div class="field">
-          <label :for="`${id}-air`">{{ $t('details.air') }}</label>
-          <NumberInput :id="`${id}-air`" v-model="airField" :max="12" :digits="1" />
-          <span class="hint">{{ $t('details.airHint', { min: n(minAir, 1) }) }}</span>
-        </div>
-        <div class="field">
-          <label :for="`${id}-fa`">{{ $t('details.flyAsh') }}</label>
-          <NumberInput :id="`${id}-fa`" v-model="flyAshField" :max="33" :digits="1" />
-        </div>
-        <div class="field">
-          <label :for="`${id}-sf`">{{ $t('details.silicaFume') }}</label>
-          <NumberInput :id="`${id}-sf`" v-model="silicaField" :max="11" :digits="1" />
-        </div>
-        <div class="field">
-          <label :for="`${id}-wu`">{{ $t('details.waterproofing') }}</label>
-          <NumberInput :id="`${id}-wu`" v-model="wuField" :max="5" :digits="1" />
-        </div>
+      <legend>{{ $t('details.admixtures') }}</legend>
+      <p class="small muted">{{ $t('details.admixturesLead') }}</p>
+      <div class="addition" :class="{ off: !plasticizerOn }">
+        <span class="check">
+          <input v-model="plasticizerOn" type="checkbox" :aria-labelledby="`${id}-add-plasticizer`" />
+          <strong :id="`${id}-add-plasticizer`">{{ $t('details.add.plasticizer') }}</strong>
+        </span>
+        <select v-model="plasticizerKind" :aria-label="$t('details.add.plasticizer')" :disabled="!plasticizerOn">
+          <option v-for="p in PLASTICIZERS.filter((p) => p !== 'none')" :key="p" :value="p">{{ $t(`option.plasticizer.${p}`) }}</option>
+        </select>
+        <p class="small muted">{{ $t('details.add.plasticizerNote') }}</p>
+      </div>
+      <div v-for="a in ADMIXTURES" :key="a.key" class="addition" :class="{ off: !a.field.on.value }">
+        <!-- Only the box itself toggles: a click beside the dose must not switch it off. -->
+        <span class="check">
+          <input v-model="a.field.on.value" type="checkbox" :aria-labelledby="`${id}-add-${a.key}`" />
+          <strong :id="`${id}-add-${a.key}`">{{ $t(`details.add.${a.key}`) }}</strong>
+        </span>
+        <span class="amount">
+          <NumberInput v-model="a.field.value.value" :max="a.max()" :digits="1" :disabled="!a.field.on.value" :aria-label="$t(`details.add.${a.key}Unit`)" />
+          <span class="small">{{ $t(`details.add.${a.key}Unit`) }}</span>
+        </span>
+        <p class="small muted">{{ $t(`details.add.${a.key}Note`, { min: n(minAir, 1), max: n(a.max(), 0) }) }}</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{ $t('details.additionsTitle') }}</legend>
+      <p class="small muted">{{ $t('details.additionsLead') }}</p>
+      <div v-for="a in ADDITIONS" :key="a.key" class="addition" :class="{ off: !a.field.on.value }">
+        <!-- Only the box itself toggles: a click beside the dose must not switch it off. -->
+        <span class="check">
+          <input v-model="a.field.on.value" type="checkbox" :aria-labelledby="`${id}-add-${a.key}`" />
+          <strong :id="`${id}-add-${a.key}`">{{ $t(`details.add.${a.key}`) }}</strong>
+        </span>
+        <span class="amount">
+          <NumberInput v-model="a.field.value.value" :max="a.max()" :digits="1" :disabled="!a.field.on.value" :aria-label="$t(`details.add.${a.key}Unit`)" />
+          <span class="small">{{ $t(`details.add.${a.key}Unit`) }}</span>
+        </span>
+        <p class="small muted">{{ $t(`details.add.${a.key}Note`, { max: n(a.max(), 0) }) }}</p>
       </div>
     </fieldset>
   </div>
@@ -103,8 +118,8 @@
 <script setup lang="ts">
 // All inputs of the B 20 mix design. Changes apply at once; the page stores them in the URL.
 import {
-  AGGREGATE_TYPES, CEMENT_TYPE_NAMES, CONSISTENCY_CLASSES, DEFAULT_MOISTURE, PLASTICIZERS, SIEVE_LINES,
-  SIEVE_LINE_NAMES, STRENGTH_CLASSES, STRENGTH_CLASS_NAMES, minAirContent, strictestLimits,
+  ADDITION_SHARE, AGGREGATE_TYPES, CEMENT_TYPES, CEMENT_TYPE_NAMES, CONSISTENCY_CLASSES, DEFAULT_MOISTURE, PLASTICIZERS, SIEVE_LINES,
+  SIEVE_LINE_NAMES, SILICA_FUME_MAX_FACTOR, STRENGTH_CLASSES, STRENGTH_CLASS_NAMES, minAirContent, strictestLimits,
   type ExposureClass, type MixInput,
 } from '@cretelab/engine';
 import { formatNumber, type Locale } from '~/utils/format';
@@ -133,10 +148,52 @@ const numberField = (get: () => number, set: (v: number) => void) =>
   computed<number | null>({ get, set: (v) => set(v ?? 0) });
 const volumeField = numberField(() => volume.value, (v) => (volume.value = v));
 const marginField = numberField(() => mix.value.margin, (v) => (mix.value.margin = v));
-const airField = numberField(() => mix.value.airPct, (v) => (mix.value.airPct = v));
-const flyAshField = numberField(() => mix.value.flyAshPct, (v) => (mix.value.flyAshPct = v));
-const silicaField = numberField(() => mix.value.silicaFumePct, (v) => (mix.value.silicaFumePct = v));
-const wuField = numberField(() => mix.value.waterproofingPct, (v) => (mix.value.waterproofingPct = v));
+
+type PctKey = 'airPct' | 'flyAshPct' | 'silicaFumePct' | 'waterproofingPct';
+/**
+ * A substance that is either off (0) or dosed: the checkbox switches it, the box holds the
+ * dose. Switching on starts with a typical dose, or the one entered before.
+ */
+function toggled(k: PctKey, typical: () => number) {
+  const last = ref(mix.value[k] || 0);
+  const on = computed({
+    get: () => mix.value[k] > 0,
+    set: (v: boolean) => (mix.value[k] = v ? last.value || typical() : 0),
+  });
+  const value = computed<number | null>({
+    get: () => (mix.value[k] > 0 ? mix.value[k] : last.value || typical()),
+    set: (v) => {
+      if (!on.value) return;
+      mix.value[k] = v ?? 0;
+      if (v) last.value = v;
+    },
+  });
+  return { on, value };
+}
+
+// Typical doses as in the bag tool (bagged/tuning.ts); air: the minimum for this grain.
+const ADMIXTURES = [
+  { key: 'air', field: toggled('airPct', () => minAir.value), max: () => 12 },
+  { key: 'waterproofing', field: toggled('waterproofingPct', () => ADDITION_SHARE.waterproofing * 100), max: () => 5 },
+];
+const ADDITIONS = [
+  // 10 %, not the bag tool's 15 %: fly ash adds fines, and 15 % tips many mixes over the limit.
+  { key: 'flyAsh', field: toggled('flyAshPct', () => 10), max: () => Math.round(CEMENT_TYPES[mix.value.cementType].flyAshMaxFactor * 100) },
+  { key: 'silicaFume', field: toggled('silicaFumePct', () => ADDITION_SHARE.silicaFume * 100), max: () => SILICA_FUME_MAX_FACTOR * 100 },
+];
+
+const lastPlasticizer = ref<'BV' | 'FM'>(mix.value.plasticizer === 'FM' ? 'FM' : 'BV');
+const plasticizerOn = computed({
+  get: () => mix.value.plasticizer !== 'none',
+  set: (v: boolean) => (mix.value.plasticizer = v ? lastPlasticizer.value : 'none'),
+});
+const plasticizerKind = computed({
+  get: () => (mix.value.plasticizer === 'none' ? lastPlasticizer.value : mix.value.plasticizer),
+  set: (v: 'BV' | 'FM') => {
+    lastPlasticizer.value = v;
+    if (plasticizerOn.value) mix.value.plasticizer = v;
+  },
+});
 
 // Switching moisture off and on again brings back the values entered before.
 const lastMoisture = ref<[number, number, number]>(mix.value.moisture ? [...mix.value.moisture] : [...DEFAULT_MOISTURE]);
@@ -194,6 +251,50 @@ legend {
 
 .exposure {
   font-size: 0.9rem;
+}
+
+.addition {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) auto;
+  gap: 0.25rem 1rem;
+  align-items: center;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.addition > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.addition .check {
+  cursor: default;
+  justify-self: start;
+}
+
+.addition .check input {
+  cursor: pointer;
+}
+
+.addition .amount {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.addition .amount :deep(input) {
+  width: 5.5rem;
+}
+
+.addition.off .amount,
+.addition.off select {
+  opacity: 0.55;
+}
+
+@media (max-width: 40rem) {
+  .addition {
+    grid-template-columns: 1fr;
+  }
 }
 
 .field.disabled label {
