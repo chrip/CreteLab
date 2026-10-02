@@ -11,7 +11,7 @@
 // While Laya works: the steps it goes through are typed in, held, deleted from the end and
 // replaced by the next one. The last step stays until the answer is there.
 const STEPS = 6;
-const STARS = ['·', '✢', '✳', '✶', '✻', '✽', '✻', '✶', '✳', '✢'];
+const STARS = ['·', '✢', '✷', '✶', '✻', '✽', '✻', '✶', '✷', '✢'];
 const TYPE_MS = 60;
 const DELETE_MS = 30;
 const HOLD_MS = 1400;

@@ -551,6 +551,19 @@ describe('legal notice and privacy policy', () => {
 });
 
 describe('ThinkingStatus', () => {
+  it('the spinner uses no character a phone draws as an emoji (✳ turns into a green ✳️ on iOS)', async () => {
+    vi.useFakeTimers();
+    const w = await mountSuspended(ThinkingStatus);
+    const seen = new Set<string>();
+    for (let i = 0; i < 20; i++) {
+      seen.add(w.find('.star').text());
+      await vi.advanceTimersByTimeAsync(180);
+    }
+    vi.useRealTimers();
+    expect(seen.size).toBeGreaterThan(4);
+    for (const c of seen) expect(c, `U+${c.codePointAt(0)!.toString(16)}`).not.toMatch(/\p{Emoji}/u);
+  });
+
   it('types a step, deletes it from the end and types the next one', async () => {
     vi.useFakeTimers();
     const w = await mountSuspended(ThinkingStatus);
