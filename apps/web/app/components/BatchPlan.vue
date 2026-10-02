@@ -17,7 +17,7 @@
       }}
     </p>
 
-    <p class="ratio" data-testid="shovel-ratio">{{ ratioText }}</p>
+    <p class="note ratio" data-testid="shovel-ratio">{{ ratioText }}</p>
 
     <div class="table-wrap">
       <table>
@@ -124,9 +124,11 @@ const rows = computed(() => {
 
 .ratio {
   margin: 0.5rem 0 0.9rem;
-  padding: 0.5rem 0.75rem;
-  border-left: 3px solid var(--accent);
-  background: var(--accent-soft);
+}
+
+/* The notes below follow the table; a line under the last row would touch them. */
+tbody tr:last-child > * {
+  border-bottom: none;
 }
 
 caption {
