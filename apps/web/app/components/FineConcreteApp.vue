@@ -276,13 +276,30 @@ async function onDescribe(text: string) {
   margin-top: 0.3rem;
 }
 
+/* On a phone each label stands above its value; two columns leave the value too narrow. */
 .source {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.3rem 1rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0.75rem 0 0;
+}
+
+.source dt {
+  color: var(--text-muted);
 }
 
 .source dd {
-  margin: 0;
+  margin: 0 0 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 40rem) {
+  .source {
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.3rem 1rem;
+  }
+
+  .source dd {
+    margin: 0;
+  }
 }
 </style>
