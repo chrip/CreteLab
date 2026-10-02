@@ -81,11 +81,11 @@ nav a.router-link-active {
     gap: 0.5rem 1rem;
   }
 
+  /* A row of its own that wraps: a strip that scrolls sideways cuts the last link off. */
   nav {
     order: 3;
     flex: 1 0 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    gap: 0.4rem 1.1rem;
     white-space: nowrap;
     padding-bottom: 0.25rem;
   }
