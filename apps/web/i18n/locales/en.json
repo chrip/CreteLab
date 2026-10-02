@@ -274,6 +274,7 @@
     "howTo": "How to mix",
     "step": {
       "dry": "Dry mix {cement} {type} and {aggregate} aggregate.",
+      "dryMoist": "Dry mix {cement} {type} and {aggregate} aggregate, weighed moist.",
       "flyAsh": "Mix in {amount} fly ash.",
       "silicaFume": "Mix in {amount} silica fume evenly.",
       "waterproofing": "Mix in {amount} waterproofing admixture.",
@@ -284,8 +285,7 @@
       "place": "Place it within about 30 minutes, compact it and keep it moist for a few days."
     },
     "batch": {
-      "title": "On site: per batch",
-      "lead": "Nobody weighs on site. Concrete is mixed by the bag, and sand and gravel go into the mixer by the bucket or shovel.",
+      "title": "Mixing on site without scales",
       "mixer": "What you mix with",
       "mixers": {
         "drum140": "Drum mixer 140 l",
@@ -298,12 +298,14 @@
       "ratio": "Into the mixer in turns: {cement} of cement to {aggregate} of sand and gravel.",
       "bagHalf": "½ bag",
       "aggregate": "Sand and gravel {sieve}, moist from the heap",
+      "aggregateDry": "Sand and gravel {sieve}, dry",
       "buckets": "{buckets}, about {shovels} ({kg})",
       "water": "Water",
       "waterValue": "{litres}, about {buckets}",
       "air": "Air-entraining agent",
       "hint": "A bucket is a 10 l builder's bucket, level full. The numbers assume {kg} kg of moist gravel per bucket and about {shovel} kg per shovel. Weigh one full bucket of your gravel once: if it is clearly heavier, use fewer buckets, and the other way round. Add the water last and by feel, but no more than {water} per batch: every extra litre makes the concrete weaker. Gravel from the heap is not equally wet; wetter gravel needs less.",
       "ratioHint": "It counts equally full shovels, so it goes by volume, not by weight: loose cement is lighter than gravel.",
+      "dryHint": "This assumes dry gravel. If it comes moist from the heap, switch on “Account for moisture” in the details: then it is more gravel and less water.",
       "bucketOne": "{n} bucket",
       "bucketMany": "{n} buckets",
       "shovelOne": "{n} shovel",

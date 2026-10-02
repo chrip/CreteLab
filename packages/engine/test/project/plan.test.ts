@@ -434,6 +434,8 @@ describe('a strength class the text names', () => {
     expect(p.requirements.mix.strengthClass).toBe('C30/37');
     expect(p.statedStrength).toEqual({ cls: 'C30/37', minimum: 'C25/30', tooLow: false });
     expect(p.volume.volume).toBe(3);
+    // Mixed on site: the gravel is moist from the heap unless the user says otherwise.
+    expect(p.requirements.mix.moisture).toEqual([5, 3, 2]);
   });
 
   it('a class below the minimum keeps the minimum and says so', () => {

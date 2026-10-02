@@ -41,11 +41,25 @@ describe('MixPanel', () => {
     const w = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 3 } });
     const plan = w.find('[data-testid="batch-plan"]');
     expect(plan.find('[data-testid="batch-summary"]').text()).toMatch(/^\d+ Mischungen mit je 1 Sack \(25 kg\) Zement, zusammen \d+ Sack\.$/);
-    expect(plan.text()).toMatch(/Sand und Kies B32, feucht vom Haufen\s*[\d½]+ Eimer, etwa \d+ Schaufeln/);
+    expect(plan.text()).toMatch(/Sand und Kies B32, trocken\s*[\d½]+ Eimer, etwa \d+ Schaufeln/);
+    expect(plan.find('[data-testid="batch-dry"]').text()).toContain('„Eigenfeuchte berücksichtigen“');
     expect(plan.find('[data-testid="shovel-ratio"]').text()).toMatch(/^Abwechselnd in den Mischer: [12] Schaufeln? Zement auf \d+ Schaufeln Sand und Kies\.$/);
     expect(plan.text()).toMatch(/aber höchstens [\d,]+ l je Mischung/);
     await plan.findAll('input[type="radio"]')[2]!.setValue(true);
     expect(plan.find('[data-testid="batch-summary"]').text()).toContain('je ½ Sack Zement');
+  });
+
+  it('with the moisture on, the batch and the steps count the gravel moist and the water less', async () => {
+    const dry = await mountSuspended(MixPanel, { props: { mix: mix(), volume: 3 } });
+    const wet = await mountSuspended(MixPanel, { props: { mix: mix({ moisture: [5, 3, 2] }), volume: 3 } });
+    const cell = (w: typeof dry, key: number) => w.find('[data-testid="batch-plan"]').findAll('tbody tr')[key]!.find('td').text();
+    const kg = (text: string) => Number(/\(([\d.]+) kg\)/.exec(text.replace(/\./g, '').replace(',', '.'))?.[1]);
+    expect(wet.find('[data-testid="batch-plan"]').text()).toContain('Sand und Kies B32, feucht vom Haufen');
+    expect(wet.find('[data-testid="batch-dry"]').exists()).toBe(false);
+    expect(kg(cell(wet, 1))).toBeGreaterThan(kg(cell(dry, 1)));
+    expect(parseFloat(cell(wet, 2).replace(',', '.'))).toBeLessThan(parseFloat(cell(dry, 2).replace(',', '.')));
+    expect(wet.find('ol.steps li').text()).toMatch(/Gesteinskörnung, feucht gewogen\.$/);
+    expect(dry.find('ol.steps li').text()).toMatch(/Gesteinskörnung\.$/);
   });
 
   it('a 180 l drum takes 1½ bags per batch: Ringanker C25/30, 3 m³', async () => {

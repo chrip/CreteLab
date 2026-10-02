@@ -1,7 +1,6 @@
 <template>
   <section class="batches" aria-labelledby="batch-title" data-testid="batch-plan">
     <h3 id="batch-title">{{ $t('mix.batch.title') }}</h3>
-    <p class="muted">{{ $t('mix.batch.lead') }}</p>
 
     <div v-if="choosable" class="mixers" role="radiogroup" :aria-label="$t('mix.batch.mixer')">
       <label v-for="m in MIXER_KEYS" :key="m" class="mixer" :class="{ active: mixer === m }">
@@ -31,6 +30,7 @@
         </tbody>
       </table>
     </div>
+    <p v-if="!mix.moisture" class="small note" data-testid="batch-dry">{{ $t('mix.batch.dryHint') }}</p>
     <p class="small muted">{{ $t('mix.batch.ratioHint') }}</p>
     <p class="small muted">{{ $t('mix.batch.hint', { kg: BUCKET_KG, shovel: SHOVEL_KG, water: amount(plan.batch.waterL, 'l') }) }}</p>
   </section>
@@ -74,7 +74,7 @@ const rows = computed(() => {
     { key: 'cement', label: t('mix.row.cement', { type: props.mix.cementType }), value: b.bags === null ? amount(b.cementKg, 'kg') : bagText.value },
     {
       key: 'aggregate',
-      label: t('mix.batch.aggregate', { sieve: props.mix.sieveLine }),
+      label: t(props.mix.moisture ? 'mix.batch.aggregate' : 'mix.batch.aggregateDry', { sieve: props.mix.sieveLine }),
       value: t('mix.batch.buckets', { buckets: count('bucket', b.buckets), shovels: count('shovel', b.shovels), kg: amount(b.aggregateKg, 'kg') }),
     },
     {

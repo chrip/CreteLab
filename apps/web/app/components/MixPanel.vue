@@ -111,7 +111,13 @@ const rows = computed<Row[]>(() => {
 const steps = computed(() => {
   const v = props.volume;
   const mm = m.value;
-  const list = [t('mix.step.dry', { cement: amount(mm.cement * v, 'kg'), type: props.mix.cementType, aggregate: amount(mm.aggregate * v, 'kg') })];
+  // With its moisture the gravel is weighed as it comes from the heap.
+  const moist = props.mix.moisture ? recipe.value.grainGroups.reduce((s, g) => s + g.massMoist, 0) : null;
+  const list = [
+    moist === null
+      ? t('mix.step.dry', { cement: amount(mm.cement * v, 'kg'), type: props.mix.cementType, aggregate: amount(mm.aggregate * v, 'kg') })
+      : t('mix.step.dryMoist', { cement: amount(mm.cement * v, 'kg'), type: props.mix.cementType, aggregate: amount(moist * v, 'kg') }),
+  ];
   if (mm.flyAsh > 0) list.push(t('mix.step.flyAsh', { amount: amount(mm.flyAsh * v, 'kg') }));
   if (mm.silicaFume > 0) list.push(t('mix.step.silicaFume', { amount: amount(mm.silicaFume * v, 'kg') }));
   if (mm.waterproofing > 0) list.push(t('mix.step.waterproofing', { amount: amount(mm.waterproofing * v, 'kg') }));

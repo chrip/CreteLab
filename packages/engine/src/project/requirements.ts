@@ -2,6 +2,7 @@
 // Laya answers plain questions; the standard's logic lives here, where it can be reviewed.
 import { NEEDS_AIR, strictestLimits, type ExposureClass } from '../b20/exposure';
 import { STRENGTH_CLASSES, lowestClassWith, type StrengthClass } from '../b20/strength';
+import { DEFAULT_MOISTURE } from '../b20/grading';
 import { DEFAULT_MIX, type MixInput } from '../b20/recipe';
 import { yes, type Answers, type Element } from './answers';
 
@@ -94,6 +95,8 @@ export function requirementsFromFacts(f: Facts): Requirements {
       consistency: f.element === 'paving' ? 'F2' : 'F3',
       airPct: airEntrained ? (fineGrain ? 4.5 : 4.0) : 0,
       waterproofingPct: f.watertight ? 2 : 0,
+      // Mixed on site, the gravel comes moist from the heap.
+      moisture: [...DEFAULT_MOISTURE],
     },
   };
 }

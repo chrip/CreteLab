@@ -274,6 +274,7 @@
     "howTo": "So wird gemischt",
     "step": {
       "dry": "Trocken vormischen: {cement} {type} und {aggregate} Gesteinskörnung.",
+      "dryMoist": "Trocken vormischen: {cement} {type} und {aggregate} Gesteinskörnung, feucht gewogen.",
       "flyAsh": "{amount} Flugasche untermischen.",
       "silicaFume": "{amount} Silikastaub gleichmäßig einmischen.",
       "waterproofing": "{amount} Dichtungsmittel einmischen.",
@@ -284,8 +285,7 @@
       "place": "Innerhalb von etwa 30 Minuten einbauen, verdichten und einige Tage feucht halten."
     },
     "batch": {
-      "title": "Auf der Baustelle: je Mischung",
-      "lead": "Auf der Baustelle wird nicht gewogen. Gemischt wird sackweise, Sand und Kies kommen mit Eimer oder Schaufel in den Mischer.",
+      "title": "Auf der Baustelle mischen ohne Waage",
       "mixer": "Womit Sie mischen",
       "mixers": {
         "drum140": "Freifallmischer 140 l",
@@ -298,12 +298,14 @@
       "ratio": "Abwechselnd in den Mischer: {cement} Zement auf {aggregate} Sand und Kies.",
       "bagHalf": "½ Sack",
       "aggregate": "Sand und Kies {sieve}, feucht vom Haufen",
+      "aggregateDry": "Sand und Kies {sieve}, trocken",
       "buckets": "{buckets}, etwa {shovels} ({kg})",
       "water": "Wasser",
       "waterValue": "{litres}, etwa {buckets}",
       "air": "Luftporenbildner",
       "hint": "Eimer heißt 10-l-Maurereimer, gestrichen voll. Gerechnet ist mit {kg} kg feuchtem Kies je Eimer und etwa {shovel} kg je Schaufel. Wiegen Sie einmal einen vollen Eimer Ihres Kieses: Wiegt er deutlich mehr, nehmen Sie entsprechend weniger Eimer, und umgekehrt. Das Wasser zuletzt und nach Gefühl, aber höchstens {water} je Mischung: Jeder Liter mehr macht den Beton schwächer. Kies vom Haufen ist unterschiedlich nass, nasser Kies braucht weniger.",
       "ratioHint": "Gezählt werden gleich volle Schaufeln, also nach Volumen, nicht nach Gewicht: Lose geschaufelter Zement ist leichter als Kies.",
+      "dryHint": "Gerechnet mit trockenem Kies. Kommt er feucht vom Haufen, schalten Sie in den Details „Eigenfeuchte berücksichtigen“ ein: Dann wird es mehr Kies und weniger Wasser.",
       "bucketOne": "{n} Eimer",
       "bucketMany": "{n} Eimer",
       "shovelOne": "{n} Schaufel",
