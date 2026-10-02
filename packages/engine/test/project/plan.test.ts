@@ -5,7 +5,7 @@ import { planBag } from '../../src/bagged/feasibility';
 import type { Answers } from '../../src/project/answers';
 import {
   DIY_DEFAULT_VOLUME_M3, MIN_SITE_CONCRETE_WALL_M, SITE_DEFAULT_VOLUME_M3,
-  chooseDecorPreset, detectApproach, isDiyPiece, planProject, productionFor, wantsBagTuning,
+  chooseDecorPreset, detectApproach, isDiyPiece, planProject, productionFor, statedStrengthClass, wantsBagTuning,
   type Approach,
 } from '../../src/project/plan';
 import type { VolumeResult } from '../../src/project/volume';
@@ -409,5 +409,36 @@ describe('pieces that hold water', () => {
   it('outdoors (a bird bath) the frost-proof mix still wins', () => {
     const p = planProject('Vogeltränke aus Beton', { answers: { ...sink, indoor_dry: { noul: 0.08 }, rain: { noul: 0.86 } }, candidates: [] });
     expect(p.decor.reason).toBe('outdoor');
+  });
+});
+
+describe('a strength class the text names', () => {
+  // The model's answers of 2026-10-02 for the ring beam: reinforced, outdoors, frost.
+  const ringBeam: Answers = {
+    indoor_dry: noul(0.38), rain: noul(0.39), frost: noul(0.54), ground: noul(0.2), deicing_salt: noul(0.12),
+    horizontal: noul(0.72), reinforced: noul(0.89), watertight: noul(0.13), traffic: { score: 0.13 },
+    element: { choice: 'wall' }, approach: { choice: 'scratch' }, 'role:50 m': { choice: 'length' },
+  };
+  const plan = (text: string) => planProject(text, { answers: ringBeam, candidates: ['24x25 cm', '50 m'] });
+
+  it('reads C30/37 in its usual spellings', () => {
+    expect(statedStrengthClass('Ringanker C30/37')).toBe('C30/37');
+    expect(statedStrengthClass('beton c 30 / 37 bitte')).toBe('C30/37');
+    expect(statedStrengthClass('C30/36')).toBeNull();
+    expect(statedStrengthClass('Ringanker 24x25cm ca. 50 Meter')).toBeNull();
+  });
+
+  it('"Ringanker 24x25cm ca. 50 Meter C30/37" uses C30/37, not the minimum C25/30', () => {
+    expect(plan('Ringanker 24x25cm ca. 50 Meter').requirements.mix.strengthClass).toBe('C25/30');
+    const p = plan('Ringanker 24x25cm ca. 50 Meter C30/37');
+    expect(p.requirements.mix.strengthClass).toBe('C30/37');
+    expect(p.statedStrength).toEqual({ cls: 'C30/37', minimum: 'C25/30', tooLow: false });
+    expect(p.volume.volume).toBe(3);
+  });
+
+  it('a class below the minimum keeps the minimum and says so', () => {
+    const p = plan('Ringanker 24x25cm ca. 50 Meter C16/20');
+    expect(p.requirements.mix.strengthClass).toBe('C25/30');
+    expect(p.statedStrength).toEqual({ cls: 'C16/20', minimum: 'C25/30', tooLow: true });
   });
 });

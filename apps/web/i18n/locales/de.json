@@ -113,6 +113,8 @@
   },
   "needs": {
     "headline": "{volume} Beton {strength}",
+    "statedStrength": "{stated} wie in Ihrer Beschreibung. Nötig wäre mindestens {minimum}.",
+    "statedTooLow": "Sie haben {stated} angegeben. Dieses Bauteil braucht mindestens {minimum}, damit rechnen wir.",
     "air": "Mit Luftporenbildner, Ziel {pct} % Luft, damit Frost und Tausalz der Oberfläche nichts anhaben.",
     "watertight": "Wasserundurchlässig: WU-Beton mit Dichtungsmittel, zusätzlich fachgerecht zu planen (Fugen, Bauteildicken).",
     "why": "Warum?",

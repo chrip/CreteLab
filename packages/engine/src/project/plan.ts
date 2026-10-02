@@ -2,6 +2,7 @@
 // what it needs and how much of it.
 import { planBag, type BagPlan } from '../bagged/feasibility';
 import { DECOR_PRESETS, type DecorPreset } from '../decor/presets';
+import { STRENGTH_CLASSES, isStrengthClass, type StrengthClass } from '../b20/strength';
 import { ORDER_SENSIBLE_FROM_M3 } from '../order/order';
 import { yes, type AnalysisResponse, type Answers } from './answers';
 import { factsFromAnswers, requirementsFromFacts, type Facts, type Requirements } from './requirements';
@@ -23,6 +24,7 @@ const BAGGED_WORDS =
   /fertigbeton|fertigmischung|trockenbeton|sackware|säcke?\b.*beton|beton.*säcke?\b|baumarkt|hornbach|bauhaus|\bobi\b|\btoom\b|home ?depot|lowe'?s|quikrete|sakrete|bag(?:s|ged)? of (?:concrete|mix)|bagged|premix|pre-mix|ready[- ]?mix(?:ed)? (?:bag|concrete)/;
 const EXTRA_CEMENT_WORDS =
   /mehr zement|zement dazu|zement (?:hinzu|zugeben|untermischen)|etwas zement|extra cement|more cement|add(?:ing)? (?:some )?cement/;
+const STRENGTH_WORDS = /\bc\s?(\d{1,3})\s?\/\s?(\d{2,3})\b/i;
 const PLASTICIZER_WORDS = /fließfähig|flüssiger|verflüssiger|fließmittel|plastici[sz]er|superplastici[sz]er|more fluid|flowable/;
 
 /** Laya reads the description as a thin DIY piece rather than a component. */
@@ -66,6 +68,34 @@ export function wantsBagTuning(answers: Answers, text = ''): boolean {
   return yes(answers, 'add_cement') || yes(answers, 'add_plasticizer') || EXTRA_CEMENT_WORDS.test(t) || PLASTICIZER_WORDS.test(t);
 }
 
+/** A strength class the text names ("C30/37", "c 30 / 37"), or null. */
+export function statedStrengthClass(text: string): StrengthClass | null {
+  const m = STRENGTH_WORDS.exec(text);
+  const cls = m ? `C${m[1]}/${m[2]}` : '';
+  return isStrengthClass(cls) ? cls : null;
+}
+
+/** The class the text asks for and the minimum the exposure needs. */
+export interface StatedStrength {
+  cls: StrengthClass;
+  minimum: StrengthClass;
+  /** Below the minimum: the plan keeps the minimum. */
+  tooLow: boolean;
+}
+
+/**
+ * A named class is used when it meets the minimum; a weaker one is not, the plan keeps the
+ * minimum and says why.
+ */
+export function applyStatedStrength(requirements: Requirements, text: string): { requirements: Requirements; stated: StatedStrength | null } {
+  const cls = statedStrengthClass(text);
+  if (!cls) return { requirements, stated: null };
+  const minimum = requirements.mix.strengthClass;
+  const tooLow = STRENGTH_CLASSES[cls].fckCube < STRENGTH_CLASSES[minimum].fckCube;
+  const mix = tooLow ? requirements.mix : { ...requirements.mix, strengthClass: cls };
+  return { requirements: { ...requirements, mix }, stated: { cls, minimum, tooLow } };
+}
+
 export type DecorReason = 'outdoor' | 'small' | 'watertight' | 'furniture';
 
 /**
@@ -103,6 +133,8 @@ export interface ProjectPlan {
   thinWall: boolean;
   decor: { preset: DecorPreset; reason: DecorReason };
   wantsBagTuning: boolean;
+  /** A strength class the text names, if any. */
+  statedStrength: StatedStrength | null;
 }
 
 export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answers' | 'candidates'>): ProjectPlan {
@@ -119,7 +151,7 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
   // Only a wall the text gives decides that a piece is too thin; an assumed one does not.
   const statedWall = volume.assumed?.wall === undefined ? (volume.wall ?? wall) : wall;
   const thinWall = (statedWall ?? Infinity) < MIN_SITE_CONCRETE_WALL_M;
-  const requirements = requirementsFromFacts(facts);
+  const { requirements, stated } = applyStatedStrength(requirementsFromFacts(facts), text);
   const bag = planBag({
     strengthClass: requirements.mix.strengthClass,
     exposureClasses: requirements.exposureClasses,
@@ -142,5 +174,6 @@ export function planProject(text: string, analysis: Pick<AnalysisResponse, 'answ
     thinWall,
     decor: chooseDecorPreset(facts, volume),
     wantsBagTuning: wantsBagTuning(answers, text),
+    statedStrength: stated,
   };
 }

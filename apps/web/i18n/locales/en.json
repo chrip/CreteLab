@@ -113,6 +113,8 @@
   },
   "needs": {
     "headline": "{volume} of {strength} concrete",
+    "statedStrength": "{stated} as in your description. The minimum would be {minimum}.",
+    "statedTooLow": "You asked for {stated}. This component needs at least {minimum}, so that is what we use.",
     "air": "With an air-entraining agent, target {pct} % air, so frost and de-icing salt do not damage the surface.",
     "watertight": "Watertight: concrete with a waterproofing admixture; joints and thicknesses need proper design as well.",
     "why": "Why?",

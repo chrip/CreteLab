@@ -297,6 +297,25 @@ describe('NeedsSummary', () => {
     expect(scale.findAll('.step.marked').map((s) => s.text())).toEqual(['55+']);
   });
 
+  it('a class the description names is used and said; an edit in the details ends the note', async () => {
+    const answers = {
+      reinforced: { noul: 0.89 }, frost: { noul: 0.54 }, horizontal: { noul: 0.72 }, rain: { noul: 0.39 },
+      element: { choice: 'wall' }, approach: { choice: 'scratch' }, 'role:50 m': { choice: 'length' },
+    };
+    const plan = planProject('Ringanker 24x25cm ca. 50 Meter C30/37', { answers, candidates: ['24x25 cm', '50 m'] });
+    const w = await mountSuspended(NeedsSummary, { props: { mix: plan.requirements.mix, volume: 3, plan } });
+    expect(w.find('h2').text()).toBe('3,00 m³ Beton C30/37');
+    expect(w.find('[data-testid="stated-strength"]').text()).toBe('C30/37 wie in Ihrer Beschreibung. Nötig wäre mindestens C25/30.');
+    await w.setProps({ mix: { ...plan.requirements.mix, strengthClass: 'C35/45' } });
+    expect(w.find('[data-testid="stated-strength"]').exists()).toBe(false);
+
+    const low = planProject('Ringanker 24x25cm ca. 50 Meter C16/20', { answers, candidates: ['24x25 cm', '50 m'] });
+    await w.setProps({ mix: low.requirements.mix, plan: low });
+    const note = w.find('[data-testid="stated-strength"]');
+    expect(note.text()).toBe('Sie haben C16/20 angegeben. Dieses Bauteil braucht mindestens C25/30, damit rechnen wir.');
+    expect(note.classes()).toContain('warn');
+  });
+
   it('the bag tool shows where the bag starts and where the additions take it', async () => {
     const w = await mountSuspended(StrengthScale, {
       props: { marks: [{ cls: 'C25/30', kind: 'from', label: 'Ausgangsmischung' }, { cls: 'C30/37', kind: 'main', label: 'Geschätzt mit Zusätzen' }] },
