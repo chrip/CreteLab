@@ -42,6 +42,8 @@ describe('MixPanel', () => {
     const plan = w.find('[data-testid="batch-plan"]');
     expect(plan.find('[data-testid="batch-summary"]').text()).toMatch(/^\d+ Mischungen mit je 1 Sack \(25 kg\) Zement, zusammen \d+ Sack\.$/);
     expect(plan.text()).toMatch(/Sand und Kies B32, feucht vom Haufen\s*[\d½]+ Eimer, etwa \d+ Schaufeln/);
+    expect(plan.find('[data-testid="shovel-ratio"]').text()).toMatch(/^Abwechselnd in den Mischer: [12] Schaufeln? Zement auf \d+ Schaufeln Sand und Kies\.$/);
+    expect(plan.text()).toMatch(/aber höchstens [\d,]+ l je Mischung/);
     await plan.findAll('input[type="radio"]')[2]!.setValue(true);
     expect(plan.find('[data-testid="batch-summary"]').text()).toContain('je ½ Sack Zement');
   });

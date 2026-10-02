@@ -18,6 +18,8 @@
       }}
     </p>
 
+    <p class="ratio" data-testid="shovel-ratio">{{ ratioText }}</p>
+
     <div class="table-wrap">
       <table>
         <caption>{{ $t('mix.batch.per', { litres: plan.litresPerBatch }) }}</caption>
@@ -29,7 +31,8 @@
         </tbody>
       </table>
     </div>
-    <p class="small muted">{{ $t('mix.batch.hint', { kg: BUCKET_KG, shovel: SHOVEL_KG }) }}</p>
+    <p class="small muted">{{ $t('mix.batch.ratioHint') }}</p>
+    <p class="small muted">{{ $t('mix.batch.hint', { kg: BUCKET_KG, shovel: SHOVEL_KG, water: amount(plan.batch.waterL, 'l') }) }}</p>
   </section>
 </template>
 
@@ -57,6 +60,12 @@ const bagText = computed(() => {
   if (b === null) return '';
   if (b === 0.5) return t('mix.batch.bagHalf');
   return t(`mix.batch.bags${b === 1 ? 'One' : 'Many'}`, { n: formatHalves(loc.value, b), kg: formatCompact(loc.value, b * CEMENT_BAG_KG, 1) });
+});
+
+/** "1 Schaufel Zement auf 4 Schaufeln Sand und Kies", in the order they go into the drum. */
+const ratioText = computed(() => {
+  const r = plan.value.ratio;
+  return t('mix.batch.ratio', { cement: count('shovel', r.cement), aggregate: count('shovel', r.aggregate) });
 });
 
 const rows = computed(() => {
@@ -111,6 +120,13 @@ const rows = computed(() => {
 
 .summary {
   font-weight: 600;
+}
+
+.ratio {
+  margin: 0.5rem 0 0.9rem;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
 }
 
 caption {

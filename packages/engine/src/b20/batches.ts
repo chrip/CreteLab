@@ -10,6 +10,8 @@ export const BUCKET_L = 10;
 export const BUCKET_KG = 16;
 /** A shovel of sand and gravel, roughly. */
 export const SHOVEL_KG = 5;
+/** Loose cement shovelled from the bag, kg/l (packed in the bag it is closer to 1,5). */
+export const CEMENT_LOOSE_KG_L = 1.2;
 
 /** Fresh concrete one batch can hold (litres): a drum fills to about two thirds. */
 export const MIXERS = { drum140: 90, drum180: 120, tub: 50 } as const;
@@ -35,6 +37,22 @@ export interface Batch {
   airEntrainerL: number;
 }
 
+/**
+ * Shovels of cement to shovels of sand and gravel, in small whole numbers: on site the two
+ * go into the drum in turns. A shovel holds about the same volume of either, so the ratio
+ * is by loose volume, not by mass.
+ */
+export interface ShovelRatio {
+  cement: 1 | 2;
+  aggregate: number;
+}
+
+export function shovelRatio(cementKg: number, aggregateKg: number): ShovelRatio {
+  const ratio = aggregateKg / (BUCKET_KG / BUCKET_L) / (cementKg / CEMENT_LOOSE_KG_L);
+  const halves = Math.max(1, Math.round(ratio * 2));
+  return halves % 2 === 0 ? { cement: 1, aggregate: halves / 2 } : { cement: 2, aggregate: halves };
+}
+
 export interface BatchPlan {
   mixer: Mixer;
   batches: number;
@@ -43,6 +61,7 @@ export interface BatchPlan {
   /** Fresh concrete per batch, litres. */
   litresPerBatch: number;
   batch: Batch;
+  ratio: ShovelRatio;
 }
 
 const half = (v: number) => Math.max(0.5, Math.round(v * 2) / 2);
@@ -78,6 +97,7 @@ export function batchPlan(recipe: Recipe, volume: number, mixer: Mixer): BatchPl
     batches,
     totalBags: bags === null ? 1 : Math.ceil(batches * bags),
     litresPerBatch: Math.round(batchVolume * 1000),
+    ratio: shovelRatio(m.cement, moist),
     batch: {
       bags,
       cementKg: per(m.cement),

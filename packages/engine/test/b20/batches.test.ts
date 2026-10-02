@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BAGS_PER_BATCH, CEMENT_BAG_KG, BUCKET_KG, MIXERS, SHOVEL_KG, batchPlan, type Mixer } from '../../src/b20/batches';
+import { BAGS_PER_BATCH, CEMENT_BAG_KG, BUCKET_KG, MIXERS, SHOVEL_KG, batchPlan, shovelRatio, type Mixer } from '../../src/b20/batches';
 import { recipeFor } from './helpers';
 
 describe('batches on site', () => {
@@ -82,4 +82,19 @@ describe('batches on site', () => {
     expect(plan.batch.cementKg).toBeCloseTo(c * 0.02, 6);
     expect(plan.litresPerBatch).toBe(20);
   });
+
+  it('shovels of cement to shovels of gravel, by loose volume in small whole numbers', () => {
+    // 300 kg cement = 250 l loose, 2000 kg moist gravel = 1250 l: 1 : 5.
+    expect(shovelRatio(300, 2000)).toEqual({ cement: 1, aggregate: 5 });
+    // 1 : 4.5 is said as 2 : 9.
+    expect(shovelRatio(320, 1920)).toEqual({ cement: 2, aggregate: 9 });
+    const ring = recipeFor({ strengthClass: 'C25/30', exposureClasses: ['XC4', 'XF1'], sieveLine: 'B16' });
+    const weak = recipeFor({ strengthClass: 'C16/20', exposureClasses: ['X0'] });
+    const r = batchPlan(ring, 3, 'drum140').ratio;
+    const w = batchPlan(weak, 3, 'drum140').ratio;
+    // More cement, less gravel per shovel of cement.
+    expect(r).toEqual({ cement: 1, aggregate: 4 });
+    expect(w).toEqual({ cement: 1, aggregate: 6 });
+  });
 });
+
